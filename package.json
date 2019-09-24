@@ -1,11 +1,25 @@
 {
+  "name": "party-client",
+  "version": "0.0.1",
+  "license": "UNLICENSED",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "lint": "eslint './src/**/*.{ts,tsx}'",
     "eject": "expo eject"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint './src/**/*.{ts,tsx}'"
+    ]
   },
   "dependencies": {
     "expo": "^35.0.0",
@@ -17,7 +31,18 @@
   "devDependencies": {
     "@types/react": "^16.8.23",
     "@types/react-native": "^0.57.65",
+    "@typescript-eslint/eslint-plugin": "^2.3.0",
+    "@typescript-eslint/parser": "^2.3.0",
     "babel-preset-expo": "^7.0.0",
+    "eslint": "^6.4.0",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^2.0.1",
+    "husky": "^3.0.5",
+    "lint-staged": "^9.3.0",
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.18.2",
     "typescript": "^3.4.5"
   },
   "private": true
