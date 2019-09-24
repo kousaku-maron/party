@@ -8,7 +8,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "lint": "yarn eslint './src/**/*.{ts,tsx}'",
+    "lint:fix": "yarn eslint './src/**/*.{ts,tsx}' --fix",
     "eject": "expo eject"
   },
   "husky": {
