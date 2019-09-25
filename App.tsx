@@ -1,22 +1,8 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import Hello from './src/components/Hello'
+import AppNavigator from './src/navigators/AppNavigator'
 
 const App = (): JSX.Element => {
-  return (
-    <View style={styles.container}>
-      <Hello />
-    </View>
-  )
+  return <AppNavigator />
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-})
 
 export default App
