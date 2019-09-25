@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
-import { signOut } from '../services/authentication'
 import { View, Text, StyleSheet } from 'react-native'
 import { RoundedButton } from '../components/atoms'
 
@@ -12,15 +11,13 @@ type OwnProps = {
 type Props = OwnProps & UserScreenState & UserScreenActions
 
 const UserScreen = (props: Props) => {
-  const { navigation, auth, resetAuth } = props
+  const { navigation, auth, signOut } = props
 
   const _signOut = useCallback(async () => {
-    const { success, error } = await signOut()
-    if (success && !error) {
-      resetAuth()
-      navigation.navigate('Welcome')
-    }
-  }, [navigation, resetAuth])
+    signOut({
+      onSuccess: () => navigation.navigate('Welcome')
+    })
+  }, [navigation, signOut])
 
   return (
     <View style={styles.container}>

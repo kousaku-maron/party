@@ -3,16 +3,15 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { AppState } from '../reducers/configureStore'
 import { Auth } from '../reducers/auth'
-import { authActions } from '../actions'
+import { authActions, Fetch } from '../actions'
 import { WelcomeScreen } from '../screens'
-import { User } from '../entities'
 
 export interface WelcomeScreenState {
   auth: Auth
 }
 
 export interface WelcomeScreenActions {
-  setAuth: (user: User) => Action<User>
+  signInFacebook: (fetch: Fetch) => Action<Fetch>
 }
 
 const mapStateToProps = (appState: AppState) => ({
@@ -20,7 +19,9 @@ const mapStateToProps = (appState: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
-  setAuth: (user: User) => dispatch(authActions.setAuth(user))
+  signInFacebook: (fetch: Fetch) => {
+    dispatch(authActions.signInFacebook(fetch))
+  }
 })
 
 export default connect(
