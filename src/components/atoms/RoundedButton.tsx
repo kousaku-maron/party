@@ -4,12 +4,27 @@ import { TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-nativ
 type Props = {
   color?: string
   disabled?: boolean
+  fullWidth?: boolean
+  width?: number
+  height?: number
   onPress?: (event: GestureResponderEvent) => void
 }
 
-const RoundedButton: React.FC<Props> = ({ color = '#ededed', disabled = false, onPress, children }) => {
+const RoundedButton: React.FC<Props> = ({
+  color = '#ededed',
+  disabled = false,
+  fullWidth = false,
+  width,
+  height,
+  onPress,
+  children
+}) => {
   return (
-    <TouchableOpacity style={[styles.container, { backgroundColor: color }]} disabled={disabled} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.container, { backgroundColor: color, width: fullWidth ? '100%' : width, height }]}
+      disabled={disabled}
+      onPress={onPress}
+    >
       {children}
     </TouchableOpacity>
   )
@@ -17,6 +32,10 @@ const RoundedButton: React.FC<Props> = ({ color = '#ededed', disabled = false, o
 
 const styles = StyleSheet.create({
   container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
     padding: 12,
     borderRadius: 25
   }
