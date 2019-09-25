@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
-import { HomeScreen, PostScreen, UserScreen } from '../screens'
+import { UserScreen } from '../containers'
+import { HomeScreen, PostScreen } from '../screens'
 
 const HomeNavigator = createStackNavigator(
   {
