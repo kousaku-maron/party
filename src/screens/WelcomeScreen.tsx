@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { WelcomeScreenState, WelcomeScreenActions } from '../containers/WelcomeScreen'
-import { buildUser } from '../entities'
-import { ImageBackground, View, Text, StyleSheet } from 'react-native'
+// import { buildUser } from '../entities'
+import { signInFacebook } from '../services/authentication'
+import { ImageBackground, View, Text, StyleSheet, Dimensions } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton } from '../components/atoms'
 
@@ -13,18 +14,23 @@ type OwnProps = {
 type Props = OwnProps & WelcomeScreenState & WelcomeScreenActions
 
 const WelcomeScreen = (props: Props) => {
-  const { navigation, setAuth } = props
+  const { navigation } = props
 
-  const signIn = useCallback(() => {
-    setAuth(buildUser({ uid: 'xxxxxxx' }))
-    navigation.navigate('App')
-  }, [navigation, setAuth])
+  const signIn = useCallback(async () => {
+    const { success, cancelled, error } = await signInFacebook()
+    if (success && !cancelled && !error) navigation.navigate('App')
+  }, [navigation])
 
   return (
     <ImageBackground source={require('../../assets/images/top.jpeg')} blurRadius={5} style={styles.container}>
+      <View style={styles.overlay} />
+      <View style={styles.titleArea}>
+        <Text style={styles.titleText}>PARTY</Text>
+        <Text style={styles.subText}>今すぐ、飲みに行こう</Text>
+      </View>
       <View style={styles.actionArea}>
         <View style={styles.buttonWrapper}>
-          <RoundedButton color="#3360ff" height={56} fullWidth={true} onPress={signIn}>
+          <RoundedButton color="#3498db" height={56} fullWidth={true} onPress={signIn}>
             <View style={styles.iconWrapper}>
               <AntDesign name="facebook-square" size={32} color="white" />
             </View>
@@ -50,6 +56,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  overlay: {
+    flex: 1,
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    opacity: 0.2,
+    backgroundColor: 'black',
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height
+  },
+  titleArea: {
+    flex: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 96
+  },
   actionArea: {
     width: '80%',
     flex: 1,
@@ -64,12 +86,20 @@ const styles = StyleSheet.create({
   iconWrapper: {
     paddingRight: 12
   },
+  titleText: {
+    color: 'white',
+    fontSize: 64
+  },
+  subText: {
+    color: 'white',
+    fontSize: 20
+  },
   fbText: {
     color: 'white',
     fontSize: 18
   },
   termText: {
-    color: 'black'
+    color: 'white'
   }
 })
 
