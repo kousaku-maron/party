@@ -5,12 +5,10 @@
         "node": true
     },
     "extends": [
-        "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:react/recommended",
-        "plugin:prettier/recommended",
-        "prettier/@typescript-eslint"
+        "plugin:prettier/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -36,6 +34,7 @@
       "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }], 
       "@typescript-eslint/no-use-before-define": [0, { "functions": false, "classes": false }],
       "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/member-delimiter-style": "off",
       "indent": [2, 2, { "SwitchCase": 1 }],
       "react/prop-types": "off",
       "react-hooks/rules-of-hooks": "error",

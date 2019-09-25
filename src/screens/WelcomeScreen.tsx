@@ -1,18 +1,29 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
+import { WelcomeScreenState, WelcomeScreenActions } from '../containers/WelcomeScreen'
+import { buildUser } from '../entities'
 import { View, Text, StyleSheet } from 'react-native'
 import { RoundedButton } from '../components/atoms'
 
-type Props = {
+type OwnProps = {
   navigation: NavigationStackProp
 }
 
-const WelcomeScreen = ({ navigation }: Props) => {
+type Props = OwnProps & WelcomeScreenState & WelcomeScreenActions
+
+const WelcomeScreen = (props: Props) => {
+  const { navigation, setAuth } = props
+
+  const signIn = useCallback(() => {
+    setAuth(buildUser({ uid: 'xxxxxxx' }))
+    navigation.navigate('App')
+  }, [navigation, setAuth])
+
   return (
     <View style={styles.container}>
       <Text>welcome screen</Text>
-      <RoundedButton onPress={() => navigation.navigate('App')}>
-        <Text>go to app</Text>
+      <RoundedButton onPress={signIn}>
+        <Text>サインイン</Text>
       </RoundedButton>
     </View>
   )
