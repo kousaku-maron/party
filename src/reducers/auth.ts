@@ -12,8 +12,8 @@ const initialState: Auth = {
 }
 
 export const authReducer = reducerWithInitialState(initialState)
-  .case(authActions.setAuth, (state, user) => {
-    return { ...state, uid: user.uid, checked: true }
+  .case(authActions.setAuth, (state, uid) => {
+    return { ...state, uid, checked: true }
   })
   .case(authActions.resetAuth, () => {
     return { ...initialState, checked: true }

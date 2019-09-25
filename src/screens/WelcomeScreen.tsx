@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { WelcomeScreenState, WelcomeScreenActions } from '../containers/WelcomeScreen'
-import { signInFacebook } from '../services/authentication'
 import { ImageBackground, View, Text, StyleSheet, Dimensions } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton } from '../components/atoms'
@@ -13,12 +12,13 @@ type OwnProps = {
 type Props = OwnProps & WelcomeScreenState & WelcomeScreenActions
 
 const WelcomeScreen = (props: Props) => {
-  const { navigation } = props
+  const { navigation, signInFacebook } = props
 
-  const signIn = useCallback(async () => {
-    const { success, cancelled, error } = await signInFacebook()
-    if (success && !cancelled && !error) navigation.navigate('App')
-  }, [navigation])
+  const signIn = useCallback(() => {
+    signInFacebook({
+      onSuccess: () => navigation.navigate('App')
+    })
+  }, [navigation, signInFacebook])
 
   return (
     <ImageBackground source={require('../../assets/images/top.jpeg')} blurRadius={5} style={styles.container}>

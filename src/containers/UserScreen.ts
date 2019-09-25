@@ -3,7 +3,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { AppState } from '../reducers/configureStore'
 import { Auth } from '../reducers/auth'
-import { authActions } from '../actions'
+import { authActions, Fetch } from '../actions'
 import { UserScreen } from '../screens'
 
 export interface UserScreenState {
@@ -11,7 +11,7 @@ export interface UserScreenState {
 }
 
 export interface UserScreenActions {
-  resetAuth: () => Action<void>
+  signOut: (fetch: Fetch) => Action<void>
 }
 
 const mapStateToProps = (appState: AppState) => ({
@@ -19,7 +19,9 @@ const mapStateToProps = (appState: AppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
-  resetAuth: () => dispatch(authActions.resetAuth())
+  signOut: (fetch: Fetch) => {
+    dispatch(authActions.signOut(fetch))
+  }
 })
 
 export default connect(
