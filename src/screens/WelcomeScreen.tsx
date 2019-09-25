@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { WelcomeScreenState, WelcomeScreenActions } from '../containers/WelcomeScreen'
-// import { buildUser } from '../entities'
 import { signInFacebook } from '../services/authentication'
 import { ImageBackground, View, Text, StyleSheet, Dimensions } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
@@ -25,7 +24,7 @@ const WelcomeScreen = (props: Props) => {
     <ImageBackground source={require('../../assets/images/top.jpeg')} blurRadius={5} style={styles.container}>
       <View style={styles.overlay} />
       <View style={styles.titleArea}>
-        <Text style={styles.titleText}>PARTY</Text>
+        <Text style={styles.titleText}>Nomoca</Text>
         <Text style={styles.subText}>今すぐ、飲みに行こう</Text>
       </View>
       <View style={styles.actionArea}>
@@ -92,7 +91,8 @@ const styles = StyleSheet.create({
   },
   subText: {
     color: 'white',
-    fontSize: 20
+    fontSize: 20,
+    letterSpacing: 4
   },
   fbText: {
     color: 'white',
