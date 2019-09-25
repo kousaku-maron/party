@@ -9,14 +9,14 @@ if (process.env.NODE_ENV !== 'production') {
   middlewares.push(logger)
 }
 
-type AppState = {
+export type AppState = {
   auth: Auth
 }
 
 const reducers = combineReducers<AppState>({ auth: authReducer })
 
-const configureStore = (initialState: AppState) => {
-  const store = createStore(reducers, initialState, applyMiddleware(...middlewares))
+const configureStore = () => {
+  const store = createStore(reducers, {}, applyMiddleware(...middlewares))
   return store
 }
 
