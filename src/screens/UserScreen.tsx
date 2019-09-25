@@ -11,18 +11,19 @@ type OwnProps = {
 type Props = OwnProps & UserScreenState & UserScreenActions
 
 const UserScreen = (props: Props) => {
-  const { navigation, auth, resetAuth } = props
+  const { navigation, auth, signOut } = props
 
-  const signOut = useCallback(() => {
-    resetAuth()
-    navigation.navigate('Welcome')
-  }, [navigation, resetAuth])
+  const _signOut = useCallback(async () => {
+    signOut({
+      onSuccess: () => navigation.navigate('Welcome')
+    })
+  }, [navigation, signOut])
 
   return (
     <View style={styles.container}>
       <Text>user screen</Text>
       <Text>uid: {auth.uid}</Text>
-      <RoundedButton onPress={signOut}>
+      <RoundedButton onPress={_signOut}>
         <Text>サインアウト</Text>
       </RoundedButton>
     </View>
