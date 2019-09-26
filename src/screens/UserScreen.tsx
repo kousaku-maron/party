@@ -31,7 +31,7 @@ const UserScreen = (props: Props) => {
 }
 
 UserScreen.navigationOptions = () => ({
-  headerTitle: 'Morioka'
+  headerTitle: 'Nomoca'
 })
 
 const styles = StyleSheet.create({
