@@ -10,7 +10,7 @@ const HomeScreen = () => {
 }
 
 HomeScreen.navigationOptions = () => ({
-  headerTitle: 'Morioka'
+  headerTitle: 'Nomoca'
 })
 
 const styles = StyleSheet.create({
