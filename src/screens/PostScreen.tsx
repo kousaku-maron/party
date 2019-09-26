@@ -10,7 +10,7 @@ const PostScreen = () => {
 }
 
 PostScreen.navigationOptions = () => ({
-  headerTitle: 'Morioka'
+  headerTitle: 'Nomoca'
 })
 
 const styles = StyleSheet.create({
