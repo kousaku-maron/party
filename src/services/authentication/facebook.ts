@@ -1,4 +1,4 @@
-import firebase from '../firebase'
+import firebase from '../../repositories/firebase'
 import * as Facebook from 'expo-facebook'
 
 const APPID = '2544437788903140'
