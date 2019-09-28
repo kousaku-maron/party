@@ -40,3 +40,25 @@ export const setThumbnail = async (uid: string, uri: string) => {
         )
     })
 }
+
+// TODO: valudate入れる。user objectを返す。
+export const setName = (uid: string, name: string) => {
+  usersRef
+    .doc(uid)
+    .set(
+      {
+        name,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      },
+      { merge: true }
+    )
+    .then(
+      () => {
+        return { result: true }
+      },
+      error => {
+        console.warn(error)
+        return { result: false }
+      }
+    )
+}
