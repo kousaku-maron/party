@@ -1,14 +1,12 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
-import * as ImagePicker from 'expo-image-picker'
-import * as Permissions from 'expo-permissions'
-import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
-import { setThumbnail } from '../repositories/user'
-import { useUser } from '../services/user'
+import { useUser, useUserEditTools } from '../services/user'
 import { View, Text, StyleSheet } from 'react-native'
-import { RoundedButton, Thumbnail } from '../components/atoms'
+import { AntDesign } from '@expo/vector-icons'
+import { RoundedButton, Fab, TextInput, Thumbnail } from '../components/atoms'
 import { LoadingPage } from '../components/pages'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -18,42 +16,22 @@ type Props = OwnProps & UserScreenState & UserScreenActions
 
 const UserScreen = (props: Props) => {
   const { navigation, auth, signOut } = props
+  const { uid } = auth
 
-  const user = useUser(auth.uid)
+  const user = useUser(uid)
+  const { pickThumbnailImage, name, onChangeName, editing, onPressNameEdit, onSubmitNameEditing } = useUserEditTools()
+
+  // MEMO: "useUserEditTools”でnameに初期値をセットする機能を未実装のため、下記コードでセットさせている。
+  useEffect(() => {
+    if (!user) return
+    onChangeName(user.name)
+  }, [onChangeName, user])
 
   const _signOut = useCallback(async () => {
     signOut({
       onSuccess: () => navigation.navigate('Welcome')
     })
   }, [navigation, signOut])
-
-  const selectThumbnail = useCallback(async () => {
-    const permissionResponse = await Permissions.getAsync(Permissions.CAMERA_ROLL)
-
-    let finalStatus = permissionResponse.status
-    if (permissionResponse.status !== 'granted') {
-      const askPermissionResponse = await Permissions.askAsync(Permissions.CAMERA_ROLL)
-      finalStatus = askPermissionResponse.status
-    }
-
-    if (finalStatus !== 'granted') {
-      return null
-    }
-
-    // TODO: 画像を圧縮する(横1080px)
-    const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [1, 1]
-    })
-
-    if (result.cancelled) {
-      return null
-    }
-
-    const { uri } = (result as unknown) as ImagePicker.ImagePickerResult & ImageInfo // base64とuriを読み込もうとすると型エラーが起きるので型再定義
-
-    await setThumbnail(auth.uid, uri)
-  }, [auth.uid])
 
   if (!user) {
     return <LoadingPage />
@@ -62,10 +40,28 @@ const UserScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.thumbnailWrapper}>
-        <Thumbnail uri={user.thumbnailURL} size={200} onPress={selectThumbnail} />
+        <Thumbnail uri={user.thumbnailURL} size={200} />
+        <View style={styles.editThumnail}>
+          <Fab onPress={() => pickThumbnailImage(uid)}>
+            <AntDesign name="edit" size={24} color="gray" />
+          </Fab>
+        </View>
       </View>
-      <View style={styles.nameWrapper}>
-        <Text style={styles.nameText}>{user.name}</Text>
+
+      <View>
+        {!editing && (
+          <View style={styles.nameWrapper}>
+            <Text style={styles.nameText}>{user.name}</Text>
+            <TouchableOpacity style={styles.editName} onPress={onPressNameEdit}>
+              <AntDesign name="edit" size={18} color="gray" />
+            </TouchableOpacity>
+          </View>
+        )}
+        {editing && (
+          <View style={styles.nameWrapper}>
+            <TextInput value={name} onChangeText={onChangeName} onSubmitEditing={() => onSubmitNameEditing(uid)} />
+          </View>
+        )}
       </View>
 
       <RoundedButton onPress={_signOut}>
@@ -87,10 +83,22 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   thumbnailWrapper: {
+    position: 'relative',
     paddingVertical: 24
   },
   nameWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingBottom: 12
+  },
+  editThumnail: {
+    position: 'absolute',
+    right: 0,
+    bottom: 24
+  },
+  editName: {
+    paddingLeft: 6
   },
   nameText: {
     fontSize: 24
