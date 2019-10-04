@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
-import { WebView } from 'react-native'
+import { WebView } from 'react-native-webview'
 
 type OwnProps = {
   navigation: NavigationStackProp
