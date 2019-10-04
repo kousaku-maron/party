@@ -20,6 +20,14 @@ const WelcomeScreen = (props: Props) => {
     })
   }, [navigation, signInFacebook])
 
+  const goToTerms = useCallback(() => {
+    navigation.navigate('Terms')
+  }, [navigation])
+
+  const goToPrivacy = useCallback(() => {
+    navigation.navigate('Privacy')
+  }, [navigation])
+
   return (
     <ImageBackground source={require('../../assets/images/top.jpeg')} blurRadius={5} style={styles.container}>
       <View style={styles.overlay} />
@@ -36,8 +44,16 @@ const WelcomeScreen = (props: Props) => {
             <Text style={styles.fbText}>Facebookでログイン</Text>
           </RoundedButton>
         </View>
-
-        <Text style={styles.termText}>利用規約を読む。</Text>
+        <Text style={styles.termsText}>
+          <Text style={styles.linkText} onPress={goToTerms}>
+            利用規約
+          </Text>
+          および
+          <Text style={styles.linkText} onPress={goToPrivacy}>
+            プライバシーポリシー
+          </Text>
+          に同意して登録を行ってください。
+        </Text>
       </View>
     </ImageBackground>
   )
@@ -80,10 +96,14 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     width: '100%',
-    paddingBottom: 12
+    paddingBottom: 24
   },
   iconWrapper: {
     paddingRight: 12
+  },
+  linkWrapper: {
+    paddingRight: 12,
+    paddingLeft: 12
   },
   titleText: {
     color: 'white',
@@ -98,8 +118,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18
   },
-  termText: {
-    color: 'white'
+  termsText: {
+    color: 'white',
+    fontSize: 12
+  },
+  linkText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 13
   }
 })
 
