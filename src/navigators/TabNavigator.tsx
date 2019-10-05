@@ -1,8 +1,9 @@
 import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
-import { UserScreen } from '../containers'
-import { HomeScreen, PostScreen } from '../screens'
+import { PostFinishNavigator } from './'
+import { UserScreen, PostScreen } from '../containers'
+import { HomeScreen } from '../screens'
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons'
 
 type IconProps = {
@@ -42,7 +43,8 @@ const HomeNavigator = createStackNavigator(
 
 const PostNavigator = createStackNavigator(
   {
-    Main: PostScreen
+    Main: PostScreen, //PostFinishNavigator,
+    PostFinish: PostFinishNavigator
   },
   {
     initialRouteName: 'Main'

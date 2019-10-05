@@ -1,7 +1,9 @@
 import React from 'react'
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native'
+import { useEffect } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
+import { useUser, useUserEditTools } from '../services/user'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -10,7 +12,18 @@ type OwnProps = {
 type Props = OwnProps & UserScreenState & UserScreenActions
 
 const PostScreen = (props: Props) => {
-  const { navigation } = props
+  const { navigation, auth } = props
+
+  const { uid } = auth
+
+  const user = useUser(uid)
+  const { onChangeName } = useUserEditTools()
+  // MEMO: "useUserEditTools”でnameに初期値をセットする機能を未実装のため、下記コードでセットさせている。
+  useEffect(() => {
+    if (!user) return
+    onChangeName(user.name)
+  }, [onChangeName, user])
+
   const postVenueArea = async venue => {
     navigation.navigate('PostFinish', { venue: venue })
   }
@@ -18,7 +31,6 @@ const PostScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.titleArea}>Which Area?</Text>
-
       <TouchableOpacity
         onPress={() => {
           postVenueArea('Shibuya')
