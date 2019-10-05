@@ -1,7 +1,6 @@
 import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
-import { PostFinishNavigator } from './'
 import { UserScreen, PostScreen } from '../containers'
 import { HomeScreen } from '../screens'
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons'
@@ -43,8 +42,8 @@ const HomeNavigator = createStackNavigator(
 
 const PostNavigator = createStackNavigator(
   {
-    Main: PostScreen, //PostFinishNavigator,
-    PostFinish: PostFinishNavigator
+    Main: PostScreen,
+    PostFinish: PostFinishScreen
   },
   {
     initialRouteName: 'Main'
