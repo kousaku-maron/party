@@ -12,3 +12,4 @@ export const buildParty = (data: firebase.firestore.DocumentData) => {
   }
   return newParty
 }
+//comment for push
