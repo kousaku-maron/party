@@ -23,7 +23,6 @@ export const useUser = (uid: string) => {
       unsubscribe()
     }
   }, [uid])
-  console.log(user)
 
   return user
 }
