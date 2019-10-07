@@ -20,14 +20,6 @@ const WelcomeScreen = (props: Props) => {
     })
   }, [navigation, signInFacebook])
 
-  const goToTerms = useCallback(() => {
-    navigation.navigate('Terms')
-  }, [navigation])
-
-  const goToPrivacy = useCallback(() => {
-    navigation.navigate('Privacy')
-  }, [navigation])
-
   return (
     <ImageBackground source={require('../../assets/images/top.jpeg')} blurRadius={5} style={styles.container}>
       <View style={styles.overlay} />
@@ -45,16 +37,7 @@ const WelcomeScreen = (props: Props) => {
           </RoundedButton>
         </View>
 
-        <Text style={styles.termText}>
-          <Text style={styles.linkText} onPress={goToTerms}>
-            利用規約
-          </Text>
-          と
-          <Text style={styles.linkText} onPress={goToPrivacy}>
-            プライバシーポリシー
-          </Text>
-          に同意して、サービスを利用して下さい。
-        </Text>
+        <Text style={styles.termText}>利用規約を読む。</Text>
       </View>
     </ImageBackground>
   )
@@ -116,13 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   termText: {
-    color: 'white',
-    fontSize: 12,
-    fontWeight: '300'
-  },
-  linkText: {
-    fontSize: 12,
-    fontWeight: 'bold'
+    color: 'white'
   }
 })
 
