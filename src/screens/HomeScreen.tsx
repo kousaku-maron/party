@@ -1,10 +1,34 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native'
+import { useParties } from '../services/party'
+import { LoadingPage } from '../components/pages'
 
 const HomeScreen = () => {
+  const parties = useParties()
+  console.log('Post screen')
+
+  const FetchPartiesThumbnail = parties => {
+    const thumbnailURLs = parties.map((party, index) => {
+      const uri = party.thumbnailURL
+      return (
+        <TouchableOpacity key={index} onPress={() => Alert.alert('Hello')} style={styles.areaImageTouchable}>
+          <Image key={index + 'image'} source={{ uri }} style={styles.areaImage}></Image>
+          <Text key={index + 'text'} style={{ justifyContent: 'center', flexDirection: 'row' }}>
+            {party.name}
+          </Text>
+        </TouchableOpacity>
+      )
+    })
+    return thumbnailURLs
+  }
+
+  if (!parties) {
+    return <LoadingPage />
+  }
   return (
     <View style={styles.container}>
-      <Text>home screen</Text>
+      <Text>post screen</Text>
+      {FetchPartiesThumbnail(parties)}
     </View>
   )
 }
@@ -20,6 +44,16 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  areaImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+    flex: 1
+  },
+  areaImageTouchable: {
+    width: '28%',
+    height: '28%'
   }
 })
 
