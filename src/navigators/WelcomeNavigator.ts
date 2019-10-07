@@ -1,9 +1,11 @@
 import { createStackNavigator } from 'react-navigation-stack'
-import { WelcomeScreen } from '../containers'
+import { WelcomeScreen, TermsScreen, PrivacyScreen } from '../containers'
 
 const WelcomeNavigator = createStackNavigator(
   {
-    Welcome: WelcomeScreen
+    Welcome: WelcomeScreen,
+    Terms: TermsScreen,
+    Privacy: PrivacyScreen
   },
   {
     initialRouteName: 'Welcome'
