@@ -25,12 +25,7 @@ const HomeScreen = () => {
   if (!parties) {
     return <LoadingPage />
   }
-  return (
-    <View style={styles.container}>
-      <Text>post screen</Text>
-      {FetchPartiesThumbnail(parties)}
-    </View>
-  )
+  return <View style={styles.container}>{FetchPartiesThumbnail(parties)}</View>
 }
 
 HomeScreen.navigationOptions = () => ({
