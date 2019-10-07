@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
-import { useUser, useUserEditTools } from '../services/user'
+import { useUser } from '../services/user'
 import { View, Text, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
-import { RoundedButton, Fab, TextInput, Thumbnail } from '../components/atoms'
+import { RoundedButton, Fab, Thumbnail } from '../components/atoms'
 import { LoadingPage } from '../components/pages'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -19,13 +18,6 @@ const UserScreen = (props: Props) => {
   const { uid } = auth
 
   const user = useUser(uid)
-  const { pickThumbnailImage, name, onChangeName, editing, onPressNameEdit, onSubmitNameEditing } = useUserEditTools()
-
-  // MEMO: "useUserEditTools”でnameに初期値をセットする機能を未実装のため、下記コードでセットさせている。
-  useEffect(() => {
-    if (!user) return
-    onChangeName(user.name)
-  }, [onChangeName, user])
 
   const _signOut = useCallback(async () => {
     signOut({
@@ -33,35 +25,30 @@ const UserScreen = (props: Props) => {
     })
   }, [navigation, signOut])
 
+  const goToEdit = useCallback(() => {
+    navigation.navigate('UserEdit')
+  }, [navigation])
+
   if (!user) {
     return <LoadingPage />
   }
 
   return (
     <View style={styles.container}>
+      <View style={styles.editFab}>
+        <Fab color="#3498db" onPress={goToEdit}>
+          <AntDesign color="white" name="edit" size={24} />
+        </Fab>
+      </View>
+
       <View style={styles.thumbnailWrapper}>
         <Thumbnail uri={user.thumbnailURL} size={200} />
-        <View style={styles.editThumnail}>
-          <Fab onPress={() => pickThumbnailImage(uid)}>
-            <AntDesign name="edit" size={24} color="gray" />
-          </Fab>
-        </View>
       </View>
 
       <View>
-        {!editing && (
-          <View style={styles.nameWrapper}>
-            <Text style={styles.nameText}>{user.name}</Text>
-            <TouchableOpacity style={styles.editName} onPress={onPressNameEdit}>
-              <AntDesign name="edit" size={18} color="gray" />
-            </TouchableOpacity>
-          </View>
-        )}
-        {editing && (
-          <View style={styles.nameWrapper}>
-            <TextInput value={name} onChangeText={onChangeName} onSubmitEditing={() => onSubmitNameEditing(uid)} />
-          </View>
-        )}
+        <View style={styles.nameWrapper}>
+          <Text style={styles.nameText}>{user.name}</Text>
+        </View>
       </View>
 
       <RoundedButton onPress={_signOut}>
@@ -72,7 +59,8 @@ const UserScreen = (props: Props) => {
 }
 
 UserScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca'
+  headerTitle: 'Nomoca',
+  headerBackTitle: null
 })
 
 const styles = StyleSheet.create({
@@ -80,10 +68,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'relative'
+  },
+  editFab: {
+    position: 'absolute',
+    right: 24,
+    bottom: 24
   },
   thumbnailWrapper: {
-    position: 'relative',
     paddingVertical: 24
   },
   nameWrapper: {
@@ -91,14 +84,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingBottom: 12
-  },
-  editThumnail: {
-    position: 'absolute',
-    right: 0,
-    bottom: 24
-  },
-  editName: {
-    paddingLeft: 6
   },
   nameText: {
     fontSize: 24
