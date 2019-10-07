@@ -1,4 +1,5 @@
 import firebase from './firebase'
+import { buildUser, User } from '../entities'
 
 const db = firebase.firestore()
 const storage = firebase.storage()
@@ -10,7 +11,6 @@ const metadata = {
   contentType: 'image/png'
 }
 
-// TODO: user objectを返す。
 export const setThumbnail = async (uid: string, uri: string) => {
   const response = await fetch(uri)
   const blob = await response.blob()
@@ -41,7 +41,7 @@ export const setThumbnail = async (uid: string, uri: string) => {
     })
 }
 
-// TODO: valudate入れる。user objectを返す。
+// TODO: valudate入れる。
 export const setName = (uid: string, name: string) => {
   usersRef
     .doc(uid)
@@ -61,4 +61,27 @@ export const setName = (uid: string, name: string) => {
         return { result: false }
       }
     )
+}
+
+export const getUser = async (uid: string) => {
+  try {
+    const snapshot = await usersRef.doc(uid).get()
+    const user = buildUser(snapshot.data())
+    return user
+  } catch (e) {
+    console.warn(e)
+    return null
+  }
+}
+
+export const setUser = async (uid: string, user: User) => {
+  try {
+    await usersRef
+      .doc(uid)
+      .set({ ...user, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true })
+    return { result: true }
+  } catch (e) {
+    console.warn(e)
+    return { result: false }
+  }
 }
