@@ -11,56 +11,21 @@ const metadata = {
   contentType: 'image/png'
 }
 
-export const setThumbnail = async (uid: string, uri: string) => {
-  const response = await fetch(uri)
-  const blob = await response.blob()
+const setThumbnail = async (uid: string, url: string) => {
   const thumbnailRef = storageRef.child(`${uid}/thumbnail01.png`)
+  const response = await fetch(url)
+  const blob = await response.blob()
   const task = thumbnailRef.put(blob, metadata)
 
-  task
+  return task
     .then(snapshop => snapshop.ref.getDownloadURL())
-    .then(url => {
-      usersRef
-        .doc(uid)
-        .set(
-          {
-            thumbnailURL: url,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-          },
-          { merge: true }
-        )
-        .then(
-          () => {
-            return { result: true }
-          },
-          error => {
-            console.warn(error)
-            return { result: false }
-          }
-        )
+    .then(async url => {
+      return { thumbnailURL: url }
     })
-}
-
-// TODO: valudate入れる。
-export const setName = (uid: string, name: string) => {
-  usersRef
-    .doc(uid)
-    .set(
-      {
-        name,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      },
-      { merge: true }
-    )
-    .then(
-      () => {
-        return { result: true }
-      },
-      error => {
-        console.warn(error)
-        return { result: false }
-      }
-    )
+    .catch(e => {
+      console.warn(e)
+      return { thumbnailURL: null }
+    })
 }
 
 export const getUser = async (uid: string) => {
@@ -74,11 +39,20 @@ export const getUser = async (uid: string) => {
   }
 }
 
+// MEMO: storage保存を async - await で書き換え可能なら、書き換えたい。
 export const setUser = async (uid: string, user: User) => {
   try {
-    await usersRef
-      .doc(uid)
-      .set({ ...user, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true })
+    const { thumbnailURL } = await setThumbnail(uid, user.thumbnailURL)
+
+    await usersRef.doc(uid).set(
+      {
+        ...user,
+        thumbnailURL,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      },
+      { merge: true }
+    )
+
     return { result: true }
   } catch (e) {
     console.warn(e)
