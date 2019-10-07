@@ -5,14 +5,17 @@ import { LoadingPage } from '../components/pages'
 
 const HomeScreen = () => {
   const parties = useParties()
+  console.log('Post screen')
 
   const FetchPartiesThumbnail = parties => {
     const thumbnailURLs = parties.map((party, index) => {
       const uri = party.thumbnailURL
       return (
-        <TouchableOpacity key={index} onPress={() => Alert.alert('Hello')} style={styles.partyImageTouchable}>
-          <Image source={{ uri }} style={styles.partyImage}></Image>
-          <Text style={styles.partyText}>{party.name}</Text>
+        <TouchableOpacity key={index} onPress={() => Alert.alert('Hello')} style={styles.areaImageTouchable}>
+          <Image key={index + 'image'} source={{ uri }} style={styles.areaImage}></Image>
+          <Text key={index + 'text'} style={{ justifyContent: 'center', flexDirection: 'row' }}>
+            {party.name}
+          </Text>
         </TouchableOpacity>
       )
     })
@@ -22,12 +25,7 @@ const HomeScreen = () => {
   if (!parties) {
     return <LoadingPage />
   }
-  return (
-    <View style={styles.container}>
-      <Text>post screen</Text>
-      {FetchPartiesThumbnail(parties)}
-    </View>
-  )
+  return <View style={styles.container}>{FetchPartiesThumbnail(parties)}</View>
 }
 
 HomeScreen.navigationOptions = () => ({
@@ -42,18 +40,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  partyImage: {
+  areaImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
     flex: 1
   },
-  partyImageTouchable: {
+  areaImageTouchable: {
     width: '28%',
     height: '28%'
   },
   partyText: {
-    justifyContent: 'center',
+    textAlign: 'center',
     flexDirection: 'row'
   }
 })
