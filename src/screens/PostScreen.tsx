@@ -1,12 +1,8 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 
 const PostScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text>post screen</Text>
-    </View>
-  )
+  return <View style={styles.container}></View>
 }
 
 PostScreen.navigationOptions = () => ({
