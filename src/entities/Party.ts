@@ -1,6 +1,6 @@
 export type Party = {
   uid: string
-  name?: string
+  name: string
   thumbnailURL?: string
 }
 
