@@ -45,11 +45,23 @@ const UserScreen = (props: Props) => {
         <Thumbnail uri={user.thumbnailURL} size={200} />
       </View>
 
-      <View>
-        <View style={styles.nameWrapper}>
-          <Text style={styles.nameText}>{user.name}</Text>
-        </View>
+      <View style={styles.nameWrapper}>
+        <Text style={styles.nameText}>{user.name}</Text>
       </View>
+
+      <View style={styles.acceptWrapper}>
+        <RoundedButton disabled={user.isAccepted} fullWidth={true}>
+          <Text style={styles.acceptText}>{user.isAccepted ? '身分書確認済み' : '身分書をアップロードする'}</Text>
+        </RoundedButton>
+      </View>
+
+      {!user.isAccepted && (
+        <View style={styles.acceptCaptionWrapper}>
+          <Text style={styles.acceptCaptionText}>
+            ※年齢確認のため、運転免許証もしくはパスポートをアップロードして下さい。
+          </Text>
+        </View>
+      )}
 
       <RoundedButton onPress={_signOut}>
         <Text>サインアウト</Text>
@@ -83,10 +95,26 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingBottom: 12
+    paddingBottom: 24
+  },
+  acceptWrapper: {
+    width: 250,
+    paddingBottom: 8
+  },
+  acceptCaptionWrapper: {
+    width: 250,
+    paddingBottom: 24
   },
   nameText: {
     fontSize: 24
+  },
+  acceptText: {
+    width: '100%',
+    textAlign: 'center',
+    fontSize: 14
+  },
+  acceptCaptionText: {
+    fontSize: 12
   }
 })
 
