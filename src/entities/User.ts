@@ -17,3 +17,5 @@ export const buildUser = (data: firebase.firestore.DocumentData) => {
 
   return newUser
 }
+
+export type UpdateUser = Pick<User, 'uid' | 'name' | 'thumbnailURL'>
