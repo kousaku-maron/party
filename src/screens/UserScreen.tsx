@@ -1,10 +1,12 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
 import { useUser } from '../services/user'
-import { View, Text, StyleSheet } from 'react-native'
+import { useCertificate } from '../services/secure'
+import { View, Text, Image, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton, Fab, Thumbnail } from '../components/atoms'
+import { UploadCertificateModal } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 
 type OwnProps = {
@@ -18,6 +20,30 @@ const UserScreen = (props: Props) => {
   const { uid } = auth
 
   const user = useUser(uid)
+
+  const [isVisible, setIsVisible] = useState<boolean>(false)
+
+  const onOpen = useCallback(() => {
+    setIsVisible(true)
+  }, [])
+
+  const onClose = useCallback(() => {
+    setIsVisible(false)
+  }, [])
+
+  const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificate(uid)
+
+  const _pickCertificateImage = useCallback(async () => {
+    const { cancelled, uri } = await onChangeUpdateCertificateURL()
+    if (!cancelled && uri) {
+      onOpen()
+    }
+  }, [onChangeUpdateCertificateURL, onOpen])
+
+  const onUpload = useCallback(() => {
+    upload()
+    onClose()
+  }, [onClose, upload])
 
   const _signOut = useCallback(async () => {
     signOut({
@@ -49,11 +75,19 @@ const UserScreen = (props: Props) => {
         <Text style={styles.nameText}>{user.name}</Text>
       </View>
 
-      <View style={styles.acceptWrapper}>
-        <RoundedButton disabled={user.isAccepted} fullWidth={true}>
-          <Text style={styles.acceptText}>{user.isAccepted ? '身分書確認済み' : '身分書をアップロードする'}</Text>
-        </RoundedButton>
-      </View>
+      {user.isAccepted && (
+        <View style={styles.isAcceptedWrapper}>
+          <Text style={styles.acceptCaptionText}>本人確認済み</Text>
+        </View>
+      )}
+
+      {!user.isAccepted && (
+        <View style={styles.isNotacceptedWrapper}>
+          <RoundedButton fullWidth={true} onPress={_pickCertificateImage}>
+            <Text style={styles.acceptText}>身分証をアップロードする</Text>
+          </RoundedButton>
+        </View>
+      )}
 
       {!user.isAccepted && (
         <View style={styles.acceptCaptionWrapper}>
@@ -63,9 +97,18 @@ const UserScreen = (props: Props) => {
         </View>
       )}
 
+      {!user.isAccepted && currentCertificateURL && (
+        <View style={styles.certificateWrapper}>
+          <Image style={styles.certificate} resizeMode="contain" source={{ uri: currentCertificateURL }} />
+          <Text style={styles.acceptCaptionText}>※提出済み</Text>
+        </View>
+      )}
+
       <RoundedButton onPress={_signOut}>
         <Text>サインアウト</Text>
       </RoundedButton>
+
+      <UploadCertificateModal isVisible={isVisible} url={uploadCertificateURL} onClose={onClose} onUpload={onUpload} />
     </View>
   )
 }
@@ -97,13 +140,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 24
   },
-  acceptWrapper: {
+  isAcceptedWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingBottom: 24
+  },
+  isNotacceptedWrapper: {
     width: 250,
     paddingBottom: 8
   },
   acceptCaptionWrapper: {
     width: 250,
     paddingBottom: 24
+  },
+  certificateWrapper: {
+    paddingBottom: 24
+  },
+  certificate: {
+    width: 200,
+    height: 200
   },
   nameText: {
     fontSize: 24
