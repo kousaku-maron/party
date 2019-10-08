@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
-import { User } from '../entities'
+import { UpdateUser } from '../entities'
 import { UserEditScreenState } from '../containers/UserEditScreen'
 import * as UserRepository from '../repositories/user'
 import { useUserEditTools } from '../services/user'
@@ -22,7 +22,7 @@ const UserEditScreen = (props: Props) => {
   const { name, thumbnailURL, onChangeName, onChangeThumbnailURL, fetched } = useUserEditTools(uid)
 
   const updateUserState = useCallback(async () => {
-    const updateUser: User = { uid, name, thumbnailURL }
+    const updateUser: UpdateUser = { uid, name, thumbnailURL }
     const { result } = await UserRepository.setUser(uid, updateUser)
     if (result) {
       navigation.goBack()
