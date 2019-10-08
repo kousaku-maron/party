@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import firebase from '../repositories/firebase'
-import { setThumbnail, setName } from '../repositories/user'
+import { getUser } from '../repositories/user'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
@@ -27,30 +27,38 @@ export const useUser = (uid: string) => {
   return user
 }
 
-export const useUserEditTools = () => {
-  const [_name, _setName] = useState<string>('') // TODO: firestoreからUserデータ取得して初期値を入れる。(onSnapShotは使わないこと)
-  const [editing, setEditing] = useState<boolean>(false)
+export const useUserEditTools = (uid: string) => {
+  const [user, setUser] = useState<User | null>(null)
+  const [fetched, setFetched] = useState<boolean>(false)
 
-  const onChangeName = useCallback(
-    (text: string) => {
-      _setName(text)
-    },
-    [_setName]
-  )
+  useEffect(() => {
+    const asyncEffect = async () => {
+      const _user = await getUser(uid)
+      setUser(_user)
+      setFetched(true)
+    }
+    asyncEffect()
+  }, [uid])
 
-  const onPressNameEdit = useCallback(() => {
-    setEditing(true)
-  }, [setEditing])
+  const [name, setName] = useState<string>('')
 
-  const onSubmitNameEditing = useCallback(
-    (uid: string) => {
-      setEditing(false)
-      setName(uid, _name)
-    },
-    [_name, setEditing]
-  )
+  useEffect(() => {
+    if (!user) return
+    setName(user.name)
+  }, [user])
 
-  const pickThumbnailImage = useCallback(async (uid: string) => {
+  const [thumbnailURL, setThumbnailURL] = useState<string>('')
+
+  useEffect(() => {
+    if (!user) return
+    setThumbnailURL(user.thumbnailURL)
+  }, [user])
+
+  const onChangeName = useCallback((text: string) => {
+    setName(text)
+  }, [])
+
+  const onChangeThumbnailURL = useCallback(async () => {
     const permissionResponse = await Permissions.getAsync(Permissions.CAMERA_ROLL)
 
     let finalStatus = permissionResponse.status
@@ -74,9 +82,8 @@ export const useUserEditTools = () => {
     }
 
     const { uri } = (result as unknown) as ImagePicker.ImagePickerResult & ImageInfo // uriを読み込もうとすると型エラーが起きるので型再定義
-
-    await setThumbnail(uid, uri)
+    setThumbnailURL(uri)
   }, [])
 
-  return { pickThumbnailImage, name: _name, onChangeName, editing, onPressNameEdit, onSubmitNameEditing }
+  return { name, thumbnailURL, onChangeName, onChangeThumbnailURL, fetched }
 }

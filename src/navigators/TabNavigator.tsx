@@ -1,7 +1,7 @@
 import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
-import { UserScreen } from '../containers'
+import { UserScreen, UserEditScreen } from '../containers'
 import { HomeScreen, PostScreen } from '../screens'
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons'
 
@@ -51,7 +51,8 @@ const PostNavigator = createStackNavigator(
 
 const UserNavigator = createStackNavigator(
   {
-    Main: UserScreen
+    Main: UserScreen,
+    UserEdit: UserEditScreen
   },
   {
     initialRouteName: 'Main'
