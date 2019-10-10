@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import {
   isIPhoneX,
   isIPhoneXAbove,
@@ -10,6 +10,7 @@ import Modal from 'react-native-modal'
 import { AntDesign } from '@expo/vector-icons'
 
 type Props = {
+  title?: string
   isVisible: boolean
   onClose: () => void
 }
@@ -19,31 +20,32 @@ const FullScreenModal: React.FC<Props> = props => {
     <View>
       <Modal isVisible={props.isVisible} style={styles.modal}>
         <View style={styles.inner}>
+          <View style={styles.header}>
+            <Text style={styles.titleText}>{props.title}</Text>
+            <TouchableOpacity style={styles.closeWrapper} onPress={props.onClose}>
+              <AntDesign name="close" size={24} />
+            </TouchableOpacity>
+          </View>
           {props.children}
-          <TouchableOpacity style={styles.closeWrapper} onPress={props.onClose}>
-            <AntDesign name="close" size={24} />
-          </TouchableOpacity>
         </View>
       </Modal>
     </View>
   )
 }
 
-const getTopSpace = () => {
-  const isIOS = Platform.OS === 'ios'
-  if (!isIOS) {
-    return ANDROID_STATUS_BAR_HEIGHT
-  }
+const TOP_SPACE = Platform.select({
+  ios: isIPhoneX() || isIPhoneXAbove() ? X_ABOVE_HEADER_NOTCH_HEIGHT : 0,
+  android: ANDROID_STATUS_BAR_HEIGHT,
+  default: 0
+})
 
-  if (isIPhoneX() || isIPhoneXAbove()) {
-    return X_ABOVE_HEADER_NOTCH_HEIGHT
-  }
+const APPBAR_HEIGHT = Platform.select({
+  ios: 44,
+  android: 56,
+  default: 64
+})
 
-  return 0
-}
-
-const topSpace = getTopSpace()
-// const hairlineWidth = StyleSheet.hairlineWidth
+const hairlineWidth = StyleSheet.hairlineWidth
 
 const styles = StyleSheet.create({
   modal: {
@@ -51,15 +53,28 @@ const styles = StyleSheet.create({
   },
   inner: {
     flex: 1,
+    paddingTop: TOP_SPACE,
+    backgroundColor: 'white'
+  },
+  header: {
     position: 'relative',
-    paddingTop: topSpace,
-    backgroundColor: '#ededed'
-    // alignItems: 'center'
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: APPBAR_HEIGHT,
+    backgroundColor: 'white',
+    borderBottomColor: 'gray',
+    borderBottomWidth: hairlineWidth,
+    zIndex: 500
   },
   closeWrapper: {
     position: 'absolute',
-    top: topSpace + 12,
+    top: 12,
     right: 12
+  },
+  titleText: {
+    fontSize: 17,
+    fontWeight: '600'
   }
 })
 

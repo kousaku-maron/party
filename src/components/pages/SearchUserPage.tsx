@@ -23,7 +23,7 @@ const SearchUserPage = (props: Props) => {
   )
 
   return (
-    <FullScreenModal isVisible={props.isVisible} onClose={props.onClose}>
+    <FullScreenModal title="Nomoca" isVisible={props.isVisible} onClose={props.onClose}>
       <View style={styles.container}>
         <View style={styles.headWrapper}>
           <Text>友達のIDを検索してください。</Text>
