@@ -1,0 +1,1 @@
+export const ANDROID_STATUS_BAR_HEIGHT = 25

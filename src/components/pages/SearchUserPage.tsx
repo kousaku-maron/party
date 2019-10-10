@@ -1,8 +1,6 @@
 import React, { useState, useCallback } from 'react'
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
-import { isIPhoneX, isIPhoneXAbove, X_ABOVE_HEADER_NOTCH_HEIGHT } from '../../services/design'
-import Modal from 'react-native-modal'
-import { AntDesign } from '@expo/vector-icons'
+import { View, Text, StyleSheet } from 'react-native'
+import { FullScreenModal } from '../templates'
 import { TextInput } from '../atoms'
 
 type Props = {
@@ -25,38 +23,21 @@ const SearchUserPage = (props: Props) => {
   )
 
   return (
-    <Modal isVisible={props.isVisible} style={styles.modal}>
-      <View style={styles.inner}>
-        <TouchableOpacity style={styles.closeWrapper} onPress={props.onClose}>
-          <AntDesign name="close" size={24} />
-        </TouchableOpacity>
+    <FullScreenModal isVisible={props.isVisible} onClose={props.onClose}>
+      <View style={styles.container}>
         <View style={styles.headWrapper}>
           <Text>友達のIDを検索してください。</Text>
           <TextInput value={value} onChangeText={onChangeText} fullWidth={true} />
         </View>
       </View>
-    </Modal>
+    </FullScreenModal>
   )
 }
 
-const topSpace = isIPhoneX() || isIPhoneXAbove() ? X_ABOVE_HEADER_NOTCH_HEIGHT : 0
-// const hairlineWidth = StyleSheet.hairlineWidth
-
 const styles = StyleSheet.create({
-  modal: {
-    margin: 0
-  },
-  inner: {
+  container: {
     flex: 1,
-    position: 'relative',
-    paddingTop: topSpace,
-    backgroundColor: '#ededed',
     alignItems: 'center'
-  },
-  closeWrapper: {
-    position: 'absolute',
-    top: topSpace + 12,
-    right: 12
   },
   headWrapper: {
     paddingTop: 48,
