@@ -3,7 +3,7 @@ import firebase from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 
 const db = firebase.firestore()
-const partiesRef = db.collection('parties')
+const partiesRef = db.collection('parties').orderBy('date')
 
 export const useParties = () => {
   const [parties, setParties] = useState<Party[]>()

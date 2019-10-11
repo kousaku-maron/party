@@ -2,7 +2,7 @@ import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
 import { UserScreen, UserEditScreen } from '../containers'
-import { HomeScreen, PostScreen, PartyDetailScreen } from '../screens'
+import { HomeScreen, PostScreen, PartyDetailScreen, PartyAppliedScreen } from '../screens'
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons'
 
 type IconProps = {
@@ -34,7 +34,8 @@ const UserIcon = ({ tintColor, focused }: IconProps) => {
 const HomeNavigator = createStackNavigator(
   {
     Main: HomeScreen,
-    PartyDetail: PartyDetailScreen
+    PartyDetail: PartyDetailScreen,
+    PartyApplied: PartyAppliedScreen
   },
   {
     initialRouteName: 'Main'

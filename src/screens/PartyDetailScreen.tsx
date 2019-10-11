@@ -1,10 +1,17 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import { NavigationStackProp } from 'react-navigation-stack'
+type OwnProps = {
+  navigation: NavigationStackProp
+}
+type Props = OwnProps
 
-const PartyDetailScreen = () => {
+const PartyDetailScreen = (props: Props) => {
+  const { navigation } = props
   return (
     <View style={styles.container}>
       <Text>party detail screen</Text>
+      <Text>{navigation.state.params.uid}</Text>
     </View>
   )
 }
