@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { User } from '../../entities'
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
 import { Thumbnail, RoundedButton } from '../atoms'
@@ -23,9 +23,18 @@ const UserListItem = ({ user, actionButton, disabled = false, onPress }: Props) 
     return React.cloneElement(actionButton)
   }, [actionButton])
 
+  const _onPress = useCallback(
+    (user: User) => {
+      if (onPress) {
+        onPress(user)
+      }
+    },
+    [onPress]
+  )
+
   /* TODO:　Userにid実装後、uidをidに変更 */
   return (
-    <TouchableOpacity style={styles.container} disabled={disabled} onPress={() => onPress(user)}>
+    <TouchableOpacity style={styles.container} disabled={disabled} onPress={() => _onPress(user)}>
       <View style={styles.head}>
         <View style={styles.thumbnailWrapper}>
           <Thumbnail size={48} uri={user.thumbnailURL} />
