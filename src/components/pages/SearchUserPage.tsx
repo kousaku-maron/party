@@ -1,7 +1,10 @@
 import React, { useState, useRef, useCallback } from 'react'
+import { User } from '../../entities'
 import { View, ScrollView, TouchableOpacity, Animated, StyleSheet } from 'react-native'
-import { FullScreenModal } from '../templates'
+import { useSearchUsers } from '../../services/user'
 import { TextBox } from '../atoms'
+import { UserListItem } from '../organisms'
+import { FullScreenModal } from '../templates'
 
 type Props = {
   isVisible: boolean
@@ -34,6 +37,7 @@ const useSearchButton = () => {
 const SearchUserPage = (props: Props) => {
   const [value, setValue] = useState<string>('')
   const searchButtonTools = useSearchButton()
+  const { users, search } = useSearchUsers()
 
   const onChangeText = useCallback(
     (text: string) => {
@@ -46,10 +50,11 @@ const SearchUserPage = (props: Props) => {
   )
 
   const onSubmitEditing = useCallback(() => {
+    search(value)
     if (props.onSubmitUserID) {
       props.onSubmitUserID(value)
     }
-  }, [props, value])
+  }, [props, search, value])
 
   return (
     <FullScreenModal title="Nomoca" isVisible={props.isVisible} onClose={props.onClose}>
@@ -79,7 +84,11 @@ const SearchUserPage = (props: Props) => {
             </Animated.Text>
           </TouchableOpacity>
         </View>
-        <ScrollView></ScrollView>
+        <ScrollView>
+          {users.map((user: User) => (
+            <UserListItem key={user.uid} user={user} />
+          ))}
+        </ScrollView>
       </View>
     </FullScreenModal>
   )
