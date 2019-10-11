@@ -73,6 +73,7 @@ const SearchUserPage = (props: Props) => {
                 styles.buttonText,
                 { width: searchButtonTools.buttonWidth, paddingLeft: searchButtonTools.buttonPaddingLeft }
               ]}
+              numberOfLines={1}
             >
               検索
             </Animated.Text>
