@@ -27,6 +27,27 @@ export const useUser = (uid: string) => {
   return user
 }
 
+export const useSearchUsers = () => {
+  const [users, setUsers] = useState<User[]>([])
+
+  const search = useCallback(async (text: string) => {
+    const snapshot = await usersRef
+      .orderBy('name') // 名前検索になっているので、Userにid追加し変更。
+      .startAt(text)
+      .endAt(`${text}\uf8ff`)
+      .get()
+
+    const users = snapshot.docs.map(doc => {
+      const user = buildUser(doc.data())
+      return user
+    })
+
+    setUsers(users)
+  }, [])
+
+  return { users, search }
+}
+
 export const useUserEditTools = (uid: string) => {
   const [user, setUser] = useState<User | null>(null)
   const [fetched, setFetched] = useState<boolean>(false)
