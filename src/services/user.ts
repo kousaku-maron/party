@@ -1,7 +1,9 @@
 import { useEffect, useState, useCallback } from 'react'
+import { getSize } from '../services/image'
 import firebase from '../repositories/firebase'
 import { getUser } from '../repositories/user'
 import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator'
 import * as Permissions from 'expo-permissions'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
 import { buildUser, User } from '../entities'
@@ -49,6 +51,7 @@ export const useSearchUsers = () => {
 }
 
 export const useUserEditTools = (uid: string) => {
+  const MAX_THUMBNAIL_WIDTH = 1080
   const [user, setUser] = useState<User | null>(null)
   const [fetched, setFetched] = useState<boolean>(false)
 
@@ -92,18 +95,35 @@ export const useUserEditTools = (uid: string) => {
       return
     }
 
-    // TODO: 画像を圧縮する(横1080px)
-    const result = await ImagePicker.launchImageLibraryAsync({
+    const pickResult = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [1, 1]
     })
 
-    if (result.cancelled) {
+    if (pickResult.cancelled) {
       return
     }
 
-    const { uri } = (result as unknown) as ImagePicker.ImagePickerResult & ImageInfo // uriを読み込もうとすると型エラーが起きるので型再定義
-    setThumbnailURL(uri)
+    const { uri } = (pickResult as unknown) as ImagePicker.ImagePickerResult & ImageInfo // uriを読み込もうとすると型エラーが起きるので型再定義
+
+    const { width, height, error } = await getSize(uri)
+
+    if (error) {
+      return
+    }
+
+    if (width <= MAX_THUMBNAIL_WIDTH) {
+      setThumbnailURL(uri)
+      return
+    }
+
+    const resizeResult = await ImageManipulator.manipulateAsync(uri, [{ resize: { width, height } }], {
+      base64: true,
+      compress: 1,
+      format: ImageManipulator.SaveFormat.PNG
+    })
+
+    setThumbnailURL(resizeResult.uri)
   }, [])
 
   return { name, thumbnailURL, onChangeName, onChangeThumbnailURL, fetched }
