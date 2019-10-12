@@ -123,7 +123,7 @@ export const useUserEditTools = (uid: string) => {
       uri,
       [{ resize: { width: resizeWidth, height: resizeHeight } }],
       {
-        base64: true,
+        base64: false,
         compress: 1,
         format: ImageManipulator.SaveFormat.PNG
       }
