@@ -1,29 +1,42 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import { Text, StyleSheet, Dimensions, ScrollView, Image, Button, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
-import { useParties } from '../services/party'
+import { useParties, formatedDate, applyParty } from '../services/party'
 import { LoadingPage } from '../components/pages'
-import ApplyModal from '../components/atoms/ApplyModal'
+import ApplyModal from '../components/organisms/ApplyModal'
+import { HomeScreenState } from '../containers/HomeScreen'
 
 type OwnProps = {
   navigation: NavigationStackProp
 }
+type Props = OwnProps & HomeScreenState
 
-type Props = OwnProps
 const HomeScreen = (props: Props) => {
   const { navigation } = props
+  const uid = '6ULPQIhKjVhziUM5B7ETSi1HRL82'
   const parties = useParties()
+  const [isModal, setIsModal] = useState<boolean>(false)
+  const onOpen = useCallback(() => {
+    setIsModal(true)
+  }, [])
+  const onClose = useCallback(() => {
+    setIsModal(false)
+  }, [])
+  const onApply = useCallback((uid, pid) => {
+    applyParty(uid, pid)
+    setIsModal(false)
+  }, [])
 
   const FetchPartiesThumbnail = parties => {
     const thumbnailURLs = parties.map((party, index) => {
       const uri = party.thumbnailURL
-      const uid = party.uid
+      const pid = party.uid
       const fetcDate = party.date.toDate()
-      const date = `${fetcDate.getFullYear()}年${fetcDate.getMonth() +
-        1}月${fetcDate.getDay()}日${fetcDate.getHours()}:${('0' + fetcDate.getMinutes()).slice(-2)}`
+      const date = formatedDate(fetcDate)
+      console.log(pid)
 
       return (
-        <View key={index} style={{ width: width, height: 200, flexDirection: 'row', margin: 24 }}>
+        <View key={index} style={styles.container}>
           <Image style={styles.image} source={{ uri }} />
           <View style={styles.description}>
             <View style={styles.descriptionTextPosition}>
@@ -33,10 +46,21 @@ const HomeScreen = (props: Props) => {
               </View>
               <View style={styles.buttonsContainer}>
                 <View style={styles.buttonContainer}>
-                  <Button title="詳細" color="#FF9999" onPress={() => navigation.navigate('PartyDetail', { uid })} />
+                  <Button title="詳細" color="#FF9999" onPress={() => navigation.navigate('PartyDetail', { pid })} />
                 </View>
                 <View style={styles.buttonContainer}>
-                  <ApplyModal navigation={navigation} title="申請" />
+                  <ApplyModal
+                    isModal={isModal}
+                    navigation={navigation}
+                    onOpen={onOpen}
+                    onClose={onClose}
+                    onApply={() => {
+                      onApply(party.uid, uid)
+                    }}
+                    title={'参加'}
+                    uid={uid}
+                    pid={party.uid}
+                  />
                 </View>
               </View>
             </View>
@@ -60,14 +84,13 @@ HomeScreen.navigationOptions = () => ({
 const { width } = Dimensions.get('window')
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    width: width,
+    height: 200,
+    flexDirection: 'row',
+    margin: 24
   },
   image: {
-    width: 300,
+    width: width,
     height: 200,
     position: 'absolute'
   },
