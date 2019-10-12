@@ -117,11 +117,17 @@ export const useUserEditTools = (uid: string) => {
       return
     }
 
-    const resizeResult = await ImageManipulator.manipulateAsync(uri, [{ resize: { width, height } }], {
-      base64: true,
-      compress: 1,
-      format: ImageManipulator.SaveFormat.PNG
-    })
+    const resizeWidth = MAX_THUMBNAIL_WIDTH
+    const resizeHeight = (height * resizeWidth) / MAX_THUMBNAIL_WIDTH
+    const resizeResult = await ImageManipulator.manipulateAsync(
+      uri,
+      [{ resize: { width: resizeWidth, height: resizeHeight } }],
+      {
+        base64: true,
+        compress: 1,
+        format: ImageManipulator.SaveFormat.PNG
+      }
+    )
 
     setThumbnailURL(resizeResult.uri)
   }, [])
