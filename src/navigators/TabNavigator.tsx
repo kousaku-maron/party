@@ -1,8 +1,8 @@
 import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
-import { UserScreen, UserEditScreen } from '../containers'
-import { HomeScreen, PostScreen, PartyDetailScreen } from '../screens'
+import { UserScreen, HomeScreen, UserEditScreen } from '../containers'
+import { PostScreen, PartyDetailScreen } from '../screens'
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons'
 
 type IconProps = {
