@@ -21,7 +21,15 @@ const RoundedButton: React.FC<Props> = ({
 }) => {
   return (
     <TouchableOpacity
-      style={[styles.container, { backgroundColor: color, width: fullWidth ? '100%' : width, height }]}
+      style={[
+        styles.container,
+        {
+          backgroundColor: color,
+          width: fullWidth ? '100%' : width,
+          height,
+          borderRadius: height ? height / 2 : 25
+        }
+      ]}
       disabled={disabled}
       onPress={onPress}
     >
@@ -36,8 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    padding: 12,
-    borderRadius: 25
+    padding: 12
   }
 })
 

@@ -6,7 +6,8 @@ const TermsScreen = () => {
 }
 
 TermsScreen.navigationOptions = () => ({
-  headerTitle: '利用規約'
+  headerTitle: '利用規約',
+  headerBackTitle: null
 })
 
 export default TermsScreen
