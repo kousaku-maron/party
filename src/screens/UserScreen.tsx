@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
+import { colors } from '../themes'
 import { useUser } from '../services/user'
 import { useCertificate } from '../services/secure'
 import { useModal } from '../services/modal'
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
-import { RoundedButton, Fab, Thumbnail } from '../components/atoms'
+import { RoundedButton, Thumbnail } from '../components/atoms'
 import { UploadCertificateModal } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 
@@ -52,52 +53,59 @@ const UserScreen = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.editFab}>
-        <Fab color="#3498db" onPress={goToEdit}>
-          <AntDesign color="white" name="edit" size={24} />
-        </Fab>
-      </View>
-
-      <View style={styles.thumbnailWrapper}>
-        <Thumbnail uri={user.thumbnailURL} size={200} />
-      </View>
-
-      <View style={styles.nameWrapper}>
-        <Text style={styles.nameText}>{user.name}</Text>
-      </View>
-
-      {user.isAccepted && (
-        <View style={styles.isAcceptedWrapper}>
-          <Text style={styles.acceptCaptionText}>本人確認済み</Text>
+      <View style={styles.profileContainer}>
+        <View style={styles.thumbnailWrapper}>
+          <Thumbnail uri={user.thumbnailURL} size={150} />
         </View>
-      )}
 
-      {!user.isAccepted && (
-        <View style={styles.isNotacceptedWrapper}>
-          <RoundedButton fullWidth={true} onPress={_pickCertificateImage}>
-            <Text style={styles.acceptText}>身分証をアップロードする</Text>
-          </RoundedButton>
+        <View style={styles.nameWrapper}>
+          <Text style={styles.nameText}>{user.name}</Text>
         </View>
-      )}
 
-      {!user.isAccepted && (
-        <View style={styles.acceptCaptionWrapper}>
-          <Text style={styles.acceptCaptionText}>
-            ※年齢確認のため、運転免許証もしくはパスポートをアップロードして下さい。
-          </Text>
+        {/* TODO: ID実装後、IDに変更 */}
+        <View style={styles.idWrapper}>
+          <Text style={styles.idText}>@{user.uid}</Text>
         </View>
-      )}
+
+        {user.isAccepted && (
+          <View style={styles.isAcceptedWrapper}>
+            <Text style={styles.acceptCaptionText}>本人確認済み</Text>
+          </View>
+        )}
+
+        {!user.isAccepted && (
+          <View style={styles.isNotacceptedWrapper}>
+            <RoundedButton color={colors.primary.main} fullWidth={true} onPress={_pickCertificateImage}>
+              <Text style={styles.acceptText}>身分証をアップロードする</Text>
+            </RoundedButton>
+          </View>
+        )}
+
+        {!user.isAccepted && (
+          <View style={styles.acceptCaptionWrapper}>
+            <Text style={styles.acceptCaptionText}>
+              ※年齢確認のため、運転免許証もしくはパスポートをアップロードして下さい。
+            </Text>
+          </View>
+        )}
+      </View>
 
       {!user.isAccepted && currentCertificateURL && (
-        <View style={styles.certificateWrapper}>
-          <Image style={styles.certificate} resizeMode="contain" source={{ uri: currentCertificateURL }} />
-          <Text style={styles.acceptCaptionText}>※提出済み</Text>
+        <View style={styles.cardWrapper}>
+          <View style={styles.card}>
+            <Image style={styles.certificate} resizeMode="contain" source={{ uri: currentCertificateURL }} />
+            <Text style={styles.acceptCaptionText}>※提出済み</Text>
+          </View>
         </View>
       )}
 
-      <RoundedButton onPress={_signOut}>
-        <Text>サインアウト</Text>
-      </RoundedButton>
+      <Text style={styles.signoutText} onPress={_signOut}>
+        サインアウト
+      </Text>
+
+      <TouchableOpacity style={styles.editFab} onPress={goToEdit}>
+        <AntDesign color="gray" name="edit" size={24} />
+      </TouchableOpacity>
 
       <UploadCertificateModal
         isVisible={modalTools.isVisible}
@@ -114,26 +122,36 @@ UserScreen.navigationOptions = () => ({
   headerBackTitle: null
 })
 
+// const hairlineWidth = StyleSheet.hairlineWidth
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
     display: 'flex',
     alignItems: 'center',
-    position: 'relative'
+    position: 'relative',
+    backgroundColor: colors.inherit
   },
   editFab: {
     position: 'absolute',
-    right: 24,
+    right: 26,
     bottom: 24
   },
+  profileContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 400
+  },
   thumbnailWrapper: {
-    paddingVertical: 24
+    paddingBottom: 12
   },
   nameWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    paddingBottom: 3
+  },
+  idWrapper: {
     paddingBottom: 24
   },
   isAcceptedWrapper: {
@@ -143,29 +161,52 @@ const styles = StyleSheet.create({
   },
   isNotacceptedWrapper: {
     width: 250,
-    paddingBottom: 8
+    paddingBottom: 3
   },
   acceptCaptionWrapper: {
-    width: 250,
+    width: 250
+  },
+  cardWrapper: {
     paddingBottom: 24
   },
-  certificateWrapper: {
-    paddingBottom: 24
+  card: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '80%',
+    padding: 24,
+    borderRadius: Platform.OS === 'ios' ? 16 : 3,
+    backgroundColor: 'white',
+    shadowColor: '#cccccc',
+    shadowOffset: {
+      width: 0,
+      height: 5
+    },
+    shadowOpacity: 1,
+    shadowRadius: 15,
+    elevation: 2
   },
   certificate: {
     width: 200,
     height: 200
   },
   nameText: {
-    fontSize: 24
+    fontSize: 18
+  },
+  idText: {
+    fontSize: 12,
+    color: 'gray'
   },
   acceptText: {
-    width: '100%',
-    textAlign: 'center',
-    fontSize: 14
+    fontSize: 14,
+    color: 'white'
   },
   acceptCaptionText: {
     fontSize: 12
+    // color: 'gray'
+  },
+  signoutText: {
+    color: colors.system.blue
   }
 })
 
