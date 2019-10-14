@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import Modal from 'react-native-modal'
+import { colors } from '../../themes'
 
 type Props = {
   isVisible: boolean
@@ -93,8 +94,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'bold',
-    fontSize: 18
-    // color: '#3f51b5'
+    fontSize: 18,
+    color: colors.primary.main
   }
 })
 
