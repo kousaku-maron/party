@@ -7,6 +7,7 @@ type Props = {
   title?: string
   uid: string
   pid: string
+  buttonColor: string
   isModal: boolean
   navigation: NavigationStackProp
   onApply: (uid: string, pid: string) => void
@@ -14,10 +15,10 @@ type Props = {
   onClose: () => void
 }
 
-const APplyModal: React.FC<Props> = props => {
+const ApplyModal: React.FC<Props> = props => {
   return (
     <View style={{ flex: 1 }}>
-      <Button title={String(props.title)} color="#FF9999" onPress={props.onOpen} />
+      <Button title={String(props.title)} color={props.buttonColor} onPress={props.onOpen} />
       <Modal isVisible={props.isModal}>
         <View style={styles.inner}>
           <View style={styles.messageArea}>
@@ -118,4 +119,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default APplyModal
+export default ApplyModal

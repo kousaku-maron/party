@@ -18,7 +18,7 @@ export const useParties = () => {
         .get()
         .then(snapshot => {
           snapshot.forEach(partyRef => {
-            const party = buildParty(partyRef.data())
+            const party = buildParty(partyRef.id, partyRef.data())
             parties.push(party)
           })
           setParties(parties)
@@ -37,7 +37,7 @@ export const useParty = (pid: string) => {
     if (!pid) return
     const partyRef = partiesRef.doc(pid)
     const unsubscribe = partyRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
-      const party = buildParty(doc.data())
+      const party = buildParty(partyRef.id, doc.data())
       setParty(party)
     })
     return () => {
