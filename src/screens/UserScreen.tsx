@@ -55,7 +55,7 @@ const UserScreen = (props: Props) => {
     <View style={styles.container}>
       <View style={styles.profileContainer}>
         <View style={styles.thumbnailWrapper}>
-          <Thumbnail uri={user.thumbnailURL} size={100} />
+          <Thumbnail uri={user.thumbnailURL} size={150} />
         </View>
 
         <View style={styles.nameWrapper}>
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 300
+    height: 400
   },
   thumbnailWrapper: {
     paddingBottom: 12
