@@ -8,6 +8,7 @@ type Props = {
   width?: number
   height?: number
   onPress?: (event: GestureResponderEvent) => void
+  padding?: number
 }
 
 const RoundedButton: React.FC<Props> = ({
@@ -17,7 +18,8 @@ const RoundedButton: React.FC<Props> = ({
   width,
   height,
   onPress,
-  children
+  children,
+  padding = 12
 }) => {
   return (
     <TouchableOpacity
@@ -27,7 +29,8 @@ const RoundedButton: React.FC<Props> = ({
           backgroundColor: color,
           width: fullWidth ? '100%' : width,
           height,
-          borderRadius: height ? height / 2 : 25
+          borderRadius: height ? height / 2 : 25,
+          padding: padding
         }
       ]}
       disabled={disabled}
@@ -43,8 +46,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'row',
-    padding: 12
+    flexDirection: 'row'
   }
 })
 

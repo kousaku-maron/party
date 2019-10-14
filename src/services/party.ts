@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import firebase from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
-import moment from 'moment'
 import { getUser } from '../repositories/user'
 
 const db = firebase.firestore()
@@ -11,22 +10,16 @@ export const useParties = () => {
   const [parties, setParties] = useState<Party[]>()
 
   useEffect(() => {
-    const parties = []
     const fetchData = async () => {
-      await partiesRef
-        .orderBy('date')
-        .get()
-        .then(snapshot => {
-          snapshot.forEach(partyRef => {
-            const party = buildParty(partyRef.id, partyRef.data())
-            parties.push(party)
-          })
-          setParties(parties)
-        })
+      const snapShot = await partiesRef.orderBy('date').get()
+      const parties = snapShot.docs.map(doc => {
+        const party = buildParty(doc.id, doc.data())
+        return party
+      })
+      setParties(parties)
     }
     fetchData()
   }, [])
-
   return parties
 }
 
@@ -48,25 +41,18 @@ export const useParty = (pid: string) => {
   return party
 }
 
-export const applyParty = async (pid: string, uid: string) => {
+export const applyParty = async (uid: string, partyId: string) => {
   const user = await getUser(uid)
-  if (!uid || !pid) return
-  const partyRef = partiesRef
-    .doc('4Q0SSM6SVWRc50VUgBRh')
-    .collection('joinUsers')
-    .doc('ofReLZxSY9jG3cjud8Xh')
-    .collection('applicant')
-
-  partyRef.add({
+  if (!uid || !partyId) return
+  const partyRef = partiesRef.doc(partyId)
+  const groupsRef = partyRef.collection('groups')
+  groupsRef.add({
     enabled: user.enabled,
     isAccepred: user.isAccepted,
     role: 'organizer',
     name: user.name,
     thumbnailURL: user.thumbnailURL,
     uid: user.uid,
-    ppid: String(pid) + 'a'
+    sex: user.sex
   })
-}
-export const formatedDate = fetchDate => {
-  return String(moment(fetchDate).format('YYYY年MM月DD日HH:MM'))
 }

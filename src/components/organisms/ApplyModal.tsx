@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   modalContent: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#ededed',
     padding: 22,
     justifyContent: 'center',
     alignItems: 'center',
