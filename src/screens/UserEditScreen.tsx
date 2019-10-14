@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UpdateUser } from '../entities'
 import { UserEditScreenState } from '../containers/UserEditScreen'
+import { colors } from '../themes'
 import * as UserRepository from '../repositories/user'
 import { useUserEditTools } from '../services/user'
 import { View, StyleSheet } from 'react-native'
@@ -36,7 +37,7 @@ const UserEditScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.editFab}>
-        <Fab color="#3498db" onPress={updateUserState}>
+        <Fab color={colors.primary.main} onPress={updateUserState}>
           <MaterialIcons color="white" name="done" size={24} />
         </Fab>
       </View>
@@ -65,11 +66,12 @@ const styles = StyleSheet.create({
     height: '100%',
     display: 'flex',
     alignItems: 'center',
-    position: 'relative'
+    position: 'relative',
+    backgroundColor: colors.inherit
   },
   editFab: {
     position: 'absolute',
-    right: 24,
+    right: 26,
     bottom: 24
   },
   thumbnailWrapper: {
