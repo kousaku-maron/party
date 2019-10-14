@@ -9,6 +9,7 @@ type Props = {
   height?: number
   onPress?: (event: GestureResponderEvent) => void
   padding?: number
+  margin?: number
 }
 
 const RoundedButton: React.FC<Props> = ({
@@ -19,7 +20,8 @@ const RoundedButton: React.FC<Props> = ({
   height,
   onPress,
   children,
-  padding = 12
+  padding = 12,
+  margin = 0
 }) => {
   return (
     <TouchableOpacity
@@ -30,7 +32,8 @@ const RoundedButton: React.FC<Props> = ({
           width: fullWidth ? '100%' : width,
           height,
           borderRadius: height ? height / 2 : 25,
-          padding: padding
+          padding: padding,
+          margin: margin
         }
       ]}
       disabled={disabled}

@@ -1,10 +1,9 @@
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 import { Text, StyleSheet, Dimensions, ScrollView, Image, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
-import { useParties, applyParty } from '../services/party'
+import { useParties } from '../services/party'
 import { formatedDate } from '../services/formatedDate'
 import { LoadingPage } from '../components/pages'
-import ApplyModal from '../components/organisms/ApplyModal'
 import RoundedButton from '../components/atoms/RoundedButton'
 import { HomeScreenState } from '../containers/HomeScreen'
 import { colors } from '../themes'
@@ -18,17 +17,6 @@ const HomeScreen = (props: Props) => {
   const { navigation, auth } = props
   const { uid } = auth
   const parties = useParties()
-  const [isModal, setIsModal] = useState<boolean>(false)
-  const onOpen = useCallback(() => {
-    setIsModal(true)
-  }, [])
-  const onClose = useCallback(() => {
-    setIsModal(false)
-  }, [])
-  const onApply = useCallback((uid, partyId) => {
-    applyParty(uid, partyId)
-    setIsModal(false)
-  }, [])
 
   const FetchPartiesThumbnail = parties => {
     const thumbnailURLs = parties.map((party, index) => {
@@ -48,33 +36,28 @@ const HomeScreen = (props: Props) => {
               <Text style={styles.date}>{date}</Text>
             </View>
             <View style={styles.buttonContainer}>
-              <View style={styles.button}>
-                <RoundedButton
-                  color={'#FFFFFF'}
-                  fullWidth={true}
-                  width={70}
-                  height={34}
-                  padding={6}
-                  onPress={() => navigation.navigate('PartyDetail', { partyId })}
-                >
-                  <Text style={styles.buttonText}>詳細</Text>
-                </RoundedButton>
-              </View>
-              <View style={styles.button}>
-                <ApplyModal
-                  isModal={isModal}
-                  navigation={navigation}
-                  onOpen={onOpen}
-                  onClose={onClose}
-                  onApply={() => {
-                    onApply(uid, partyId)
-                  }}
-                  title={'参加'}
-                  uid={uid}
-                  pid={partyId}
-                  buttonColor={colors.primary.dark}
-                />
-              </View>
+              <RoundedButton
+                color={'#FFFFFF'}
+                fullWidth={false}
+                width={70}
+                height={30}
+                padding={6}
+                margin={3}
+                onPress={() => navigation.navigate('PartyDetail', { partyId })}
+              >
+                <Text style={styles.buttonText}>詳細</Text>
+              </RoundedButton>
+              <RoundedButton
+                color={'#FFFFFF'}
+                fullWidth={false}
+                width={70}
+                height={30}
+                padding={6}
+                margin={3}
+                onPress={() => onApply(uid, partyId)}
+              >
+                <Text style={styles.buttonText}>参加</Text>
+              </RoundedButton>
             </View>
           </View>
         </View>
@@ -134,6 +117,13 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'column'
+  },
+  button: {
+    height: 30,
+    width: 70,
+    backgroundColor: '#FFFFFF',
+    margin: 3,
+    borderRadius: 40
   },
   buttonText: {
     fontSize: 18,
