@@ -22,7 +22,7 @@ const UploadCertificateModal = (props: Props) => {
           </View>
 
           <View style={styles.imageWrapper}>
-            <Image style={styles.image} source={{ uri: props.url }} />
+            <Image style={styles.image} resizeMode="contain" source={{ uri: props.url }} />
           </View>
 
           <View style={styles.actionArea}>

@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
 import { useUser } from '../services/user'
 import { useCertificate } from '../services/secure'
+import { useModal } from '../services/modal'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton, Fab, Thumbnail } from '../components/atoms'
@@ -20,30 +21,20 @@ const UserScreen = (props: Props) => {
   const { uid } = auth
 
   const user = useUser(uid)
-
-  const [isVisible, setIsVisible] = useState<boolean>(false)
-
-  const onOpen = useCallback(() => {
-    setIsVisible(true)
-  }, [])
-
-  const onClose = useCallback(() => {
-    setIsVisible(false)
-  }, [])
-
+  const modalTools = useModal()
   const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificate(uid)
 
   const _pickCertificateImage = useCallback(async () => {
     const { cancelled, uri } = await onChangeUpdateCertificateURL()
     if (!cancelled && uri) {
-      onOpen()
+      modalTools.onOpen()
     }
-  }, [onChangeUpdateCertificateURL, onOpen])
+  }, [modalTools, onChangeUpdateCertificateURL])
 
   const onUpload = useCallback(() => {
     upload()
-    onClose()
-  }, [onClose, upload])
+    modalTools.onClose()
+  }, [modalTools, upload])
 
   const _signOut = useCallback(async () => {
     signOut({
@@ -108,7 +99,12 @@ const UserScreen = (props: Props) => {
         <Text>サインアウト</Text>
       </RoundedButton>
 
-      <UploadCertificateModal isVisible={isVisible} url={uploadCertificateURL} onClose={onClose} onUpload={onUpload} />
+      <UploadCertificateModal
+        isVisible={modalTools.isVisible}
+        url={uploadCertificateURL}
+        onClose={modalTools.onClose}
+        onUpload={onUpload}
+      />
     </View>
   )
 }
