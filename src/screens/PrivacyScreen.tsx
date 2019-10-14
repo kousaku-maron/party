@@ -6,7 +6,8 @@ const PrivacyScreen = () => {
 }
 
 PrivacyScreen.navigationOptions = () => ({
-  headerTitle: 'プライバシーポリシー'
+  headerTitle: 'プライバシーポリシー',
+  headerBackTitle: null
 })
 
 export default PrivacyScreen
