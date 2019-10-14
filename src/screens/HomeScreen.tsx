@@ -105,8 +105,9 @@ const styles = StyleSheet.create({
   },
   name: {
     color: 'white',
-    fontSize: 20,
-    padding: 6
+    fontSize: 25,
+    padding: 6,
+    fontWeight: 'bold'
   },
   date: {
     color: 'white',
@@ -129,10 +130,10 @@ const styles = StyleSheet.create({
   },
   Button: {
     height: 30,
-    width: 80,
+    width: 70,
     backgroundColor: '#FFFFFF',
     margin: 3,
-    borderRadius: 10
+    borderRadius: 40
   }
 })
 
