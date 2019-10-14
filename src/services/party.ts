@@ -43,6 +43,7 @@ export const useParty = (pid: string) => {
 
 export const applyParty = async (uid: string, partyId: string) => {
   const user = await getUser(uid)
+  console.log(uid, partyId)
   if (!uid || !partyId) return
   const partyRef = partiesRef.doc(partyId)
   const groupsRef = partyRef.collection('groups')
@@ -53,6 +54,6 @@ export const applyParty = async (uid: string, partyId: string) => {
     name: user.name,
     thumbnailURL: user.thumbnailURL,
     uid: user.uid,
-    sex: user.sex
+    sex: user.gender
   })
 }
