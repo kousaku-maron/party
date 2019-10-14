@@ -8,5 +8,9 @@ export const colors = {
     main: '#ff7043',
     light: '#ffa270',
     dark: '#c63f17'
+  },
+  inherit: '#f5f5f5', // Base背景
+  system: {
+    blue: 'rgb(0, 122, 255)'
   }
 }
