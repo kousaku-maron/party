@@ -1,5 +1,5 @@
 import firebase from './firebase'
-import { buildUser, User } from '../entities'
+import { buildUser, UpdateUser } from '../entities'
 
 const db = firebase.firestore()
 const storage = firebase.storage()
@@ -40,7 +40,7 @@ export const getUser = async (uid: string) => {
 }
 
 // MEMO: storage保存を async - await で書き換え可能なら、書き換えたい。
-export const setUser = async (uid: string, user: User) => {
+export const setUser = async (uid: string, user: UpdateUser) => {
   try {
     const { thumbnailURL } = await setThumbnail(uid, user.thumbnailURL)
 
