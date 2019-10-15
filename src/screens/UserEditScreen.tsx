@@ -20,7 +20,9 @@ const UserEditScreen = (props: Props) => {
   const { navigation, auth } = props
   const { uid } = auth
 
-  const { name, thumbnailURL, onChangeName, onChangeThumbnailURL, fetched } = useUserEditTools(uid)
+  const { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched } = useUserEditTools(
+    uid
+  )
 
   const updateUserState = useCallback(async () => {
     const updateUser: UpdateUser = { uid, name, thumbnailURL }
@@ -49,6 +51,10 @@ const UserEditScreen = (props: Props) => {
       <View>
         <View style={styles.nameWrapper}>
           <TextInput value={name} onChangeText={onChangeName}></TextInput>
+        </View>
+
+        <View style={styles.userIDWrapper}>
+          <TextInput value={userID} onChangeText={onChangeUserID}></TextInput>
         </View>
       </View>
     </View>
@@ -83,7 +89,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 12
   },
+  userIDWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 12
+  },
   nameText: {
+    fontSize: 24
+  },
+  userIDText: {
     fontSize: 24
   }
 })

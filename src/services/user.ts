@@ -71,6 +71,13 @@ export const useUserEditTools = (uid: string) => {
     setName(user.name)
   }, [user])
 
+  const [userID, setUserID] = useState<string>('')
+
+  useEffect(() => {
+    if (!user) return
+    setUserID(user.userID)
+  }, [user])
+
   const [thumbnailURL, setThumbnailURL] = useState<string>('')
 
   useEffect(() => {
@@ -80,6 +87,10 @@ export const useUserEditTools = (uid: string) => {
 
   const onChangeName = useCallback((text: string) => {
     setName(text)
+  }, [])
+
+  const onChangeUserID = useCallback((text: string) => {
+    setUserID(text)
   }, [])
 
   const onChangeThumbnailURL = useCallback(async () => {
@@ -132,5 +143,5 @@ export const useUserEditTools = (uid: string) => {
     setThumbnailURL(resizeResult.uri)
   }, [])
 
-  return { name, thumbnailURL, onChangeName, onChangeThumbnailURL, fetched }
+  return { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched }
 }

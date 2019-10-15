@@ -1,8 +1,10 @@
 import firebase from './firebase'
 import { buildUser, UpdateUser } from '../entities'
+import console = require('console')
 
 const db = firebase.firestore()
 const storage = firebase.storage()
+const functions = firebase.functions()
 
 const storageRef = storage.ref('users')
 const usersRef = db.collection('users')
@@ -26,6 +28,16 @@ const setThumbnail = async (uid: string, url: string) => {
       console.warn(e)
       return { thumbnailURL: null }
     })
+}
+
+export const setUserID = async (uid: string, userID: string) => {
+  try {
+    await functions.httpsCallable('setUserID')({ uid, userID })
+    return { userID }
+  } catch (e) {
+    console.warn(e)
+    return { userID: null }
+  }
 }
 
 export const getUser = async (uid: string) => {
