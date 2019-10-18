@@ -86,7 +86,7 @@ const SearchUserPage = (props: Props) => {
         </View>
         <ScrollView>
           {users.map((user: User) => (
-            <UserListItem key={user.uid} user={user} />
+            <UserListItem key={user.userID} user={user} />
           ))}
         </ScrollView>
       </View>

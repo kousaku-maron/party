@@ -32,7 +32,6 @@ const UserListItem = ({ user, actionButton, disabled = false, onPress }: Props) 
     [onPress]
   )
 
-  /* TODO:　Userにid実装後、uidをidに変更 */
   return (
     <TouchableOpacity style={styles.container} disabled={disabled} onPress={() => _onPress(user)}>
       <View style={styles.head}>
@@ -41,7 +40,7 @@ const UserListItem = ({ user, actionButton, disabled = false, onPress }: Props) 
         </View>
         <View>
           <Text style={styles.nameText}>{user.name}</Text>
-          <Text style={styles.idText}>@{user.uid}</Text>
+          <Text style={styles.idText}>@{user.userID}</Text>
         </View>
       </View>
       <View style={styles.tail}>{ActionButton}</View>

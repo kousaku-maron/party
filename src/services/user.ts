@@ -34,7 +34,7 @@ export const useSearchUsers = () => {
 
   const search = useCallback(async (text: string) => {
     const snapshot = await usersRef
-      .orderBy('name') // 名前検索になっているので、Userにid追加し変更。
+      .orderBy('userID')
       .startAt(text)
       .endAt(`${text}\uf8ff`)
       .get()
