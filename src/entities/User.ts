@@ -2,7 +2,8 @@ export type User = {
   enabled: boolean
   isAccepted: boolean
   uid: string
-  name?: string
+  userID: string
+  name: string
   thumbnailURL?: string
 }
 
@@ -11,6 +12,7 @@ export const buildUser = (data: firebase.firestore.DocumentData) => {
     enabled: data.enabled,
     isAccepted: data.isAccepted,
     uid: data.uid,
+    userID: data.userID,
     name: data.name,
     thumbnailURL: data.thumbnailURL
   }

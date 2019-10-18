@@ -20,7 +20,7 @@ const useSearchButton = () => {
   const show = useCallback(() => {
     Animated.parallel([
       Animated.timing(buttonWidth, { toValue: 50, duration: 200 }),
-      Animated.timing(buttonPaddingLeft, { toValue: 8, duration: 200 })
+      Animated.timing(buttonPaddingLeft, { toValue: 12, duration: 200 })
     ]).start()
   }, [buttonPaddingLeft, buttonWidth])
 
@@ -86,7 +86,7 @@ const SearchUserPage = (props: Props) => {
         </View>
         <ScrollView>
           {users.map((user: User) => (
-            <UserListItem key={user.uid} user={user} />
+            <UserListItem key={user.userID} user={user} />
           ))}
         </ScrollView>
       </View>
