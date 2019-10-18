@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Image, GestureResponderEvent, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, Image, GestureResponderEvent, StyleSheet } from 'react-native'
 
 type Props = {
   uri?: string
@@ -9,6 +9,20 @@ type Props = {
 }
 
 const Thumbnail: React.FC<Props> = ({ uri, disabled = false, size = 24, onPress }) => {
+  if (!onPress) {
+    return (
+      <View style={[styles.container, { width: size, height: size, borderRadius: size / 2 }]}>
+        {uri && <Image source={{ uri }} style={{ width: size, height: size, borderRadius: size / 2 }} />}
+        {!uri && (
+          <Image
+            source={require('../../../assets/images/no_user.png')}
+            style={{ width: size, height: size, borderRadius: size / 2 }}
+          />
+        )}
+      </View>
+    )
+  }
+
   return (
     <TouchableOpacity
       style={[styles.container, { width: size, height: size, borderRadius: size / 2 }]}
