@@ -1,6 +1,7 @@
 import { Platform } from 'react-native'
-import FlatDesignCard from '../atoms/FlatDesignCard'
-import MaterialDesignCard from '../atoms/MaterialDesignCard'
+import FlatDesignCard from './FlatDesignCard'
+import MaterialDesignCard from './MaterialDesignCard'
+
 const Card = Platform.select({
   ios: FlatDesignCard,
   android: MaterialDesignCard,

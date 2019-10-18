@@ -1,15 +1,12 @@
 import React, { useState, useCallback } from 'react'
-import { Text, StyleSheet, Dimensions, ScrollView, View } from 'react-native'
+import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { useParties, applyParty } from '../services/party'
-import { formatedDate } from '../services/formatedDate'
 import { useModal } from '../services/modal'
 import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
 import { colors } from '../themes'
-import Modal from '../components/organisms/Modal'
-import Button from '../components/organisms/Button'
-import Card from '../components/organisms/Card'
+import { Modal, Card } from '../components/organisms'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -20,63 +17,42 @@ const HomeScreen = (props: Props) => {
   const { navigation, auth } = props
   const { uid } = auth
   const parties = useParties()
-  const [statePartyId, setStatePartyId] = useState<string>()
+  const [statepartyID, setStatepartyID] = useState<string>()
   const modalTools = useModal()
   const onOpen = useCallback(
-    partyId => {
+    partyID => {
       modalTools.onOpen()
-      setStatePartyId(partyId)
+      setStatepartyID(partyID)
     },
     [modalTools]
   )
 
   const onApply = useCallback(
     uid => {
-      applyParty(uid, statePartyId)
+      applyParty(uid, statepartyID)
       modalTools.onClose()
     },
-    [modalTools, statePartyId]
+    [modalTools, statepartyID]
   )
 
   const FetchPartiesThumbnail = parties => {
     const thumbnailURLs = parties.map((party, index) => {
       const uri = party.thumbnailURL
-      const partyId = party.id
-      const fetcDate = party.date.toDate()
-      const date = formatedDate(fetcDate)
+      const partyID = party.id
 
       return (
         <View key={index} style={styles.container}>
-          <Card uri={{ uri }} name={party.name} date={date} width={width}>
-            <View style={styles.buttonContainer}>
-              <View style={styles.buttonWrapper}>
-                <Button
-                  color={'#FFFFFF'}
-                  fullWidth={false}
-                  width={70}
-                  height={30}
-                  padding={6}
-                  onPress={() => navigation.navigate('PartyDetail', { partyId })}
-                >
-                  <Text style={styles.buttonText}>詳細</Text>
-                </Button>
-              </View>
-              <View style={styles.buttonWrapper}>
-                <Button
-                  color={'#FFFFFF'}
-                  fullWidth={false}
-                  width={70}
-                  height={30}
-                  padding={6}
-                  onPress={() => {
-                    onOpen(partyId)
-                  }}
-                >
-                  <Text style={styles.buttonText}>参加</Text>
-                </Button>
-              </View>
-            </View>
-          </Card>
+          <Card
+            uri={{ uri }}
+            name={party.name}
+            date={party.date.toDate()}
+            width={width}
+            navigation={navigation}
+            onPressApply={() => {
+              onOpen(partyID)
+            }}
+            onPressDetail={() => props.navigation.navigate('PartyDetail', { partyID })}
+          ></Card>
           <Modal
             isVisible={modalTools.isVisible}
             title="本当に参加しますか？"

@@ -15,7 +15,7 @@ type Props = {
   onClose: () => void
 }
 
-const ApplyModal: React.FC<Props> = props => {
+export const ApplyModal: React.FC<Props> = props => {
   return (
     <View style={{ flex: 1 }}>
       <Button title={String(props.title)} color={props.buttonColor} onPress={props.onOpen} />
@@ -118,5 +118,3 @@ const styles = StyleSheet.create({
     borderRadius: 16
   }
 })
-
-export default ApplyModal

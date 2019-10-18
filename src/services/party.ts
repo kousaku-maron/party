@@ -41,18 +41,23 @@ export const useParty = (pid: string) => {
   return party
 }
 
-export const applyParty = async (uid: string, partyId: string) => {
+export const applyParty = async (uid: string, partyID: string) => {
   const user = await getUser(uid)
-  if (!uid || !partyId) return
-  const partyRef = partiesRef.doc(partyId)
+  if (!uid || !partyID) return
+  const partyRef = partiesRef.doc(partyID)
   const groupsRef = partyRef.collection('groups')
   groupsRef.add({
-    enabled: user.enabled,
-    isAccepred: user.isAccepted,
-    role: 'organizer',
-    name: user.name,
-    thumbnailURL: user.thumbnailURL,
-    uid: user.uid,
-    sex: user.gender
+    ourganizer: uid,
+    gender: user.gender
   })
+  //const memberRef = groupsRef.collection('memberID')
+  // groupsRef.add({
+  //   enabled: user.enabled,
+  //   isAccepred: user.isAccepted,
+  //   role: 'organizer',
+  //   name: user.name,
+  //   thumbnailURL: user.thumbnailURL,
+  //   uid: user.uid,
+  //   sex: user.gender
+  // })
 }
