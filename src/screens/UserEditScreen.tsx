@@ -20,15 +20,17 @@ const UserEditScreen = (props: Props) => {
   const { navigation, auth } = props
   const { uid } = auth
 
-  const { name, thumbnailURL, onChangeName, onChangeThumbnailURL, fetched } = useUserEditTools(uid)
+  const { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched } = useUserEditTools(
+    uid
+  )
 
   const updateUserState = useCallback(async () => {
-    const updateUser: UpdateUser = { uid, name, thumbnailURL }
+    const updateUser: UpdateUser = { uid, name, thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
     const { result } = await UserRepository.setUser(uid, updateUser)
     if (result) {
       navigation.goBack()
     }
-  }, [name, navigation, thumbnailURL, uid])
+  }, [name, navigation, thumbnailURL, uid, userID])
 
   if (!fetched) {
     return <LoadingPage />
@@ -49,6 +51,12 @@ const UserEditScreen = (props: Props) => {
       <View>
         <View style={styles.nameWrapper}>
           <TextInput value={name} onChangeText={onChangeName}></TextInput>
+        </View>
+      </View>
+
+      <View>
+        <View style={styles.userIDWrapper}>
+          <TextInput value={userID} onChangeText={onChangeUserID}></TextInput>
         </View>
       </View>
     </View>
@@ -78,6 +86,12 @@ const styles = StyleSheet.create({
     paddingVertical: 24
   },
   nameWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 12
+  },
+  userIDWrapper: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
