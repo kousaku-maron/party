@@ -47,17 +47,19 @@ export const applyParty = async (uid: string, partyID: string) => {
   const partyRef = partiesRef.doc(partyID)
   const groupsRef = partyRef.collection('groups')
   groupsRef.add({
-    ourganizer: uid,
+    organizer: uid,
     gender: user.gender
   })
-  //const memberRef = groupsRef.collection('memberID')
-  // groupsRef.add({
-  //   enabled: user.enabled,
-  //   isAccepred: user.isAccepted,
-  //   role: 'organizer',
-  //   name: user.name,
-  //   thumbnailURL: user.thumbnailURL,
-  //   uid: user.uid,
-  //   sex: user.gender
-  // })
+
+  const fetchGroupID = async () => {
+    const snapShot = await groupsRef.where('organizer', '==', uid).get()
+
+    snapShot.docs.forEach(groupDoc => {
+      const memberIDRef = groupsRef.doc(groupDoc.id).collection('memberID')
+      memberIDRef.add({
+        memberID: uid
+      })
+    })
+  }
+  fetchGroupID()
 }
