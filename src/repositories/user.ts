@@ -1,8 +1,5 @@
-import firebase from './firebase'
+import firebase, { db, storage, functions } from './firebase'
 import { buildUser, UpdateUser } from '../entities'
-
-const db = firebase.firestore()
-const storage = firebase.storage()
 
 const storageRef = storage.ref('users')
 const usersRef = db.collection('users')
@@ -28,6 +25,16 @@ const setThumbnail = async (uid: string, url: string) => {
     })
 }
 
+const setUserID = async (uid: string, userID: string) => {
+  try {
+    await functions.httpsCallable('updateUserID')({ uid, userID })
+    return { userID }
+  } catch (e) {
+    console.warn(e)
+    return { userID: null }
+  }
+}
+
 export const getUser = async (uid: string) => {
   try {
     const snapshot = await usersRef.doc(uid).get()
@@ -39,15 +46,36 @@ export const getUser = async (uid: string) => {
   }
 }
 
-// MEMO: storage保存を async - await で書き換え可能なら、書き換えたい。
 export const setUser = async (uid: string, user: UpdateUser) => {
   try {
-    const { thumbnailURL } = await setThumbnail(uid, user.thumbnailURL)
+    if (user.userID) {
+      const { userID } = await setUserID(uid, user.userID)
+      if (!userID) {
+        throw 'update userID failure.'
+      }
+    }
+
+    if (user.thumbnailURL) {
+      const { thumbnailURL } = await setThumbnail(uid, user.thumbnailURL)
+      if (!thumbnailURL) {
+        throw 'update thumbnail failure.'
+      }
+
+      await usersRef.doc(uid).set(
+        {
+          name: user.name,
+          thumbnailURL,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        },
+        { merge: true }
+      )
+
+      return { result: true }
+    }
 
     await usersRef.doc(uid).set(
       {
-        ...user,
-        thumbnailURL,
+        name: user.name,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       },
       { merge: true }
