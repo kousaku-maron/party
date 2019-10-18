@@ -1,14 +1,15 @@
 import React, { useState, useCallback } from 'react'
-import { Text, StyleSheet, Dimensions, ScrollView, Image, View } from 'react-native'
+import { Text, StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { useParties, applyParty } from '../services/party'
 import { formatedDate } from '../services/formatedDate'
 import { useModal } from '../services/modal'
 import { LoadingPage } from '../components/pages'
-import ApplyModal from '../components/organisms/ApplyModal'
-import RoundedButton from '../components/atoms/RoundedButton'
 import { HomeScreenState } from '../containers/HomeScreen'
 import { colors } from '../themes'
+import Modal from '../components/organisms/Modal'
+import Button from '../components/organisms/Button'
+import Card from '../components/organisms/Card'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -46,17 +47,10 @@ const HomeScreen = (props: Props) => {
 
       return (
         <View key={index} style={styles.container}>
-          <View style={styles.imageBorderRadius}>
-            <Image style={styles.image} source={{ uri }} />
-          </View>
-          <View style={styles.description}>
-            <View>
-              <Text style={styles.name}>{party.name}</Text>
-              <Text style={styles.date}>{date}</Text>
-            </View>
+          <Card uri={{ uri }} name={party.name} date={date} width={width}>
             <View style={styles.buttonContainer}>
               <View style={styles.buttonWrapper}>
-                <RoundedButton
+                <Button
                   color={'#FFFFFF'}
                   fullWidth={false}
                   width={70}
@@ -65,10 +59,10 @@ const HomeScreen = (props: Props) => {
                   onPress={() => navigation.navigate('PartyDetail', { partyId })}
                 >
                   <Text style={styles.buttonText}>詳細</Text>
-                </RoundedButton>
+                </Button>
               </View>
               <View style={styles.buttonWrapper}>
-                <RoundedButton
+                <Button
                   color={'#FFFFFF'}
                   fullWidth={false}
                   width={70}
@@ -78,23 +72,22 @@ const HomeScreen = (props: Props) => {
                     onOpen(partyId)
                   }}
                 >
-                  <ApplyModal
-                    isVisible={modalTools.isVisible}
-                    title="本当に参加しますか？"
-                    desc="前日のドタキャンは評価を落としかねます"
-                    negative="キャンセル"
-                    positive="はい"
-                    uid={uid}
-                    partyId={partyId}
-                    onApply={onApply}
-                    onClose={modalTools.onClose}
-                  ></ApplyModal>
-
                   <Text style={styles.buttonText}>参加</Text>
-                </RoundedButton>
+                </Button>
               </View>
             </View>
-          </View>
+          </Card>
+          <Modal
+            isVisible={modalTools.isVisible}
+            title="本当に参加しますか？"
+            desc="前日のドタキャンは評価を落としかねます"
+            negative="キャンセル"
+            positive="はい"
+            onPositive={() => {
+              onApply(uid)
+            }}
+            onNegative={modalTools.onClose}
+          ></Modal>
         </View>
       )
     })

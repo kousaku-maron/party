@@ -1,5 +1,8 @@
 export { default as RoundedButton } from './RoundedButton'
+export { default as AngularedButton } from './AngularedButton'
 export { default as Fab } from './Fab'
 export { default as TextInput } from './TextInput'
 export { default as TextBox } from './TextBox'
 export { default as Thumbnail } from './Thumbnail'
+export { default as MaterialDesignCard } from '../atoms/MaterialDesignCard'
+export { default as FlatDesignCard } from '../atoms/FlatDesignCard'
