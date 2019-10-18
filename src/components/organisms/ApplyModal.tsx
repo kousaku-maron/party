@@ -19,7 +19,7 @@ const ApplyModal: React.FC<Props> = props => {
   const onPositive = () => {
     props.onApply(props.uid)
   }
-  if (isIPhoneXAbove || isIPhoneX) {
+  if (isIPhoneXAbove() || isIPhoneX()) {
     return (
       <FlatDesignModal
         isVisible={props.isVisible}
