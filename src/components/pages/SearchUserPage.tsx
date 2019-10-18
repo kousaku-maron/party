@@ -11,6 +11,7 @@ type Props = {
   onClose: () => void
   onChangeUserID?: (userID: string) => void
   onSubmitUserID?: (userID: string) => void
+  onSelectUser?: (user: User) => void
 }
 
 const useSearchButton = () => {
@@ -56,6 +57,15 @@ const SearchUserPage = (props: Props) => {
     }
   }, [props, search, value])
 
+  const onSelectUser = useCallback(
+    (user: User) => {
+      if (props.onSelectUser) {
+        props.onSelectUser(user)
+      }
+    },
+    [props]
+  )
+
   return (
     <FullScreenModal title="Nomoca" isVisible={props.isVisible} onClose={props.onClose}>
       <View style={styles.container}>
@@ -86,7 +96,7 @@ const SearchUserPage = (props: Props) => {
         </View>
         <ScrollView>
           {users.map((user: User) => (
-            <UserListItem key={user.userID} user={user} />
+            <UserListItem key={user.userID} user={user} onPress={() => onSelectUser(user)} />
           ))}
         </ScrollView>
       </View>
