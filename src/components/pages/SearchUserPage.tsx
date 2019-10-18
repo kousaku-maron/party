@@ -20,7 +20,7 @@ const useSearchButton = () => {
   const show = useCallback(() => {
     Animated.parallel([
       Animated.timing(buttonWidth, { toValue: 50, duration: 200 }),
-      Animated.timing(buttonPaddingLeft, { toValue: 8, duration: 200 })
+      Animated.timing(buttonPaddingLeft, { toValue: 12, duration: 200 })
     ]).start()
   }, [buttonPaddingLeft, buttonWidth])
 
