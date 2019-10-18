@@ -11,7 +11,7 @@ const PartyDetailScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <Text>party detail screen</Text>
-      <Text>{navigation.state.params.uid}</Text>
+      <Text>{navigation.state.params.partyId}</Text>
     </View>
   )
 }

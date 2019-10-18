@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import { Text, StyleSheet, Dimensions, ScrollView, Image, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
-import { useParties } from '../services/party'
+import { useParties, applyParty } from '../services/party'
 import { formatedDate } from '../services/formatedDate'
+import { useModal } from '../services/modal'
 import { LoadingPage } from '../components/pages'
+import ApplyModal from '../components/organisms/ApplyModal'
 import RoundedButton from '../components/atoms/RoundedButton'
 import { HomeScreenState } from '../containers/HomeScreen'
 import { colors } from '../themes'
@@ -17,6 +19,23 @@ const HomeScreen = (props: Props) => {
   const { navigation, auth } = props
   const { uid } = auth
   const parties = useParties()
+  const [statePartyId, setStatePartyId] = useState<string>()
+  const modalTools = useModal()
+  const onOpen = useCallback(
+    partyId => {
+      modalTools.onOpen()
+      setStatePartyId(partyId)
+    },
+    [modalTools]
+  )
+
+  const onApply = useCallback(
+    uid => {
+      applyParty(uid, statePartyId)
+      modalTools.onClose()
+    },
+    [modalTools, statePartyId]
+  )
 
   const FetchPartiesThumbnail = parties => {
     const thumbnailURLs = parties.map((party, index) => {
@@ -36,28 +55,44 @@ const HomeScreen = (props: Props) => {
               <Text style={styles.date}>{date}</Text>
             </View>
             <View style={styles.buttonContainer}>
-              <RoundedButton
-                color={'#FFFFFF'}
-                fullWidth={false}
-                width={70}
-                height={30}
-                padding={6}
-                margin={3}
-                onPress={() => navigation.navigate('PartyDetail', { partyId })}
-              >
-                <Text style={styles.buttonText}>詳細</Text>
-              </RoundedButton>
-              <RoundedButton
-                color={'#FFFFFF'}
-                fullWidth={false}
-                width={70}
-                height={30}
-                padding={6}
-                margin={3}
-                onPress={() => onApply(uid, partyId)}
-              >
-                <Text style={styles.buttonText}>参加</Text>
-              </RoundedButton>
+              <View style={styles.buttonWrapper}>
+                <RoundedButton
+                  color={'#FFFFFF'}
+                  fullWidth={false}
+                  width={70}
+                  height={30}
+                  padding={6}
+                  onPress={() => navigation.navigate('PartyDetail', { partyId })}
+                >
+                  <Text style={styles.buttonText}>詳細</Text>
+                </RoundedButton>
+              </View>
+              <View style={styles.buttonWrapper}>
+                <RoundedButton
+                  color={'#FFFFFF'}
+                  fullWidth={false}
+                  width={70}
+                  height={30}
+                  padding={6}
+                  onPress={() => {
+                    onOpen(partyId)
+                  }}
+                >
+                  <ApplyModal
+                    isVisible={modalTools.isVisible}
+                    title="本当に参加しますか？"
+                    desc="前日のドタキャンは評価を落としかねます"
+                    negative="キャンセル"
+                    positive="はい"
+                    uid={uid}
+                    partyId={partyId}
+                    onApply={onApply}
+                    onClose={modalTools.onClose}
+                  ></ApplyModal>
+
+                  <Text style={styles.buttonText}>参加</Text>
+                </RoundedButton>
+              </View>
             </View>
           </View>
         </View>
@@ -116,14 +151,11 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   buttonContainer: {
+    display: 'flex',
     flexDirection: 'column'
   },
-  button: {
-    height: 30,
-    width: 70,
-    backgroundColor: '#FFFFFF',
-    margin: 3,
-    borderRadius: 40
+  buttonWrapper: {
+    padding: 3
   },
   buttonText: {
     fontSize: 18,
