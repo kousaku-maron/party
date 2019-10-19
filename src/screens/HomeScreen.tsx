@@ -6,7 +6,7 @@ import { useModal } from '../services/modal'
 import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
 import { colors } from '../themes'
-import { Modal, Card } from '../components/organisms'
+import { Modal, Card, GenderModal } from '../components/organisms'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -52,7 +52,7 @@ const HomeScreen = (props: Props) => {
               onOpen(partyID)
             }}
             onPressDetail={() => props.navigation.navigate('PartyDetail', { partyID })}
-          ></Card>
+          />
           <Modal
             isVisible={modalTools.isVisible}
             title="本当に参加しますか？"
@@ -63,7 +63,16 @@ const HomeScreen = (props: Props) => {
               onApply(uid)
             }}
             onNegative={modalTools.onClose}
-          ></Modal>
+          />
+          <GenderModal
+            isVisible={modalTools.isVisible}
+            uid={uid}
+            title="あなたの性別は何ですか？"
+            negative="キャンセル"
+            positive="登録します"
+            onPositive={modalTools.onClose}
+            onNegative={modalTools.onClose}
+          />
         </View>
       )
     })

@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native'
 import { colors } from '../../themes'
 import { formatedDate } from '../../services/formatedDate'
-import { Button } from '../organisms'
+import { RoundedButton } from '../atoms'
 import { NavigationStackProp } from 'react-navigation-stack'
 
 type Props = {
@@ -29,7 +29,7 @@ const FlatDesignCard: React.FC<Props> = props => {
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.buttonWrapper}>
-            <Button
+            <RoundedButton
               color={'#FFFFFF'}
               fullWidth={false}
               width={70}
@@ -38,12 +38,19 @@ const FlatDesignCard: React.FC<Props> = props => {
               onPress={props.onPressDetail}
             >
               <Text style={styles.buttonText}>詳細</Text>
-            </Button>
+            </RoundedButton>
           </View>
           <View style={styles.buttonWrapper}>
-            <Button color={'#FFFFFF'} fullWidth={false} width={70} height={30} padding={6} onPress={props.onPressApply}>
+            <RoundedButton
+              color={'#FFFFFF'}
+              fullWidth={false}
+              width={70}
+              height={30}
+              padding={6}
+              onPress={props.onPressApply}
+            >
               <Text style={styles.buttonText}>参加</Text>
-            </Button>
+            </RoundedButton>
           </View>
         </View>
       </View>

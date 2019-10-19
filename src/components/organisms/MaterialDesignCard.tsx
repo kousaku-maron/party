@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native'
 import { colors } from '../../themes'
 import { formatedDate } from '../../services/formatedDate'
-import { Button } from '../organisms'
+import { AngularedButton } from '../atoms'
 import { NavigationStackProp } from 'react-navigation-stack'
 
 type Props = {
@@ -29,7 +29,7 @@ const MaterialDesignCard: React.FC<Props> = props => {
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.buttonWrapper}>
-            <Button
+            <AngularedButton
               color={'#FFFFFF'}
               fullWidth={false}
               width={70}
@@ -38,12 +38,19 @@ const MaterialDesignCard: React.FC<Props> = props => {
               onPress={props.onPressDetail}
             >
               <Text style={styles.buttonText}>詳細</Text>
-            </Button>
+            </AngularedButton>
           </View>
           <View style={styles.buttonWrapper}>
-            <Button color={'#FFFFFF'} fullWidth={false} width={70} height={30} padding={6} onPress={props.onPressApply}>
+            <AngularedButton
+              color={'#FFFFFF'}
+              fullWidth={false}
+              width={70}
+              height={30}
+              padding={6}
+              onPress={props.onPressApply}
+            >
               <Text style={styles.buttonText}>参加</Text>
-            </Button>
+            </AngularedButton>
           </View>
         </View>
       </View>
@@ -77,8 +84,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   buttonContainer: {
-    display: 'flex',
-    flexDirection: 'column'
+    alignItems: 'flex-end',
+    flexDirection: 'row'
   },
   buttonWrapper: {
     padding: 3
