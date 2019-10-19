@@ -127,11 +127,10 @@ const styles = StyleSheet.create({
     paddingBottom: 24
   },
   thumbnailWrapper: {
-    paddingBottom: 12
+    paddingBottom: 6
   },
   titleText: {
-    fontSize: 24,
-    fontWeight: 'bold'
+    fontSize: 24
   },
   idText: {
     color: 'gray'
