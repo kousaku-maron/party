@@ -134,3 +134,18 @@ export const useUserEditTools = (uid: string) => {
 
   return { name, thumbnailURL, onChangeName, onChangeThumbnailURL, fetched }
 }
+
+//TODO: modify then -> map or forEach
+export const checkGender = async (uid: string) => {
+  const snapShot = usersRef.doc(uid).get()
+  return snapShot.then(doc => {
+    return doc.data().gender ? true : false
+  })
+}
+
+export const setGender = async (uid: string, gender: string) => {
+  const useDoc = usersRef.doc(uid)
+  useDoc.update({
+    gender: gender
+  })
+}

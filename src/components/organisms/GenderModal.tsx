@@ -10,7 +10,7 @@ type Props = {
   negative?: string
   positive?: string
   onNegative: () => void
-  onPositive: () => void
+  onPositive: (uid: string, gender: string) => void
 }
 
 const GenderModal: React.FC<Props> = props => {
@@ -20,14 +20,19 @@ const GenderModal: React.FC<Props> = props => {
       isVisible={props.isVisible}
       title={props.title}
       positive="選択"
-      onPositive={props.onPositive}
+      onPositive={() => {
+        props.onPositive(props.uid, genderVal)
+      }}
       onNegative={props.onNegative}
     >
       <Picker
         style={[styles.picker]}
         itemStyle={styles.pickerItem}
         selectedValue={genderVal}
-        onValueChange={itemValue => setGenderVal(itemValue)}
+        onValueChange={itemValue => {
+          setGenderVal(itemValue)
+          console.log(itemValue)
+        }}
       >
         <Picker.Item label="女性" value={'female'} />
         <Picker.Item label="男性" value={'male'} />

@@ -44,8 +44,8 @@ export const useParty = (pid: string) => {
 export const applyParty = async (uid: string, partyID: string) => {
   const user = await getUser(uid)
   if (!uid || !partyID) return
-  const partyRef = partiesRef.doc(partyID)
-  const groupsRef = partyRef.collection('groups')
+  const partyDoc = partiesRef.doc(partyID)
+  const groupsRef = partyDoc.collection('groups')
   groupsRef.add({
     organizer: uid,
     gender: user.gender
@@ -55,7 +55,7 @@ export const applyParty = async (uid: string, partyID: string) => {
     const snapShot = await groupsRef.where('organizer', '==', uid).get()
 
     snapShot.docs.forEach(groupDoc => {
-      const memberIDRef = groupsRef.doc(groupDoc.id).collection('memberID')
+      const memberIDRef = groupsRef.doc(groupDoc.id).collection('members')
       memberIDRef.add({
         memberID: uid
       })

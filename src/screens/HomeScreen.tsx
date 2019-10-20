@@ -7,7 +7,7 @@ import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
 import { colors } from '../themes'
 import { Modal, Card, GenderModal } from '../components/organisms'
-
+import { checkGender, setGender } from '../services/user'
 type OwnProps = {
   navigation: NavigationStackProp
 }
@@ -26,11 +26,30 @@ const HomeScreen = (props: Props) => {
     },
     [modalTools]
   )
+  // const onPressRegistGender = useCallback(() => {}, [])
+  //Gender がFirestoreに入ってるかどうかの確認
+  const [isGender, setIsGender] = useState<boolean>(false)
+  const onOpenGender = useCallback(async () => {
+    const resCheckGender = await checkGender(uid)
+    resCheckGender == true ? setIsGender(true) : setIsGender(false)
+  }, [uid])
+  onOpenGender()
+  const onSetGender = useCallback(
+    async (uid, gender) => {
+      await setGender(uid, gender)
+      setIsGender(true)
+      modalTools.onClose
+    },
+    [modalTools.onClose]
+  )
 
   const onApply = useCallback(
-    uid => {
-      applyParty(uid, statepartyID)
-      modalTools.onClose()
+    async uid => {
+      await applyParty(uid, statepartyID)
+      if ((await checkGender(uid)) == true) {
+        setIsGender(true)
+        modalTools.onClose()
+      }
     },
     [modalTools, statepartyID]
   )
@@ -65,12 +84,14 @@ const HomeScreen = (props: Props) => {
             onNegative={modalTools.onClose}
           />
           <GenderModal
-            isVisible={modalTools.isVisible}
+            isVisible={!isGender}
             uid={uid}
             title="あなたの性別は何ですか？"
             negative="キャンセル"
             positive="登録します"
-            onPositive={modalTools.onClose}
+            onPositive={(uid, gender) => {
+              onSetGender(uid, gender)
+            }}
             onNegative={modalTools.onClose}
           />
         </View>
