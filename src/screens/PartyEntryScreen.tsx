@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { User } from '../entities'
 import { PartyEntryScreenState } from '../containers/PartyEntryScreen'
 import { colors } from '../themes'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { useModal } from '../services/modal'
 import * as userRepository from '../repositories/user'
 import { LoadingPage, SearchUserPage } from '../components/pages'
-import { Thumbnail } from '../components/atoms'
-import { ScrollView } from 'react-native-gesture-handler'
+import { Thumbnail, RoundedButton } from '../components/atoms'
+import _ from 'lodash'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -48,6 +48,19 @@ const PartyEntryScreen = (props: Props) => {
     [focusMemberIndex, onClose]
   )
 
+  const enabledEntry = useMemo(() => {
+    const emptyMembers = members.findIndex(member => _.isEmpty(member))
+    if (emptyMembers === -1) {
+      return true
+    }
+    return false
+  }, [members])
+
+  const onEntry = useCallback(() => {
+    if (!enabledEntry) return
+    console.info(members) // TODO: 参加申請の関数を発火させる。
+  }, [enabledEntry, members])
+
   useEffect(() => {
     const fetchMyUser = async () => {
       const user = await userRepository.getUser(uid)
@@ -63,7 +76,8 @@ const PartyEntryScreen = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      {/* MEMO: 今後、ScrollViewで囲う可能性があるため、Viewで括っている */}
+      <View>
         <View style={styles.inner}>
           <View style={styles.titleWrapper}>
             <Text style={styles.titleText}>参加ユーザー</Text>
@@ -94,7 +108,13 @@ const PartyEntryScreen = (props: Props) => {
             })}
           </View>
         </View>
-      </ScrollView>
+      </View>
+
+      <View style={styles.entryButtonWrapper}>
+        <RoundedButton disabled={!enabledEntry} fullWidth={true} height={48} onPress={onEntry}>
+          <Text style={styles.entryText}>参加する</Text>
+        </RoundedButton>
+      </View>
 
       <SearchUserPage isVisible={isVisible} onClose={onClose} onSelectUser={onSelectUser} />
     </View>
@@ -105,6 +125,8 @@ PartyEntryScreen.navigationOptions = () => ({
   headerTitle: 'Nomoca',
   headerBackTitle: null
 })
+
+const width = Dimensions.get('window').width
 
 const styles = StyleSheet.create({
   container: {
@@ -129,11 +151,21 @@ const styles = StyleSheet.create({
   thumbnailWrapper: {
     paddingBottom: 6
   },
+  entryButtonWrapper: {
+    position: 'absolute',
+    width,
+    paddingHorizontal: 24,
+    bottom: 24
+  },
   titleText: {
     fontSize: 24
   },
   idText: {
     color: 'gray'
+  },
+  entryText: {
+    fontSize: 20,
+    color: 'white'
   }
 })
 
