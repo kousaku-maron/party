@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native'
 import { colors } from '../../themes'
-import { formatedDate } from '../../services/formatedDate'
+import { formatedDateFull } from '../../services/formatedDate'
 import { AngularedButton } from '../atoms'
 import { NavigationStackProp } from 'react-navigation-stack'
 
@@ -16,7 +16,7 @@ type Props = {
 }
 
 const MaterialDesignCard: React.FC<Props> = props => {
-  const date = formatedDate(props.date)
+  const date = formatedDateFull(props.date)
   return (
     <View>
       <View style={styles.imageBorderRadius}>
@@ -73,7 +73,9 @@ const styles = StyleSheet.create({
   },
   date: {
     color: 'white',
-    padding: 6
+    paddingRight: 6,
+    paddingLeft: 6,
+    paddingBottom: 6
   },
   description: {
     backgroundColor: colors.primary.main,

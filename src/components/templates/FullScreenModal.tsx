@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   closeWrapper: {
     position: 'absolute',
     top: 12,
-    right: 12
+    left: 12
   },
   titleText: {
     fontSize: 17,

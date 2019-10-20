@@ -5,7 +5,7 @@ import { UserEditScreenState } from '../containers/UserEditScreen'
 import { colors } from '../themes'
 import * as UserRepository from '../repositories/user'
 import { useUserEditTools } from '../services/user'
-import { View, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Fab, Thumbnail, TextInput } from '../components/atoms'
 import { LoadingPage } from '../components/pages'
@@ -20,15 +20,17 @@ const UserEditScreen = (props: Props) => {
   const { navigation, auth } = props
   const { uid } = auth
 
-  const { name, thumbnailURL, onChangeName, onChangeThumbnailURL, fetched } = useUserEditTools(uid)
+  const { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched } = useUserEditTools(
+    uid
+  )
 
   const updateUserState = useCallback(async () => {
-    const updateUser: UpdateUser = { uid, name, thumbnailURL }
+    const updateUser: UpdateUser = { uid, name, thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
     const { result } = await UserRepository.setUser(uid, updateUser)
     if (result) {
       navigation.goBack()
     }
-  }, [name, navigation, thumbnailURL, uid])
+  }, [name, navigation, thumbnailURL, uid, userID])
 
   if (!fetched) {
     return <LoadingPage />
@@ -48,7 +50,15 @@ const UserEditScreen = (props: Props) => {
 
       <View>
         <View style={styles.nameWrapper}>
+          <Text style={styles.titleText}>ネーム</Text>
           <TextInput value={name} onChangeText={onChangeName}></TextInput>
+        </View>
+      </View>
+
+      <View>
+        <View style={styles.userIDWrapper}>
+          <Text style={styles.titleText}>ID</Text>
+          <TextInput value={userID} onChangeText={onChangeUserID}></TextInput>
         </View>
       </View>
     </View>
@@ -75,16 +85,23 @@ const styles = StyleSheet.create({
     bottom: 24
   },
   thumbnailWrapper: {
-    paddingVertical: 24
+    paddingTop: 24,
+    paddingBottom: 36
   },
   nameWrapper: {
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingBottom: 12
+    flexDirection: 'column',
+    paddingBottom: 24
   },
-  nameText: {
-    fontSize: 24
+  userIDWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    paddingBottom: 24
+  },
+  titleText: {
+    fontSize: 16,
+    fontWeight: 'bold'
+    // color: 'gray'
   }
 })
 

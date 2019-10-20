@@ -1,3 +1,4 @@
+// TODO: uid -> partyIDに変更する。
 export type Party = {
   id: string
   name: string
@@ -15,4 +16,9 @@ export const buildParty = (id: string, data: firebase.firestore.DocumentData) =>
     date: data.date
   }
   return newParty
+}
+
+export type EntryParty = Pick<Party, 'uid'> & {
+  userUIDs: string[]
+  organizerUID: string
 }

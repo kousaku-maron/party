@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { useParties, applyParty } from '../services/party'
@@ -15,7 +15,6 @@ type Props = OwnProps & HomeScreenState
 
 const HomeScreen = (props: Props) => {
   const { navigation, auth } = props
-  const { uid } = auth
   const parties = useParties()
   const [statepartyID, setStatepartyID] = useState<string>()
   const modalTools = useModal()
@@ -26,33 +25,35 @@ const HomeScreen = (props: Props) => {
     },
     [modalTools]
   )
-  // const onPressRegistGender = useCallback(() => {}, [])
-  //Gender がFirestoreに入ってるかどうかの確認
-  const [isGender, setIsGender] = useState<boolean>(false)
-  const onOpenGender = useCallback(async () => {
-    const resCheckGender = await checkGender(uid)
-    resCheckGender == true ? setIsGender(true) : setIsGender(false)
-  }, [uid])
-  onOpenGender()
+
+  const [existGender, setExistGender] = useState<boolean>(false)
+  useEffect(() => {
+    const funcCheckGender = async () => {
+      if (!auth || !auth.uid) return
+      const { uid } = auth
+      const resCheckGender = await checkGender(uid)
+      setExistGender(resCheckGender)
+    }
+    funcCheckGender()
+  }, [auth])
   const onSetGender = useCallback(
     async (uid, gender) => {
       await setGender(uid, gender)
-      setIsGender(true)
+      setExistGender(true)
       modalTools.onClose
     },
     [modalTools.onClose]
   )
 
-  const onApply = useCallback(
-    async uid => {
-      await applyParty(uid, statepartyID)
-      if ((await checkGender(uid)) == true) {
-        setIsGender(true)
-        modalTools.onClose()
-      }
-    },
-    [modalTools, statepartyID]
-  )
+  const onApply = useCallback(async () => {
+    if (!auth || !auth.uid) return
+    const { uid } = auth
+    await applyParty(uid, statepartyID)
+    if ((await checkGender(uid)) == true) {
+      setExistGender(true)
+      modalTools.onClose()
+    }
+  }, [auth, modalTools, statepartyID])
 
   const FetchPartiesThumbnail = parties => {
     const thumbnailURLs = parties.map((party, index) => {
@@ -70,7 +71,7 @@ const HomeScreen = (props: Props) => {
             onPressApply={() => {
               onOpen(partyID)
             }}
-            onPressDetail={() => props.navigation.navigate('PartyDetail', { partyID })}
+            onPressDetail={() => props.navigation.navigate('PartyDetail', { party })}
           />
           <Modal
             isVisible={modalTools.isVisible}
@@ -78,22 +79,22 @@ const HomeScreen = (props: Props) => {
             desc="前日のドタキャンは評価を落としかねます"
             negative="キャンセル"
             positive="はい"
-            onPositive={() => {
-              onApply(uid)
-            }}
+            onPositive={onApply}
             onNegative={modalTools.onClose}
           />
-          <GenderModal
-            isVisible={!isGender}
-            uid={uid}
-            title="あなたの性別は何ですか？"
-            negative="キャンセル"
-            positive="登録します"
-            onPositive={(uid, gender) => {
-              onSetGender(uid, gender)
-            }}
-            onNegative={modalTools.onClose}
-          />
+          {auth && auth.uid && (
+            <GenderModal
+              isVisible={!existGender}
+              uid={auth.uid}
+              title="あなたの性別は何ですか？"
+              negative="キャンセル"
+              positive="登録します"
+              onPositive={(uid, gender) => {
+                onSetGender(uid, gender)
+              }}
+              onNegative={modalTools.onClose}
+            />
+          )}
         </View>
       )
     })

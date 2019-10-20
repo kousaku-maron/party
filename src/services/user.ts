@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { getSize } from '../services/image'
-import firebase from '../repositories/firebase'
+import { db } from '../repositories/firebase'
 import { getUser } from '../repositories/user'
 import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator'
@@ -8,7 +8,6 @@ import * as Permissions from 'expo-permissions'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
 import { buildUser, User } from '../entities'
 
-const db = firebase.firestore()
 const usersRef = db.collection('users')
 
 export const useUser = (uid: string) => {
@@ -29,23 +28,37 @@ export const useUser = (uid: string) => {
   return user
 }
 
-export const useSearchUsers = () => {
+type SearchUsersOption = {
+  ignoreUserIDs?: string[]
+}
+
+export const useSearchUsers = (options?: SearchUsersOption) => {
   const [users, setUsers] = useState<User[]>([])
 
-  const search = useCallback(async (text: string) => {
-    const snapshot = await usersRef
-      .orderBy('userID')
-      .startAt(text)
-      .endAt(`${text}\uf8ff`)
-      .get()
+  const search = useCallback(
+    async (text: string) => {
+      const snapshot = await usersRef
+        .orderBy('userID')
+        .startAt(text)
+        .endAt(`${text}\uf8ff`)
+        .get()
 
-    const users = snapshot.docs.map(doc => {
-      const user = buildUser(doc.data())
-      return user
-    })
+      const users = snapshot.docs
+        .map(doc => {
+          const user = buildUser(doc.data())
+          return user
+        })
+        .filter(user => {
+          if (options && options.ignoreUserIDs) {
+            return !options.ignoreUserIDs.includes(user.userID)
+          }
+          return true
+        })
 
-    setUsers(users)
-  }, [])
+      setUsers(users)
+    },
+    [options]
+  )
 
   return { users, search }
 }
@@ -71,6 +84,13 @@ export const useUserEditTools = (uid: string) => {
     setName(user.name)
   }, [user])
 
+  const [userID, setUserID] = useState<string>('')
+
+  useEffect(() => {
+    if (!user) return
+    setUserID(user.userID)
+  }, [user])
+
   const [thumbnailURL, setThumbnailURL] = useState<string>('')
 
   useEffect(() => {
@@ -80,6 +100,10 @@ export const useUserEditTools = (uid: string) => {
 
   const onChangeName = useCallback((text: string) => {
     setName(text)
+  }, [])
+
+  const onChangeUserID = useCallback((text: string) => {
+    setUserID(text)
   }, [])
 
   const onChangeThumbnailURL = useCallback(async () => {
@@ -132,7 +156,7 @@ export const useUserEditTools = (uid: string) => {
     setThumbnailURL(resizeResult.uri)
   }, [])
 
-  return { name, thumbnailURL, onChangeName, onChangeThumbnailURL, fetched }
+  return { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched }
 }
 
 //TODO: modify then -> map or forEach

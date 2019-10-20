@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
+
 type OwnProps = {
   navigation: NavigationStackProp
 }
@@ -8,10 +9,11 @@ type Props = OwnProps
 
 const PartyDetailScreen = (props: Props) => {
   const { navigation } = props
+  const partyParams = navigation.state.params
+
   return (
     <View style={styles.container}>
-      <Text>party detail screen</Text>
-      <Text>{navigation.state.params.partyId}</Text>
+      <Text>{partyParams.party.name}飲み！！</Text>
     </View>
   )
 }
@@ -26,7 +28,8 @@ const styles = StyleSheet.create({
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 16
   }
 })
 
