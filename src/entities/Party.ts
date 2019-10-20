@@ -1,4 +1,3 @@
-// TODO: uid -> partyIDに変更する。
 export type Party = {
   id: string
   name: string

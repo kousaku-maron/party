@@ -23,12 +23,12 @@ export const useParties = () => {
   return parties
 }
 
-export const useParty = (pid: string) => {
+export const useParty = (partyID: string) => {
   const [party, setParty] = useState<Party>(null)
 
   useEffect(() => {
-    if (!pid) return
-    const partyRef = partiesRef.doc(pid)
+    if (!partyID) return
+    const partyRef = partiesRef.doc(partyID)
     const unsubscribe = partyRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
       const party = buildParty(partyRef.id, doc.data())
       setParty(party)
@@ -36,7 +36,7 @@ export const useParty = (pid: string) => {
     return () => {
       unsubscribe()
     }
-  }, [pid])
+  }, [partyID])
 
   return party
 }

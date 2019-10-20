@@ -73,28 +73,6 @@ const HomeScreen = (props: Props) => {
             }}
             onPressDetail={() => props.navigation.navigate('PartyDetail', { party })}
           />
-          <Modal
-            isVisible={modalTools.isVisible}
-            title="本当に参加しますか？"
-            desc="前日のドタキャンは評価を落としかねます"
-            negative="キャンセル"
-            positive="はい"
-            onPositive={onApply}
-            onNegative={modalTools.onClose}
-          />
-          {auth && auth.uid && (
-            <GenderModal
-              isVisible={!existGender}
-              uid={auth.uid}
-              title="あなたの性別は何ですか？"
-              negative="キャンセル"
-              positive="登録します"
-              onPositive={(uid, gender) => {
-                onSetGender(uid, gender)
-              }}
-              onNegative={modalTools.onClose}
-            />
-          )}
         </View>
       )
     })
@@ -104,7 +82,33 @@ const HomeScreen = (props: Props) => {
   if (!parties) {
     return <LoadingPage />
   }
-  return <ScrollView>{FetchPartiesThumbnail(parties)}</ScrollView>
+  return (
+    <ScrollView>
+      {FetchPartiesThumbnail(parties)}
+      <Modal
+        isVisible={modalTools.isVisible}
+        title="本当に参加しますか？"
+        desc="前日のドタキャンは評価を落としかねます"
+        negative="キャンセル"
+        positive="はい"
+        onPositive={onApply}
+        onNegative={modalTools.onClose}
+      />
+      {auth && auth.uid && (
+        <GenderModal
+          isVisible={!existGender}
+          uid={auth.uid}
+          title="あなたの性別は何ですか？"
+          negative="キャンセル"
+          positive="登録します"
+          onPositive={(uid, gender) => {
+            onSetGender(uid, gender)
+          }}
+          onNegative={modalTools.onClose}
+        />
+      )}
+    </ScrollView>
+  )
 }
 
 HomeScreen.navigationOptions = () => ({
