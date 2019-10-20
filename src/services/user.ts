@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { getSize } from '../services/image'
-import firebase from '../repositories/firebase'
+import { db } from '../repositories/firebase'
 import { getUser } from '../repositories/user'
 import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator'
@@ -8,7 +8,6 @@ import * as Permissions from 'expo-permissions'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
 import { buildUser, User } from '../entities'
 
-const db = firebase.firestore()
 const usersRef = db.collection('users')
 
 export const useUser = (uid: string) => {
@@ -71,6 +70,13 @@ export const useUserEditTools = (uid: string) => {
     setName(user.name)
   }, [user])
 
+  const [userID, setUserID] = useState<string>('')
+
+  useEffect(() => {
+    if (!user) return
+    setUserID(user.userID)
+  }, [user])
+
   const [thumbnailURL, setThumbnailURL] = useState<string>('')
 
   useEffect(() => {
@@ -80,6 +86,10 @@ export const useUserEditTools = (uid: string) => {
 
   const onChangeName = useCallback((text: string) => {
     setName(text)
+  }, [])
+
+  const onChangeUserID = useCallback((text: string) => {
+    setUserID(text)
   }, [])
 
   const onChangeThumbnailURL = useCallback(async () => {
@@ -132,5 +142,5 @@ export const useUserEditTools = (uid: string) => {
     setThumbnailURL(resizeResult.uri)
   }, [])
 
-  return { name, thumbnailURL, onChangeName, onChangeThumbnailURL, fetched }
+  return { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched }
 }
