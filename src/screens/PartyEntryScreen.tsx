@@ -56,6 +56,10 @@ const PartyEntryScreen = (props: Props) => {
     return false
   }, [members])
 
+  const ignoreUserIDs = useMemo(() => {
+    return members.filter(member => !_.isEmpty(member)).map(member => member.userID)
+  }, [members])
+
   const onEntry = useCallback(() => {
     if (!enabledEntry) return
     console.info(members) // TODO: 参加申請の関数を発火させる。
@@ -116,7 +120,12 @@ const PartyEntryScreen = (props: Props) => {
         </RoundedButton>
       </View>
 
-      <SearchUserPage isVisible={isVisible} onClose={onClose} onSelectUser={onSelectUser} />
+      <SearchUserPage
+        isVisible={isVisible}
+        onClose={onClose}
+        onSelectUser={onSelectUser}
+        ignoreUserIDs={ignoreUserIDs}
+      />
     </View>
   )
 }

@@ -9,6 +9,7 @@ import { FullScreenModal } from '../templates'
 type Props = {
   isVisible: boolean
   onClose: () => void
+  ignoreUserIDs?: string[]
   onChangeUserID?: (userID: string) => void
   onSubmitUserID?: (userID: string) => void
   onSelectUser?: (user: User) => void
@@ -38,7 +39,7 @@ const useSearchButton = () => {
 const SearchUserPage = (props: Props) => {
   const [value, setValue] = useState<string>('')
   const searchButtonTools = useSearchButton()
-  const { users, search } = useSearchUsers()
+  const { users, search } = useSearchUsers({ ignoreUserIDs: props.ignoreUserIDs })
 
   const onChangeText = useCallback(
     (text: string) => {

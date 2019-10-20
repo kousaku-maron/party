@@ -29,23 +29,37 @@ export const useUser = (uid: string) => {
   return user
 }
 
-export const useSearchUsers = () => {
+type SearchUsersOption = {
+  ignoreUserIDs?: string[]
+}
+
+export const useSearchUsers = (options?: SearchUsersOption) => {
   const [users, setUsers] = useState<User[]>([])
 
-  const search = useCallback(async (text: string) => {
-    const snapshot = await usersRef
-      .orderBy('userID')
-      .startAt(text)
-      .endAt(`${text}\uf8ff`)
-      .get()
+  const search = useCallback(
+    async (text: string) => {
+      const snapshot = await usersRef
+        .orderBy('userID')
+        .startAt(text)
+        .endAt(`${text}\uf8ff`)
+        .get()
 
-    const users = snapshot.docs.map(doc => {
-      const user = buildUser(doc.data())
-      return user
-    })
+      const users = snapshot.docs
+        .map(doc => {
+          const user = buildUser(doc.data())
+          return user
+        })
+        .filter(user => {
+          if (options && options.ignoreUserIDs) {
+            return !options.ignoreUserIDs.includes(user.userID)
+          }
+          return true
+        })
 
-    setUsers(users)
-  }, [])
+      setUsers(users)
+    },
+    [options]
+  )
 
   return { users, search }
 }
