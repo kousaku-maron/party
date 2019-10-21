@@ -1,9 +1,9 @@
 import moment from 'moment'
 
-export const formatedDateFull = fetchDate => {
+export const formatedDateFull = (fetchDate: Date) => {
   return String(moment(fetchDate).format('YYYY年MM月DD日HH:MM'))
 }
 
-export const formatedDateMonthDate = fetchDate => {
-  return String(moment(fetchDate).format('MM月DD日'))
+export const formatedDateMonthDateHour = (fetchDate: Date) => {
+  return String(moment(fetchDate).format('MM月DD日HH:MM'))
 }

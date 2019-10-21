@@ -3,7 +3,7 @@ export type Party = {
   name: string
   thumbnailURL?: string
   enabled: boolean
-  date: Date
+  date: firebase.firestore.Timestamp
 }
 
 export const buildParty = (id: string, data: firebase.firestore.DocumentData) => {

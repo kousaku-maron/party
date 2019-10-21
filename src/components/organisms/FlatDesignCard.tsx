@@ -3,14 +3,12 @@ import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native
 import { colors } from '../../themes'
 import { formatedDateFull } from '../../services/formatedDate'
 import { RoundedButton } from '../atoms'
-import { NavigationStackProp } from 'react-navigation-stack'
 
 type Props = {
   uri: ImageSourcePropType
   name: string
   date: Date
   width: number
-  navigation: NavigationStackProp
   onPressDetail: () => void
   onPressApply: () => void
 }

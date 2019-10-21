@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Modal from './Modal'
 import { Picker, StyleSheet } from 'react-native'
-import { useState } from 'react'
 
 type Props = {
   isVisible: boolean

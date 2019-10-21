@@ -8,16 +8,17 @@ import { HomeScreenState } from '../containers/HomeScreen'
 import { colors } from '../themes'
 import { Modal, Card, GenderModal } from '../components/organisms'
 import { checkGender, setGender } from '../services/user'
-type OwnProps = {
-  navigation: NavigationStackProp
-}
+import { Party } from '../entities/Party'
+
+type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps & HomeScreenState
 
 const HomeScreen = (props: Props) => {
-  const { navigation, auth } = props
+  const { auth } = props
   const parties = useParties()
-  const [statepartyID, setStatepartyID] = useState<string>()
   const modalTools = useModal()
+
+  const [statepartyID, setStatepartyID] = useState<string>()
   const onOpen = useCallback(
     partyID => {
       modalTools.onOpen()
@@ -36,6 +37,7 @@ const HomeScreen = (props: Props) => {
     }
     funcCheckGender()
   }, [auth])
+
   const onSetGender = useCallback(
     async (uid, gender) => {
       await setGender(uid, gender)
@@ -55,29 +57,31 @@ const HomeScreen = (props: Props) => {
     }
   }, [auth, modalTools, statepartyID])
 
-  const FetchPartiesThumbnail = parties => {
-    const thumbnailURLs = parties.map((party, index) => {
-      const uri = party.thumbnailURL
-      const partyID = party.id
+  const FetchPartiesThumbnail = useCallback(
+    (parties: Party[]) => {
+      const thumbnailURLs = parties.map((party, index) => {
+        const uri = party.thumbnailURL
+        const partyID = party.id
 
-      return (
-        <View key={index} style={styles.container}>
-          <Card
-            uri={{ uri }}
-            name={party.name}
-            date={party.date.toDate()}
-            width={width}
-            navigation={navigation}
-            onPressApply={() => {
-              onOpen(partyID)
-            }}
-            onPressDetail={() => props.navigation.navigate('PartyDetail', { party })}
-          />
-        </View>
-      )
-    })
-    return thumbnailURLs
-  }
+        return (
+          <View key={index} style={styles.container}>
+            <Card
+              uri={{ uri }}
+              name={party.name}
+              date={party.date.toDate()}
+              width={width}
+              onPressApply={() => {
+                onOpen(partyID)
+              }}
+              onPressDetail={() => props.navigation.navigate('PartyDetail', { party })}
+            />
+          </View>
+        )
+      })
+      return thumbnailURLs
+    },
+    [onOpen, props.navigation]
+  )
 
   if (!parties) {
     return <LoadingPage />
