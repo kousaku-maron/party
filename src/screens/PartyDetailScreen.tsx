@@ -6,26 +6,28 @@ import { colors } from '../themes'
 import { RoundedButton } from '../components/atoms'
 import { Modal } from '../components/organisms'
 import { useModal } from '../services/modal'
-import { applyParty } from '../services/party'
+import { applyParty, useParty } from '../services/party'
+import { PartyDetailScreenState } from '../containers/PartyDetailScreen'
 
 type OwnProps = {
   navigation: NavigationStackProp
 }
-type Props = OwnProps
+type Props = OwnProps & PartyDetailScreenState
 
 const PartyDetailScreen = (props: Props) => {
-  const { navigation } = props
-  const partyParams = navigation.state.params.party
-  const uid = navigation.state.params.uid
-  const date = partyParams.date.toDate()
+  const { navigation, auth } = props
+  const partyID = navigation.state.params.partyID
+  const party = useParty(partyID)
+  const uid = auth.uid
+  const date = party.date
   const dateStr = formatedDateMonthDateHour(date)
-  const uri = partyParams.thumbnailURL
+  const uri = party.thumbnailURL
   const modalTools = useModal()
 
   const onApply = useCallback(async () => {
-    await applyParty(uid, partyParams.id)
+    await applyParty(uid, party.id)
     modalTools.onClose()
-  }, [modalTools, partyParams.id, uid])
+  }, [modalTools, party.id, uid])
 
   return (
     <View style={styles.container}>
@@ -36,12 +38,12 @@ const PartyDetailScreen = (props: Props) => {
             <Text style={styles.calenderDay}>{date.getDay()}</Text>
           </View>
           <View style={styles.titleTextWrapper}>
-            <Text style={styles.titleText}>{partyParams.name}飲み！！</Text>
+            <Text style={styles.titleText}>{party.name}飲み！！</Text>
           </View>
         </View>
         <Image style={[styles.image, { width: width }]} source={{ uri }} />
         <View style={styles.descriptionContainer}>
-          <Text style={styles.areaText}>エリア: {partyParams.name}</Text>
+          <Text style={styles.areaText}>エリア: {party.name}</Text>
           <Text style={styles.dateText}>日時: {dateStr}</Text>
         </View>
       </ScrollView>

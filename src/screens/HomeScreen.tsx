@@ -17,7 +17,6 @@ const HomeScreen = (props: Props) => {
   const { auth } = props
   const parties = useParties()
   const modalTools = useModal()
-
   const [statepartyID, setStatepartyID] = useState<string>()
   const onOpen = useCallback(
     partyID => {
@@ -51,9 +50,9 @@ const HomeScreen = (props: Props) => {
     if (!auth || !auth.uid) return
     const { uid } = auth
     await applyParty(uid, statepartyID)
+    modalTools.onClose()
     if ((await checkGender(uid)) == true) {
       setExistGender(true)
-      modalTools.onClose()
     }
   }, [auth, modalTools, statepartyID])
 
@@ -62,26 +61,25 @@ const HomeScreen = (props: Props) => {
       const thumbnailURLs = parties.map((party, index) => {
         const uri = party.thumbnailURL
         const partyID = party.id
-        const uid = auth.uid
 
         return (
           <View key={index} style={styles.container}>
             <Card
               uri={{ uri }}
               name={party.name}
-              date={party.date.toDate()}
+              date={party.date}
               width={width}
               onPressApply={() => {
                 onOpen(partyID)
               }}
-              onPressDetail={() => props.navigation.navigate('PartyDetail', { party, onApply, uid })}
+              onPressDetail={() => props.navigation.navigate('PartyDetail', { partyID })}
             />
           </View>
         )
       })
       return thumbnailURLs
     },
-    [auth.uid, onApply, onOpen, props.navigation]
+    [onOpen, props.navigation]
   )
 
   if (!parties) {
