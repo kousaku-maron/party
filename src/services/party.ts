@@ -5,6 +5,7 @@ import { getUser } from '../repositories/user'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
+const batch = db.batch()
 
 export const useParties = () => {
   const [parties, setParties] = useState<Party[]>()
@@ -46,20 +47,19 @@ export const applyParty = async (uid: string, partyID: string) => {
   if (!uid || !partyID) return
   const partyDoc = partiesRef.doc(partyID)
   const groupsRef = partyDoc.collection('groups')
-  groupsRef.add({
+  batch.set(groupsRef.doc(), {
     organizer: uid,
     gender: user.gender
   })
 
-  const fetchGroupID = async () => {
-    const snapShot = await groupsRef.where('organizer', '==', uid).get()
+  const snapShot = await groupsRef.where('organizer', '==', uid).get()
 
-    snapShot.docs.forEach(groupDoc => {
-      const memberIDRef = groupsRef.doc(groupDoc.id).collection('members')
-      memberIDRef.add({
-        memberID: uid
-      })
+  snapShot.docs.map(groupDoc => {
+    const memberIDRef = groupsRef.doc(groupDoc.id).collection('members')
+    batch.set(memberIDRef.doc(), {
+      memberID: uid
     })
-  }
-  fetchGroupID()
+  })
+
+  await batch.commit()
 }
