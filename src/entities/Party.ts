@@ -1,15 +1,18 @@
-// TODO: uid -> partyIDに変更する。
 export type Party = {
-  uid: string
+  id: string
   name: string
   thumbnailURL?: string
+  enabled: boolean
+  date: firebase.firestore.Timestamp
 }
 
-export const buildParty = (data: firebase.firestore.DocumentData) => {
+export const buildParty = (id: string, data: firebase.firestore.DocumentData) => {
   const newParty = {
-    uid: data.uid,
+    id,
     name: data.name,
-    thumbnailURL: data.thumbnailURL
+    thumbnailURL: data.thumbnailURL,
+    enabled: data.enabled,
+    date: data.date
   }
   return newParty
 }
