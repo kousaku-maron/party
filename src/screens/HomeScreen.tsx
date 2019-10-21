@@ -62,6 +62,7 @@ const HomeScreen = (props: Props) => {
       const thumbnailURLs = parties.map((party, index) => {
         const uri = party.thumbnailURL
         const partyID = party.id
+        const uid = auth.uid
 
         return (
           <View key={index} style={styles.container}>
@@ -73,14 +74,14 @@ const HomeScreen = (props: Props) => {
               onPressApply={() => {
                 onOpen(partyID)
               }}
-              onPressDetail={() => props.navigation.navigate('PartyDetail', { party })}
+              onPressDetail={() => props.navigation.navigate('PartyDetail', { party, onApply, uid })}
             />
           </View>
         )
       })
       return thumbnailURLs
     },
-    [onOpen, props.navigation]
+    [auth.uid, onApply, onOpen, props.navigation]
   )
 
   if (!parties) {
