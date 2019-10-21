@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
-import { useParties, applyParty } from '../services/party'
+import { useParties, entryParty } from '../services/party'
 import { useModal } from '../services/modal'
 import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
@@ -49,7 +49,7 @@ const HomeScreen = (props: Props) => {
   const onApply = useCallback(async () => {
     if (!auth || !auth.uid) return
     const { uid } = auth
-    await applyParty(uid, statepartyID)
+    await entryParty(uid, statepartyID)
     modalTools.onClose()
     if ((await checkGender(uid)) == true) {
       setExistGender(true)
@@ -122,7 +122,8 @@ const { width } = Dimensions.get('window')
 const styles = StyleSheet.create({
   container: {
     width: width,
-    padding: 10
+    padding: 10,
+    backgroundColor: colors.inherit
   },
   imageBorderRadius: {
     borderBottomLeftRadius: 0,
