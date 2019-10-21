@@ -77,8 +77,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     display: 'flex',
-    alignItems: 'center',
-    paddingTop: 24
+    alignItems: 'center'
   },
   calender: {
     height: 60,
