@@ -25,7 +25,6 @@ export const useParties = () => {
 
 export const useParty = (partyID: string) => {
   const [party, setParty] = useState<Party>(null)
-
   useEffect(() => {
     if (!partyID) return
     const partyRef = partiesRef.doc(partyID)
@@ -41,7 +40,7 @@ export const useParty = (partyID: string) => {
   return party
 }
 
-export const applyParty = async (uid: string, partyID: string) => {
+export const entryParty = async (uid: string, partyID: string) => {
   const batch = db.batch()
   const user = await getUser(uid)
   if (!uid || !partyID) return
@@ -49,7 +48,8 @@ export const applyParty = async (uid: string, partyID: string) => {
   const groupsRef = partyDoc.collection('groups')
   batch.set(groupsRef.doc(), {
     organizer: uid,
-    gender: user.gender
+    gender: user.gender,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   })
 
   const snapShot = await groupsRef.where('organizer', '==', uid).get()
