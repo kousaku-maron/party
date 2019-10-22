@@ -2,6 +2,7 @@ import { take, put, call } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
 import { authActions } from '../actions'
 import firebase from '../repositories/firebase'
+import * as userRepository from '../repositories/user'
 import { signInFacebook, signOut } from '../services/authentication'
 
 const authChannel = () => {
@@ -19,6 +20,7 @@ function* checkAuthState() {
 
     if (user && !error) {
       yield put(authActions.setAuth(user.uid))
+      yield put(authActions.getMyUserRequest(user.uid))
     } else {
       yield put(authActions.resetAuth())
     }
@@ -58,6 +60,19 @@ function* signOutProcess() {
   }
 }
 
-const saga = [checkAuthState(), signInFacebookProcess(), signOutProcess()]
+function* fetchMyUser() {
+  while (true) {
+    const { payload } = yield take(authActions.getMyUserRequest)
+
+    try {
+      const user = yield call(userRepository.getUser, payload)
+      yield put(authActions.getMyUserSuccess(user))
+    } catch (e) {
+      yield put(authActions.getMyUserFailure())
+    }
+  }
+}
+
+const saga = [checkAuthState(), signInFacebookProcess(), signOutProcess(), fetchMyUser()]
 
 export default saga
