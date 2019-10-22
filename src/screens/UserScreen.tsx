@@ -118,7 +118,11 @@ const UserScreen = (props: Props) => {
 
 UserScreen.navigationOptions = () => ({
   headerTitle: 'Nomoca',
-  headerBackTitle: null
+  headerBackTitle: null,
+  headerTintColor: colors.tertiary.light,
+  headerStyle: {
+    backgroundColor: colors.senary.dark
+  }
 })
 
 // const hairlineWidth = StyleSheet.hairlineWidth

@@ -41,9 +41,9 @@ const WelcomeScreen = (props: Props) => {
       </View>
       <View style={styles.actionArea}>
         <View style={styles.buttonWrapper}>
-          <RoundedButton color="#3498db" height={56} fullWidth={true} onPress={signIn}>
+          <RoundedButton color={colors.primary.main} height={56} fullWidth={true} onPress={signIn}>
             <View style={styles.iconWrapper}>
-              <AntDesign name="facebook-square" size={32} color="white" />
+              <AntDesign name="facebook-square" size={32} color={colors.tertiary.light} />
             </View>
             <Text style={styles.fbText}>Facebookでログイン</Text>
           </RoundedButton>
@@ -66,7 +66,11 @@ const WelcomeScreen = (props: Props) => {
 
 WelcomeScreen.navigationOptions = () => ({
   header: null,
-  headerBackTitle: null
+  headerBackTitle: null,
+  headerTintColor: colors.tertiary.light,
+  headerStyle: {
+    backgroundColor: colors.senary.dark
+  }
 })
 
 const styles = StyleSheet.create({
@@ -75,7 +79,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.primary.main
+    backgroundColor: colors.inherit
   },
   // overlay: {
   //   flex: 1,
@@ -116,20 +120,20 @@ const styles = StyleSheet.create({
     width: 300
   },
   titleText: {
-    color: 'white',
+    color: colors.tertiary.light,
     fontSize: 64
   },
   subText: {
-    color: 'white',
+    color: colors.tertiary.light,
     fontSize: 20,
     letterSpacing: 4
   },
   fbText: {
-    color: 'white',
+    color: colors.tertiary.light,
     fontSize: 18
   },
   termText: {
-    color: 'white',
+    color: colors.tertiary.light,
     fontSize: 12,
     fontWeight: '300'
   },
