@@ -2,13 +2,11 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { useParties } from '../services/party'
-// import { useParties, entryParty } from '../services/party'
 import { useModal } from '../services/modal'
 import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
 import { colors } from '../themes'
 import { Card, GenderModal } from '../components/organisms'
-// import { Modal, Card, GenderModal } from '../components/organisms'
 import { checkGender, setGender } from '../services/user'
 import { Party } from '../entities/Party'
 
@@ -19,14 +17,6 @@ const HomeScreen = (props: Props) => {
   const { auth } = props
   const parties = useParties()
   const modalTools = useModal()
-  // const [statepartyID, setStatepartyID] = useState<string>()
-  // const onOpen = useCallback(
-  //   partyID => {
-  //     modalTools.onOpen()
-  //     setStatepartyID(partyID)
-  //   },
-  //   [modalTools]
-  // )
 
   const [existGender, setExistGender] = useState<boolean>(false)
   useEffect(() => {
@@ -47,16 +37,6 @@ const HomeScreen = (props: Props) => {
     },
     [modalTools.onClose]
   )
-
-  // const onApply = useCallback(async () => {
-  //   if (!auth || !auth.uid) return
-  //   const { uid } = auth
-  //   await entryParty(uid, statepartyID)
-  //   modalTools.onClose()
-  //   if ((await checkGender(uid)) == true) {
-  //     setExistGender(true)
-  //   }
-  // }, [auth, modalTools])
 
   const FetchPartiesThumbnail = useCallback(
     (parties: Party[]) => {
@@ -88,15 +68,6 @@ const HomeScreen = (props: Props) => {
   return (
     <ScrollView>
       {FetchPartiesThumbnail(parties)}
-      {/* <Modal
-        isVisible={modalTools.isVisible}
-        title="本当に参加しますか？"
-        desc="前日のドタキャンは評価を落としかねます"
-        negative="キャンセル"
-        positive="はい"
-        onPositive={onApply}
-        onNegative={modalTools.onClose}
-      /> */}
       {auth && auth.uid && (
         <GenderModal
           isVisible={!existGender}

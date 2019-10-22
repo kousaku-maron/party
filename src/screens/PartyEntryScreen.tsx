@@ -63,8 +63,8 @@ const PartyEntryScreen = (props: Props) => {
 
   const onEntry = useCallback(() => {
     if (!enabledEntry) return
-    entryPartyMembers(members, props.navigation.state.params.partyID)
-    console.info(members) // TODO: 参加申請の関数を発火させる。
+    const organizer = members[0]
+    entryPartyMembers(organizer, members, props.navigation.state.params.partyID)
   }, [enabledEntry, members, props.navigation.state.params.partyID])
 
   useEffect(() => {
