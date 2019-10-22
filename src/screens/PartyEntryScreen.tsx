@@ -5,6 +5,7 @@ import { PartyEntryScreenState } from '../containers/PartyEntryScreen'
 import { colors } from '../themes'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { useModal } from '../services/modal'
+import { entryPartyMembers } from '../services/party'
 import * as userRepository from '../repositories/user'
 import { LoadingPage, SearchUserPage } from '../components/pages'
 import { Thumbnail, RoundedButton } from '../components/atoms'
@@ -62,8 +63,9 @@ const PartyEntryScreen = (props: Props) => {
 
   const onEntry = useCallback(() => {
     if (!enabledEntry) return
-    console.info(members) // TODO: 参加申請の関数を発火させる。
-  }, [enabledEntry, members])
+    const organizer = members[0]
+    entryPartyMembers(organizer, members, props.navigation.state.params.partyID)
+  }, [enabledEntry, members, props.navigation.state.params.partyID])
 
   useEffect(() => {
     const fetchMyUser = async () => {

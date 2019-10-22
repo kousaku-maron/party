@@ -9,8 +9,9 @@ type Props = {
   name: string
   date: Date
   width: number
+  partyID: string
   onPressDetail: () => void
-  onPressApply: () => void
+  onPressEntry: () => void
 }
 
 const MaterialDesignCard: React.FC<Props> = props => {
@@ -45,7 +46,7 @@ const MaterialDesignCard: React.FC<Props> = props => {
               width={70}
               height={30}
               padding={6}
-              onPress={props.onPressApply}
+              onPress={props.onPressEntry}
             >
               <Text style={styles.buttonText}>参加</Text>
             </AngularedButton>
