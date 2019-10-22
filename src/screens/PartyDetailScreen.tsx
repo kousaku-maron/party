@@ -1,12 +1,10 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { formatedDateMonthDateHour } from '../services/formatedDate'
 import { colors } from '../themes'
 import { RoundedButton } from '../components/atoms'
-import { Modal } from '../components/organisms'
-import { useModal } from '../services/modal'
-import { entryParty, useParty } from '../services/party'
+import { useParty } from '../services/party'
 import { PartyDetailScreenState } from '../containers/PartyDetailScreen'
 import { LoadingPage } from '../components/pages'
 
@@ -16,15 +14,9 @@ type OwnProps = {
 type Props = OwnProps & PartyDetailScreenState
 
 const PartyDetailScreen = (props: Props) => {
-  const { navigation, auth } = props
+  const { navigation } = props
   const partyID = navigation.state.params.partyID
   const party = useParty(partyID)
-  const uid = auth.uid
-  const modalTools = useModal()
-  const onEntry = useCallback(async () => {
-    await entryParty(uid, partyID)
-    modalTools.onClose()
-  }, [modalTools, partyID, uid])
 
   if (!party) {
     return <LoadingPage />
@@ -45,19 +37,16 @@ const PartyDetailScreen = (props: Props) => {
         </View>
       </ScrollView>
       <View style={styles.entryButtonWrapper}>
-        <RoundedButton color={colors.primary.main} fullWidth={true} height={48} padding={6} onPress={modalTools.onOpen}>
+        <RoundedButton
+          color={colors.primary.main}
+          fullWidth={true}
+          height={48}
+          padding={6}
+          onPress={() => props.navigation.navigate('PartyEntry', { partyID })}
+        >
           <Text style={styles.entryButtonText}>参加</Text>
         </RoundedButton>
       </View>
-      <Modal
-        isVisible={modalTools.isVisible}
-        title="本当に参加しますか？"
-        desc="前日のドタキャンは評価を落としかねます"
-        negative="キャンセル"
-        positive="はい"
-        onPositive={onEntry}
-        onNegative={modalTools.onClose}
-      />
     </View>
   )
 }
@@ -112,7 +101,8 @@ const styles = StyleSheet.create({
     padding: 24
   },
   areaText: {
-    fontSize: descriptionFontSize
+    fontSize: descriptionFontSize,
+    color: colors.tertiary.light
   },
   dateText: {
     fontSize: descriptionFontSize,
