@@ -4,6 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { HomeScreen, PartyEntryScreen, UserScreen, UserEditScreen, PartyDetailScreen } from '../containers'
 import { PostScreen } from '../screens'
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons'
+import { colors } from '../themes'
 
 type IconProps = {
   tintColor?: string
@@ -85,8 +86,12 @@ const TabNavigator = createBottomTabNavigator(
   {
     initialRouteName: 'Home',
     tabBarOptions: {
-      activeTintColor: 'black',
-      showLabel: false
+      activeTintColor: colors.primary.main,
+      inactiveTintColor: colors.tertiary.light,
+      showLabel: false,
+      style: {
+        backgroundColor: colors.senary.dark
+      }
     }
   }
 )
