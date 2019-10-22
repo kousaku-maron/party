@@ -1,35 +1,35 @@
 export const gorgeous = {
   primary: {
-    main: '#E42E33',
-    light: '#E42E33',
-    dark: '#E42E33'
+    main: '#e42e33',
+    light: '#ff675d',
+    dark: '#aa000c'
   },
   secondary: {
-    main: '#EABE61',
-    light: '#EABE61',
-    dark: '#EABE61'
+    main: '#eabe61',
+    light: '#fff091',
+    dark: '#b58e32'
   },
   tertiary: {
-    main: '#C3B1A3',
-    light: '#C3B1A3',
-    dark: '#C3B1A3'
+    main: '#c3b1a3',
+    light: '#f6e3d4',
+    dark: '#928274'
   },
   quaternary: {
     main: '#996349',
-    light: '#996349',
-    dark: '#996349'
+    light: '#cc9175',
+    dark: '#683821'
   },
   quinary: {
     main: '#840E2C',
-    light: '#840E2C',
-    dark: '#840E2C'
+    light: '#b94554',
+    dark: '#510001'
   },
   senary: {
     main: '#26170F',
-    light: '#26170F',
-    dark: '#26170F'
+    light: '#4f3d35',
+    dark: '#000000'
   },
-  inherit: '#f5f5f5', // 多分変える。
+  inherit: '#000000', // 多分変える。
   system: {
     blue: 'rgb(0, 122, 255)'
   }

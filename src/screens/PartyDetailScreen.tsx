@@ -63,7 +63,12 @@ const PartyDetailScreen = (props: Props) => {
 }
 
 PartyDetailScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca'
+  headerTitle: 'Nomoca',
+  headerBackTitle: null,
+  headerTintColor: colors.tertiary.light,
+  headerStyle: {
+    backgroundColor: colors.senary.dark
+  }
 })
 const { width } = Dimensions.get('window')
 const descriptionFontSize = 24

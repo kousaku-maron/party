@@ -67,7 +67,11 @@ const UserEditScreen = (props: Props) => {
 
 UserEditScreen.navigationOptions = () => ({
   headerTitle: 'Nomoca',
-  headerBackTitle: null
+  headerBackTitle: null,
+  headerTintColor: colors.tertiary.light,
+  headerStyle: {
+    backgroundColor: colors.senary.dark
+  }
 })
 
 const styles = StyleSheet.create({

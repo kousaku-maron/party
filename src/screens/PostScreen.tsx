@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import { colors } from '../themes'
 
 const PostScreen = () => {
   return (
@@ -10,7 +11,12 @@ const PostScreen = () => {
 }
 
 PostScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca'
+  headerTitle: 'Nomoca',
+  headerBackTitle: null,
+  headerTintColor: colors.tertiary.light,
+  headerStyle: {
+    backgroundColor: colors.senary.dark
+  }
 })
 
 const styles = StyleSheet.create({

@@ -134,7 +134,11 @@ const PartyEntryScreen = (props: Props) => {
 
 PartyEntryScreen.navigationOptions = () => ({
   headerTitle: 'Nomoca',
-  headerBackTitle: null
+  headerBackTitle: null,
+  headerTintColor: colors.tertiary.light,
+  headerStyle: {
+    backgroundColor: colors.senary.dark
+  }
 })
 
 const width = Dimensions.get('window').width
