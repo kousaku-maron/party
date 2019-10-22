@@ -10,7 +10,7 @@ type Props = {
   date: Date
   width: number
   onPressDetail: () => void
-  onPressApply: () => void
+  onPressEntry: () => void
 }
 
 const FlatDesignCard: React.FC<Props> = props => {
@@ -45,7 +45,7 @@ const FlatDesignCard: React.FC<Props> = props => {
               width={70}
               height={30}
               padding={6}
-              onPress={props.onPressApply}
+              onPress={props.onPressEntry}
             >
               <Text style={styles.buttonText}>参加</Text>
             </RoundedButton>

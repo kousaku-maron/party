@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import firebase from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 import { getUser } from '../repositories/user'
+import { User } from '../entities/'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
@@ -58,6 +59,30 @@ export const entryParty = async (uid: string, partyID: string) => {
     const membersRef = groupsRef.doc(groupDoc.id).collection('members')
     batch.set(membersRef.doc(), {
       memberID: uid
+    })
+  })
+
+  await batch.commit()
+}
+
+export const entryPartyMembers = async (members: User[], partyID: string) => {
+  const batch = db.batch()
+  if (!members || !partyID) return
+  const partyDoc = partiesRef.doc(partyID)
+  const groupsRef = partyDoc.collection('groups')
+  const groupID = groupsRef.doc().id
+  const organizer = members[0]
+
+  batch.set(groupsRef.doc(groupID), {
+    organizer: organizer.userID,
+    gender: organizer.gender,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  })
+
+  const membersRef = groupsRef.doc(groupID).collection('members')
+  members.map(member => {
+    batch.set(membersRef.doc(), {
+      memberID: member.userID
     })
   })
 
