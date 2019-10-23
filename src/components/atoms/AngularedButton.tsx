@@ -1,10 +1,8 @@
 import React from 'react'
 import { TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-native'
-import { colors } from '../../themes'
 
 type Props = {
   color?: string
-  inactiveColor?: string
   disabled?: boolean
   fullWidth?: boolean
   width?: number
@@ -13,9 +11,8 @@ type Props = {
   padding?: number
 }
 
-const RoundedButton: React.FC<Props> = ({
-  color = colors.primary.main,
-  inactiveColor = '#bdbdbd',
+const AngularedButton: React.FC<Props> = ({
+  color = '#ededed',
   disabled = false,
   fullWidth = false,
   width,
@@ -29,10 +26,9 @@ const RoundedButton: React.FC<Props> = ({
       style={[
         styles.container,
         {
-          backgroundColor: disabled ? inactiveColor : color,
+          backgroundColor: color,
           width: fullWidth ? '100%' : width,
           height,
-          borderRadius: height ? height / 2 : 25,
           padding: padding
         }
       ]}
@@ -53,4 +49,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default RoundedButton
+export default AngularedButton

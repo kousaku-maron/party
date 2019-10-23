@@ -2,8 +2,10 @@ export type User = {
   enabled: boolean
   isAccepted: boolean
   uid: string
-  name?: string
+  userID: string
+  name: string
   thumbnailURL?: string
+  gender?: string
 }
 
 export const buildUser = (data: firebase.firestore.DocumentData) => {
@@ -11,11 +13,13 @@ export const buildUser = (data: firebase.firestore.DocumentData) => {
     enabled: data.enabled,
     isAccepted: data.isAccepted,
     uid: data.uid,
+    userID: data.userID,
     name: data.name,
-    thumbnailURL: data.thumbnailURL
+    thumbnailURL: data.thumbnailURL,
+    gender: data.gender
   }
 
   return newUser
 }
 
-export type UpdateUser = Pick<User, 'uid' | 'name' | 'thumbnailURL'>
+export type UpdateUser = Pick<User, 'uid' | 'name' | 'thumbnailURL'> & { userID?: string }

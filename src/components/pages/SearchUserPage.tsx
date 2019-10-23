@@ -9,8 +9,10 @@ import { FullScreenModal } from '../templates'
 type Props = {
   isVisible: boolean
   onClose: () => void
+  ignoreUserIDs?: string[]
   onChangeUserID?: (userID: string) => void
   onSubmitUserID?: (userID: string) => void
+  onSelectUser?: (user: User) => void
 }
 
 const useSearchButton = () => {
@@ -20,7 +22,7 @@ const useSearchButton = () => {
   const show = useCallback(() => {
     Animated.parallel([
       Animated.timing(buttonWidth, { toValue: 50, duration: 200 }),
-      Animated.timing(buttonPaddingLeft, { toValue: 8, duration: 200 })
+      Animated.timing(buttonPaddingLeft, { toValue: 12, duration: 200 })
     ]).start()
   }, [buttonPaddingLeft, buttonWidth])
 
@@ -37,7 +39,7 @@ const useSearchButton = () => {
 const SearchUserPage = (props: Props) => {
   const [value, setValue] = useState<string>('')
   const searchButtonTools = useSearchButton()
-  const { users, search } = useSearchUsers()
+  const { users, search } = useSearchUsers({ ignoreUserIDs: props.ignoreUserIDs })
 
   const onChangeText = useCallback(
     (text: string) => {
@@ -55,6 +57,15 @@ const SearchUserPage = (props: Props) => {
       props.onSubmitUserID(value)
     }
   }, [props, search, value])
+
+  const onSelectUser = useCallback(
+    (user: User) => {
+      if (props.onSelectUser) {
+        props.onSelectUser(user)
+      }
+    },
+    [props]
+  )
 
   return (
     <FullScreenModal title="Nomoca" isVisible={props.isVisible} onClose={props.onClose}>
@@ -86,7 +97,7 @@ const SearchUserPage = (props: Props) => {
         </View>
         <ScrollView>
           {users.map((user: User) => (
-            <UserListItem key={user.uid} user={user} />
+            <UserListItem key={user.userID} user={user} onPress={() => onSelectUser(user)} />
           ))}
         </ScrollView>
       </View>

@@ -1,9 +1,10 @@
 import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
-import { UserScreen, UserEditScreen } from '../containers'
-import { HomeScreen, PostScreen } from '../screens'
+import { HomeScreen, PartyEntryScreen, UserScreen, UserEditScreen, PartyDetailScreen } from '../containers'
+import { PostScreen } from '../screens'
 import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons'
+import { colors } from '../themes'
 
 type IconProps = {
   tintColor?: string
@@ -33,7 +34,9 @@ const UserIcon = ({ tintColor, focused }: IconProps) => {
 
 const HomeNavigator = createStackNavigator(
   {
-    Main: HomeScreen
+    Main: HomeScreen,
+    PartyEntry: PartyEntryScreen,
+    PartyDetail: PartyDetailScreen
   },
   {
     initialRouteName: 'Main'
@@ -83,8 +86,12 @@ const TabNavigator = createBottomTabNavigator(
   {
     initialRouteName: 'Home',
     tabBarOptions: {
-      activeTintColor: 'black',
-      showLabel: false
+      activeTintColor: colors.primary.main,
+      inactiveTintColor: colors.tertiary.light,
+      showLabel: false,
+      style: {
+        backgroundColor: colors.senary.dark
+      }
     }
   }
 )

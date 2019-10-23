@@ -62,9 +62,8 @@ const UserScreen = (props: Props) => {
           <Text style={styles.nameText}>{user.name}</Text>
         </View>
 
-        {/* TODO: ID実装後、IDに変更 */}
         <View style={styles.idWrapper}>
-          <Text style={styles.idText}>@{user.uid}</Text>
+          <Text style={styles.idText}>@{user.userID}</Text>
         </View>
 
         {user.isAccepted && (
@@ -119,7 +118,11 @@ const UserScreen = (props: Props) => {
 
 UserScreen.navigationOptions = () => ({
   headerTitle: 'Nomoca',
-  headerBackTitle: null
+  headerBackTitle: null,
+  headerTintColor: colors.tertiary.light,
+  headerStyle: {
+    backgroundColor: colors.senary.dark
+  }
 })
 
 // const hairlineWidth = StyleSheet.hairlineWidth

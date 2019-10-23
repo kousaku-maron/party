@@ -1,14 +1,23 @@
 export type Party = {
-  uid: string
+  id: string
   name: string
   thumbnailURL?: string
+  enabled: boolean
+  date: Date
 }
 
-export const buildParty = (data: firebase.firestore.DocumentData) => {
+export const buildParty = (id: string, data: firebase.firestore.DocumentData) => {
   const newParty = {
-    uid: data.uid,
+    id,
     name: data.name,
-    thumbnailURL: data.thumbnailURL
+    thumbnailURL: data.thumbnailURL,
+    enabled: data.enabled,
+    date: data.date.toDate()
   }
   return newParty
+}
+
+export type EntryParty = Pick<Party, 'uid'> & {
+  userUIDs: string[]
+  organizerUID: string
 }
