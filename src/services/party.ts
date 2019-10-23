@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import firebase from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 import { getUser } from '../repositories/user'
+import { createDocument } from './document'
 import { User } from '../entities'
 
 const db = firebase.firestore()
@@ -47,19 +48,28 @@ export const entryParty = async (uid: string, partyID: string) => {
   if (!uid || !partyID) return
   const partyDoc = partiesRef.doc(partyID)
   const groupsRef = partyDoc.collection('groups')
-  batch.set(groupsRef.doc(), {
-    organizer: uid,
-    gender: user.gender,
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  })
+
+  // TODO: repository層に退避
+  batch.set(
+    groupsRef.doc(),
+    createDocument({
+      organizer: uid,
+      gender: user.gender
+    })
+  )
 
   const snapShot = await groupsRef.where('organizer', '==', uid).get()
 
   snapShot.docs.map(groupDoc => {
     const membersRef = groupsRef.doc(groupDoc.id).collection('members')
-    batch.set(membersRef.doc(), {
-      memberID: uid
-    })
+
+    // TODO: repository層に退避
+    batch.set(
+      membersRef.doc(),
+      createDocument({
+        memberID: uid
+      })
+    )
   })
 
   await batch.commit()
@@ -72,17 +82,25 @@ export const entryPartyMembers = async (organizer, members: User[], partyID: str
   const groupsRef = partyDoc.collection('groups')
   const groupID = groupsRef.doc().id
 
-  batch.set(groupsRef.doc(groupID), {
-    organizer: organizer.userID,
-    gender: organizer.gender,
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  })
+  // TODO: repository層に退避
+  batch.set(
+    groupsRef.doc(groupID),
+    createDocument({
+      organizer: organizer.userID,
+      gender: organizer.gender
+    })
+  )
 
   const membersRef = groupsRef.doc(groupID).collection('members')
+
+  // TODO: repository層に退避
   members.map(member => {
-    batch.set(membersRef.doc(), {
-      memberID: member.userID
-    })
+    batch.set(
+      membersRef.doc(),
+      createDocument({
+        memberID: member.userID
+      })
+    )
   })
 
   await batch.commit()

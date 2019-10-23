@@ -1,5 +1,6 @@
-import firebase, { db, storage, functions } from './firebase'
+import { db, storage, functions } from './firebase'
 import { buildUser, UpdateUser } from '../entities'
+import { updateDocument } from '../services/document'
 
 const storageRef = storage.ref('users')
 const usersRef = db.collection('users')
@@ -62,24 +63,17 @@ export const setUser = async (uid: string, user: UpdateUser) => {
       }
 
       await usersRef.doc(uid).set(
-        {
+        updateDocument({
           name: user.name,
-          thumbnailURL,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        },
+          thumbnailURL
+        }),
         { merge: true }
       )
 
       return { result: true }
     }
 
-    await usersRef.doc(uid).set(
-      {
-        name: user.name,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      },
-      { merge: true }
-    )
+    await usersRef.doc(uid).set(updateDocument({ name: user.name }), { merge: true })
 
     return { result: true }
   } catch (e) {
