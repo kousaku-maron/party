@@ -6,8 +6,7 @@ import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator'
 import * as Permissions from 'expo-permissions'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
-import { buildUser, User } from '../entities'
-import { updateDocument } from '../services/document'
+import { buildUser, User, updateDocument } from '../entities'
 
 const usersRef = db.collection('users')
 

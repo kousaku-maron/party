@@ -1,6 +1,5 @@
 import { db, storage, functions } from './firebase'
-import { buildUser, UpdateUser } from '../entities'
-import { updateDocument } from '../services/document'
+import { buildUser, UpdateUser, updateDocument } from '../entities'
 
 const storageRef = storage.ref('users')
 const usersRef = db.collection('users')

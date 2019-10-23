@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import firebase from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 import { getUser } from '../repositories/user'
-import { createDocument } from './document'
-import { User } from '../entities'
+import { User, createDocument } from '../entities'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
