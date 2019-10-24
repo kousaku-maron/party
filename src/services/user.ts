@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator'
 import * as Permissions from 'expo-permissions'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
-import { buildUser, User } from '../entities'
+import { buildUser, User, updateDocument } from '../entities'
 
 const usersRef = db.collection('users')
 
@@ -168,7 +168,11 @@ export const checkGender = async (uid: string) => {
 
 export const setGender = async (uid: string, gender: string) => {
   const useDoc = usersRef.doc(uid)
-  useDoc.update({
-    gender: gender
-  })
+
+  // TODO: repository層に退避
+  useDoc.update(
+    updateDocument({
+      gender: gender
+    })
+  )
 }

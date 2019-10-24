@@ -24,7 +24,6 @@ export const setCertificate = async (uid: string, url: string) => {
     })
 }
 
-// MEMO: firestoreにURL保存した方がいいかも。
 export const getCertificate = async (uid: string) => {
   const certificateRef = storageRef.child(`${uid}/secure/certificate.png`)
 
