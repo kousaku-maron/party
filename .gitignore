@@ -12,3 +12,4 @@ web-build/
 web-report/
 *.log
 src/repositories/firebase/config.ts
+.DS_Store
