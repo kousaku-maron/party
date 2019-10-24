@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     display: 'flex',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    backgroundColor: 'rgba(20, 20, 20, 0.8)',
     borderRadius: Platform.OS === 'ios' ? 16 : 3,
     justifyContent: 'center',
     alignItems: 'center',
