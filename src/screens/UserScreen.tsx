@@ -74,7 +74,7 @@ const UserScreen = (props: Props) => {
 
         {!user.isAccepted && (
           <View style={styles.isNotacceptedWrapper}>
-            <RoundedButton color={colors.primary.main} fullWidth={true} onPress={_pickCertificateImage}>
+            <RoundedButton color={colors.tints.primary.main} fullWidth={true} onPress={_pickCertificateImage}>
               <Text style={styles.acceptText}>身分証をアップロードする</Text>
             </RoundedButton>
           </View>
@@ -119,9 +119,9 @@ const UserScreen = (props: Props) => {
 UserScreen.navigationOptions = () => ({
   headerTitle: 'Nomoca',
   headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
+  headerTintColor: colors.foregrounds.primary,
   headerStyle: {
-    backgroundColor: colors.senary.dark
+    backgroundColor: colors.backgrounds.secondary
   }
 })
 
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: colors.inherit
+    backgroundColor: colors.backgrounds.primary
   },
   editFab: {
     position: 'absolute',
@@ -179,8 +179,7 @@ const styles = StyleSheet.create({
     width: '80%',
     padding: 24,
     borderRadius: Platform.OS === 'ios' ? 16 : 3,
-    backgroundColor: 'white',
-    shadowColor: '#cccccc',
+    backgroundColor: colors.backgrounds.secondary,
     shadowOffset: {
       width: 0,
       height: 5
@@ -194,19 +193,20 @@ const styles = StyleSheet.create({
     height: 200
   },
   nameText: {
-    fontSize: 18
+    fontSize: 18,
+    color: colors.foregrounds.primary
   },
   idText: {
     fontSize: 12,
-    color: 'gray'
+    color: colors.foregrounds.secondary
   },
   acceptText: {
     fontSize: 14,
-    color: 'white'
+    color: colors.foregrounds.ontint
   },
   acceptCaptionText: {
-    fontSize: 12
-    // color: 'gray'
+    fontSize: 12,
+    color: colors.foregrounds.secondary
   },
   signoutText: {
     color: colors.system.blue

@@ -13,9 +13,9 @@ const PostScreen = () => {
 PostScreen.navigationOptions = () => ({
   headerTitle: 'Nomoca',
   headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
+  headerTintColor: colors.foregrounds.primary,
   headerStyle: {
-    backgroundColor: colors.senary.dark
+    backgroundColor: colors.backgrounds.secondary
   }
 })
 

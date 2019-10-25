@@ -86,11 +86,11 @@ const TabNavigator = createBottomTabNavigator(
   {
     initialRouteName: 'Home',
     tabBarOptions: {
-      activeTintColor: colors.primary.main,
-      inactiveTintColor: colors.tertiary.light,
+      activeTintColor: colors.tints.primary.main,
+      inactiveTintColor: colors.system.gray,
       showLabel: false,
       style: {
-        backgroundColor: colors.senary.dark
+        backgroundColor: colors.backgrounds.secondary
       }
     }
   }

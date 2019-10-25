@@ -39,8 +39,8 @@ const UserEditScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.editFab}>
-        <Fab color={colors.primary.main} onPress={updateUserState}>
-          <MaterialIcons color="white" name="done" size={24} />
+        <Fab color={colors.tints.primary.main} onPress={updateUserState}>
+          <MaterialIcons color={colors.foregrounds.ontint} name="done" size={24} />
         </Fab>
       </View>
 
@@ -68,9 +68,9 @@ const UserEditScreen = (props: Props) => {
 UserEditScreen.navigationOptions = () => ({
   headerTitle: 'Nomoca',
   headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
+  headerTintColor: colors.foregrounds.primary,
   headerStyle: {
-    backgroundColor: colors.senary.dark
+    backgroundColor: colors.backgrounds.secondary
   }
 })
 
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: colors.inherit
+    backgroundColor: colors.backgrounds.primary
   },
   editFab: {
     position: 'absolute',
@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 16,
-    fontWeight: 'bold'
-    // color: 'gray'
+    fontWeight: 'bold',
+    color: colors.foregrounds.primary
   }
 })
 

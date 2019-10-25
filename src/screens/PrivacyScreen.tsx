@@ -9,9 +9,9 @@ const PrivacyScreen = () => {
 PrivacyScreen.navigationOptions = () => ({
   headerTitle: 'プライバシーポリシー',
   headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
+  headerTintColor: colors.foregrounds.primary,
   headerStyle: {
-    backgroundColor: colors.senary.dark
+    backgroundColor: colors.backgrounds.secondary
   }
 })
 

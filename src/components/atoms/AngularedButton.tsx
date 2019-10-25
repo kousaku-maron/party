@@ -1,5 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-native'
+import { colors } from '../../themes'
 
 type Props = {
   color?: string
@@ -12,7 +13,7 @@ type Props = {
 }
 
 const AngularedButton: React.FC<Props> = ({
-  color = '#ededed',
+  color = colors.tints.primary.main,
   disabled = false,
   fullWidth = false,
   width,

@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     paddingBottom: 6
   },
   description: {
-    backgroundColor: colors.primary.main,
+    backgroundColor: colors.tints.primary.main,
     height: 80,
     justifyContent: 'space-between',
     padding: 6,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: colors.primary.dark
+    color: colors.tints.primary.dark
   }
 })
 

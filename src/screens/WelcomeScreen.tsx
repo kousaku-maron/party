@@ -41,9 +41,9 @@ const WelcomeScreen = (props: Props) => {
       </View>
       <View style={styles.actionArea}>
         <View style={styles.buttonWrapper}>
-          <RoundedButton color={colors.primary.main} height={56} fullWidth={true} onPress={signIn}>
+          <RoundedButton color={colors.tints.primary.main} height={56} fullWidth={true} onPress={signIn}>
             <View style={styles.iconWrapper}>
-              <AntDesign name="facebook-square" size={32} color={colors.tertiary.light} />
+              <AntDesign name="facebook-square" size={32} color={colors.foregrounds.ontint} />
             </View>
             <Text style={styles.fbText}>Facebookでログイン</Text>
           </RoundedButton>
@@ -67,9 +67,9 @@ const WelcomeScreen = (props: Props) => {
 WelcomeScreen.navigationOptions = () => ({
   header: null,
   headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
+  headerTintColor: colors.foregrounds.primary,
   headerStyle: {
-    backgroundColor: colors.senary.dark
+    backgroundColor: colors.backgrounds.secondary
   }
 })
 
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.inherit
+    backgroundColor: colors.backgrounds.primary
   },
   // overlay: {
   //   flex: 1,
@@ -120,20 +120,20 @@ const styles = StyleSheet.create({
     width: 300
   },
   titleText: {
-    color: colors.tertiary.light,
+    color: colors.tints.primary.main,
     fontSize: 64
   },
   subText: {
-    color: colors.tertiary.light,
+    color: colors.tints.primary.main,
     fontSize: 20,
     letterSpacing: 4
   },
   fbText: {
-    color: colors.tertiary.light,
+    color: colors.foregrounds.ontint,
     fontSize: 18
   },
   termText: {
-    color: colors.tertiary.light,
+    color: colors.foregrounds.secondary,
     fontSize: 12,
     fontWeight: '300'
   },

@@ -5,6 +5,7 @@ import { useSearchUsers } from '../../services/user'
 import { TextBox } from '../atoms'
 import { UserListItem } from '../organisms'
 import { FullScreenModal } from '../templates'
+import { colors } from '../../themes'
 
 type Props = {
   isVisible: boolean
@@ -126,7 +127,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   buttonText: {
-    fontSize: 18
+    fontSize: 18,
+    color: colors.foregrounds.primary
   }
 })
 

@@ -2,6 +2,7 @@ import React, { useMemo, useCallback } from 'react'
 import { User } from '../../entities'
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
 import { Thumbnail, RoundedButton } from '../atoms'
+import { colors } from '../../themes'
 
 type Props = {
   user: User
@@ -58,8 +59,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width,
     height: 75,
-    padding: 12,
-    backgroundColor: 'white'
+    padding: 12
+    // backgroundColor: colors.backgrounds.primary
   },
   head: {
     display: 'flex',
@@ -75,11 +76,12 @@ const styles = StyleSheet.create({
     paddingRight: 12
   },
   nameText: {
-    fontSize: 16
+    fontSize: 16,
+    color: colors.foregrounds.primary
   },
   idText: {
     fontSize: 12,
-    color: 'gray'
+    color: colors.foregrounds.secondary
   }
 })
 

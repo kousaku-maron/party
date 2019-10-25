@@ -107,7 +107,7 @@ const PartyEntryScreen = (props: Props) => {
                       <Thumbnail size={100} onPress={() => onSearch(index)} />
                     )}
                   </View>
-                  <Text>{member.name}</Text>
+                  <Text style={styles.nameText}>{member.name}</Text>
                   <Text style={styles.idText}>@{member.userID}</Text>
                 </View>
               )
@@ -135,9 +135,9 @@ const PartyEntryScreen = (props: Props) => {
 PartyEntryScreen.navigationOptions = () => ({
   headerTitle: 'Nomoca',
   headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
+  headerTintColor: colors.foregrounds.primary,
   headerStyle: {
-    backgroundColor: colors.senary.dark
+    backgroundColor: colors.backgrounds.secondary
   }
 })
 
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     display: 'flex',
-    backgroundColor: colors.inherit
+    backgroundColor: colors.backgrounds.primary
   },
   inner: {
     display: 'flex',
@@ -173,14 +173,18 @@ const styles = StyleSheet.create({
     bottom: 24
   },
   titleText: {
-    fontSize: 24
+    fontSize: 24,
+    color: colors.foregrounds.primary
+  },
+  nameText: {
+    color: colors.foregrounds.primary
   },
   idText: {
-    color: 'gray'
+    color: colors.foregrounds.secondary
   },
   entryText: {
     fontSize: 20,
-    color: 'white'
+    color: colors.foregrounds.ontint
   }
 })
 

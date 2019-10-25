@@ -6,6 +6,7 @@ import {
   TextInputSubmitEditingEventData,
   StyleSheet
 } from 'react-native'
+import { colors } from '../../themes'
 
 type AutoCapitalizeOptions = 'none' | 'sentences' | 'words' | 'characters'
 
@@ -30,8 +31,8 @@ const CustomTextInput: React.FC<Props> = ({
   value,
   onChangeText,
   onSubmitEditing,
-  color = 'black',
-  borderColor = 'black',
+  color = colors.foregrounds.primary,
+  borderColor = colors.foregrounds.primary,
   // disabled = false,
   fullWidth = false,
   width = 250,

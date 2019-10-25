@@ -38,7 +38,7 @@ const PartyDetailScreen = (props: Props) => {
       </ScrollView>
       <View style={styles.entryButtonWrapper}>
         <RoundedButton
-          color={colors.primary.main}
+          color={colors.tints.primary.main}
           fullWidth={true}
           height={48}
           padding={6}
@@ -54,9 +54,9 @@ const PartyDetailScreen = (props: Props) => {
 PartyDetailScreen.navigationOptions = () => ({
   headerTitle: 'Nomoca',
   headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
+  headerTintColor: colors.foregrounds.primary,
   headerStyle: {
-    backgroundColor: colors.senary.dark
+    backgroundColor: colors.backgrounds.secondary
   }
 })
 const { width } = Dimensions.get('window')
@@ -67,25 +67,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     display: 'flex',
-    backgroundColor: colors.inherit
+    backgroundColor: colors.backgrounds.primary
   },
   inner: {
     display: 'flex',
     alignItems: 'center'
-  },
-  calender: {
-    height: 60,
-    width: 60,
-    alignItems: 'center',
-    backgroundColor: colors.primary.main
-  },
-  calenderMonth: {
-    color: 'white',
-    fontSize: 20
-  },
-  calenderDay: {
-    color: 'white',
-    fontSize: 25
   },
   titleTextWrapper: {
     width: '100%',
@@ -102,11 +88,11 @@ const styles = StyleSheet.create({
   },
   areaText: {
     fontSize: descriptionFontSize,
-    color: colors.tertiary.light
+    color: colors.foregrounds.primary
   },
   dateText: {
     fontSize: descriptionFontSize,
-    color: 'gray'
+    color: colors.foregrounds.secondary
   },
   entryButtonWrapper: {
     position: 'absolute',
@@ -116,7 +102,7 @@ const styles = StyleSheet.create({
   },
   entryButtonText: {
     fontSize: 32,
-    color: '#FFFFFF'
+    color: colors.foregrounds.ontint
   }
 })
 

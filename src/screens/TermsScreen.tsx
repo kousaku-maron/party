@@ -9,9 +9,9 @@ const TermsScreen = () => {
 TermsScreen.navigationOptions = () => ({
   headerTitle: '利用規約',
   headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
+  headerTintColor: colors.foregrounds.primary,
   headerStyle: {
-    backgroundColor: colors.senary.dark
+    backgroundColor: colors.backgrounds.secondary
   }
 })
 

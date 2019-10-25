@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Platform
 } from 'react-native'
+import { colors } from '../../themes'
 
 type AutoCapitalizeOptions = 'none' | 'sentences' | 'words' | 'characters'
 
@@ -39,8 +40,8 @@ const CustomTextInput: React.FC<Props> = ({
   onSubmitEditing,
   onEndEditing,
   onFocus,
-  color = 'black',
-  backgroundColor = '#ededed',
+  color = colors.foregrounds.primary,
+  backgroundColor = colors.foregrounds.placeholder,
   // disabled = false,
   fullWidth = false,
   width = 250,

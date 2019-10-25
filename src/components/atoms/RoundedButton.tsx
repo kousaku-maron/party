@@ -14,8 +14,8 @@ type Props = {
 }
 
 const RoundedButton: React.FC<Props> = ({
-  color = colors.primary.main,
-  inactiveColor = '#bdbdbd',
+  color = colors.tints.primary.main,
+  inactiveColor = colors.system.gray,
   disabled = false,
   fullWidth = false,
   width,

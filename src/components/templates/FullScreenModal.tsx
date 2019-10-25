@@ -8,6 +8,7 @@ import {
 } from '../../services/design'
 import Modal from 'react-native-modal'
 import { AntDesign } from '@expo/vector-icons'
+import { colors } from '../../themes'
 
 type Props = {
   title?: string
@@ -23,7 +24,7 @@ const FullScreenModal: React.FC<Props> = props => {
           <View style={styles.header}>
             <Text style={styles.titleText}>{props.title}</Text>
             <TouchableOpacity style={styles.closeWrapper} onPress={props.onClose}>
-              <AntDesign name="close" size={24} />
+              <AntDesign name="close" size={24} color={colors.foregrounds.secondary} />
             </TouchableOpacity>
           </View>
           {props.children}
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
   inner: {
     flex: 1,
     paddingTop: TOP_SPACE,
-    backgroundColor: 'white'
+    backgroundColor: colors.backgrounds.secondary
   },
   header: {
     position: 'relative',
@@ -62,8 +63,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: APPBAR_HEIGHT,
-    backgroundColor: 'white',
-    borderBottomColor: 'gray',
+    backgroundColor: colors.backgrounds.secondary,
+    borderBottomColor: colors.foregrounds.separator,
     borderBottomWidth: hairlineWidth,
     zIndex: 500
   },
@@ -74,7 +75,8 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 17,
-    fontWeight: '600'
+    fontWeight: '600',
+    color: colors.foregrounds.primary
   }
 })
 

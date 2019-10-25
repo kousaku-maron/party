@@ -1,5 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-native'
+import { colors } from '../../themes'
 
 type Props = {
   color?: string
@@ -8,7 +9,13 @@ type Props = {
   onPress?: (event: GestureResponderEvent) => void
 }
 
-const Fab: React.FC<Props> = ({ color = '#ededed', disabled = false, size = 48, onPress, children }) => {
+const Fab: React.FC<Props> = ({
+  color = colors.tints.primary.main,
+  disabled = false,
+  size = 48,
+  onPress,
+  children
+}) => {
   return (
     <TouchableOpacity
       style={[styles.container, { backgroundColor: color, width: size, height: size, borderRadius: size / 2 }]}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, TouchableOpacity, Image, GestureResponderEvent, StyleSheet } from 'react-native'
+import { colors } from '../../themes'
 
 type Props = {
   uri?: string
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'gray'
+    backgroundColor: colors.system.gray
   }
 })
 
