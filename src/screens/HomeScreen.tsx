@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { useParties } from '../services/party'
@@ -18,24 +18,12 @@ const HomeScreen = (props: Props) => {
   const { user } = auth
   const parties = useParties()
 
-  const [existGender, setExistGender] = useState<boolean>(true)
-  const [_isAccepted, setIsAccepted] = useState<boolean>(true)
   const genderModalTools = useModal()
   const isAcceptedModalTools = useModal()
-
-  useEffect(() => {
-    const funcCheckGender = async () => {
-      if (!auth || !user) return
-      setExistGender(user.gender ? true : false)
-      setIsAccepted(user.isAccepted)
-    }
-    funcCheckGender()
-  }, [auth, user])
 
   const onSetGender = useCallback(
     async (uid, gender) => {
       await setGender(uid, gender)
-      setExistGender(true)
       genderModalTools.onClose()
     },
     [genderModalTools]
@@ -43,17 +31,18 @@ const HomeScreen = (props: Props) => {
 
   const onPressEntry = useCallback(
     partyID => {
-      if (!_isAccepted) {
+      if (!user) return
+      if (!user.isAccepted) {
         isAcceptedModalTools.onOpen()
       }
-      if (!existGender) {
+      if (!user.gender) {
         genderModalTools.onOpen()
       }
-      if (_isAccepted && existGender) {
+      if (user.isAccepted && user.gender) {
         props.navigation.navigate('PartyEntry', { partyID })
       }
     },
-    [_isAccepted, existGender, genderModalTools, isAcceptedModalTools, props.navigation]
+    [genderModalTools, isAcceptedModalTools, props.navigation, user]
   )
 
   const FetchPartiesThumbnail = useCallback(
