@@ -41,7 +41,7 @@ jobs:
           command: yarn -s run expo login --non-interactive -u $EXPO_USERNAME -p $EXPO_PASSWORD
       - run: 
           name: Publish to Expo
-          command: yarn -s run expo publish --non-interactive --max-workers 1 -- release-channel $EXPO_RELEASE_CHANNEL
+          command: yarn -s run expo publish --non-interactive --max-workers 1 --release-channel $EXPO_RELEASE_CHANNEL
 
 workflows:
   version: 2
