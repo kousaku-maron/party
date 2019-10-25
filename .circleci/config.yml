@@ -33,6 +33,9 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "yarn.lock" }}-{{ checksum "package.json" }}
+      - run:
+          name: Install Expo global
+          command: yarn global expo-cli
       - run: 
           name: Login into Expo
           command: yarn -s run expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
