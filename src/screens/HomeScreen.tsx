@@ -101,7 +101,7 @@ const HomeScreen = (props: Props) => {
       />
       <Modal
         isVisible={isAcceptedModalTools.isVisible}
-        title="本人確認中です、承認されるまでお待ちください。"
+        title={'本人確認中です。\n承認されるまでお待ちください。'}
         negative="戻る"
         positive="OK"
         onPositive={isAcceptedModalTools.onClose}
