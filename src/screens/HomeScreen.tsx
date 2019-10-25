@@ -33,14 +33,12 @@ const HomeScreen = (props: Props) => {
     partyID => {
       if (!user) return
       if (!user.isAccepted) {
-        isAcceptedModalTools.onOpen()
+        return isAcceptedModalTools.onOpen()
       }
       if (!user.gender) {
-        genderModalTools.onOpen()
+        return genderModalTools.onOpen()
       }
-      if (user.isAccepted && user.gender) {
-        props.navigation.navigate('PartyEntry', { partyID })
-      }
+      props.navigation.navigate('PartyEntry', { partyID })
     },
     [genderModalTools, isAcceptedModalTools, props.navigation, user]
   )
