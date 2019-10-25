@@ -42,7 +42,7 @@ const PartyDetailScreen = (props: Props) => {
           fullWidth={true}
           height={48}
           padding={6}
-          onPress={() => props.navigation.navigate('PartyEntry', { partyID })}
+          onPress={navigation.state.params.onPressEntry}
         >
           <Text style={styles.entryButtonText}>参加</Text>
         </RoundedButton>
