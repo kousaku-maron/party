@@ -1,1 +1,1 @@
-export { gorgeous as colors } from './colors'
+export { dark as colors } from './gorgeous'
