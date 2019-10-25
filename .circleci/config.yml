@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  "test":
+  test:
     docker:
       - image: circleci/node:12.9.1
     working_directory: ~/repo
@@ -18,7 +18,7 @@ jobs:
       - run: yarn lint
   
   # TODO: add expo publish process
-  "publish":
+  publish:
     docker:
       - image: circleci/node:12.9.1
     steps:
@@ -29,11 +29,11 @@ workflows:
   version: 2
   test_and_build:
     jobs:
-      - "test"
-      - "publish":
-        filters:
-          branches:
-            only:
-              - master
-        requires:
-          - test
+      - test
+      - publish:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - test
