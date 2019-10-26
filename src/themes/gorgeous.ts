@@ -89,25 +89,25 @@ export const light = {
     }
   },
   foregrounds: {
-    primary: 'rgb(255, 255, 255)',
-    secondary: 'rgba(235, 235, 245, 0.6)',
-    tertiary: 'rgba(235, 235, 245, 0.3)',
-    placeholder: 'rgba(235, 235, 245, 0.3)',
-    separator: 'rgba(84, 84, 88, 0.6)',
+    primary: 'rgb(0, 0, 0)',
+    secondary: 'rgba(60, 60, 67, 0.6)',
+    tertiary: 'rgba(60, 60, 67, 0.3)',
+    placeholder: 'rgba(60, 60, 67, 0.3)',
+    separator: 'rgba(60, 60, 67, 0.29)',
     ontint: 'rgb(255, 255, 255)'
   },
   backgrounds: {
-    primary: 'rgb(0, 0, 0)',
-    secondary: 'rgb(28, 28, 30)',
-    tertiary: 'rgb(44, 44, 46)'
+    primary: 'rgb(255, 255, 255)',
+    secondary: 'rgb(242, 242, 247)',
+    tertiary: 'rgb(255, 255, 255)'
   },
   system: {
-    blue: 'rgb(10, 132, 255)',
+    blue: 'rgb(0, 122, 255)',
     gray: 'rgb(142, 142, 147)',
-    gray2: 'rgb(99, 99, 102)',
-    gray3: 'rgb(72, 72, 74)',
-    gray4: 'rgb(58, 58, 60)',
-    gray5: 'rgb(44, 44, 46)',
-    gray6: 'rgb(28, 28, 30)'
+    gray2: 'rgb(174, 174, 178)',
+    gray3: 'rgb(199, 199, 204)',
+    gray4: 'rgb(209, 209, 214)',
+    gray5: 'rgb(229, 229, 234)',
+    gray6: 'rgb(242, 242, 247)'
   }
 }
