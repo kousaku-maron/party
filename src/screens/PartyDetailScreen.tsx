@@ -2,11 +2,13 @@ import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { formatedDateMonthDateHour } from '../services/formatedDate'
-import { colors } from '../themes'
 import { RoundedButton } from '../components/atoms'
 import { useParty } from '../services/party'
+import { getColors } from '../services/design'
 import { PartyDetailScreenState } from '../containers/PartyDetailScreen'
 import { LoadingPage } from '../components/pages'
+
+const colors = getColors()
 
 type OwnProps = {
   navigation: NavigationStackProp

@@ -1,6 +1,8 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { colors } from '../themes'
+import { getColors } from '../services/design'
+
+const colors = getColors()
 
 const PostScreen = () => {
   return (

@@ -2,7 +2,9 @@ import React, { useMemo, useCallback } from 'react'
 import { User } from '../../entities'
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
 import { Thumbnail, RoundedButton } from '../atoms'
-import { colors } from '../../themes'
+import { getColors } from '../../services/design'
+
+const colors = getColors()
 
 type Props = {
   user: User

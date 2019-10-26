@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
-import { colors } from '../themes'
+import { getColors } from '../services/design'
 import { useUser } from '../services/user'
 import { useCertificate } from '../services/secure'
 import { useModal } from '../services/modal'
@@ -10,6 +10,8 @@ import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton, Thumbnail } from '../components/atoms'
 import { UploadCertificateModal } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
+
+const colors = getColors()
 
 type OwnProps = {
   navigation: NavigationStackProp

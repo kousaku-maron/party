@@ -2,10 +2,12 @@ import React, { useState, useRef, useCallback } from 'react'
 import { User } from '../../entities'
 import { View, ScrollView, TouchableOpacity, Animated, StyleSheet } from 'react-native'
 import { useSearchUsers } from '../../services/user'
+import { getColors } from '../../services/design'
 import { TextBox } from '../atoms'
 import { UserListItem } from '../organisms'
 import { FullScreenModal } from '../templates'
-import { colors } from '../../themes'
+
+const colors = getColors()
 
 type Props = {
   isVisible: boolean

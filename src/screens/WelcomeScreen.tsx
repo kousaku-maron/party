@@ -1,10 +1,12 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { WelcomeScreenState, WelcomeScreenActions } from '../containers/WelcomeScreen'
-import { colors } from '../themes'
+import { getColors } from '../services/design'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton } from '../components/atoms'
+
+const colors = getColors()
 
 type OwnProps = {
   navigation: NavigationStackProp

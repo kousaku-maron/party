@@ -3,12 +3,14 @@ import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { useParties } from '../services/party'
 import { useModal } from '../services/modal'
+import { getColors } from '../services/design'
 import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
-import { colors } from '../themes'
 import { Card, GenderModal } from '../components/organisms'
 import { checkGender, setGender } from '../services/user'
 import { Party } from '../entities/Party'
+
+const colors = getColors()
 
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps & HomeScreenState

@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import {
+  getColors,
   isIPhoneX,
   isIPhoneXAbove,
   X_ABOVE_HEADER_NOTCH_HEIGHT,
@@ -8,7 +9,8 @@ import {
 } from '../../services/design'
 import Modal from 'react-native-modal'
 import { AntDesign } from '@expo/vector-icons'
-import { colors } from '../../themes'
+
+const colors = getColors()
 
 type Props = {
   title?: string

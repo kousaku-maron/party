@@ -2,7 +2,9 @@ import React, { useEffect } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { AuthLoadingScreenState } from '../containers/AuthLoadingScreen'
 import { View, StyleSheet, ActivityIndicator } from 'react-native'
-import { colors } from '../themes'
+import { getColors } from '../services/design'
+
+const colors = getColors()
 
 type OwnProps = {
   navigation: NavigationStackProp

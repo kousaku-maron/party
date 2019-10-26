@@ -1,8 +1,10 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native'
-import { colors } from '../../themes'
+import { getColors } from '../../services/design'
 import { formatedDateFull } from '../../services/formatedDate'
 import { RoundedButton } from '../atoms'
+
+const colors = getColors()
 
 type Props = {
   uri: ImageSourcePropType

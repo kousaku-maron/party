@@ -1,7 +1,9 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import Modal from 'react-native-modal'
-import { colors } from '../../themes'
+import { getColors } from '../../services/design'
+
+const colors = getColors()
 
 type Props = {
   isVisible: boolean

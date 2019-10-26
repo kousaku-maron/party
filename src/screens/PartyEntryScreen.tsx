@@ -2,14 +2,16 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { User } from '../entities'
 import { PartyEntryScreenState } from '../containers/PartyEntryScreen'
-import { colors } from '../themes'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { useModal } from '../services/modal'
+import { getColors } from '../services/design'
 import { entryPartyMembers } from '../services/party'
 import * as userRepository from '../repositories/user'
 import { LoadingPage, SearchUserPage } from '../components/pages'
 import { Thumbnail, RoundedButton } from '../components/atoms'
 import _ from 'lodash'
+
+const colors = getColors()
 
 type OwnProps = {
   navigation: NavigationStackProp

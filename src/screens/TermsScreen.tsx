@@ -1,6 +1,8 @@
 import React from 'react'
 import { WebView } from 'react-native-webview'
-import { colors } from '../themes'
+import { getColors } from '../services/design'
+
+const colors = getColors()
 
 const TermsScreen = () => {
   return <WebView source={{ uri: 'https://insta-693eb.web.app/webview-terms' }} />

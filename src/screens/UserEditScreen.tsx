@@ -2,13 +2,15 @@ import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UpdateUser } from '../entities'
 import { UserEditScreenState } from '../containers/UserEditScreen'
-import { colors } from '../themes'
 import * as UserRepository from '../repositories/user'
+import { getColors } from '../services/design'
 import { useUserEditTools } from '../services/user'
 import { View, Text, StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Fab, Thumbnail, TextInput } from '../components/atoms'
 import { LoadingPage } from '../components/pages'
+
+const colors = getColors()
 
 type OwnProps = {
   navigation: NavigationStackProp

@@ -1,6 +1,8 @@
 import React from 'react'
 import { TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-native'
-import { colors } from '../../themes'
+import { getColors } from '../../services/design'
+
+const colors = getColors()
 
 type Props = {
   color?: string

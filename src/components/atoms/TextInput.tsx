@@ -6,7 +6,9 @@ import {
   TextInputSubmitEditingEventData,
   StyleSheet
 } from 'react-native'
-import { colors } from '../../themes'
+import { getColors } from '../../services/design'
+
+const colors = getColors()
 
 type AutoCapitalizeOptions = 'none' | 'sentences' | 'words' | 'characters'
 
