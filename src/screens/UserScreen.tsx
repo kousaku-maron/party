@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   },
   acceptText: {
     fontSize: 14,
-    color: colors.foregrounds.ontint
+    color: colors.foregrounds.onTintPrimary
   },
   acceptCaptionText: {
     fontSize: 12,

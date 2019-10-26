@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   entryText: {
     fontSize: 20,
-    color: colors.foregrounds.ontint
+    color: colors.foregrounds.onTintPrimary
   }
 })
 

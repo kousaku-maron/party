@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   entryButtonText: {
     fontSize: 32,
-    color: colors.foregrounds.ontint
+    color: colors.foregrounds.onTintPrimary
   }
 })
 

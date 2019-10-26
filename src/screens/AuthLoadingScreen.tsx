@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { AuthLoadingScreenState } from '../containers/AuthLoadingScreen'
 import { View, StyleSheet, ActivityIndicator } from 'react-native'
+import { colors } from '../themes'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -23,7 +24,7 @@ const AuthLoadingScreen = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator />
+      <ActivityIndicator color={colors.tints.primary.main} />
     </View>
   )
 }
@@ -38,7 +39,8 @@ const styles = StyleSheet.create({
     height: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: colors.backgrounds.primary
   }
 })
 

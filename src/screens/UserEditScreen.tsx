@@ -40,7 +40,7 @@ const UserEditScreen = (props: Props) => {
     <View style={styles.container}>
       <View style={styles.editFab}>
         <Fab color={colors.tints.primary.main} onPress={updateUserState}>
-          <MaterialIcons color={colors.foregrounds.ontint} name="done" size={24} />
+          <MaterialIcons color={colors.foregrounds.onTintPrimary} name="done" size={24} />
         </Fab>
       </View>
 

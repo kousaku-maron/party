@@ -43,7 +43,7 @@ const WelcomeScreen = (props: Props) => {
         <View style={styles.buttonWrapper}>
           <RoundedButton color={colors.tints.primary.main} height={56} fullWidth={true} onPress={signIn}>
             <View style={styles.iconWrapper}>
-              <AntDesign name="facebook-square" size={32} color={colors.foregrounds.ontint} />
+              <AntDesign name="facebook-square" size={32} color={colors.foregrounds.onTintPrimary} />
             </View>
             <Text style={styles.fbText}>Facebookでログイン</Text>
           </RoundedButton>
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     letterSpacing: 4
   },
   fbText: {
-    color: colors.foregrounds.ontint,
+    color: colors.foregrounds.onTintPrimary,
     fontSize: 18
   },
   termText: {
