@@ -179,14 +179,7 @@ const styles = StyleSheet.create({
     width: '80%',
     padding: 24,
     borderRadius: Platform.OS === 'ios' ? 16 : 3,
-    backgroundColor: colors.backgrounds.secondary,
-    shadowOffset: {
-      width: 0,
-      height: 5
-    },
-    shadowOpacity: 1,
-    shadowRadius: 15,
-    elevation: 2
+    backgroundColor: colors.backgrounds.secondary
   },
   certificate: {
     width: 200,
