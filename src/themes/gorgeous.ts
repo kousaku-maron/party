@@ -37,7 +37,12 @@ export const dark = {
     tertiary: 'rgba(235, 235, 245, 0.3)',
     placeholder: 'rgba(235, 235, 245, 0.3)',
     separator: 'rgba(84, 84, 88, 0.6)',
-    ontint: 'rgb(255, 255, 255)'
+    onTintPrimary: 'rgb(255, 255, 255)',
+    onTintSecondary: 'rgb(255, 255, 255)',
+    onTintTertiary: 'rgb(255, 255, 255)',
+    onTintQuaternary: 'rgb(255, 255, 255)',
+    onTintQuinary: 'rgb(255, 255, 255)',
+    onTintSenary: 'rgb(255, 255, 255)'
   },
   backgrounds: {
     primary: 'rgb(0, 0, 0)',
@@ -94,7 +99,12 @@ export const light = {
     tertiary: 'rgba(60, 60, 67, 0.3)',
     placeholder: 'rgba(60, 60, 67, 0.3)',
     separator: 'rgba(60, 60, 67, 0.29)',
-    ontint: 'rgb(255, 255, 255)'
+    onTintPrimary: 'rgb(255, 255, 255)',
+    onTintSecondary: 'rgb(255, 255, 255)',
+    onTintTertiary: 'rgb(255, 255, 255)',
+    onTintQuaternary: 'rgb(255, 255, 255)',
+    onTintQuinary: 'rgb(255, 255, 255)',
+    onTintSenary: 'rgb(255, 255, 255)'
   },
   backgrounds: {
     primary: 'rgb(255, 255, 255)',
