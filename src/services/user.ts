@@ -160,10 +160,9 @@ export const useUserEditTools = (uid: string) => {
 }
 
 export const checkGender = async (uid: string) => {
-  const snapShot = usersRef.doc(uid).get()
-  return snapShot.then(doc => {
-    return doc.data().gender
-  })
+  const user = await getUser(uid)
+  if (!user) return null
+  return user.gender
 }
 
 export const setGender = async (uid: string, gender: string) => {
