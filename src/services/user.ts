@@ -159,12 +159,6 @@ export const useUserEditTools = (uid: string) => {
   return { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched }
 }
 
-export const checkGender = async (uid: string) => {
-  const user = await getUser(uid)
-  if (!user) return null
-  return user.gender
-}
-
 export const setGender = async (uid: string, gender: string) => {
   const useDoc = usersRef.doc(uid)
 
