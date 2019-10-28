@@ -1,12 +1,10 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { WelcomeScreenState, WelcomeScreenActions } from '../containers/WelcomeScreen'
-import { getColors } from '../services/design'
+import { useStyles, useColors, StylesCallback, colorsHandler } from '../services/design'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton } from '../components/atoms'
-
-const colors = getColors()
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -16,6 +14,8 @@ type Props = OwnProps & WelcomeScreenState & WelcomeScreenActions
 
 const WelcomeScreen = (props: Props) => {
   const { navigation, signInFacebook } = props
+  const styles = useStyles(_styles)
+  const colors = useColors()
 
   const signIn = useCallback(() => {
     signInFacebook({
@@ -66,83 +66,88 @@ const WelcomeScreen = (props: Props) => {
   )
 }
 
-WelcomeScreen.navigationOptions = () => ({
-  header: null,
-  headerBackTitle: null,
-  headerTintColor: colors.foregrounds.primary,
-  headerStyle: {
-    backgroundColor: colors.backgrounds.secondary
-  }
-})
+WelcomeScreen.navigationOptions = ({ navigation }) => {
+  const colors = colorsHandler({ navigation })
 
-const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.backgrounds.primary
-  },
-  // overlay: {
-  //   flex: 1,
-  //   position: 'absolute',
-  //   left: 0,
-  //   top: 0,
-  //   backgroundColor: colors.primary.main,
-  //   width: Dimensions.get('window').width,
-  //   height: Dimensions.get('window').height
-  // },
-  titleArea: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 96
-  },
-  actionArea: {
-    width: '80%',
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    paddingBottom: 96
-  },
-  imageArea: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 134
-  },
-  buttonWrapper: {
-    width: '100%',
-    paddingBottom: 12
-  },
-  iconWrapper: {
-    paddingRight: 12
-  },
-  image: {
-    width: 300
-  },
-  titleText: {
-    color: colors.tints.primary.main,
-    fontSize: 64
-  },
-  subText: {
-    color: colors.tints.primary.main,
-    fontSize: 20,
-    letterSpacing: 4
-  },
-  fbText: {
-    color: colors.foregrounds.onTintPrimary,
-    fontSize: 18
-  },
-  termText: {
-    color: colors.foregrounds.secondary,
-    fontSize: 12,
-    fontWeight: '300'
-  },
-  linkText: {
-    fontSize: 12,
-    fontWeight: 'bold'
+  return {
+    header: null,
+    headerBackTitle: null,
+    headerTintColor: colors.foregrounds.primary,
+    headerStyle: {
+      backgroundColor: colors.backgrounds.secondary
+    }
   }
-})
+}
+
+const _styles: StylesCallback = colors =>
+  StyleSheet.create({
+    container: {
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.backgrounds.primary
+    },
+    // overlay: {
+    //   flex: 1,
+    //   position: 'absolute',
+    //   left: 0,
+    //   top: 0,
+    //   backgroundColor: colors.primary.main,
+    //   width: Dimensions.get('window').width,
+    //   height: Dimensions.get('window').height
+    // },
+    titleArea: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingTop: 96
+    },
+    actionArea: {
+      width: '80%',
+      flex: 1,
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      paddingBottom: 96
+    },
+    imageArea: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingTop: 134
+    },
+    buttonWrapper: {
+      width: '100%',
+      paddingBottom: 12
+    },
+    iconWrapper: {
+      paddingRight: 12
+    },
+    image: {
+      width: 300
+    },
+    titleText: {
+      color: colors.tints.primary.main,
+      fontSize: 64
+    },
+    subText: {
+      color: colors.tints.primary.main,
+      fontSize: 20,
+      letterSpacing: 4
+    },
+    fbText: {
+      color: colors.foregrounds.onTintPrimary,
+      fontSize: 18
+    },
+    termText: {
+      color: colors.foregrounds.secondary,
+      fontSize: 12,
+      fontWeight: '300'
+    },
+    linkText: {
+      fontSize: 12,
+      fontWeight: 'bold'
+    }
+  })
 
 export default WelcomeScreen

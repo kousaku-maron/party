@@ -3,19 +3,19 @@ import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { useParties } from '../services/party'
 import { useModal } from '../services/modal'
-import { getColors } from '../services/design'
+import { useStyles, StylesCallback, colorsHandler } from '../services/design'
 import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
 import { Card, GenderModal } from '../components/organisms'
 import { checkGender, setGender } from '../services/user'
 import { Party } from '../entities/Party'
 
-const colors = getColors()
-
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps & HomeScreenState
 
 const HomeScreen = (props: Props) => {
+  const styles = useStyles(_styles)
+
   const { auth } = props
   const parties = useParties()
   const modalTools = useModal()
@@ -53,7 +53,7 @@ const HomeScreen = (props: Props) => {
               name={party.name}
               date={party.date}
               width={width}
-              onPressEntry={() => props.navigation.navigate('PartyEntry', { partyID })}
+              onPressEntry={() => props.navigation.navigate('PartyEntry', { partyID, hideTabBar: true })}
               onPressDetail={() => props.navigation.navigate('PartyDetail', { partyID })}
             />
           </View>
@@ -61,7 +61,7 @@ const HomeScreen = (props: Props) => {
       })
       return thumbnailURLs
     },
-    [props.navigation]
+    [props.navigation, styles.container]
   )
 
   if (!parties) {
@@ -87,22 +87,27 @@ const HomeScreen = (props: Props) => {
   )
 }
 
-HomeScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca',
-  headerBackTitle: null,
-  headerTintColor: colors.foregrounds.primary,
-  headerStyle: {
-    backgroundColor: colors.backgrounds.secondary
+HomeScreen.navigationOptions = ({ navigation }) => {
+  const colors = colorsHandler({ navigation })
+  return {
+    headerTitle: 'Nomoca',
+    headerBackTitle: null,
+    headerTintColor: colors.foregrounds.primary,
+    headerStyle: {
+      backgroundColor: colors.backgrounds.secondary
+    }
   }
-})
+}
 
 const { width } = Dimensions.get('window')
-const styles = StyleSheet.create({
-  container: {
-    width: width,
-    padding: 10,
-    backgroundColor: colors.backgrounds.primary
-  }
-})
+
+const _styles: StylesCallback = colors =>
+  StyleSheet.create({
+    container: {
+      width: width,
+      padding: 10,
+      backgroundColor: colors.backgrounds.primary
+    }
+  })
 
 export default HomeScreen

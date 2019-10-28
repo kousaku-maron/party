@@ -16,4 +16,6 @@ const config: Config = {
   messagingSenderId: process.env.MESSAGING_SENDER_ID
 }
 
+console.info(config)
+
 export default config

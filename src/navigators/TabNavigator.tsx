@@ -1,38 +1,12 @@
-import React from 'react'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
+import { HomeIcon, PostIcon, UserIcon } from '../components/atoms'
 import { HomeScreen, PartyEntryScreen, UserScreen, UserEditScreen, PartyDetailScreen } from '../containers'
 import { PostScreen } from '../screens'
-import { getColors } from '../services/design'
-import { MaterialCommunityIcons, AntDesign, FontAwesome } from '@expo/vector-icons'
+import { getTheme } from '../themes'
+import { isIPhoneX, isIPhoneXAbove, X_ABOVE_TAB_NOTCH_HEIGHT } from '../services/design'
 
-const colors = getColors()
-
-type IconProps = {
-  tintColor?: string
-  focused?: boolean
-}
-
-const HomeIcon = ({ tintColor, focused }: IconProps) => {
-  if (focused) {
-    return <MaterialCommunityIcons name="home" size={24} color={tintColor} />
-  }
-  return <MaterialCommunityIcons name="home-outline" size={24} color={tintColor} />
-}
-
-const PostIcon = ({ tintColor, focused }: IconProps) => {
-  if (focused) {
-    return <AntDesign name="pluscircle" size={24} color={tintColor} />
-  }
-  return <AntDesign name="pluscircleo" size={24} color={tintColor} />
-}
-
-const UserIcon = ({ tintColor, focused }: IconProps) => {
-  if (focused) {
-    return <FontAwesome name="user" size={24} color={tintColor} />
-  }
-  return <FontAwesome name="user-o" size={24} color={tintColor} />
-}
+const theme = getTheme()
 
 const HomeNavigator = createStackNavigator(
   {
@@ -69,31 +43,61 @@ const TabNavigator = createBottomTabNavigator(
     Home: {
       screen: HomeNavigator,
       navigationOptions: {
-        tabBarIcon: HomeIcon
+        tabBarIcon: ({ tintColor, focused }) => {
+          if (isIPhoneX() || isIPhoneXAbove()) {
+            return HomeIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
+          }
+          return HomeIcon({ tintColor, focused })
+        }
       }
     },
     Post: {
       screen: PostNavigator,
       navigationOptions: {
-        tabBarIcon: PostIcon
+        tabBarIcon: ({ tintColor, focused }) => {
+          if (isIPhoneX() || isIPhoneXAbove()) {
+            return PostIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
+          }
+          return PostIcon({ tintColor, focused })
+        }
       }
     },
     User: {
       screen: UserNavigator,
       navigationOptions: {
-        tabBarIcon: UserIcon
+        tabBarIcon: ({ tintColor, focused }) => {
+          if (isIPhoneX() || isIPhoneXAbove()) {
+            return UserIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
+          }
+          return UserIcon({ tintColor, focused })
+        }
       }
     }
   },
   {
     initialRouteName: 'Home',
     tabBarOptions: {
-      activeTintColor: colors.tints.primary.main,
-      inactiveTintColor: colors.system.gray,
+      activeTintColor: {
+        dark: theme.dark.tints.primary.main,
+        light: theme.light.tints.primary.main
+      },
+      inactiveTintColor: {
+        dark: theme.dark.system.gray,
+        light: theme.light.system.gray
+      },
+      activeBackgroundColor: {
+        dark: theme.dark.backgrounds.secondary,
+        light: theme.light.backgrounds.secondary
+      },
+      inactiveBackgroundColor: {
+        dark: theme.dark.backgrounds.secondary,
+        light: theme.light.backgrounds.secondary
+      },
       showLabel: false,
       style: {
-        backgroundColor: colors.backgrounds.secondary
-      }
+        height: isIPhoneX() || isIPhoneXAbove() ? 49 + X_ABOVE_TAB_NOTCH_HEIGHT : 49
+      },
+      safeAreaInset: { bottom: 'never', top: 'never' }
     }
   }
 )
