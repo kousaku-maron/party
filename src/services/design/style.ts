@@ -13,7 +13,7 @@ export type Colors = typeof defaultColors
 export type Styles = {
   [key: string]: StyleProp<ViewStyle> & StyleProp<TextStyle> & StyleProp<ImageStyle> // MEMO: これで正解なのかわからないので、注意。
 }
-export type StylesCallback = (colors: Colors) => Styles
+export type MakeStyles = (colors: Colors) => Styles
 
 export const useColors = () => {
   const navigation = useRef(useNavigation()).current
@@ -21,7 +21,6 @@ export const useColors = () => {
   const [colors, setColors] = useState<Colors>(defaultColors)
 
   useEffect(() => {
-    if (!colorScheme) return
     if (colorScheme === 'dark') {
       setColors(theme.dark)
       navigation.setParams({ colors: theme.dark })
@@ -34,7 +33,7 @@ export const useColors = () => {
   return colors
 }
 
-export const useStyles = (callback: StylesCallback) => {
+export const useStyles = (callback: MakeStyles) => {
   const colors = useColors()
   const [styles, setStyles] = useState<Styles>(callback(colors))
 

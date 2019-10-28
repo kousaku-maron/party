@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { useParties } from '../services/party'
 import { useModal } from '../services/modal'
-import { useStyles, StylesCallback, colorsHandler } from '../services/design'
+import { useStyles, MakeStyles, colorsHandler } from '../services/design'
 import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
 import { Card, GenderModal } from '../components/organisms'
@@ -14,7 +14,7 @@ type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps & HomeScreenState
 
 const HomeScreen = (props: Props) => {
-  const styles = useStyles(_styles)
+  const styles = useStyles(makeStyles)
 
   const { auth } = props
   const parties = useParties()
@@ -101,7 +101,7 @@ HomeScreen.navigationOptions = ({ navigation }) => {
 
 const { width } = Dimensions.get('window')
 
-const _styles: StylesCallback = colors =>
+const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
       width: width,

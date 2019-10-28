@@ -1,8 +1,6 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-native'
-import { getColors } from '../../services/design'
-
-const colors = getColors()
+import { useColors } from '../../services/design'
 
 type Props = {
   color?: string
@@ -16,8 +14,8 @@ type Props = {
 }
 
 const RoundedButton: React.FC<Props> = ({
-  color = colors.tints.primary.main,
-  inactiveColor = colors.system.gray,
+  color,
+  inactiveColor,
   disabled = false,
   fullWidth = false,
   width,
@@ -26,12 +24,28 @@ const RoundedButton: React.FC<Props> = ({
   children,
   padding = 12
 }) => {
+  const colors = useColors()
+
+  const _color = useMemo(() => {
+    if (color) {
+      return color
+    }
+    return colors.tints.primary.main
+  }, [color, colors.tints.primary.main])
+
+  const _inactiveColor = useMemo(() => {
+    if (inactiveColor) {
+      return inactiveColor
+    }
+    return colors.system.gray
+  }, [colors.system.gray, inactiveColor])
+
   return (
     <TouchableOpacity
       style={[
         styles.container,
         {
-          backgroundColor: disabled ? inactiveColor : color,
+          backgroundColor: disabled ? _inactiveColor : _color,
           width: fullWidth ? '100%' : width,
           height,
           borderRadius: height ? height / 2 : 25,

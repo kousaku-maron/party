@@ -1,8 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-native'
-import { getColors } from '../../services/design'
-
-const colors = getColors()
+import { useColors } from '../../services/design'
 
 type Props = {
   color?: string
@@ -11,16 +9,19 @@ type Props = {
   onPress?: (event: GestureResponderEvent) => void
 }
 
-const Fab: React.FC<Props> = ({
-  color = colors.tints.primary.main,
-  disabled = false,
-  size = 48,
-  onPress,
-  children
-}) => {
+const Fab: React.FC<Props> = ({ color, disabled = false, size = 48, onPress, children }) => {
+  const colors = useColors()
   return (
     <TouchableOpacity
-      style={[styles.container, { backgroundColor: color, width: size, height: size, borderRadius: size / 2 }]}
+      style={[
+        styles.container,
+        {
+          backgroundColor: color ? color : colors.tints.primary.main,
+          width: size,
+          height: size,
+          borderRadius: size / 2
+        }
+      ]}
       disabled={disabled}
       onPress={onPress}
     >

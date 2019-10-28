@@ -4,14 +4,12 @@ import { User } from '../entities'
 import { PartyEntryScreenState } from '../containers/PartyEntryScreen'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { useModal } from '../services/modal'
-import { getColors } from '../services/design'
+import { useStyles, MakeStyles, colorsHandler } from '../services/design'
 import { entryPartyMembers } from '../services/party'
 import * as userRepository from '../repositories/user'
 import { LoadingPage, SearchUserPage } from '../components/pages'
 import { Thumbnail, RoundedButton } from '../components/atoms'
 import _ from 'lodash'
-
-const colors = getColors()
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -24,6 +22,8 @@ const MEMBERS_COUNT = 2
 const PartyEntryScreen = (props: Props) => {
   const { auth } = props
   const { uid } = auth
+
+  const styles = useStyles(makeStyles)
 
   const { isVisible, onClose, onOpen } = useModal()
   const [organizer, setOrganizer] = useState<User | null>()
@@ -134,60 +134,64 @@ const PartyEntryScreen = (props: Props) => {
   )
 }
 
-PartyEntryScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca',
-  headerBackTitle: null,
-  headerTintColor: colors.foregrounds.primary,
-  headerStyle: {
-    backgroundColor: colors.backgrounds.secondary
+PartyEntryScreen.navigationOptions = ({ navigation }) => {
+  const colors = colorsHandler({ navigation })
+  return {
+    headerTitle: 'Nomoca',
+    headerBackTitle: null,
+    headerTintColor: colors.foregrounds.primary,
+    headerStyle: {
+      backgroundColor: colors.backgrounds.secondary
+    }
   }
-})
+}
 
 const width = Dimensions.get('window').width
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    backgroundColor: colors.backgrounds.primary
-  },
-  inner: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingTop: 24
-  },
-  titleWrapper: {
-    paddingBottom: 24
-  },
-  memberWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingBottom: 24
-  },
-  thumbnailWrapper: {
-    paddingBottom: 6
-  },
-  entryButtonWrapper: {
-    position: 'absolute',
-    width,
-    paddingHorizontal: 24,
-    bottom: 24
-  },
-  titleText: {
-    fontSize: 24,
-    color: colors.foregrounds.primary
-  },
-  nameText: {
-    color: colors.foregrounds.primary
-  },
-  idText: {
-    color: colors.foregrounds.secondary
-  },
-  entryText: {
-    fontSize: 20,
-    color: colors.foregrounds.onTintPrimary
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      backgroundColor: colors.backgrounds.primary
+    },
+    inner: {
+      display: 'flex',
+      alignItems: 'center',
+      paddingTop: 24
+    },
+    titleWrapper: {
+      paddingBottom: 24
+    },
+    memberWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      paddingBottom: 24
+    },
+    thumbnailWrapper: {
+      paddingBottom: 6
+    },
+    entryButtonWrapper: {
+      position: 'absolute',
+      width,
+      paddingHorizontal: 24,
+      bottom: 24
+    },
+    titleText: {
+      fontSize: 24,
+      color: colors.foregrounds.primary
+    },
+    nameText: {
+      color: colors.foregrounds.primary
+    },
+    idText: {
+      color: colors.foregrounds.secondary
+    },
+    entryText: {
+      fontSize: 20,
+      color: colors.foregrounds.onTintPrimary
+    }
+  })
 
 export default PartyEntryScreen

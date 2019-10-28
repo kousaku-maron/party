@@ -4,11 +4,9 @@ import { NavigationStackProp } from 'react-navigation-stack'
 import { formatedDateMonthDateHour } from '../services/formatedDate'
 import { RoundedButton } from '../components/atoms'
 import { useParty } from '../services/party'
-import { getColors } from '../services/design'
+import { useStyles, useColors, MakeStyles, colorsHandler } from '../services/design'
 import { PartyDetailScreenState } from '../containers/PartyDetailScreen'
 import { LoadingPage } from '../components/pages'
-
-const colors = getColors()
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -17,6 +15,10 @@ type Props = OwnProps & PartyDetailScreenState
 
 const PartyDetailScreen = (props: Props) => {
   const { navigation } = props
+
+  const styles = useStyles(makeStyles)
+  const colors = useColors()
+
   const partyID = navigation.state.params.partyID
   const party = useParty(partyID)
 
@@ -53,59 +55,64 @@ const PartyDetailScreen = (props: Props) => {
   )
 }
 
-PartyDetailScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca',
-  headerBackTitle: null,
-  headerTintColor: colors.foregrounds.primary,
-  headerStyle: {
-    backgroundColor: colors.backgrounds.secondary
+PartyDetailScreen.navigationOptions = ({ navigation }) => {
+  const colors = colorsHandler({ navigation })
+  return {
+    headerTitle: 'Nomoca',
+    headerBackTitle: null,
+    headerTintColor: colors.foregrounds.primary,
+    headerStyle: {
+      backgroundColor: colors.backgrounds.secondary
+    }
   }
-})
+}
+
 const { width } = Dimensions.get('window')
 const descriptionFontSize = 24
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    backgroundColor: colors.backgrounds.primary
-  },
-  inner: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  titleTextWrapper: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'flex-start',
-    flexDirection: 'row'
-  },
-  image: {
-    height: (width / 16) * 9
-  },
-  descriptionContainer: {
-    width,
-    padding: 24
-  },
-  areaText: {
-    fontSize: descriptionFontSize,
-    color: colors.foregrounds.primary
-  },
-  dateText: {
-    fontSize: descriptionFontSize,
-    color: colors.foregrounds.secondary
-  },
-  entryButtonWrapper: {
-    position: 'absolute',
-    width,
-    paddingHorizontal: 24,
-    bottom: 24
-  },
-  entryButtonText: {
-    fontSize: 32,
-    color: colors.foregrounds.onTintPrimary
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      backgroundColor: colors.backgrounds.primary
+    },
+    inner: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    titleTextWrapper: {
+      width: '100%',
+      display: 'flex',
+      alignItems: 'flex-start',
+      flexDirection: 'row'
+    },
+    image: {
+      height: (width / 16) * 9
+    },
+    descriptionContainer: {
+      width,
+      padding: 24
+    },
+    areaText: {
+      fontSize: descriptionFontSize,
+      color: colors.foregrounds.primary
+    },
+    dateText: {
+      fontSize: descriptionFontSize,
+      color: colors.foregrounds.secondary
+    },
+    entryButtonWrapper: {
+      position: 'absolute',
+      width,
+      paddingHorizontal: 24,
+      bottom: 24
+    },
+    entryButtonText: {
+      fontSize: 32,
+      color: colors.foregrounds.onTintPrimary
+    }
+  })
 
 export default PartyDetailScreen

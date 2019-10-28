@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { WelcomeScreenState, WelcomeScreenActions } from '../containers/WelcomeScreen'
-import { useStyles, useColors, StylesCallback, colorsHandler } from '../services/design'
+import { useStyles, useColors, MakeStyles, colorsHandler } from '../services/design'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton } from '../components/atoms'
@@ -14,7 +14,7 @@ type Props = OwnProps & WelcomeScreenState & WelcomeScreenActions
 
 const WelcomeScreen = (props: Props) => {
   const { navigation, signInFacebook } = props
-  const styles = useStyles(_styles)
+  const styles = useStyles(makeStyles)
   const colors = useColors()
 
   const signIn = useCallback(() => {
@@ -68,7 +68,6 @@ const WelcomeScreen = (props: Props) => {
 
 WelcomeScreen.navigationOptions = ({ navigation }) => {
   const colors = colorsHandler({ navigation })
-
   return {
     header: null,
     headerBackTitle: null,
@@ -79,7 +78,7 @@ WelcomeScreen.navigationOptions = ({ navigation }) => {
   }
 }
 
-const _styles: StylesCallback = colors =>
+const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
       height: '100%',

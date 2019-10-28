@@ -2,12 +2,10 @@ import React, { useState, useRef, useCallback } from 'react'
 import { User } from '../../entities'
 import { View, ScrollView, TouchableOpacity, Animated, StyleSheet } from 'react-native'
 import { useSearchUsers } from '../../services/user'
-import { getColors } from '../../services/design'
+import { useStyles, MakeStyles } from '../../services/design'
 import { TextBox } from '../atoms'
 import { UserListItem } from '../organisms'
 import { FullScreenModal } from '../templates'
-
-const colors = getColors()
 
 type Props = {
   isVisible: boolean
@@ -40,6 +38,8 @@ const useSearchButton = () => {
 }
 
 const SearchUserPage = (props: Props) => {
+  const styles = useStyles(makeStyles)
+
   const [value, setValue] = useState<string>('')
   const searchButtonTools = useSearchButton()
   const { users, search } = useSearchUsers({ ignoreUserIDs: props.ignoreUserIDs })
@@ -110,28 +110,29 @@ const SearchUserPage = (props: Props) => {
 
 // const hairlineWidth = StyleSheet.hairlineWidth
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center'
-  },
-  headWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    paddingHorizontal: 12,
-    paddingVertical: 6
-    // borderBottomWidth: hairlineWidth,
-    // borderBottomColor: 'gray'
-  },
-  searchBox: {
-    flex: 1
-  },
-  buttonText: {
-    fontSize: 18,
-    color: colors.foregrounds.primary
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center'
+    },
+    headWrapper: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '100%',
+      paddingHorizontal: 12,
+      paddingVertical: 6
+      // borderBottomWidth: hairlineWidth,
+      // borderBottomColor: 'gray'
+    },
+    searchBox: {
+      flex: 1
+    },
+    buttonText: {
+      fontSize: 18,
+      color: colors.foregrounds.primary
+    }
+  })
 
 export default SearchUserPage

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
-import { getColors } from '../services/design'
+import { useStyles, useColors, MakeStyles, colorsHandler } from '../services/design'
 import { useUser } from '../services/user'
 import { useCertificate } from '../services/secure'
 import { useModal } from '../services/modal'
@@ -10,8 +10,6 @@ import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton, Thumbnail } from '../components/atoms'
 import { UploadCertificateModal } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
-
-const colors = getColors()
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -22,6 +20,9 @@ type Props = OwnProps & UserScreenState & UserScreenActions
 const UserScreen = (props: Props) => {
   const { navigation, auth, signOut } = props
   const { uid } = auth
+
+  const styles = useStyles(makeStyles)
+  const colors = useColors()
 
   const user = useUser(uid)
   const modalTools = useModal()
@@ -118,94 +119,98 @@ const UserScreen = (props: Props) => {
   )
 }
 
-UserScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca',
-  headerBackTitle: null,
-  headerTintColor: colors.foregrounds.primary,
-  headerStyle: {
-    backgroundColor: colors.backgrounds.secondary
+UserScreen.navigationOptions = ({ navigation }) => {
+  const colors = colorsHandler({ navigation })
+  return {
+    headerTitle: 'Nomoca',
+    headerBackTitle: null,
+    headerTintColor: colors.foregrounds.primary,
+    headerStyle: {
+      backgroundColor: colors.backgrounds.secondary
+    }
   }
-})
+}
 
 // const hairlineWidth = StyleSheet.hairlineWidth
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    position: 'relative',
-    backgroundColor: colors.backgrounds.primary
-  },
-  editFab: {
-    position: 'absolute',
-    right: 26,
-    bottom: 24
-  },
-  profileContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: 400
-  },
-  thumbnailWrapper: {
-    paddingBottom: 12
-  },
-  nameWrapper: {
-    paddingBottom: 3
-  },
-  idWrapper: {
-    paddingBottom: 24
-  },
-  isAcceptedWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    paddingBottom: 24
-  },
-  isNotacceptedWrapper: {
-    width: 250,
-    paddingBottom: 3
-  },
-  acceptCaptionWrapper: {
-    width: 250
-  },
-  cardWrapper: {
-    paddingBottom: 24
-  },
-  card: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '80%',
-    padding: 24,
-    borderRadius: Platform.OS === 'ios' ? 16 : 3,
-    backgroundColor: colors.backgrounds.secondary
-  },
-  certificate: {
-    width: 200,
-    height: 200
-  },
-  nameText: {
-    fontSize: 18,
-    color: colors.foregrounds.primary
-  },
-  idText: {
-    fontSize: 12,
-    color: colors.foregrounds.secondary
-  },
-  acceptText: {
-    fontSize: 14,
-    color: colors.foregrounds.onTintPrimary
-  },
-  acceptCaptionText: {
-    fontSize: 12,
-    color: colors.foregrounds.secondary
-  },
-  signoutText: {
-    color: colors.system.blue
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      position: 'relative',
+      backgroundColor: colors.backgrounds.primary
+    },
+    editFab: {
+      position: 'absolute',
+      right: 26,
+      bottom: 24
+    },
+    profileContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+      height: 400
+    },
+    thumbnailWrapper: {
+      paddingBottom: 12
+    },
+    nameWrapper: {
+      paddingBottom: 3
+    },
+    idWrapper: {
+      paddingBottom: 24
+    },
+    isAcceptedWrapper: {
+      display: 'flex',
+      justifyContent: 'center',
+      paddingBottom: 24
+    },
+    isNotacceptedWrapper: {
+      width: 250,
+      paddingBottom: 3
+    },
+    acceptCaptionWrapper: {
+      width: 250
+    },
+    cardWrapper: {
+      paddingBottom: 24
+    },
+    card: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '80%',
+      padding: 24,
+      borderRadius: Platform.OS === 'ios' ? 16 : 3,
+      backgroundColor: colors.backgrounds.secondary
+    },
+    certificate: {
+      width: 200,
+      height: 200
+    },
+    nameText: {
+      fontSize: 18,
+      color: colors.foregrounds.primary
+    },
+    idText: {
+      fontSize: 12,
+      color: colors.foregrounds.secondary
+    },
+    acceptText: {
+      fontSize: 14,
+      color: colors.foregrounds.onTintPrimary
+    },
+    acceptCaptionText: {
+      fontSize: 12,
+      color: colors.foregrounds.secondary
+    },
+    signoutText: {
+      color: colors.system.blue
+    }
+  })
 
 export default UserScreen
