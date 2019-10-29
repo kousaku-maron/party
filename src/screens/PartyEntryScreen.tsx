@@ -68,7 +68,8 @@ const PartyEntryScreen = (props: Props) => {
     if (!enabledEntry) return
     const organizer = members[0]
     entryPartyMembers(organizer, members, props.navigation.state.params.partyID)
-  }, [enabledEntry, members, props.navigation.state.params.partyID])
+    props.navigation.goBack()
+  }, [enabledEntry, members, props.navigation])
 
   useEffect(() => {
     const fetchMyUser = async () => {

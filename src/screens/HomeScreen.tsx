@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
@@ -7,8 +7,8 @@ import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
 import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
-import { Card, GenderModal } from '../components/organisms'
-import { checkGender, setGender } from '../services/user'
+import { Card, GenderModal, Modal } from '../components/organisms'
+import { setGender } from '../services/user'
 import { Party } from '../entities/Party'
 
 type OwnProps = { navigation: NavigationStackProp }
@@ -18,27 +18,32 @@ const HomeScreen = (props: Props) => {
   const styles = useStyles(makeStyles)
 
   const { auth } = props
+  const { user } = auth
   const parties = useParties()
-  const modalTools = useModal()
 
-  const [existGender, setExistGender] = useState<boolean>(false)
-  useEffect(() => {
-    const funcCheckGender = async () => {
-      if (!auth || !auth.uid) return
-      const { uid } = auth
-      const resCheckGender = await checkGender(uid)
-      setExistGender(resCheckGender)
-    }
-    funcCheckGender()
-  }, [auth])
+  const genderModalTools = useModal()
+  const isAcceptedModalTools = useModal()
 
   const onSetGender = useCallback(
     async (uid, gender) => {
       await setGender(uid, gender)
-      setExistGender(true)
-      modalTools.onClose
+      genderModalTools.onClose()
     },
-    [modalTools.onClose]
+    [genderModalTools]
+  )
+
+  const onPressEntry = useCallback(
+    partyID => {
+      if (!user) return
+      if (!user.isAccepted) {
+        return isAcceptedModalTools.onOpen()
+      }
+      if (!user.gender) {
+        return genderModalTools.onOpen()
+      }
+      props.navigation.navigate('PartyEntry', { partyID })
+    },
+    [genderModalTools, isAcceptedModalTools, props.navigation, user]
   )
 
   const FetchPartiesThumbnail = useCallback(
@@ -54,15 +59,17 @@ const HomeScreen = (props: Props) => {
               name={party.name}
               date={party.date}
               width={width}
-              onPressEntry={() => props.navigation.navigate('PartyEntry', { partyID })}
-              onPressDetail={() => props.navigation.navigate('PartyDetail', { partyID })}
+              onPressEntry={() => {
+                onPressEntry(partyID)
+              }}
+              onPressDetail={() => props.navigation.navigate('PartyDetail', { partyID, onPressEntry })}
             />
           </View>
         )
       })
       return thumbnailURLs
     },
-    [props.navigation, styles.container]
+    [onPressEntry, props.navigation, styles.container]
   )
 
   if (!parties) {
@@ -71,19 +78,25 @@ const HomeScreen = (props: Props) => {
   return (
     <ScrollView>
       {FetchPartiesThumbnail(parties)}
-      {auth && auth.uid && (
-        <GenderModal
-          isVisible={!existGender}
-          uid={auth.uid}
-          title="あなたの性別は何ですか？"
-          negative="キャンセル"
-          positive="登録します"
-          onPositive={(uid, gender) => {
-            onSetGender(uid, gender)
-          }}
-          onNegative={modalTools.onClose}
-        />
-      )}
+      <GenderModal
+        isVisible={genderModalTools.isVisible}
+        uid={auth.uid}
+        title="あなたの性別は何ですか？"
+        negative="キャンセル"
+        positive="登録します"
+        onPositive={(uid, gender) => {
+          onSetGender(uid, gender)
+        }}
+        onNegative={genderModalTools.onClose}
+      />
+      <Modal
+        isVisible={isAcceptedModalTools.isVisible}
+        title={'本人確認中です。\n承認されるまでお待ちください。'}
+        negative="戻る"
+        positive="OK"
+        onPositive={isAcceptedModalTools.onClose}
+        onNegative={isAcceptedModalTools.onClose}
+      />
     </ScrollView>
   )
 }
