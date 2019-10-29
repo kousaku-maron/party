@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
-import { useStyles, useColors, MakeStyles, colorsHandler } from '../services/design'
+import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
 import { useCertificate } from '../services/secure'
 import { useModal } from '../services/modal'
@@ -119,17 +120,7 @@ const UserScreen = (props: Props) => {
   )
 }
 
-UserScreen.navigationOptions = ({ navigation }) => {
-  const colors = colorsHandler({ navigation })
-  return {
-    headerTitle: 'Nomoca',
-    headerBackTitle: null,
-    headerTintColor: colors.foregrounds.primary,
-    headerStyle: {
-      backgroundColor: colors.backgrounds.secondary
-    }
-  }
-}
+UserScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 // const hairlineWidth = StyleSheet.hairlineWidth
 

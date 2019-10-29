@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { UpdateUser } from '../entities'
 import { UserEditScreenState } from '../containers/UserEditScreen'
 import * as UserRepository from '../repositories/user'
-import { useStyles, useColors, MakeStyles, colorsHandler } from '../services/design'
+import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUserEditTools } from '../services/user'
 import { View, Text, StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -68,17 +69,7 @@ const UserEditScreen = (props: Props) => {
   )
 }
 
-UserEditScreen.navigationOptions = ({ navigation }) => {
-  const colors = colorsHandler({ navigation })
-  return {
-    headerTitle: 'Nomoca',
-    headerBackTitle: null,
-    headerTintColor: colors.foregrounds.primary,
-    headerStyle: {
-      backgroundColor: colors.backgrounds.secondary
-    }
-  }
-}
+UserEditScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({

@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { useParties } from '../services/party'
 import { useModal } from '../services/modal'
-import { useStyles, MakeStyles, colorsHandler } from '../services/design'
+import { useStyles, MakeStyles } from '../services/design'
 import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
 import { Card, GenderModal } from '../components/organisms'
@@ -87,17 +88,7 @@ const HomeScreen = (props: Props) => {
   )
 }
 
-HomeScreen.navigationOptions = ({ navigation }) => {
-  const colors = colorsHandler({ navigation })
-  return {
-    headerTitle: 'Nomoca',
-    headerBackTitle: null,
-    headerTintColor: colors.foregrounds.primary,
-    headerStyle: {
-      backgroundColor: colors.backgrounds.secondary
-    }
-  }
-}
+HomeScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
 

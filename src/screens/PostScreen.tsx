@@ -1,6 +1,7 @@
 import React from 'react'
+import { NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { View, Text, StyleSheet } from 'react-native'
-import { colorsHandler } from '../services/design'
 
 const PostScreen = () => {
   return (
@@ -10,17 +11,7 @@ const PostScreen = () => {
   )
 }
 
-PostScreen.navigationOptions = ({ navigation }) => {
-  const colors = colorsHandler({ navigation })
-  return {
-    headerTitle: 'Nomoca',
-    headerBackTitle: null,
-    headerTintColor: colors.foregrounds.primary,
-    headerStyle: {
-      backgroundColor: colors.backgrounds.secondary
-    }
-  }
-}
+PostScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const styles = StyleSheet.create({
   container: {

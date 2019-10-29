@@ -1,10 +1,11 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from 'react-native'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { formatedDateMonthDateHour } from '../services/formatedDate'
 import { RoundedButton } from '../components/atoms'
 import { useParty } from '../services/party'
-import { useStyles, useColors, MakeStyles, colorsHandler } from '../services/design'
+import { useStyles, useColors, MakeStyles } from '../services/design'
 import { PartyDetailScreenState } from '../containers/PartyDetailScreen'
 import { LoadingPage } from '../components/pages'
 
@@ -55,17 +56,7 @@ const PartyDetailScreen = (props: Props) => {
   )
 }
 
-PartyDetailScreen.navigationOptions = ({ navigation }) => {
-  const colors = colorsHandler({ navigation })
-  return {
-    headerTitle: 'Nomoca',
-    headerBackTitle: null,
-    headerTintColor: colors.foregrounds.primary,
-    headerStyle: {
-      backgroundColor: colors.backgrounds.secondary
-    }
-  }
-}
+PartyDetailScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
 const descriptionFontSize = 24

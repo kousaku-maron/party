@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { WelcomeScreenState, WelcomeScreenActions } from '../containers/WelcomeScreen'
-import { useStyles, useColors, MakeStyles, colorsHandler } from '../services/design'
+import { useStyles, useColors, MakeStyles } from '../services/design'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton } from '../components/atoms'
@@ -66,17 +66,7 @@ const WelcomeScreen = (props: Props) => {
   )
 }
 
-WelcomeScreen.navigationOptions = ({ navigation }) => {
-  const colors = colorsHandler({ navigation })
-  return {
-    header: null,
-    headerBackTitle: null,
-    headerTintColor: colors.foregrounds.primary,
-    headerStyle: {
-      backgroundColor: colors.backgrounds.secondary
-    }
-  }
-}
+WelcomeScreen.navigationOptions = () => ({ header: null, headerBackTitle: null })
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({

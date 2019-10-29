@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { User } from '../entities'
 import { PartyEntryScreenState } from '../containers/PartyEntryScreen'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { useModal } from '../services/modal'
-import { useStyles, MakeStyles, colorsHandler } from '../services/design'
+import { useStyles, MakeStyles } from '../services/design'
 import { entryPartyMembers } from '../services/party'
 import * as userRepository from '../repositories/user'
 import { LoadingPage, SearchUserPage } from '../components/pages'
@@ -134,17 +135,7 @@ const PartyEntryScreen = (props: Props) => {
   )
 }
 
-PartyEntryScreen.navigationOptions = ({ navigation }) => {
-  const colors = colorsHandler({ navigation })
-  return {
-    headerTitle: 'Nomoca',
-    headerBackTitle: null,
-    headerTintColor: colors.foregrounds.primary,
-    headerStyle: {
-      backgroundColor: colors.backgrounds.secondary
-    }
-  }
-}
+PartyEntryScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const width = Dimensions.get('window').width
 
