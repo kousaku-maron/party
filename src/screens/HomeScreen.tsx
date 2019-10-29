@@ -54,7 +54,7 @@ const HomeScreen = (props: Props) => {
               name={party.name}
               date={party.date}
               width={width}
-              onPressEntry={() => props.navigation.navigate('PartyEntry', { partyID, hideTabBar: true })}
+              onPressEntry={() => props.navigation.navigate('PartyEntry', { partyID })}
               onPressDetail={() => props.navigation.navigate('PartyDetail', { partyID })}
             />
           </View>
