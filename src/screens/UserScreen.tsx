@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { UserScreenState } from '../containers/UserScreen'
+import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
 import { useCertificate } from '../services/secure'
@@ -16,23 +16,16 @@ type OwnProps = {
   navigation: NavigationStackProp
 }
 
-type Props = OwnProps & UserScreenState
+type Props = OwnProps & UserScreenState & UserScreenActions
 
 const UserScreen = (props: Props) => {
-  const { navigation, auth } = props
+  const { navigation, auth, signOut } = props
   const { uid } = auth
 
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
-  const targetUserID = useMemo(() => {
-    if (navigation.state.params && navigation.state.params.userID) {
-      return navigation.state.params.userID
-    }
-    return uid
-  }, [navigation.state.params, uid])
-
-  const user = useUser(targetUserID)
+  const user = useUser(uid)
   const modalTools = useModal()
   const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificate(uid)
 
@@ -48,12 +41,14 @@ const UserScreen = (props: Props) => {
     modalTools.onClose()
   }, [modalTools, upload])
 
+  const _signOut = useCallback(async () => {
+    signOut({
+      onSuccess: () => navigation.navigate('Welcome')
+    })
+  }, [navigation, signOut])
+
   const goToEdit = useCallback(() => {
     navigation.navigate('UserEdit')
-  }, [navigation])
-
-  const goToSetting = useCallback(() => {
-    navigation.navigate('Setting')
   }, [navigation])
 
   if (!user) {
@@ -107,15 +102,13 @@ const UserScreen = (props: Props) => {
         </View>
       )}
 
+      <Text style={styles.signoutText} onPress={_signOut}>
+        サインアウト
+      </Text>
+
       <TouchableOpacity style={styles.editFab} onPress={goToEdit}>
         <AntDesign color="gray" name="edit" size={24} />
       </TouchableOpacity>
-
-      {uid === targetUserID && (
-        <TouchableOpacity style={styles.settingFab} onPress={goToSetting}>
-          <AntDesign color="gray" name="setting" size={24} />
-        </TouchableOpacity>
-      )}
 
       <UploadCertificateModal
         isVisible={modalTools.isVisible}
@@ -144,11 +137,6 @@ const makeStyles: MakeStyles = colors =>
     editFab: {
       position: 'absolute',
       right: 26,
-      bottom: 24
-    },
-    settingFab: {
-      position: 'absolute',
-      right: 58,
       bottom: 24
     },
     profileContainer: {
@@ -210,6 +198,9 @@ const makeStyles: MakeStyles = colors =>
     acceptCaptionText: {
       fontSize: 12,
       color: colors.foregrounds.secondary
+    },
+    signoutText: {
+      color: colors.system.blue
     }
   })
 
