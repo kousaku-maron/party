@@ -1,7 +1,16 @@
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
 import { HomeIcon, PostIcon, UserIcon } from '../components/atoms'
-import { HomeScreen, PartyEntryScreen, UserScreen, UserEditScreen, PartyDetailScreen } from '../containers'
+import {
+  HomeScreen,
+  PartyEntryScreen,
+  UserScreen,
+  UserEditScreen,
+  PartyDetailScreen,
+  SettingScreen,
+  TermsScreen,
+  PrivacyScreen
+} from '../containers'
 import { PostScreen } from '../screens'
 import { getTheme } from '../themes'
 import { isIPhoneX, isIPhoneXAbove, X_ABOVE_TAB_NOTCH_HEIGHT } from '../services/design'
@@ -31,7 +40,10 @@ const PostNavigator = createStackNavigator(
 const UserNavigator = createStackNavigator(
   {
     Main: UserScreen,
-    UserEdit: UserEditScreen
+    UserEdit: UserEditScreen,
+    Setting: SettingScreen,
+    Terms: TermsScreen,
+    Privacy: PrivacyScreen
   },
   {
     initialRouteName: 'Main'
