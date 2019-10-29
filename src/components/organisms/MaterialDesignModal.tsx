@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import Modal from 'react-native-modal'
-import { colors } from '../../themes'
+import { useStyles, MakeStyles } from '../../services/design'
 
 type Props = {
   isVisible: boolean
@@ -14,6 +14,8 @@ type Props = {
 }
 
 const MaterialDesignModal: React.FC<Props> = props => {
+  const styles = useStyles(makeStyles)
+
   return (
     <View>
       <Modal isVisible={props.isVisible} animationIn="bounceIn" animationOut="fadeOut">
@@ -54,49 +56,51 @@ const MaterialDesignModal: React.FC<Props> = props => {
   )
 }
 
-const styles = StyleSheet.create({
-  inner: {
-    display: 'flex',
-    backgroundColor: '#ededed',
-    borderRadius: 3,
-    padding: 16
-  },
-  contentsArea: {
-    display: 'flex'
-  },
-  actionArea: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    width: '100%'
-  },
-  contentsWrapper: {
-    paddingBottom: 32
-  },
-  titleWrapper: {
-    paddingBottom: 16
-  },
-  button: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  buttonLeft: {
-    paddingRight: 16
-  },
-  titleText: {
-    fontWeight: 'bold',
-    fontSize: 18
-  },
-  descText: {
-    fontSize: 16,
-    color: '#313131'
-  },
-  buttonText: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    color: colors.primary.main
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    inner: {
+      display: 'flex',
+      backgroundColor: colors.backgrounds.tertiary,
+      borderRadius: 3,
+      padding: 16
+    },
+    contentsArea: {
+      display: 'flex'
+    },
+    actionArea: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      width: '100%'
+    },
+    contentsWrapper: {
+      paddingBottom: 32
+    },
+    titleWrapper: {
+      paddingBottom: 16
+    },
+    button: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    buttonLeft: {
+      paddingRight: 16
+    },
+    titleText: {
+      fontWeight: 'bold',
+      fontSize: 18,
+      color: colors.foregrounds.primary
+    },
+    descText: {
+      fontSize: 16,
+      color: colors.foregrounds.secondary
+    },
+    buttonText: {
+      fontWeight: 'bold',
+      fontSize: 18,
+      color: colors.tints.primary.main
+    }
+  })
 
 export default MaterialDesignModal

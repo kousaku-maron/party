@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { UpdateUser } from '../entities'
 import { UserEditScreenState } from '../containers/UserEditScreen'
-import { colors } from '../themes'
 import * as UserRepository from '../repositories/user'
+import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUserEditTools } from '../services/user'
 import { View, Text, StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -19,6 +20,9 @@ type Props = OwnProps & UserEditScreenState
 const UserEditScreen = (props: Props) => {
   const { navigation, auth } = props
   const { uid } = auth
+
+  const styles = useStyles(makeStyles)
+  const colors = useColors()
 
   const { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched } = useUserEditTools(
     uid
@@ -39,8 +43,8 @@ const UserEditScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.editFab}>
-        <Fab color={colors.primary.main} onPress={updateUserState}>
-          <MaterialIcons color="white" name="done" size={24} />
+        <Fab color={colors.tints.primary.main} onPress={updateUserState}>
+          <MaterialIcons color={colors.foregrounds.onTintPrimary} name="done" size={24} />
         </Fab>
       </View>
 
@@ -65,48 +69,42 @@ const UserEditScreen = (props: Props) => {
   )
 }
 
-UserEditScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca',
-  headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
-  headerStyle: {
-    backgroundColor: colors.senary.dark
-  }
-})
+UserEditScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    position: 'relative',
-    backgroundColor: colors.inherit
-  },
-  editFab: {
-    position: 'absolute',
-    right: 26,
-    bottom: 24
-  },
-  thumbnailWrapper: {
-    paddingTop: 24,
-    paddingBottom: 36
-  },
-  nameWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    paddingBottom: 24
-  },
-  userIDWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    paddingBottom: 24
-  },
-  titleText: {
-    fontSize: 16,
-    fontWeight: 'bold'
-    // color: 'gray'
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      position: 'relative',
+      backgroundColor: colors.backgrounds.primary
+    },
+    editFab: {
+      position: 'absolute',
+      right: 26,
+      bottom: 24
+    },
+    thumbnailWrapper: {
+      paddingTop: 24,
+      paddingBottom: 36
+    },
+    nameWrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+      paddingBottom: 24
+    },
+    userIDWrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+      paddingBottom: 24
+    },
+    titleText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: colors.foregrounds.primary
+    }
+  })
 
 export default UserEditScreen

@@ -1,18 +1,13 @@
 import React from 'react'
+import { NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { WebView } from 'react-native-webview'
-import { colors } from '../themes'
 
 const TermsScreen = () => {
   return <WebView source={{ uri: 'https://insta-693eb.web.app/webview-terms' }} />
 }
 
-TermsScreen.navigationOptions = () => ({
-  headerTitle: '利用規約',
-  headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
-  headerStyle: {
-    backgroundColor: colors.senary.dark
-  }
-})
+TermsScreen.navigationOptions = (props: NavigationStackScreenProps) =>
+  headerNavigationOptions({ ...props, title: '利用規約' })
 
 export default TermsScreen

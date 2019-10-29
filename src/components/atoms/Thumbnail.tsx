@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, TouchableOpacity, Image, GestureResponderEvent, StyleSheet } from 'react-native'
+import { useStyles, MakeStyles } from '../../services/design'
 
 type Props = {
   uri?: string
@@ -9,6 +10,8 @@ type Props = {
 }
 
 const Thumbnail: React.FC<Props> = ({ uri, disabled = false, size = 24, onPress }) => {
+  const styles = useStyles(makeStyles)
+
   if (!onPress) {
     return (
       <View style={[styles.container, { width: size, height: size, borderRadius: size / 2 }]}>
@@ -40,13 +43,14 @@ const Thumbnail: React.FC<Props> = ({ uri, disabled = false, size = 24, onPress 
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'gray'
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.system.gray
+    }
+  })
 
 export default Thumbnail
