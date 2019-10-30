@@ -1,5 +1,6 @@
 import React from 'react'
 import { Provider } from 'react-redux'
+import { AppearanceProvider, useColorScheme } from 'react-native-appearance'
 import configureStore from './src/reducers/configureStore'
 import AppNavigator from './src/navigators/AppNavigator'
 import FlashMessage from 'react-native-flash-message'
@@ -7,11 +8,15 @@ import FlashMessage from 'react-native-flash-message'
 const store = configureStore()
 
 const App = (): JSX.Element => {
+  const theme = useColorScheme()
+
   return (
-    <Provider store={store}>
-      <AppNavigator />
-      <FlashMessage position="top" />
-    </Provider>
+    <AppearanceProvider>
+      <Provider store={store}>
+        <AppNavigator theme={theme} />
+        <FlashMessage position="top" />
+      </Provider>
+    </AppearanceProvider>
   )
 }
 

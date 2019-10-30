@@ -1,10 +1,11 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from 'react-native'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { formatedDateMonthDateHour } from '../services/formatedDate'
-import { colors } from '../themes'
 import { RoundedButton } from '../components/atoms'
 import { useParty } from '../services/party'
+import { useStyles, useColors, MakeStyles } from '../services/design'
 import { PartyDetailScreenState } from '../containers/PartyDetailScreen'
 import { LoadingPage } from '../components/pages'
 
@@ -15,6 +16,10 @@ type Props = OwnProps & PartyDetailScreenState
 
 const PartyDetailScreen = (props: Props) => {
   const { navigation } = props
+
+  const styles = useStyles(makeStyles)
+  const colors = useColors()
+
   const partyID = navigation.state.params.partyID
   const party = useParty(partyID)
 
@@ -38,7 +43,7 @@ const PartyDetailScreen = (props: Props) => {
       </ScrollView>
       <View style={styles.entryButtonWrapper}>
         <RoundedButton
-          color={colors.primary.main}
+          color={colors.tints.primary.main}
           fullWidth={true}
           height={48}
           padding={6}
@@ -51,73 +56,54 @@ const PartyDetailScreen = (props: Props) => {
   )
 }
 
-PartyDetailScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca',
-  headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
-  headerStyle: {
-    backgroundColor: colors.senary.dark
-  }
-})
+PartyDetailScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
+
 const { width } = Dimensions.get('window')
 const descriptionFontSize = 24
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    backgroundColor: colors.inherit
-  },
-  inner: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  calender: {
-    height: 60,
-    width: 60,
-    alignItems: 'center',
-    backgroundColor: colors.primary.main
-  },
-  calenderMonth: {
-    color: 'white',
-    fontSize: 20
-  },
-  calenderDay: {
-    color: 'white',
-    fontSize: 25
-  },
-  titleTextWrapper: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'flex-start',
-    flexDirection: 'row'
-  },
-  image: {
-    height: (width / 16) * 9
-  },
-  descriptionContainer: {
-    width,
-    padding: 24
-  },
-  areaText: {
-    fontSize: descriptionFontSize,
-    color: colors.tertiary.light
-  },
-  dateText: {
-    fontSize: descriptionFontSize,
-    color: 'gray'
-  },
-  entryButtonWrapper: {
-    position: 'absolute',
-    width,
-    paddingHorizontal: 24,
-    bottom: 24
-  },
-  entryButtonText: {
-    fontSize: 32,
-    color: '#FFFFFF'
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      backgroundColor: colors.backgrounds.primary
+    },
+    inner: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    titleTextWrapper: {
+      width: '100%',
+      display: 'flex',
+      alignItems: 'flex-start',
+      flexDirection: 'row'
+    },
+    image: {
+      height: (width / 16) * 9
+    },
+    descriptionContainer: {
+      width,
+      padding: 24
+    },
+    areaText: {
+      fontSize: descriptionFontSize,
+      color: colors.foregrounds.primary
+    },
+    dateText: {
+      fontSize: descriptionFontSize,
+      color: colors.foregrounds.secondary
+    },
+    entryButtonWrapper: {
+      position: 'absolute',
+      width,
+      paddingHorizontal: 24,
+      bottom: 24
+    },
+    entryButtonText: {
+      fontSize: 32,
+      color: colors.foregrounds.onTintPrimary
+    }
+  })
 
 export default PartyDetailScreen

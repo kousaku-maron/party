@@ -1,6 +1,9 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import {
+  useStyles,
+  MakeStyles,
+  useColors,
   isIPhoneX,
   isIPhoneXAbove,
   X_ABOVE_HEADER_NOTCH_HEIGHT,
@@ -16,6 +19,9 @@ type Props = {
 }
 
 const FullScreenModal: React.FC<Props> = props => {
+  const styles = useStyles(makeStyles)
+  const colors = useColors()
+
   return (
     <View>
       <Modal isVisible={props.isVisible} style={styles.modal}>
@@ -23,7 +29,7 @@ const FullScreenModal: React.FC<Props> = props => {
           <View style={styles.header}>
             <Text style={styles.titleText}>{props.title}</Text>
             <TouchableOpacity style={styles.closeWrapper} onPress={props.onClose}>
-              <AntDesign name="close" size={24} />
+              <AntDesign name="close" size={24} color={colors.foregrounds.secondary} />
             </TouchableOpacity>
           </View>
           {props.children}
@@ -47,35 +53,37 @@ const APPBAR_HEIGHT = Platform.select({
 
 const hairlineWidth = StyleSheet.hairlineWidth
 
-const styles = StyleSheet.create({
-  modal: {
-    margin: 0
-  },
-  inner: {
-    flex: 1,
-    paddingTop: TOP_SPACE,
-    backgroundColor: 'white'
-  },
-  header: {
-    position: 'relative',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: APPBAR_HEIGHT,
-    backgroundColor: 'white',
-    borderBottomColor: 'gray',
-    borderBottomWidth: hairlineWidth,
-    zIndex: 500
-  },
-  closeWrapper: {
-    position: 'absolute',
-    top: 12,
-    left: 12
-  },
-  titleText: {
-    fontSize: 17,
-    fontWeight: '600'
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    modal: {
+      margin: 0
+    },
+    inner: {
+      flex: 1,
+      paddingTop: TOP_SPACE,
+      backgroundColor: colors.backgrounds.secondary
+    },
+    header: {
+      position: 'relative',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: APPBAR_HEIGHT,
+      backgroundColor: colors.backgrounds.secondary,
+      borderBottomColor: colors.foregrounds.separator,
+      borderBottomWidth: hairlineWidth,
+      zIndex: 500
+    },
+    closeWrapper: {
+      position: 'absolute',
+      top: 12,
+      left: 12
+    },
+    titleText: {
+      fontSize: 17,
+      fontWeight: '600',
+      color: colors.foregrounds.primary
+    }
+  })
 
 export default FullScreenModal

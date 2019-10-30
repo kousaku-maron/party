@@ -1,11 +1,12 @@
 import React, { useCallback } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { useParties } from '../services/party'
 import { useModal } from '../services/modal'
+import { useStyles, MakeStyles } from '../services/design'
 import { LoadingPage } from '../components/pages'
 import { HomeScreenState } from '../containers/HomeScreen'
-import { colors } from '../themes'
 import { Card, GenderModal, Modal } from '../components/organisms'
 import { setGender } from '../services/user'
 import { Party } from '../entities/Party'
@@ -14,6 +15,8 @@ type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps & HomeScreenState
 
 const HomeScreen = (props: Props) => {
+  const styles = useStyles(makeStyles)
+
   const { auth } = props
   const { user } = auth
   const parties = useParties()
@@ -66,7 +69,7 @@ const HomeScreen = (props: Props) => {
       })
       return thumbnailURLs
     },
-    [onPressEntry, props.navigation]
+    [onPressEntry, props.navigation, styles.container]
   )
 
   if (!parties) {
@@ -98,66 +101,17 @@ const HomeScreen = (props: Props) => {
   )
 }
 
-HomeScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca',
-  headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
-  headerStyle: {
-    backgroundColor: colors.senary.dark
-  }
-})
+HomeScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
-const styles = StyleSheet.create({
-  container: {
-    width: width,
-    padding: 10,
-    backgroundColor: colors.inherit
-  },
-  imageBorderRadius: {
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    borderTopRightRadius: 16,
-    borderTopLeftRadius: 16,
-    overflow: 'hidden'
-  },
-  image: {
-    width: width,
-    height: 200
-  },
-  name: {
-    color: 'white',
-    fontSize: 25,
-    padding: 6,
-    fontWeight: 'bold'
-  },
-  date: {
-    color: 'white',
-    padding: 6
-  },
-  description: {
-    backgroundColor: colors.primary.main,
-    height: 80,
-    justifyContent: 'space-between',
-    padding: 6,
-    flexDirection: 'row',
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    borderTopRightRadius: 0,
-    borderTopLeftRadius: 0,
-    overflow: 'hidden'
-  },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  buttonWrapper: {
-    padding: 3
-  },
-  buttonText: {
-    fontSize: 18,
-    color: colors.primary.dark
-  }
-})
+
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      width: width,
+      padding: 10,
+      backgroundColor: colors.backgrounds.primary
+    }
+  })
 
 export default HomeScreen

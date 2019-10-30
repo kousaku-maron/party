@@ -6,6 +6,7 @@ import {
   TextInputSubmitEditingEventData,
   StyleSheet
 } from 'react-native'
+import { useColors } from '../../services/design'
 
 type AutoCapitalizeOptions = 'none' | 'sentences' | 'words' | 'characters'
 
@@ -30,8 +31,8 @@ const CustomTextInput: React.FC<Props> = ({
   value,
   onChangeText,
   onSubmitEditing,
-  color = 'black',
-  borderColor = 'black',
+  color,
+  borderColor,
   // disabled = false,
   fullWidth = false,
   width = 250,
@@ -42,6 +43,8 @@ const CustomTextInput: React.FC<Props> = ({
   autoCapitalize = 'none',
   multiline = false
 }) => {
+  const colors = useColors()
+
   return (
     <TextInput
       style={[
@@ -49,8 +52,8 @@ const CustomTextInput: React.FC<Props> = ({
         {
           width: fullWidth ? '100%' : width,
           height: height,
-          borderColor,
-          color
+          borderColor: borderColor ? borderColor : colors.foregrounds.primary,
+          color: color ? color : colors.foregrounds.primary
         }
       ]}
       value={value}

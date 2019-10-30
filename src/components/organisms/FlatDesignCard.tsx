@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native'
-import { colors } from '../../themes'
+import { useStyles, useColors, MakeStyles } from '../../services/design'
 import { formatedDateFull } from '../../services/formatedDate'
 import { RoundedButton } from '../atoms'
 
@@ -14,7 +14,11 @@ type Props = {
 }
 
 const FlatDesignCard: React.FC<Props> = props => {
+  const styles = useStyles(makeStyles)
+  const colors = useColors()
+
   const date = formatedDateFull(props.date)
+
   return (
     <View>
       <View style={styles.imageBorderRadius}>
@@ -28,7 +32,7 @@ const FlatDesignCard: React.FC<Props> = props => {
         <View style={styles.buttonContainer}>
           <View style={styles.buttonWrapper}>
             <RoundedButton
-              color={'#FFFFFF'}
+              color={colors.foregrounds.onTintPrimary}
               fullWidth={false}
               width={70}
               height={30}
@@ -40,7 +44,7 @@ const FlatDesignCard: React.FC<Props> = props => {
           </View>
           <View style={styles.buttonWrapper}>
             <RoundedButton
-              color={'#FFFFFF'}
+              color={colors.foregrounds.onTintPrimary}
               fullWidth={false}
               width={70}
               height={30}
@@ -56,50 +60,51 @@ const FlatDesignCard: React.FC<Props> = props => {
   )
 }
 
-const styles = StyleSheet.create({
-  imageBorderRadius: {
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    borderTopRightRadius: 16,
-    borderTopLeftRadius: 16,
-    overflow: 'hidden'
-  },
-  image: {
-    height: 200
-  },
-  name: {
-    color: 'white',
-    fontSize: 25,
-    padding: 6,
-    fontWeight: 'bold'
-  },
-  date: {
-    color: 'white',
-    padding: 6
-  },
-  description: {
-    backgroundColor: colors.primary.main,
-    height: 80,
-    justifyContent: 'space-between',
-    padding: 6,
-    flexDirection: 'row',
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-    borderTopRightRadius: 0,
-    borderTopLeftRadius: 0,
-    overflow: 'hidden'
-  },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  buttonWrapper: {
-    padding: 3
-  },
-  buttonText: {
-    fontSize: 18,
-    color: colors.primary.dark
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    imageBorderRadius: {
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      borderTopRightRadius: 16,
+      borderTopLeftRadius: 16,
+      overflow: 'hidden'
+    },
+    image: {
+      height: 200
+    },
+    name: {
+      color: colors.foregrounds.onTintPrimary,
+      fontSize: 25,
+      padding: 6,
+      fontWeight: 'bold'
+    },
+    date: {
+      color: colors.foregrounds.onTintPrimary,
+      padding: 6
+    },
+    description: {
+      backgroundColor: colors.tints.primary.main,
+      height: 80,
+      justifyContent: 'space-between',
+      padding: 6,
+      flexDirection: 'row',
+      borderBottomLeftRadius: 16,
+      borderBottomRightRadius: 16,
+      borderTopRightRadius: 0,
+      borderTopLeftRadius: 0,
+      overflow: 'hidden'
+    },
+    buttonContainer: {
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    buttonWrapper: {
+      padding: 3
+    },
+    buttonText: {
+      fontSize: 18,
+      color: colors.tints.primary.main
+    }
+  })
 
 export default FlatDesignCard

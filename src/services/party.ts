@@ -3,7 +3,7 @@ import firebase from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 import { getUser } from '../repositories/user'
 import { User, createDocument } from '../entities'
-import { showMessage } from 'react-native-flash-message'
+import { entryPartyFlashCardTrue, entryPartyFlashCardFalse } from '../services/flashCard'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
@@ -103,28 +103,11 @@ export const entryPartyMembers = async (organizer, members: User[], partyID: str
     )
   })
 
-  await batch
-    .commit()
-    .then(() => {
-      showMessage({
-        message: 'パーティーに参加申請しました',
-        type: 'success',
-        titleStyle: styles.flashCardMessage
-      })
-      console.log('successssssssssssss')
-    })
-    .catch(error => {
-      showMessage({
-        message: 'パーティーの参加申請に失敗しました',
-        type: 'danger',
-        titleStyle: styles.flashCardMessage
-      })
-      console.warn(error)
-    })
-}
-
-const styles = {
-  flashCardMessage: {
-    fontSize: 18
+  try {
+    await batch.commit()
+    entryPartyFlashCardTrue()
+  } catch (e) {
+    entryPartyFlashCardFalse()
+    console.warn(e)
   }
 }
