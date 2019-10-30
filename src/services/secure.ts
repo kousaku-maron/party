@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { getCertificate, setCertificate } from '../repositories/certificate'
-import { getSecure, setSecure } from '../repositories/secure'
+import { updateSecure } from '../repositories/secure'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
@@ -47,8 +47,7 @@ export const useCertificateEditTools = (uid: string) => {
     const { result, url } = await setCertificate(uid, uploadCertificateURL)
     if (!result || !url) return
 
-    const secure = await getSecure(uid)
-    await setSecure(uid, { ...secure, certificateURL: url })
+    await updateSecure(uid, { certificateURL: url })
     setUploadCount(prev => prev + 1)
   }, [uid, uploadCertificateURL])
 

@@ -26,13 +26,25 @@ export const getSecure = async (uid: string) => {
 export const setSecure = async (uid: string, secure: Secure) => {
   const secureRef = getSecureRef(uid)
 
+  const updateSecure: Secure = {
+    certificateURL: secure.certificateURL ? secure.certificateURL : null,
+    pushToken: secure.pushToken ? secure.pushToken : null
+  }
+
   try {
-    await secureRef.set(
-      updateDocument<Secure>({
-        pushToken: secure.pushToken,
-        certificateURL: secure.certificateURL
-      })
-    )
+    await secureRef.set(updateDocument<Secure>(updateSecure))
+    return { result: true }
+  } catch (e) {
+    console.warn(e)
+    return { result: false }
+  }
+}
+
+export const updateSecure = async (uid: string, secure: Secure) => {
+  const secureRef = getSecureRef(uid)
+
+  try {
+    await secureRef.set(updateDocument<Secure>(secure), { merge: true })
     return { result: true }
   } catch (e) {
     console.warn(e)
