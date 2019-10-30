@@ -1,19 +1,20 @@
 import { useEffect, useState, useCallback } from 'react'
-import { getCertificate, setCertificate } from '../repositories/secure'
+import { getCertificate, setCertificate } from '../repositories/certificate'
+import { getSecure, setSecure } from '../repositories/secure'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
 
-export const useCertificate = (uid: string) => {
+export const useCertificateEditTools = (uid: string) => {
   const [currentCertificateURL, setCurrentCertificateURL] = useState<string | null>(null)
   const [uploadCertificateURL, setUploadCertificateURL] = useState<string | null>(null)
   const [uploadCount, setUploadCount] = useState<number>(0)
 
   useEffect(() => {
     const asyncEffect = async () => {
-      const { certificateURL } = await getCertificate(uid)
+      const url = await getCertificate(uid)
       setCurrentCertificateURL(null) // 一旦初期化させることで、再描写をさせている。
-      setCurrentCertificateURL(certificateURL)
+      setCurrentCertificateURL(url)
     }
     asyncEffect()
   }, [uid, uploadCount])
@@ -43,7 +44,11 @@ export const useCertificate = (uid: string) => {
   }, [])
 
   const upload = useCallback(async () => {
-    await setCertificate(uid, uploadCertificateURL)
+    const { result, url } = await setCertificate(uid, uploadCertificateURL)
+    if (!result || !url) return
+
+    const secure = await getSecure(uid)
+    await setSecure(uid, { ...secure, certificateURL: url })
     setUploadCount(prev => prev + 1)
   }, [uid, uploadCertificateURL])
 
