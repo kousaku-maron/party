@@ -3,7 +3,8 @@ import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigatio
 import { headerNavigationOptions } from '../navigators/options'
 import { SettingScreenState, SettingScreenActions } from '../containers/SettingScreen'
 import { useStyles, MakeStyles } from '../services/design'
-import { View, ScrollView, Text, StyleSheet, Dimensions } from 'react-native'
+import { useSecure, usePushNotifications } from '../services/secure'
+import { TouchableOpacity, ScrollView, Text, StyleSheet, Dimensions } from 'react-native'
 import { LoadingPage } from '../components/pages'
 
 type OwnProps = {
@@ -17,6 +18,9 @@ const SettingScreen = (props: Props) => {
   const { user } = auth
 
   const styles = useStyles(makeStyles)
+
+  const secure = useSecure(user.uid)
+  const pushNotificationsTools = usePushNotifications(user.uid)
 
   const onSignOut = useCallback(() => {
     signOut({
@@ -32,39 +36,39 @@ const SettingScreen = (props: Props) => {
     navigation.navigate('Privacy')
   }, [navigation])
 
-  if (!user) {
+  if (!user || !secure) {
     return <LoadingPage />
   }
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.listItem}>
-        <Text style={styles.primaryText}>
-          {/* user.pushToken */ false ? 'プッシュ通知を拒否' : 'プッシュ通知を許可'}
-        </Text>
-      </View>
+      {secure.pushToken && (
+        <TouchableOpacity style={styles.listItem} onPress={pushNotificationsTools.onReject}>
+          <Text style={styles.primaryText}>プッシュ通知を拒否</Text>
+        </TouchableOpacity>
+      )}
 
-      <View style={styles.listItem}>
-        <Text style={styles.primaryText} onPress={goToTerms}>
-          利用規約
-        </Text>
-      </View>
+      {!secure.pushToken && (
+        <TouchableOpacity style={styles.listItem} onPress={pushNotificationsTools.onAccept}>
+          <Text style={styles.primaryText}>プッシュ通知を許可</Text>
+        </TouchableOpacity>
+      )}
 
-      <View style={styles.listItem}>
-        <Text style={styles.primaryText} onPress={goToPrivacy}>
-          プライバシーポリシー
-        </Text>
-      </View>
+      <TouchableOpacity style={styles.listItem} onPress={goToTerms}>
+        <Text style={styles.primaryText}>利用規約</Text>
+      </TouchableOpacity>
 
-      <View style={styles.listItem}>
+      <TouchableOpacity style={styles.listItem} onPress={goToPrivacy}>
+        <Text style={styles.primaryText}>プライバシーポリシー</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.listItem}>
         <Text style={styles.primaryText}>退会する</Text>
-      </View>
+      </TouchableOpacity>
 
-      <View style={styles.listItem}>
-        <Text style={styles.signoutText} onPress={onSignOut}>
-          サインアウト
-        </Text>
-      </View>
+      <TouchableOpacity style={styles.listItem} onPress={onSignOut}>
+        <Text style={styles.signoutText}>サインアウト</Text>
+      </TouchableOpacity>
     </ScrollView>
   )
 }

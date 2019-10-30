@@ -1,9 +1,38 @@
 import { useEffect, useState, useCallback } from 'react'
+import { db } from '../repositories/firebase'
 import { getCertificate, setCertificate } from '../repositories/certificate'
 import { updateSecure } from '../repositories/secure'
+import { Notifications } from 'expo'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
+import Constants from 'expo-constants'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
+import { Secure, buildSecure } from '../entities'
+
+const usersRef = db.collection('users')
+const getSecureRef = (uid: string) => {
+  return usersRef
+    .doc(uid)
+    .collection('options')
+    .doc('secure')
+}
+
+export const useSecure = (uid: string) => {
+  const [secure, setSecure] = useState<Secure>()
+  useEffect(() => {
+    if (!uid) return
+    const secureRef = getSecureRef(uid)
+    const unsubscribe = secureRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
+      const secure = buildSecure(doc.data())
+      setSecure(secure)
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [uid])
+
+  return secure
+}
 
 export const useCertificateEditTools = (uid: string) => {
   const [currentCertificateURL, setCurrentCertificateURL] = useState<string | null>(null)
@@ -52,4 +81,43 @@ export const useCertificateEditTools = (uid: string) => {
   }, [uid, uploadCertificateURL])
 
   return { currentCertificateURL, uploadCertificateURL, onChangeUpdateCertificateURL, upload }
+}
+
+export const usePushNotifications = (uid: string) => {
+  const onAccept = useCallback(async () => {
+    if (!Constants.isDevice) {
+      return alert('エミュレーターでは、プッシュ通知を許可できません。')
+    }
+
+    const permissionResponse = await Permissions.getAsync(Permissions.NOTIFICATIONS)
+    let finalStatus = permissionResponse.status
+
+    if (permissionResponse.status !== 'granted') {
+      const askPermissionResponse = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+      finalStatus = askPermissionResponse.status
+    }
+
+    if (finalStatus !== 'granted') return
+
+    const token = await Notifications.getExpoPushTokenAsync()
+    const secure: Secure = { pushToken: token }
+
+    const { result } = await updateSecure(uid, secure)
+
+    // TODO: FlashMessage発行
+
+    return { result }
+  }, [uid])
+
+  const onReject = useCallback(async () => {
+    const secure: Secure = { pushToken: null }
+
+    const { result } = await updateSecure(uid, secure)
+
+    // TODO: FlashMessage発行
+
+    return { result }
+  }, [uid])
+
+  return { onAccept, onReject }
 }
