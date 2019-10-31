@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { db } from '../repositories/firebase'
-import { getCertificate, setCertificate } from '../repositories/certificate'
+import { getCertificateImage, setCertificateImage } from '../repositories/certificate'
 import { updateSecure, getSecure } from '../repositories/secure'
 import { Notifications } from 'expo'
 import * as ImagePicker from 'expo-image-picker'
@@ -42,7 +42,7 @@ export const useCertificateEditTools = (uid: string) => {
 
   useEffect(() => {
     const asyncEffect = async () => {
-      const url = await getCertificate(uid)
+      const url = await getCertificateImage(uid)
       setCurrentCertificateURL(null) // 一旦初期化させることで、再描写をさせている。
       setCurrentCertificateURL(url)
     }
@@ -74,7 +74,7 @@ export const useCertificateEditTools = (uid: string) => {
   }, [])
 
   const upload = useCallback(async () => {
-    const { result, url } = await setCertificate(uid, uploadCertificateURL)
+    const { result, url } = await setCertificateImage(uid, uploadCertificateURL)
     if (!result || !url) return
 
     await updateSecure(uid, { certificateURL: url })
