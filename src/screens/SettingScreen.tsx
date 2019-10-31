@@ -5,6 +5,7 @@ import { SettingScreenState, SettingScreenActions } from '../containers/SettingS
 import { useStyles, MakeStyles } from '../services/design'
 import { useSecure, usePushNotifications } from '../services/secure'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, Dimensions } from 'react-native'
+import { PushNotificationListItem } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 
 type OwnProps = {
@@ -42,17 +43,11 @@ const SettingScreen = (props: Props) => {
 
   return (
     <ScrollView style={styles.container}>
-      {secure.pushToken && (
-        <TouchableOpacity style={styles.listItem} onPress={pushNotificationsTools.onReject}>
-          <Text style={styles.primaryText}>プッシュ通知を拒否</Text>
-        </TouchableOpacity>
-      )}
-
-      {!secure.pushToken && (
-        <TouchableOpacity style={styles.listItem} onPress={pushNotificationsTools.onAccept}>
-          <Text style={styles.primaryText}>プッシュ通知を許可</Text>
-        </TouchableOpacity>
-      )}
+      <PushNotificationListItem
+        isExist={secure.pushTokens && secure.pushTokens.includes(pushNotificationsTools.deviceToken)}
+        onAccept={pushNotificationsTools.onAccept}
+        onReject={pushNotificationsTools.onReject}
+      />
 
       <TouchableOpacity style={styles.listItem} onPress={goToTerms}>
         <Text style={styles.primaryText}>利用規約</Text>
