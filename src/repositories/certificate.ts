@@ -7,7 +7,7 @@ const metadata = {
 }
 
 // TODO: binaryを引数に渡す仕様に変えたい。
-export const setCertificate = async (uid: string, url: string) => {
+export const setCertificateImage = async (uid: string, url: string) => {
   const certificateRef = storageRef.child(`${uid}/secure/certificate.png`)
   const response = await fetch(url)
   const blob = await response.blob()
@@ -24,7 +24,7 @@ export const setCertificate = async (uid: string, url: string) => {
     })
 }
 
-export const getCertificate = async (uid: string) => {
+export const getCertificateImage = async (uid: string) => {
   const certificateRef = storageRef.child(`${uid}/secure/certificate.png`)
 
   try {
