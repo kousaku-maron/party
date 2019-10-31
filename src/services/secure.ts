@@ -1,13 +1,14 @@
 import { useEffect, useState, useCallback } from 'react'
 import { db } from '../repositories/firebase'
 import { getCertificate, setCertificate } from '../repositories/certificate'
-import { updateSecure } from '../repositories/secure'
+import { updateSecure, getSecure } from '../repositories/secure'
 import { Notifications } from 'expo'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import Constants from 'expo-constants'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
 import { Secure, buildSecure } from '../entities'
+import _ from 'lodash'
 
 const usersRef = db.collection('users')
 const getSecureRef = (uid: string) => {
@@ -84,11 +85,9 @@ export const useCertificateEditTools = (uid: string) => {
 }
 
 export const usePushNotifications = (uid: string) => {
-  const onAccept = useCallback(async () => {
-    if (!Constants.isDevice) {
-      return alert('エミュレーターでは、プッシュ通知を許可できません。')
-    }
+  const [deviceToken, setDeviceToken] = useState<string | null>(null)
 
+  const getTokenWithAsk = useCallback(async () => {
     const permissionResponse = await Permissions.getAsync(Permissions.NOTIFICATIONS)
     let finalStatus = permissionResponse.status
 
@@ -97,27 +96,59 @@ export const usePushNotifications = (uid: string) => {
       finalStatus = askPermissionResponse.status
     }
 
-    if (finalStatus !== 'granted') return
+    if (finalStatus !== 'granted') {
+      return null
+    }
 
     const token = await Notifications.getExpoPushTokenAsync()
-    const secure: Secure = { pushToken: token }
+    return token
+  }, [])
 
+  // MEMO: effect内では、Permissionの許可申請を行わない。
+  useEffect(() => {
+    const getToken = async () => {
+      try {
+        const token = await Notifications.getExpoPushTokenAsync()
+        if (!token) return
+        setDeviceToken(token)
+      } catch (e) {
+        console.warn(e)
+      }
+    }
+    getToken()
+  }, [])
+
+  const onAccept = useCallback(async () => {
+    if (!Constants.isDevice) {
+      return alert('エミュレーターでは、プッシュ通知を許可できません。')
+    }
+
+    let updateToken = deviceToken
+    if (!updateToken) {
+      const token = await getTokenWithAsk()
+      if (!token) return
+      updateToken = token
+    }
+
+    const currentSecure = await getSecure(uid)
+    const secure: Secure = {
+      pushTokens: !_.isEmpty(currentSecure.pushTokens)
+        ? _.uniq([...currentSecure.pushTokens, updateToken])
+        : [updateToken]
+    }
     const { result } = await updateSecure(uid, secure)
-
-    // TODO: FlashMessage発行
-
     return { result }
-  }, [uid])
+  }, [deviceToken, getTokenWithAsk, uid])
 
   const onReject = useCallback(async () => {
-    const secure: Secure = { pushToken: null }
-
+    const currentSecure = await getSecure(uid)
+    const secure: Secure = {
+      pushTokens: !_.isEmpty(currentSecure.pushTokens) ? _.pull(currentSecure.pushTokens, deviceToken) : []
+    }
     const { result } = await updateSecure(uid, secure)
 
-    // TODO: FlashMessage発行
-
     return { result }
-  }, [uid])
+  }, [deviceToken, uid])
 
-  return { onAccept, onReject }
+  return { onAccept, onReject, deviceToken }
 }

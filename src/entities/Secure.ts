@@ -1,12 +1,12 @@
 export type Secure = {
   certificateURL?: string
-  pushToken?: string
+  pushTokens?: string[]
 }
 
 export const buildSecure = (data: firebase.firestore.DocumentData) => {
   const newSecure = {
     certificateURL: data.certificateURL,
-    pushToken: data.pushToken
+    pushTokens: data.pushTokens
   }
 
   return newSecure
