@@ -1,40 +1,48 @@
-import firebase from './firebase'
+import { db } from './firebase'
+import { Secure, buildSecure } from '../entities'
+import { updateDocument } from '../entities'
 
-const storage = firebase.storage()
-const storageRef = storage.ref('users')
-
-const metadata = {
-  contentType: 'image/png'
+const usersRef = db.collection('users')
+const getSecureRef = (uid: string) => {
+  return usersRef
+    .doc(uid)
+    .collection('options')
+    .doc('secure')
 }
 
-export const setCertificate = async (uid: string, url: string) => {
-  const certificateRef = storageRef.child(`${uid}/secure/certificate.png`)
-  const response = await fetch(url)
-  const blob = await response.blob()
-  const task = certificateRef.put(blob, metadata)
-
-  return task
-    .then(snapshop => snapshop.ref.getDownloadURL())
-    .then(async url => {
-      return { certificateURL: url }
-    })
-    .catch(e => {
-      console.warn(e)
-      return { certificateURL: null }
-    })
-}
-
-export const getCertificate = async (uid: string) => {
-  const certificateRef = storageRef.child(`${uid}/secure/certificate.png`)
+export const getSecure = async (uid: string) => {
+  const secureRef = getSecureRef(uid)
 
   try {
-    const url = await certificateRef.getDownloadURL()
-    if (url) {
-      return { certificateURL: url }
-    }
-    return { certificateURL: null }
+    const snapshot = await secureRef.get()
+    const secure = buildSecure(snapshot.data())
+    return secure
   } catch (e) {
-    // console.warn(e)
-    return { certificateURL: null }
+    console.warn(e)
+    return null
+  }
+}
+
+export const setSecure = async (uid: string, secure: Secure) => {
+  const secureRef = getSecureRef(uid)
+
+  try {
+    await secureRef.set(updateDocument<Secure>(secure))
+    return { result: true }
+  } catch (e) {
+    console.warn(e)
+    return { result: false }
+  }
+}
+
+export const updateSecure = async (uid: string, secure: Secure) => {
+  const secureRef = getSecureRef(uid)
+
+  try {
+    await secureRef.set(updateDocument<Secure>(secure), { merge: true })
+    return { result: true }
+  } catch (e) {
+    console.warn(e)
+    return { result: false }
   }
 }

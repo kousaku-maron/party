@@ -4,7 +4,7 @@ import { headerNavigationOptions } from '../navigators/options'
 import { UserScreenState } from '../containers/UserScreen'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
-import { useCertificate } from '../services/secure'
+import { useCertificateEditTools } from '../services/secure'
 import { useModal } from '../services/modal'
 import { View, Text, Image, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
@@ -34,7 +34,9 @@ const UserScreen = (props: Props) => {
 
   const user = useUser(targetUserID)
   const modalTools = useModal()
-  const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificate(uid)
+  const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificateEditTools(
+    uid
+  )
 
   const _pickCertificateImage = useCallback(async () => {
     const { cancelled, uri } = await onChangeUpdateCertificateURL()
