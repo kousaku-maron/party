@@ -12,6 +12,7 @@ export interface WelcomeScreenState {
 
 export interface WelcomeScreenActions {
   signInFacebook: (fetch: Fetch) => Action<Fetch>
+  signInAnonymously: (fetch: Fetch) => Action<Fetch>
 }
 
 const mapStateToProps = (appState: AppState) => ({
@@ -21,6 +22,9 @@ const mapStateToProps = (appState: AppState) => ({
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
   signInFacebook: (fetch: Fetch) => {
     dispatch(authActions.signInFacebook(fetch))
+  },
+  signInAnonymously: (fetch: Fetch) => {
+    dispatch(authActions.signInAnonymously(fetch))
   }
 })
 

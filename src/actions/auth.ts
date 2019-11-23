@@ -10,6 +10,7 @@ export interface Fetch {
 
 export const authActions = {
   signInFacebook: actionCreator<Fetch>('SIGNIN_FACEBOOK'),
+  signInAnonymously: actionCreator<Fetch>('SIGNIN_ANONYMOUSLY'),
   signOut: actionCreator<Fetch>('SIGNOUT'),
   setAuth: actionCreator<string>('SET_AUTH'),
   resetAuth: actionCreator<void>('RESET_AUTH'),
