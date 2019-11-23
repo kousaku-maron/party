@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
 import { UpdateUser } from '../entities'
-import { UserEditScreenState } from '../containers/UserEditScreen'
+import { UserEditScreenState, UserEditScreenActions } from '../containers/UserEditScreen'
 import * as UserRepository from '../repositories/user'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUserEditTools } from '../services/user'
@@ -15,7 +15,7 @@ type OwnProps = {
   navigation: NavigationStackProp
 }
 
-type Props = OwnProps & UserEditScreenState
+type Props = OwnProps & UserEditScreenState & UserEditScreenActions
 
 const UserEditScreen = (props: Props) => {
   const { navigation, auth } = props
@@ -29,12 +29,14 @@ const UserEditScreen = (props: Props) => {
   )
 
   const updateUserState = useCallback(async () => {
+    props.openLoadingModal()
     const updateUser: UpdateUser = { uid, name, thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
     const { result } = await UserRepository.setUser(uid, updateUser)
+    props.closeLoadingModal()
     if (result) {
       navigation.goBack()
     }
-  }, [name, navigation, thumbnailURL, uid, userID])
+  }, [name, navigation, props, thumbnailURL, uid, userID])
 
   if (!fetched) {
     return <LoadingPage />

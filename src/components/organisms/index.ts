@@ -1,3 +1,4 @@
+export { default as LoadingModal } from './LoadingModal'
 export { default as FlatDesignModal } from './FlatDesignModal'
 export { default as MaterialDesignModal } from './MaterialDesignModal'
 export { default as UploadCertificateModal } from './UploadCertificateModal'
