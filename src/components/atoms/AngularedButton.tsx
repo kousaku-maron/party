@@ -1,5 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-native'
+import { useColors } from '../../services/design'
 
 type Props = {
   color?: string
@@ -12,7 +13,7 @@ type Props = {
 }
 
 const AngularedButton: React.FC<Props> = ({
-  color = '#ededed',
+  color,
   disabled = false,
   fullWidth = false,
   width,
@@ -21,12 +22,14 @@ const AngularedButton: React.FC<Props> = ({
   children,
   padding = 12
 }) => {
+  const colors = useColors()
+
   return (
     <TouchableOpacity
       style={[
         styles.container,
         {
-          backgroundColor: color,
+          backgroundColor: color ? color : colors.tints.primary.main,
           width: fullWidth ? '100%' : width,
           height,
           padding: padding

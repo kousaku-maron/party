@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react'
-import { NavigationStackProp } from 'react-navigation-stack'
-import { UserScreenState, UserScreenActions } from '../containers/UserScreen'
-import { colors } from '../themes'
+import React, { useCallback, useMemo } from 'react'
+import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
+import { UserScreenState } from '../containers/UserScreen'
+import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
-import { useCertificate } from '../services/secure'
+import { useCertificateEditTools } from '../services/secure'
 import { useModal } from '../services/modal'
 import { View, Text, Image, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
@@ -15,15 +16,27 @@ type OwnProps = {
   navigation: NavigationStackProp
 }
 
-type Props = OwnProps & UserScreenState & UserScreenActions
+type Props = OwnProps & UserScreenState
 
 const UserScreen = (props: Props) => {
-  const { navigation, auth, signOut } = props
+  const { navigation, auth } = props
   const { uid } = auth
 
-  const user = useUser(uid)
+  const styles = useStyles(makeStyles)
+  const colors = useColors()
+
+  const targetUserID = useMemo(() => {
+    if (navigation.state.params && navigation.state.params.userID) {
+      return navigation.state.params.userID
+    }
+    return uid
+  }, [navigation.state.params, uid])
+
+  const user = useUser(targetUserID)
   const modalTools = useModal()
-  const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificate(uid)
+  const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificateEditTools(
+    uid
+  )
 
   const _pickCertificateImage = useCallback(async () => {
     const { cancelled, uri } = await onChangeUpdateCertificateURL()
@@ -37,14 +50,12 @@ const UserScreen = (props: Props) => {
     modalTools.onClose()
   }, [modalTools, upload])
 
-  const _signOut = useCallback(async () => {
-    signOut({
-      onSuccess: () => navigation.navigate('Welcome')
-    })
-  }, [navigation, signOut])
-
   const goToEdit = useCallback(() => {
     navigation.navigate('UserEdit')
+  }, [navigation])
+
+  const goToSetting = useCallback(() => {
+    navigation.navigate('Setting')
   }, [navigation])
 
   if (!user) {
@@ -74,7 +85,7 @@ const UserScreen = (props: Props) => {
 
         {!user.isAccepted && (
           <View style={styles.isNotacceptedWrapper}>
-            <RoundedButton color={colors.primary.main} fullWidth={true} onPress={_pickCertificateImage}>
+            <RoundedButton color={colors.tints.primary.main} fullWidth={true} onPress={_pickCertificateImage}>
               <Text style={styles.acceptText}>身分証をアップロードする</Text>
             </RoundedButton>
           </View>
@@ -98,13 +109,15 @@ const UserScreen = (props: Props) => {
         </View>
       )}
 
-      <Text style={styles.signoutText} onPress={_signOut}>
-        サインアウト
-      </Text>
-
       <TouchableOpacity style={styles.editFab} onPress={goToEdit}>
         <AntDesign color="gray" name="edit" size={24} />
       </TouchableOpacity>
+
+      {uid === targetUserID && (
+        <TouchableOpacity style={styles.settingFab} onPress={goToSetting}>
+          <AntDesign color="gray" name="setting" size={24} />
+        </TouchableOpacity>
+      )}
 
       <UploadCertificateModal
         isVisible={modalTools.isVisible}
@@ -116,101 +129,90 @@ const UserScreen = (props: Props) => {
   )
 }
 
-UserScreen.navigationOptions = () => ({
-  headerTitle: 'Nomoca',
-  headerBackTitle: null,
-  headerTintColor: colors.tertiary.light,
-  headerStyle: {
-    backgroundColor: colors.senary.dark
-  }
-})
+UserScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 // const hairlineWidth = StyleSheet.hairlineWidth
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    position: 'relative',
-    backgroundColor: colors.inherit
-  },
-  editFab: {
-    position: 'absolute',
-    right: 26,
-    bottom: 24
-  },
-  profileContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: 400
-  },
-  thumbnailWrapper: {
-    paddingBottom: 12
-  },
-  nameWrapper: {
-    paddingBottom: 3
-  },
-  idWrapper: {
-    paddingBottom: 24
-  },
-  isAcceptedWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    paddingBottom: 24
-  },
-  isNotacceptedWrapper: {
-    width: 250,
-    paddingBottom: 3
-  },
-  acceptCaptionWrapper: {
-    width: 250
-  },
-  cardWrapper: {
-    paddingBottom: 24
-  },
-  card: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '80%',
-    padding: 24,
-    borderRadius: Platform.OS === 'ios' ? 16 : 3,
-    backgroundColor: 'white',
-    shadowColor: '#cccccc',
-    shadowOffset: {
-      width: 0,
-      height: 5
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      position: 'relative',
+      backgroundColor: colors.backgrounds.primary
     },
-    shadowOpacity: 1,
-    shadowRadius: 15,
-    elevation: 2
-  },
-  certificate: {
-    width: 200,
-    height: 200
-  },
-  nameText: {
-    fontSize: 18
-  },
-  idText: {
-    fontSize: 12,
-    color: 'gray'
-  },
-  acceptText: {
-    fontSize: 14,
-    color: 'white'
-  },
-  acceptCaptionText: {
-    fontSize: 12
-    // color: 'gray'
-  },
-  signoutText: {
-    color: colors.system.blue
-  }
-})
+    editFab: {
+      position: 'absolute',
+      right: 26,
+      bottom: 24
+    },
+    settingFab: {
+      position: 'absolute',
+      right: 58,
+      bottom: 24
+    },
+    profileContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+      height: 400
+    },
+    thumbnailWrapper: {
+      paddingBottom: 12
+    },
+    nameWrapper: {
+      paddingBottom: 3
+    },
+    idWrapper: {
+      paddingBottom: 24
+    },
+    isAcceptedWrapper: {
+      display: 'flex',
+      justifyContent: 'center',
+      paddingBottom: 24
+    },
+    isNotacceptedWrapper: {
+      width: 250,
+      paddingBottom: 3
+    },
+    acceptCaptionWrapper: {
+      width: 250
+    },
+    cardWrapper: {
+      paddingBottom: 24
+    },
+    card: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '80%',
+      padding: 24,
+      borderRadius: Platform.OS === 'ios' ? 16 : 3,
+      backgroundColor: colors.backgrounds.secondary
+    },
+    certificate: {
+      width: 200,
+      height: 200
+    },
+    nameText: {
+      fontSize: 18,
+      color: colors.foregrounds.primary
+    },
+    idText: {
+      fontSize: 12,
+      color: colors.foregrounds.secondary
+    },
+    acceptText: {
+      fontSize: 14,
+      color: colors.foregrounds.onTintPrimary
+    },
+    acceptCaptionText: {
+      fontSize: 12,
+      color: colors.foregrounds.secondary
+    }
+  })
 
 export default UserScreen

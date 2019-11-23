@@ -2,6 +2,7 @@ import React, { useMemo, useCallback } from 'react'
 import { User } from '../../entities'
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
 import { Thumbnail, RoundedButton } from '../atoms'
+import { useStyles, MakeStyles } from '../../services/design'
 
 type Props = {
   user: User
@@ -11,6 +12,8 @@ type Props = {
 }
 
 const UserListItem = ({ user, actionButton, disabled = false, onPress }: Props) => {
+  const styles = useStyles(makeStyles)
+
   const ActionButton = useMemo(() => {
     if (!actionButton) {
       return null
@@ -50,37 +53,39 @@ const UserListItem = ({ user, actionButton, disabled = false, onPress }: Props) 
 
 const width = Dimensions.get('window').width
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-    width,
-    height: 75,
-    padding: 12,
-    backgroundColor: 'white'
-  },
-  head: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  tail: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  thumbnailWrapper: {
-    paddingRight: 12
-  },
-  nameText: {
-    fontSize: 16
-  },
-  idText: {
-    fontSize: 12,
-    color: 'gray'
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexDirection: 'row',
+      width,
+      height: 75,
+      padding: 12
+      // backgroundColor: colors.backgrounds.primary
+    },
+    head: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    tail: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    thumbnailWrapper: {
+      paddingRight: 12
+    },
+    nameText: {
+      fontSize: 16,
+      color: colors.foregrounds.primary
+    },
+    idText: {
+      fontSize: 12,
+      color: colors.foregrounds.secondary
+    }
+  })
 
 export default UserListItem

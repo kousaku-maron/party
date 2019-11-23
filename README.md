@@ -8,3 +8,12 @@
 yarn
 yarn start
 ```
+
+# 環境
+
+nodeの12系推奨。
+※13系だとfirebaseのライブラリで使用しているgrpcのインストールで失敗してしまったので。
+
+# firebase configの設定
+
+`.env.sample`を参考に、`.env`ファイルを作成する。

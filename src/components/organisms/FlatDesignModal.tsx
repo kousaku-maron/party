@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { useStyles, MakeStyles } from '../../services/design'
 import Modal from 'react-native-modal'
 
 type Props = {
@@ -13,6 +14,8 @@ type Props = {
 }
 
 const FlatDesignModal: React.FC<Props> = props => {
+  const styles = useStyles(makeStyles)
+
   return (
     <View>
       <Modal isVisible={props.isVisible} animationIn="bounceIn" animationOut="fadeOut">
@@ -55,57 +58,60 @@ const FlatDesignModal: React.FC<Props> = props => {
 
 const hairlineWidth = StyleSheet.hairlineWidth
 
-const styles = StyleSheet.create({
-  inner: {
-    display: 'flex',
-    backgroundColor: '#ededed',
-    borderRadius: 16
-  },
-  contentsArea: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingTop: 32,
-    paddingLeft: 16,
-    paddingRight: 16
-  },
-  actionArea: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%'
-  },
-  contentsWrapper: {
-    paddingBottom: 32
-  },
-  titleWrapper: {
-    paddingBottom: 16
-  },
-  centerAlign: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  button: {
-    flex: 1,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'gray',
-    borderTopWidth: hairlineWidth
-  },
-  borderRight: {
-    borderColor: 'gray',
-    borderRightWidth: hairlineWidth
-  },
-  titleText: {
-    fontWeight: 'bold',
-    fontSize: 18
-  },
-  descText: {
-    fontSize: 16
-  },
-  buttonText: {
-    fontSize: 16,
-    color: 'rgb(0, 122, 255)'
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    inner: {
+      display: 'flex',
+      backgroundColor: colors.backgrounds.tertiary,
+      borderRadius: 16
+    },
+    contentsArea: {
+      display: 'flex',
+      alignItems: 'center',
+      paddingTop: 32,
+      paddingLeft: 16,
+      paddingRight: 16
+    },
+    actionArea: {
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%'
+    },
+    contentsWrapper: {
+      paddingBottom: 32
+    },
+    titleWrapper: {
+      paddingBottom: 16
+    },
+    centerAlign: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    button: {
+      flex: 1,
+      height: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderColor: colors.foregrounds.separator,
+      borderTopWidth: hairlineWidth
+    },
+    borderRight: {
+      borderColor: colors.foregrounds.separator,
+      borderRightWidth: hairlineWidth
+    },
+    titleText: {
+      fontWeight: 'bold',
+      fontSize: 18,
+      color: colors.foregrounds.primary
+    },
+    descText: {
+      fontSize: 16,
+      color: colors.foregrounds.secondary
+    },
+    buttonText: {
+      fontSize: 16,
+      color: colors.system.blue
+    }
+  })
 
 export default FlatDesignModal
