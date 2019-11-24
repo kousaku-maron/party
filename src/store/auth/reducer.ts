@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
-import { authActions } from '../actions'
-import { User } from '../entities'
-import { AppState } from './configureStore'
+import { authActions } from './actions'
+import { User } from '../../entities'
+import { AppState } from '../configureStore'
 
 export interface Auth {
   checked: boolean

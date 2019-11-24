@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
-import { useAuthState } from '../reducers'
+import { useAuthState } from '../store/hooks'
 import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 

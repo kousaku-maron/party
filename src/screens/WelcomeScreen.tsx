@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
-import { useAuthActions } from '../actions'
+import { useAuthActions } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { View, Text, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'

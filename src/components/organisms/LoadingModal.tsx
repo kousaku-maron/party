@@ -2,7 +2,7 @@ import React from 'react'
 import { View, ActivityIndicator, Platform, Dimensions, StyleSheet } from 'react-native'
 import Modal from 'react-native-modal'
 import { useStyles, useColors, MakeStyles } from '../../services/design'
-import { useUIState } from '../../reducers'
+import { useUIState } from '../../store/hooks'
 
 const LoadingModal: React.FC = () => {
   const styles = useStyles(makeStyles)

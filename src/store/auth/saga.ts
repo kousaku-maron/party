@@ -1,9 +1,9 @@
 import { take, put, call } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
-import { authActions } from '../actions'
-import firebase from '../repositories/firebase'
-import * as userRepository from '../repositories/user'
-import { signInFacebook, signOut, signInAnonymously } from '../services/authentication'
+import { authActions } from './actions'
+import firebase from '../../repositories/firebase'
+import * as userRepository from '../../repositories/user'
+import { signInFacebook, signOut, signInAnonymously } from '../../services/authentication'
 
 const authChannel = () => {
   const channel = eventChannel(emit => {

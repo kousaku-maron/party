@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { useAuthState } from '../reducers'
+import { useAuthState } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
 import { useCertificateEditTools } from '../services/secure'
