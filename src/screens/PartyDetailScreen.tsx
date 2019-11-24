@@ -6,17 +6,14 @@ import { formatedDateMonthDateHour } from '../services/formatedDate'
 import { RoundedButton } from '../components/atoms'
 import { useParty } from '../services/party'
 import { useStyles, useColors, MakeStyles } from '../services/design'
-import { PartyDetailScreenState } from '../containers/PartyDetailScreen'
 import { LoadingPage } from '../components/pages'
 
 type OwnProps = {
   navigation: NavigationStackProp
 }
-type Props = OwnProps & PartyDetailScreenState
+type Props = OwnProps
 
-const PartyDetailScreen = (props: Props) => {
-  const { navigation } = props
-
+const PartyDetailScreen = ({ navigation }: Props) => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 

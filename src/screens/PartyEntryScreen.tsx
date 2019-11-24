@@ -2,10 +2,10 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
 import { User } from '../entities'
-import { PartyEntryScreenState } from '../containers/PartyEntryScreen'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
+import { useAuthState } from '../reducers'
 import { entryPartyMembers } from '../services/party'
 import * as userRepository from '../repositories/user'
 import { LoadingPage, SearchUserPage } from '../components/pages'
@@ -16,13 +16,12 @@ type OwnProps = {
   navigation: NavigationStackProp
 }
 
-type Props = OwnProps & PartyEntryScreenState
+type Props = OwnProps
 
 const MEMBERS_COUNT = 2
 
-const PartyEntryScreen = (props: Props) => {
-  const { auth } = props
-  const { uid } = auth
+const PartyEntryScreen = ({ navigation }: Props) => {
+  const { uid } = useAuthState()
 
   const styles = useStyles(makeStyles)
 
@@ -67,9 +66,9 @@ const PartyEntryScreen = (props: Props) => {
   const onEntry = useCallback(() => {
     if (!enabledEntry) return
     const organizer = members[0]
-    entryPartyMembers(organizer, members, props.navigation.state.params.partyID)
-    props.navigation.goBack()
-  }, [enabledEntry, members, props.navigation])
+    entryPartyMembers(organizer, members, navigation.state.params.partyID)
+    navigation.goBack()
+  }, [enabledEntry, members, navigation])
 
   useEffect(() => {
     const fetchMyUser = async () => {

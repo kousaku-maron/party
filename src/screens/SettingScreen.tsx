@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { SettingScreenState, SettingScreenActions } from '../containers/SettingScreen'
+import { useAuthState } from '../reducers'
+import { useAuthActions } from '../actions'
 import { useStyles, MakeStyles } from '../services/design'
 import { useSecure, usePushNotifications } from '../services/secure'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, Dimensions } from 'react-native'
@@ -12,12 +13,11 @@ type OwnProps = {
   navigation: NavigationStackProp
 }
 
-type Props = OwnProps & SettingScreenState & SettingScreenActions
+type Props = OwnProps
 
-const SettingScreen = (props: Props) => {
-  const { navigation, auth, signOut } = props
-  const { user } = auth
-
+const SettingScreen = ({ navigation }: Props) => {
+  const { user } = useAuthState()
+  const { signOut } = useAuthActions()
   const styles = useStyles(makeStyles)
 
   const secure = useSecure(user.uid)
