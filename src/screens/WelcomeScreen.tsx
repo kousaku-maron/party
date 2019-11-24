@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
-import { WelcomeScreenState, WelcomeScreenActions } from '../containers/WelcomeScreen'
+import { useAuthActions } from '../actions'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { View, Text, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
@@ -11,10 +11,10 @@ type OwnProps = {
   navigation: NavigationStackProp
 }
 
-type Props = OwnProps & WelcomeScreenState & WelcomeScreenActions
+type Props = OwnProps
 
-const WelcomeScreen = (props: Props) => {
-  const { navigation, signInFacebook, signInAnonymously } = props
+const WelcomeScreen = ({ navigation }: Props) => {
+  const { signInFacebook, signInAnonymously } = useAuthActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
 

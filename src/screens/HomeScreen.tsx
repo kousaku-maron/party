@@ -5,19 +5,18 @@ import { headerNavigationOptions } from '../navigators/options'
 import { useParties } from '../services/party'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
+import { useAuthState } from '../reducers'
 import { LoadingPage } from '../components/pages'
-import { HomeScreenState } from '../containers/HomeScreen'
 import { Card, GenderModal, Modal } from '../components/organisms'
 import { setGender } from '../services/user'
 import { Party } from '../entities/Party'
 
 type OwnProps = { navigation: NavigationStackProp }
-type Props = OwnProps & HomeScreenState
+type Props = OwnProps
 
-const HomeScreen = (props: Props) => {
+const HomeScreen = ({ navigation }: Props) => {
   const styles = useStyles(makeStyles)
-
-  const { auth } = props
+  const auth = useAuthState()
   const { user } = auth
   const parties = useParties()
 
@@ -41,9 +40,9 @@ const HomeScreen = (props: Props) => {
       if (!user.gender) {
         return genderModalTools.onOpen()
       }
-      props.navigation.navigate('PartyEntry', { partyID })
+      navigation.navigate('PartyEntry', { partyID })
     },
-    [genderModalTools, isAcceptedModalTools, props.navigation, user]
+    [genderModalTools, isAcceptedModalTools, navigation, user]
   )
 
   const FetchPartiesThumbnail = useCallback(
@@ -62,14 +61,14 @@ const HomeScreen = (props: Props) => {
               onPressEntry={() => {
                 onPressEntry(partyID)
               }}
-              onPressDetail={() => props.navigation.navigate('PartyDetail', { partyID, onPressEntry })}
+              onPressDetail={() => navigation.navigate('PartyDetail', { partyID, onPressEntry })}
             />
           </View>
         )
       })
       return thumbnailURLs
     },
-    [onPressEntry, props.navigation, styles.container]
+    [navigation, onPressEntry, styles.container]
   )
 
   if (!parties) {

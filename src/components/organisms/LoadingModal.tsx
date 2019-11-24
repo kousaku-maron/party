@@ -2,18 +2,16 @@ import React from 'react'
 import { View, ActivityIndicator, Platform, Dimensions, StyleSheet } from 'react-native'
 import Modal from 'react-native-modal'
 import { useStyles, useColors, MakeStyles } from '../../services/design'
+import { useUIState } from '../../reducers'
 
-type Props = {
-  isVisible: boolean
-}
-
-const LoadingModal: React.FC<Props> = props => {
+const LoadingModal: React.FC = () => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
+  const { showLoadingModal } = useUIState()
 
   return (
     <View>
-      <Modal style={styles.container} isVisible={props.isVisible} animationIn="bounceIn" animationOut="fadeOut">
+      <Modal style={styles.container} isVisible={showLoadingModal} animationIn="bounceIn" animationOut="fadeOut">
         <View style={styles.inner}>
           <ActivityIndicator style={styles.indicator} size="large" color={colors.system.gray} />
         </View>

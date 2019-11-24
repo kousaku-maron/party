@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { AppearanceProvider, useColorScheme } from 'react-native-appearance'
 import configureStore from './src/reducers/configureStore'
 import AppNavigator from './src/navigators/AppNavigator'
-import { LoadingModal } from './src/containers/components/organisms'
+import { LoadingModal } from './src/components/organisms'
 
 const store = configureStore()
 
