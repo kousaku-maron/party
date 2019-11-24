@@ -2,9 +2,10 @@ import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { WelcomeScreenState, WelcomeScreenActions } from '../containers/WelcomeScreen'
 import { useStyles, useColors, MakeStyles } from '../services/design'
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton } from '../components/atoms'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -13,15 +14,21 @@ type OwnProps = {
 type Props = OwnProps & WelcomeScreenState & WelcomeScreenActions
 
 const WelcomeScreen = (props: Props) => {
-  const { navigation, signInFacebook } = props
+  const { navigation, signInFacebook, signInAnonymously } = props
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
-  const signIn = useCallback(() => {
+  const onSignInFacebook = useCallback(() => {
     signInFacebook({
       onSuccess: () => navigation.navigate('App')
     })
   }, [navigation, signInFacebook])
+
+  const onSignInAnonymously = useCallback(() => {
+    signInAnonymously({
+      onSuccess: () => navigation.navigate('App')
+    })
+  }, [navigation, signInAnonymously])
 
   const goToTerms = useCallback(() => {
     navigation.navigate('Terms')
@@ -35,20 +42,26 @@ const WelcomeScreen = (props: Props) => {
     <View style={styles.container}>
       {/* <View style={styles.overlay} /> */}
       <View style={styles.titleArea}>
-        <Text style={styles.titleText}>Nomoca</Text>
-        <Text style={styles.subText}>今すぐ、飲みに行こう</Text>
+        <Text style={styles.titleText}>DEMO</Text>
+        {/* <Text style={styles.subText}>今すぐ、飲みに行こう</Text> */}
       </View>
       <View style={styles.imageArea}>
-        <Image style={styles.image} resizeMode="contain" source={require('./../../assets/icons/cocktail.png')} />
+        {/* <Image style={styles.image} resizeMode="contain" source={require('./../../assets/icons/cocktail.png')} /> */}
       </View>
       <View style={styles.actionArea}>
-        <View style={styles.buttonWrapper}>
-          <RoundedButton color={colors.tints.primary.main} height={56} fullWidth={true} onPress={signIn}>
+        <View style={styles.facebookButtonWrapper}>
+          <RoundedButton color={colors.tints.primary.main} height={56} fullWidth={true} onPress={onSignInFacebook}>
             <View style={styles.iconWrapper}>
               <AntDesign name="facebook-square" size={32} color={colors.foregrounds.onTintPrimary} />
             </View>
             <Text style={styles.fbText}>Facebookでログイン</Text>
           </RoundedButton>
+        </View>
+
+        <View style={styles.guestButtonWrapper}>
+          <TouchableOpacity onPress={onSignInAnonymously}>
+            <Text style={styles.guestText}>ゲストでログイン</Text>
+          </TouchableOpacity>
         </View>
 
         <Text style={styles.termText}>
@@ -105,9 +118,16 @@ const makeStyles: MakeStyles = colors =>
       alignItems: 'center',
       paddingTop: 134
     },
-    buttonWrapper: {
+    facebookButtonWrapper: {
       width: '100%',
-      paddingBottom: 12
+      paddingBottom: 24
+    },
+    guestButtonWrapper: {
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingBottom: 24
     },
     iconWrapper: {
       paddingRight: 12
@@ -127,6 +147,10 @@ const makeStyles: MakeStyles = colors =>
     fbText: {
       color: colors.foregrounds.onTintPrimary,
       fontSize: 18
+    },
+    guestText: {
+      color: colors.foregrounds.onTintPrimary,
+      fontSize: 14
     },
     termText: {
       color: colors.foregrounds.secondary,
