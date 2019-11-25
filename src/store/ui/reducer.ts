@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
-import { uiActions } from '../actions'
-import { AppState } from './configureStore'
+import { uiActions } from './actions'
+import { AppState } from '../configureStore'
 
 export interface UI {
   showLoadingModal: boolean

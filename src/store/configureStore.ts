@@ -2,7 +2,7 @@ import { combineReducers, createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { authReducer, Auth } from './auth'
 import { uiReducer, UI } from './ui'
-import rootSaga from '../sagas'
+import rootSaga from './configureSaga'
 
 const sagaMiddleware = createSagaMiddleware()
 const middlewares = [sagaMiddleware]

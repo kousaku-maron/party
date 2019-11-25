@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import actionCreateFactory from 'typescript-fsa'
-import { User } from '../entities'
+import { User } from '../../entities'
 
 const actionCreator = actionCreateFactory()
 
