@@ -50,7 +50,7 @@ const HomeScreen = ({ navigation }: Props) => {
     partyID => {
       if (!user) return
 
-      navigation.navigate('Chat', { partyID })
+      navigation.navigate('Chat', { roomID: partyID })
     },
     [navigation, user]
   )

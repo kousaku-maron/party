@@ -1,24 +1,24 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import firebase from '../repositories/firebase'
-import { buildMessage, Message, CreateMessage } from '../entities'
-import { getUser } from '../repositories/user'
+import { buildMessage, Message, CreateMessage, systemUser } from '../entities'
 import { createMessage } from '../repositories/message'
-import { User } from '../entities'
-import { IMessage } from 'react-native-gifted-chat'
+import { IMessage, Reply } from 'react-native-gifted-chat'
 import { useAuthState } from '../store/auth'
 import _ from 'lodash'
 
 const db = firebase.firestore()
-const partiesRef = db.collection('parties')
-const getMessagesRef = (partyID: string) => {
-  return partiesRef.doc(partyID).collection('messages')
+
+// MEMO: messagesの保存場所を一時的にparty直下にしている。
+const roomsRef = db.collection('parties')
+const getMessagesRef = (roomID: string) => {
+  return roomsRef.doc(roomID).collection('messages')
 }
 
-export const useMessages = (partyID: string) => {
+export const useMessages = (roomID: string) => {
   const [messages, setMessages] = useState<Message[]>()
 
   useEffect(() => {
-    const messagesRef = getMessagesRef(partyID).orderBy('createdAt', 'desc')
+    const messagesRef = getMessagesRef(roomID).orderBy('createdAt', 'desc')
 
     const unsubscribe = messagesRef.onSnapshot({
       next: (snapshot: firebase.firestore.QuerySnapshot) => {
@@ -34,65 +34,82 @@ export const useMessages = (partyID: string) => {
         console.warn(error)
       },
       complete: () => {
-        console.info('complete messages onSnaoshot.')
+        // console.info('complete messages onSnaoshot.')
       }
     })
 
     return () => {
       unsubscribe()
     }
-  }, [partyID])
+  }, [roomID])
 
   return messages
 }
 
-export const useGiftedhatTools = (partyID: string, roomUserUIDs: string[]) => {
-  const messages = useMessages(partyID)
-  const { uid } = useAuthState()
-
-  const userDic: { [uid: string]: User } = useMemo(() => {
-    const domain = {}
-    roomUserUIDs.map(uid => {
-      const user = getUser(uid)
-      domain[uid] = user
-    })
-
-    return domain
-  }, [roomUserUIDs])
+export const useGiftedhatTools = (roomID: string) => {
+  const messages = useMessages(roomID)
+  const { user } = useAuthState()
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const defaultAvatar = require('../../assets/images/no_user.png')
 
   const iMessages: IMessage[] = useMemo(() => {
     if (_.isEmpty(messages)) return []
     return messages.map(message => {
-      const user = userDic[message.writerUID]
+      const user = message.user
 
       const iMessage: IMessage = {
         _id: message.id,
         text: message.text,
         createdAt: message.createdAt,
+        system: message.user ? false : message.system, // systemがtrueだとアバター表示が面倒なため、userデータがあるメッセージはfalseにしている。
         user: {
           _id: user.uid,
           name: user.name,
-          avatar: user.thumbnailURL
+          avatar: user.thumbnailURL || defaultAvatar
         },
+        quickReplies: message.quickReplies,
         image: message.imageURL,
         video: message.videoURL
       }
       return iMessage
     })
-  }, [messages, userDic])
+  }, [defaultAvatar, messages])
 
   const onSend = useCallback(
     (iMessages: IMessage[]) => {
       const iMessage = iMessages.slice(-1)[0]
+
       const newMessage: CreateMessage = {
         text: iMessage.text,
-        writerUID: uid
+        user,
+        system: false
       }
 
-      createMessage(partyID, newMessage)
+      createMessage(roomID, newMessage)
     },
-    [partyID, uid]
+    [roomID, user]
   )
 
-  return { messages: iMessages, onSend }
+  const onSystemSend = useCallback(
+    (iMessages: IMessage[]) => {
+      const iMessage = iMessages.slice(-1)[0]
+
+      const newMessage: CreateMessage = {
+        text: iMessage.text,
+        user: systemUser,
+        system: true
+      }
+
+      createMessage(roomID, newMessage)
+    },
+    [roomID]
+  )
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const onQuickReply = useCallback((replies: Reply[]) => {
+    // reply process
+    console.info(replies)
+  }, [])
+
+  return { messages: iMessages, onSend, onSystemSend, onQuickReply }
 }

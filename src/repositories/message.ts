@@ -2,13 +2,14 @@ import { db } from './firebase'
 import { CreateMessage } from '../entities'
 import { createDocument } from '../entities'
 
-const partiesRef = db.collection('parties')
-const getMessagesRef = (partyID: string) => {
-  return partiesRef.doc(partyID).collection('messages')
+// MEMO: messagesの保存場所を一時的にparty直下にしている。
+const roomsRef = db.collection('parties')
+const getMessagesRef = (roomID: string) => {
+  return roomsRef.doc(roomID).collection('messages')
 }
 
-export const createMessage = async (partyID: string, message: CreateMessage) => {
-  const messagesRef = getMessagesRef(partyID)
+export const createMessage = async (roomID: string, message: CreateMessage) => {
+  const messagesRef = getMessagesRef(roomID)
 
   try {
     await messagesRef.doc().set(createDocument<CreateMessage>(message))
