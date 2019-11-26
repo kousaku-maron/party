@@ -103,20 +103,22 @@ const makeStyles: MakeStyles = colors =>
       flex: 1
     },
     bubbleWrapper: {
-      position: 'relative'
+      position: 'relative',
+      maxWidth: '80%',
+      paddingBottom: 10.5
     },
     pinnedRight: {
       position: 'absolute',
-      bottom: 0,
-      right: 35
+      bottom: 12,
+      right: 32
     },
     pinnedLeft: {
       position: 'absolute',
-      bottom: 0,
-      left: 35
+      bottom: 12,
+      left: 32
     },
     username: {
-      fontSize: 16,
+      fontSize: 10.5,
       backgroundColor: 'transparent',
       color: colors.foregrounds.secondary
     },
