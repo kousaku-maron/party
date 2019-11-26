@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import firebase from '../repositories/firebase'
 import { buildMessage, Message, CreateMessage, systemUser } from '../entities'
-import { createMessage } from '../repositories/message'
+import { setMessage } from '../repositories/message'
 import { IMessage, Reply } from 'react-native-gifted-chat'
 import { useAuthState } from '../store/auth'
 import _ from 'lodash'
@@ -85,7 +85,7 @@ export const useGiftedhatTools = (roomID: string) => {
         system: false
       }
 
-      createMessage(roomID, newMessage)
+      setMessage(roomID, newMessage)
     },
     [roomID, user]
   )
@@ -100,7 +100,7 @@ export const useGiftedhatTools = (roomID: string) => {
         system: true
       }
 
-      createMessage(roomID, newMessage)
+      setMessage(roomID, newMessage)
     },
     [roomID]
   )

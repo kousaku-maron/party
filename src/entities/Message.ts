@@ -39,6 +39,8 @@ export const buildMessage = (id: string, data: firebase.firestore.DocumentData) 
 
 export type CreateMessage = Pick<Message, 'text' | 'user' | 'system' | 'quickReplies' | 'imageURL' | 'videoURL'>
 
+export type UpdateMessage = Pick<Message, 'user'>
+
 export const systemUser: MessageUser = {
   enabled: true,
   isAccepted: true,

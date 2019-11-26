@@ -46,6 +46,7 @@ export const getUser = async (uid: string) => {
   }
 }
 
+// TODO: 参加中のルーム一覧を取得し、メッセージのuserもアップデートするように修正する。
 export const setUser = async (uid: string, user: UpdateUser) => {
   try {
     if (user.userID) {
@@ -55,24 +56,33 @@ export const setUser = async (uid: string, user: UpdateUser) => {
       }
     }
 
+    const batch = db.batch()
+
     if (user.thumbnailURL) {
       const { thumbnailURL } = await setThumbnail(uid, user.thumbnailURL)
       if (!thumbnailURL) {
         throw 'update thumbnail failure.'
       }
 
-      await usersRef.doc(uid).set(
+      batch.set(
+        usersRef.doc(uid),
         updateDocument({
           name: user.name,
           thumbnailURL
-        }),
-        { merge: true }
+        })
       )
-
-      return { result: true }
     }
 
-    await usersRef.doc(uid).set(updateDocument({ name: user.name }), { merge: true })
+    if (!user.thumbnailURL) {
+      batch.set(
+        usersRef.doc(uid),
+        updateDocument({
+          name: user.name
+        })
+      )
+    }
+
+    await batch.commit()
 
     return { result: true }
   } catch (e) {

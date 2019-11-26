@@ -13,7 +13,6 @@ import { useColors } from '../services/design'
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ChatScreen = ({ navigation }: Props) => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
@@ -23,11 +22,16 @@ const ChatScreen = ({ navigation }: Props) => {
 
   const { messages, onSend, onQuickReply } = useGiftedhatTools(roomID)
 
+  // MEMO: "Type instantiation is excessively deep and possibly infinite."のエラー回避のため、ラップしている。
+  const CustomBubble = useCallback(props => {
+    return <Bubble {...props} />
+  }, [])
+
   const renderBubble = useCallback(
     props => (
       <View style={styles.bubbleWrapper}>
         {props.currentMessage.user._id !== uid && <Text style={styles.username}>{props.currentMessage.user.name}</Text>}
-        <Bubble
+        <CustomBubble
           {...props}
           containerStyle={{
             left: { paddingTop: 8 },
