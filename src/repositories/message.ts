@@ -20,11 +20,11 @@ export const setMessage = async (roomID: string, message: CreateMessage) => {
   }
 }
 
-export const updateMessage = async (roomID: string, message: UpdateMessage) => {
+export const updateMessage = async (roomID: string, messageID: string, message: UpdateMessage) => {
   const messagesRef = getMessagesRef(roomID)
 
   try {
-    await messagesRef.doc().set(updateDocument<UpdateMessage>(message), { merge: true })
+    await messagesRef.doc(messageID).set(updateDocument<UpdateMessage>(message), { merge: true })
     return { result: true }
   } catch (e) {
     console.warn(e)

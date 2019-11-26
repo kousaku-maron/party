@@ -82,6 +82,7 @@ export const useGiftedhatTools = (roomID: string) => {
       const newMessage: CreateMessage = {
         text: iMessage.text,
         user,
+        writerUID: user.uid,
         system: false
       }
 
@@ -97,6 +98,7 @@ export const useGiftedhatTools = (roomID: string) => {
       const newMessage: CreateMessage = {
         text: iMessage.text,
         user: systemUser,
+        writerUID: systemUser.uid,
         system: true
       }
 

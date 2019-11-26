@@ -19,6 +19,7 @@ export type Message = {
   imageURL?: string
   videoURL?: string
   user?: MessageUser
+  writerUID?: string
   system: boolean
   quickReplies?: QuickReplies
 }
@@ -31,13 +32,17 @@ export const buildMessage = (id: string, data: firebase.firestore.DocumentData) 
     imageURL: data.imageURL,
     videoURL: data.videoURL,
     user: data.user,
+    writerUID: data.writerUID,
     system: data.system,
     quickReplies: data.quickReplies
   }
   return newMessage
 }
 
-export type CreateMessage = Pick<Message, 'text' | 'user' | 'system' | 'quickReplies' | 'imageURL' | 'videoURL'>
+export type CreateMessage = Pick<
+  Message,
+  'text' | 'user' | 'writerUID' | 'system' | 'quickReplies' | 'imageURL' | 'videoURL'
+>
 
 export type UpdateMessage = Pick<Message, 'user'>
 
