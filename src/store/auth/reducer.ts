@@ -1,6 +1,8 @@
+import { useSelector } from 'react-redux'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
-import { authActions } from '../actions'
-import { User } from '../entities'
+import { authActions } from './actions'
+import { User } from '../../entities'
+import { AppState } from '../configureStore'
 
 export interface Auth {
   checked: boolean
@@ -30,3 +32,9 @@ export const authReducer = reducerWithInitialState(initialState)
   .case(authActions.getMyUserFailure, state => {
     return { ...state }
   })
+
+export const useAuthState = () => {
+  const auth = useSelector((state: AppState) => state.auth)
+
+  return auth
+}

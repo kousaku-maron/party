@@ -5,19 +5,18 @@ import { headerNavigationOptions } from '../navigators/options'
 import { useParties } from '../services/party'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
+import { useAuthState } from '../store/hooks'
 import { LoadingPage } from '../components/pages'
-import { HomeScreenState } from '../containers/HomeScreen'
 import { Card, GenderModal, Modal } from '../components/organisms'
 import { setGender } from '../services/user'
 import { Party } from '../entities/Party'
 
 type OwnProps = { navigation: NavigationStackProp }
-type Props = OwnProps & HomeScreenState
+type Props = OwnProps
 
-const HomeScreen = (props: Props) => {
+const HomeScreen = ({ navigation }: Props) => {
   const styles = useStyles(makeStyles)
-
-  const { auth } = props
+  const auth = useAuthState()
   const { user } = auth
   const parties = useParties()
 
@@ -32,18 +31,28 @@ const HomeScreen = (props: Props) => {
     [genderModalTools]
   )
 
-  const onPressEntry = useCallback(
+  // TODO: PartyEntryScreenで閉じれるものは閉じた方が良いので、PartyEntryScreenで定義して使用する。
+  // const onPressEntry = useCallback(
+  //   partyID => {
+  //     if (!user) return
+  //     if (!user.isAccepted) {
+  //       return isAcceptedModalTools.onOpen()
+  //     }
+  //     if (!user.gender) {
+  //       return genderModalTools.onOpen()
+  //     }
+  //     navigation.navigate('PartyEntry', { partyID })
+  //   },
+  //   [genderModalTools, isAcceptedModalTools, navigation, user]
+  // )
+
+  const onPressEntryForDemo = useCallback(
     partyID => {
       if (!user) return
-      if (!user.isAccepted) {
-        return isAcceptedModalTools.onOpen()
-      }
-      if (!user.gender) {
-        return genderModalTools.onOpen()
-      }
-      props.navigation.navigate('PartyEntry', { partyID })
+
+      navigation.navigate('Chat', { roomID: partyID })
     },
-    [genderModalTools, isAcceptedModalTools, props.navigation, user]
+    [navigation, user]
   )
 
   const FetchPartiesThumbnail = useCallback(
@@ -60,16 +69,17 @@ const HomeScreen = (props: Props) => {
               date={party.date}
               width={width}
               onPressEntry={() => {
-                onPressEntry(partyID)
+                onPressEntryForDemo(partyID)
               }}
-              onPressDetail={() => props.navigation.navigate('PartyDetail', { partyID, onPressEntry })}
+              // TODO: PartyEntryScreenで閉じれるものは閉じた方が良いので、PartyEntryScreenで定義して使用する。
+              onPressDetail={() => navigation.navigate('PartyDetail', { partyID, onPressEntry: onPressEntryForDemo })}
             />
           </View>
         )
       })
       return thumbnailURLs
     },
-    [onPressEntry, props.navigation, styles.container]
+    [navigation, onPressEntryForDemo, styles.container]
   )
 
   if (!parties) {

@@ -1,5 +1,5 @@
 import { createStackNavigator } from 'react-navigation-stack'
-import { WelcomeScreen, TermsScreen, PrivacyScreen } from '../containers'
+import { WelcomeScreen, TermsScreen, PrivacyScreen } from '../screens'
 
 const WelcomeNavigator = createStackNavigator(
   {

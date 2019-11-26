@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from 'react'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { UserScreenState } from '../containers/UserScreen'
+import { useAuthState } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
-import { useCertificate } from '../services/secure'
+import { useCertificateEditTools } from '../services/secure'
 import { useModal } from '../services/modal'
 import { View, Text, Image, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
@@ -16,11 +16,10 @@ type OwnProps = {
   navigation: NavigationStackProp
 }
 
-type Props = OwnProps & UserScreenState
+type Props = OwnProps
 
-const UserScreen = (props: Props) => {
-  const { navigation, auth } = props
-  const { uid } = auth
+const UserScreen = ({ navigation }: Props) => {
+  const { uid } = useAuthState()
 
   const styles = useStyles(makeStyles)
   const colors = useColors()
@@ -34,7 +33,9 @@ const UserScreen = (props: Props) => {
 
   const user = useUser(targetUserID)
   const modalTools = useModal()
-  const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificate(uid)
+  const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificateEditTools(
+    uid
+  )
 
   const _pickCertificateImage = useCallback(async () => {
     const { cancelled, uri } = await onChangeUpdateCertificateURL()

@@ -9,9 +9,10 @@ import {
   PartyDetailScreen,
   SettingScreen,
   TermsScreen,
-  PrivacyScreen
-} from '../containers'
-import { PostScreen } from '../screens'
+  PrivacyScreen,
+  PostScreen,
+  ChatScreen
+} from '../screens'
 import { getTheme } from '../themes'
 import { isIPhoneX, isIPhoneXAbove, X_ABOVE_TAB_NOTCH_HEIGHT } from '../services/design'
 
@@ -21,7 +22,8 @@ const HomeNavigator = createStackNavigator(
   {
     Main: HomeScreen,
     PartyEntry: PartyEntryScreen,
-    PartyDetail: PartyDetailScreen
+    PartyDetail: PartyDetailScreen,
+    Chat: ChatScreen
   },
   {
     initialRouteName: 'Main'
