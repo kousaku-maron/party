@@ -17,7 +17,7 @@ export const buildParty = (id: string, data: firebase.firestore.DocumentData) =>
   return newParty
 }
 
-export type EntryParty = Pick<Party, 'uid'> & {
+export type EntryParty = Pick<Party, 'id'> & {
   userUIDs: string[]
   organizerUID: string
 }
