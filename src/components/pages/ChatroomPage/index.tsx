@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { View, StyleSheet } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { useStyles, MakeStyles } from '../../../services/design'
 import { CustomBubble } from './Bubble'
 import { CustomAvatar } from './Avatar'
+import { CustomSend } from './Send'
+import { CustomInputToolbar } from './InputToolbar'
+import { CustomComposer } from './Composer'
 import { useGiftedhatTools } from '../../../services/chat'
 import { useAuthState } from '../../../store/hooks'
 import { GiftedChat } from 'react-native-gifted-chat'
@@ -17,6 +20,16 @@ const ChatroomPage = ({ roomID }: Props) => {
   const { uid } = useAuthState()
   const { messages, onSend, onQuickReply } = useGiftedhatTools(roomID)
 
+  const renderBubble = useCallback(props => <CustomBubble {...props} customParameter={{ uid }} />, [uid])
+
+  const renderAvatar = useCallback(props => <CustomAvatar {...props} />, [])
+
+  const renderSend = useCallback(props => <CustomSend {...props} />, [])
+
+  const renderInputToolbar = useCallback(props => <CustomInputToolbar {...props} />, [])
+
+  const renderComposer = useCallback(props => <CustomComposer {...props} />, [])
+
   return (
     <View style={styles.flex}>
       <GiftedChat
@@ -26,10 +39,13 @@ const ChatroomPage = ({ roomID }: Props) => {
         onSend={onSend}
         onQuickReply={onQuickReply}
         user={{ _id: uid }}
-        renderBubble={props => <CustomBubble {...props} customParameter={{ uid }} />}
+        renderBubble={renderBubble}
         renderAvatarOnTop={true}
         showAvatarForEveryMessage={true}
-        renderAvatar={props => <CustomAvatar {...props} />}
+        renderAvatar={renderAvatar}
+        renderInputToolbar={renderInputToolbar}
+        renderComposer={renderComposer}
+        renderSend={renderSend}
         isKeyboardInternallyHandled={false}
       />
       <KeyboardSpacer />
