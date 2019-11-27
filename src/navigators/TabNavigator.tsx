@@ -16,6 +16,14 @@ import {
 import { getTheme } from '../themes'
 import { isIPhoneX, isIPhoneXAbove, X_ABOVE_TAB_NOTCH_HEIGHT } from '../services/design'
 
+const getTabBarVisible = ({ navigation }) => {
+  const { routes } = navigation.state
+  if (routes.length > 1) {
+    return false
+  }
+  return true
+}
+
 const theme = getTheme()
 
 const HomeNavigator = createStackNavigator(
@@ -56,34 +64,46 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: {
       screen: HomeNavigator,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor, focused }) => {
-          if (isIPhoneX() || isIPhoneXAbove()) {
-            return HomeIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
-          }
-          return HomeIcon({ tintColor, focused })
+      navigationOptions: ({ navigation }) => {
+        const tabBarVisible = getTabBarVisible({ navigation })
+        return {
+          tabBarIcon: ({ tintColor, focused }) => {
+            if (isIPhoneX() || isIPhoneXAbove()) {
+              return HomeIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
+            }
+            return HomeIcon({ tintColor, focused })
+          },
+          tabBarVisible
         }
       }
     },
     Post: {
       screen: PostNavigator,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor, focused }) => {
-          if (isIPhoneX() || isIPhoneXAbove()) {
-            return PostIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
-          }
-          return PostIcon({ tintColor, focused })
+      navigationOptions: ({ navigation }) => {
+        const tabBarVisible = getTabBarVisible({ navigation })
+        return {
+          tabBarIcon: ({ tintColor, focused }) => {
+            if (isIPhoneX() || isIPhoneXAbove()) {
+              return PostIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
+            }
+            return PostIcon({ tintColor, focused })
+          },
+          tabBarVisible
         }
       }
     },
     User: {
       screen: UserNavigator,
-      navigationOptions: {
-        tabBarIcon: ({ tintColor, focused }) => {
-          if (isIPhoneX() || isIPhoneXAbove()) {
-            return UserIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
-          }
-          return UserIcon({ tintColor, focused })
+      navigationOptions: ({ navigation }) => {
+        const tabBarVisible = getTabBarVisible({ navigation })
+        return {
+          tabBarIcon: ({ tintColor, focused }) => {
+            if (isIPhoneX() || isIPhoneXAbove()) {
+              return UserIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
+            }
+            return UserIcon({ tintColor, focused })
+          },
+          tabBarVisible
         }
       }
     }
