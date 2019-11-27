@@ -1,8 +1,7 @@
 import React from 'react'
-import { View /* , Text */ } from 'react-native'
-import { useColors } from '../../../services/design'
+import { View, StyleSheet } from 'react-native'
+import { useStyles, MakeStyles, useColors } from '../../../services/design'
 import { Composer, ComposerProps } from 'react-native-gifted-chat'
-// import { RoundedButton } from '../../atoms'
 
 export const CustomComposer = (
   props: Readonly<ComposerProps> &
@@ -10,10 +9,11 @@ export const CustomComposer = (
       children?: React.ReactNode
     }>
 ) => {
+  const styles = useStyles(makeStyles)
   const colors = useColors()
 
   return (
-    <View style={{ flex: 1, flexDirection: 'row', paddingRight: 3 }}>
+    <View style={styles.container}>
       <Composer
         {...props}
         textInputStyle={{
@@ -25,12 +25,11 @@ export const CustomComposer = (
         }}
         placeholderTextColor={colors.foregrounds.placeholder}
       />
-      {/* <RoundedButton>
-        <Text>動画</Text>
-      </RoundedButton>
-      <RoundedButton>
-        <Text>画像</Text>
-      </RoundedButton> */}
     </View>
   )
 }
+
+const makeStyles: MakeStyles = () =>
+  StyleSheet.create({
+    container: { flex: 1, flexDirection: 'row' }
+  })

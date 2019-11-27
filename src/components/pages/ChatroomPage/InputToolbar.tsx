@@ -9,11 +9,5 @@ export const CustomInputToolbar = (
     }>
 ) => {
   const colors = useColors()
-  return (
-    <InputToolbar
-      {...props}
-      containerStyle={{ backgroundColor: colors.backgrounds.secondary }}
-      primaryStyle={{ paddingTop: 3, paddingBottom: 3 }}
-    />
-  )
+  return <InputToolbar {...props} containerStyle={{ backgroundColor: colors.backgrounds.secondary }} />
 }

@@ -7,7 +7,9 @@ import { CustomAvatar } from './Avatar'
 import { CustomSend } from './Send'
 import { CustomInputToolbar } from './InputToolbar'
 import { CustomComposer } from './Composer'
-import { useGiftedhatTools } from '../../../services/chat'
+// import { CustomActions } from './Actions'
+import { CustomDay } from './Day'
+import { useGiftedChatTools } from '../../../services/chat'
 import { useAuthState } from '../../../store/hooks'
 import { GiftedChat } from 'react-native-gifted-chat'
 
@@ -18,35 +20,36 @@ const ChatroomPage = ({ roomID }: Props) => {
   const styles = useStyles(makeStyles)
 
   const { uid } = useAuthState()
-  const { messages, onSend, onQuickReply } = useGiftedhatTools(roomID)
+  const { messages, onSend, onQuickReply /*, onPressActionButton */ } = useGiftedChatTools(roomID)
 
   const renderBubble = useCallback(props => <CustomBubble {...props} customParameter={{ uid }} />, [uid])
-
   const renderAvatar = useCallback(props => <CustomAvatar {...props} />, [])
-
   const renderSend = useCallback(props => <CustomSend {...props} />, [])
-
   const renderInputToolbar = useCallback(props => <CustomInputToolbar {...props} />, [])
-
   const renderComposer = useCallback(props => <CustomComposer {...props} />, [])
+  // const renderActions = useCallback(props => <CustomActions {...props} />, [])
+  const renderDay = useCallback(props => <CustomDay {...props} />, [])
 
   return (
     <View style={styles.flex}>
       <GiftedChat
-        placeholder="メッセージを入力"
+        placeholder="Aa"
         messages={messages}
-        alwaysShowSend={true}
-        onSend={onSend}
-        onQuickReply={onQuickReply}
         user={{ _id: uid }}
-        renderBubble={renderBubble}
+        alwaysShowSend={true}
         renderAvatarOnTop={true}
         showAvatarForEveryMessage={true}
+        isKeyboardInternallyHandled={false}
+        onSend={onSend}
+        onQuickReply={onQuickReply}
+        // onPressActionButton={onPressActionButton}
+        renderBubble={renderBubble}
         renderAvatar={renderAvatar}
+        renderSend={renderSend}
         renderInputToolbar={renderInputToolbar}
         renderComposer={renderComposer}
-        renderSend={renderSend}
-        isKeyboardInternallyHandled={false}
+        // renderActions={renderActions}
+        renderDay={renderDay}
       />
       <KeyboardSpacer />
     </View>
