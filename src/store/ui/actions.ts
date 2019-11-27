@@ -6,7 +6,8 @@ const actionCreator = actionCreateFactory()
 
 export const uiActions = {
   openLoadingModal: actionCreator<void>('OPEN_LOADING_MODAL'),
-  closeLoadingModal: actionCreator<void>('CLOSE_LOADING_MODAL')
+  closeLoadingModal: actionCreator<void>('CLOSE_LOADING_MODAL'),
+  setTheme: actionCreator<'dark' | 'light'>('SET_THEME')
 }
 
 export const useUIActions = () => {
