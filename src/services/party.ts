@@ -3,18 +3,22 @@ import firebase from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 import { getUser } from '../repositories/user'
 import { User, createDocument } from '../entities'
+import { useAuthState } from '../store/hooks'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
 
 export const useParties = () => {
   const [parties, setParties] = useState<Party[]>()
+  const auth = useAuthState()
+  const { user } = auth
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
+      if (!user) return
       partiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
         const _parties: Party[] = []
-        snapShot.forEach(doc => {
+        snapShot.docs.map(doc => {
           const party = buildParty(doc.id, doc.data())
           _parties.push(party)
         })
@@ -22,7 +26,7 @@ export const useParties = () => {
       })
     }
     fetchData()
-  }, [parties])
+  }, [parties, user])
   return parties
 }
 
