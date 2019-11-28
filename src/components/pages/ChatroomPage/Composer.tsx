@@ -18,8 +18,8 @@ export const CustomComposer = (
         {...props}
         textInputStyle={{
           borderRadius: 12,
-          paddingTop: 8,
           paddingLeft: 12,
+          paddingRight: 12,
           backgroundColor: colors.backgrounds.tertiary,
           color: colors.foregrounds.primary
         }}
