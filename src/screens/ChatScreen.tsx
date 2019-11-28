@@ -4,7 +4,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { useStyles, MakeStyles } from '../services/design'
 import { formattedDateForMessageCreatedAt } from '../services/formatedDate'
-import { useGiftedCatTools } from '../services/chat'
+import { useGiftedhatTools } from '../services/chat'
 import { headerNavigationOptions } from '../navigators/options'
 import { useAuthState } from '../store/hooks'
 import { GiftedChat, Bubble, Avatar } from 'react-native-gifted-chat'
@@ -20,7 +20,7 @@ const ChatScreen = ({ navigation }: Props) => {
   const { uid } = useAuthState()
   const roomID = navigation.state.params.roomID
 
-  const { messages, onSend, onQuickReply } = useGiftedCatTools(roomID)
+  const { messages, onSend, onQuickReply } = useGiftedhatTools(roomID)
 
   // MEMO: "Type instantiation is excessively deep and possibly infinite."のエラー回避のため、ラップしている。
   const CustomBubble = useCallback(props => {
