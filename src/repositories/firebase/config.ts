@@ -8,12 +8,12 @@ type Config = {
 }
 
 const config: Config = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  databaseURL: process.env.DATABASE_URL,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID
+  apiKey: 'AIzaSyDOMVYjxP9Tm74Il_piZeMcfR6sRqTJj0c',
+  authDomain: 'insta-693eb.firebaseapp.com',
+  databaseURL: 'insta-693eb.firebaseio.com',
+  projectId: 'insta-693eb',
+  storageBucket: 'insta-693eb.appspot.com',
+  messagingSenderId: '1006598708094'
 }
 
 export default config

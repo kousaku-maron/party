@@ -14,18 +14,13 @@ export const useParties = () => {
   const { user } = auth
 
   useEffect(() => {
-    const fetchData = () => {
-      if (!user) return
-      partiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
-        const _parties: Party[] = []
-        snapShot.docs.map(doc => {
-          const party = buildParty(doc.id, doc.data())
-          _parties.push(party)
-        })
-        setParties(_parties)
+    if (!user) return
+    partiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
+      const newParty: Party[] = snapShot.docs.map(doc => {
+        return buildParty(doc.id, doc.data())
       })
-    }
-    fetchData()
+      setParties(newParty)
+    })
   }, [parties, user])
   return parties
 }
