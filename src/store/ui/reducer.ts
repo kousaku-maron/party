@@ -5,10 +5,12 @@ import { AppState } from '../configureStore'
 
 export interface UI {
   showLoadingModal: boolean
+  theme: 'dark' | 'light'
 }
 
 const initialState: UI = {
-  showLoadingModal: false
+  showLoadingModal: false,
+  theme: 'dark'
 }
 
 export const uiReducer = reducerWithInitialState(initialState)
@@ -17,6 +19,9 @@ export const uiReducer = reducerWithInitialState(initialState)
   })
   .case(uiActions.closeLoadingModal, state => {
     return { ...state, showLoadingModal: false }
+  })
+  .case(uiActions.setTheme, (state, theme) => {
+    return { ...state, theme }
   })
 
 export const useUIState = () => {

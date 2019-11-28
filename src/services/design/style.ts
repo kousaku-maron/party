@@ -1,11 +1,12 @@
 import { ViewStyle, TextStyle, ImageStyle, StyleProp } from 'react-native'
 import { useState, useEffect } from 'react'
-import { useColorScheme } from 'react-native-appearance'
+// import { useColorScheme } from 'react-native-appearance'
+import { useUIState } from '../../store/hooks'
 import { getTheme } from '../../themes'
 
 const palette = getTheme()
 
-export const defaultColors = palette.light
+export const defaultColors = palette.dark
 
 export type Colors = typeof defaultColors
 export type Styles = {
@@ -14,18 +15,8 @@ export type Styles = {
 export type MakeStyles = (colors: Colors) => Styles
 
 export const useColors = () => {
-  const colorScheme = useColorScheme()
-  const [colors, setColors] = useState<Colors>(defaultColors)
-
-  useEffect(() => {
-    if (colorScheme === 'dark') {
-      setColors(palette.dark)
-      return
-    }
-    setColors(palette.light)
-  }, [colorScheme])
-
-  return colors
+  const { theme } = useUIState()
+  return theme === 'dark' ? palette.dark : palette.light
 }
 
 export const useStyles = (callback: MakeStyles) => {
