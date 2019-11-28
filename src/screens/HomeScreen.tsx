@@ -19,7 +19,6 @@ const HomeScreen = ({ navigation }: Props) => {
   const auth = useAuthState()
   const { user } = auth
   const parties = useParties()
-
   const genderModalTools = useModal()
   const isAcceptedModalTools = useModal()
 
