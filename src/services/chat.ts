@@ -46,7 +46,7 @@ export const useMessages = (roomID: string) => {
   return messages
 }
 
-export const useGiftedhatTools = (roomID: string) => {
+export const useGiftedCatTools = (roomID: string) => {
   const messages = useMessages(roomID)
   const { user } = useAuthState()
   // eslint-disable-next-line @typescript-eslint/no-var-requires
