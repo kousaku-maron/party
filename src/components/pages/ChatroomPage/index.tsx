@@ -12,6 +12,7 @@ import { CustomDay } from './Day'
 import { useGiftedChatTools } from '../../../services/chat'
 import { useAuthState } from '../../../store/hooks'
 import { GiftedChat } from 'react-native-gifted-chat'
+import SafeAreaView from 'react-native-safe-area-view'
 
 type OwnProps = { roomID: string }
 type Props = OwnProps
@@ -31,35 +32,42 @@ const ChatroomPage = ({ roomID }: Props) => {
   const renderDay = useCallback(props => <CustomDay {...props} />, [])
 
   return (
-    <View style={styles.flex}>
-      <GiftedChat
-        placeholder="Aa"
-        messages={messages}
-        user={{ _id: uid }}
-        alwaysShowSend={true}
-        renderAvatarOnTop={true}
-        showAvatarForEveryMessage={true}
-        isKeyboardInternallyHandled={false}
-        onSend={onSend}
-        onQuickReply={onQuickReply}
-        // onPressActionButton={onPressActionButton}
-        renderBubble={renderBubble}
-        renderAvatar={renderAvatar}
-        renderSend={renderSend}
-        renderInputToolbar={renderInputToolbar}
-        renderComposer={renderComposer}
-        // renderActions={renderActions}
-        renderDay={renderDay}
-      />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.inner}>
+        <GiftedChat
+          placeholder="Aa"
+          messages={messages}
+          user={{ _id: uid }}
+          alwaysShowSend={true}
+          renderAvatarOnTop={true}
+          showAvatarForEveryMessage={true}
+          isKeyboardInternallyHandled={false}
+          onSend={onSend}
+          onQuickReply={onQuickReply}
+          // onPressActionButton={onPressActionButton}
+          renderBubble={renderBubble}
+          renderAvatar={renderAvatar}
+          renderSend={renderSend}
+          renderInputToolbar={renderInputToolbar}
+          renderComposer={renderComposer}
+          // renderActions={renderActions}
+          renderDay={renderDay}
+        />
+      </View>
       <KeyboardSpacer />
-    </View>
+    </SafeAreaView>
   )
 }
 
-const makeStyles: MakeStyles = () =>
+const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
-    flex: {
-      flex: 1
+    container: {
+      flex: 1,
+      backgroundColor: colors.backgrounds.secondary
+    },
+    inner: {
+      flex: 1,
+      backgroundColor: colors.backgrounds.primary
     }
   })
 
