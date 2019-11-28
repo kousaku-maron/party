@@ -12,15 +12,17 @@ export const useParties = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const snapShot = await partiesRef.orderBy('date').get()
-      const parties = snapShot.docs.map(doc => {
-        const party = buildParty(doc.id, doc.data())
-        return party
+      partiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
+        const _parties: Party[] = []
+        snapShot.forEach(doc => {
+          const party = buildParty(doc.id, doc.data())
+          _parties.push(party)
+        })
+        setParties(_parties)
       })
-      setParties(parties)
     }
     fetchData()
-  }, [])
+  }, [parties])
   return parties
 }
 
