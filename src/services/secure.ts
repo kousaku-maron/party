@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { db } from '../repositories/firebase'
-import { getCertificateImage, setCertificateImage } from '../repositories/certificate'
+import { setCertificateImage } from '../repositories/certificate'
 import { updateSecure, getSecure } from '../repositories/secure'
 import { Notifications } from 'expo'
 import * as ImagePicker from 'expo-image-picker'
@@ -36,18 +36,16 @@ export const useSecure = (uid: string) => {
 }
 
 export const useCertificateEditTools = (uid: string) => {
+  const secure = useSecure(uid)
   const [currentCertificateURL, setCurrentCertificateURL] = useState<string | null>(null)
   const [uploadCertificateURL, setUploadCertificateURL] = useState<string | null>(null)
   const [uploadCount, setUploadCount] = useState<number>(0)
 
   useEffect(() => {
-    const asyncEffect = async () => {
-      const url = await getCertificateImage(uid)
-      setCurrentCertificateURL(null) // 一旦初期化させることで、再描写をさせている。
-      setCurrentCertificateURL(url)
-    }
-    asyncEffect()
-  }, [uid, uploadCount])
+    if (!secure || !secure.certificateURL) return
+    setCurrentCertificateURL(null) // 一旦初期化させることで、再描写をさせている。
+    setCurrentCertificateURL(secure.certificateURL)
+  }, [secure, uid, uploadCount])
 
   const onChangeUpdateCertificateURL = useCallback(async () => {
     const permissionResponse = await Permissions.getAsync(Permissions.CAMERA_ROLL)
@@ -108,8 +106,12 @@ export const usePushNotifications = (uid: string) => {
   useEffect(() => {
     const getToken = async () => {
       try {
+        const response = await Permissions.getAsync(Permissions.NOTIFICATIONS)
+        if (response.status !== 'granted') return
+
         const token = await Notifications.getExpoPushTokenAsync()
         if (!token) return
+
         setDeviceToken(token)
       } catch (e) {
         console.warn(e)

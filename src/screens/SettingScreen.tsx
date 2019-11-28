@@ -22,10 +22,10 @@ const SettingScreen = ({ navigation }: Props) => {
   const secure = useSecure(user.uid)
   const pushNotificationsTools = usePushNotifications(user.uid)
 
+  // MEMO: signOutするとuserデータがなくなってしまうので、先に画面遷移させる。
   const onSignOut = useCallback(() => {
-    signOut({
-      onSuccess: () => navigation.navigate('Welcome')
-    })
+    navigation.navigate('Welcome')
+    signOut({})
   }, [navigation, signOut])
 
   const goToTerms = useCallback(() => {
