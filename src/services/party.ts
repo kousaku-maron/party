@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import firebase from '../repositories/firebase'
+import firebase, { functions } from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 import { getUser } from '../repositories/user'
 import { User, createDocument } from '../entities'
@@ -73,6 +73,14 @@ export const entryParty = async (uid: string, partyID: string) => {
   })
 
   await batch.commit()
+}
+
+export const entryDemoParty = (partyID: string) => {
+  try {
+    functions.httpsCallable('entryParty')({ partyID })
+  } catch (e) {
+    console.warn(e)
+  }
 }
 
 export const entryPartyMembers = async (organizer, members: User[], partyID: string) => {

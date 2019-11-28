@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { useParties } from '../services/party'
+import { useParties, entryDemoParty } from '../services/party'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
@@ -46,10 +46,13 @@ const HomeScreen = ({ navigation }: Props) => {
   // )
 
   const onPressEntryForDemo = useCallback(
-    partyID => {
+    (party: Party) => {
       if (!user) return
+      if (!party.entryUIDs || !party.entryUIDs.includes(user.uid)) {
+        entryDemoParty(party.id)
+      }
 
-      navigation.navigate('Chat', { roomID: partyID })
+      navigation.navigate('Chat', { roomID: party.id })
     },
     [navigation, user]
   )
@@ -68,7 +71,7 @@ const HomeScreen = ({ navigation }: Props) => {
               date={party.date}
               width={width}
               onPressEntry={() => {
-                onPressEntryForDemo(partyID)
+                onPressEntryForDemo(party)
               }}
               // TODO: PartyEntryScreenで閉じれるものは閉じた方が良いので、PartyEntryScreenで定義して使用する。
               onPressDetail={() => navigation.navigate('PartyDetail', { partyID, onPressEntry: onPressEntryForDemo })}
