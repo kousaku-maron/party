@@ -3,7 +3,11 @@ import { Image } from 'react-native'
 // MEMO: Image.getSizeをasync-awaitで使えるようラップしている。
 const _getSize = (url: string) => {
   return new Promise<{ width?: number; height?: number; error?: Error }>(resolve => {
-    Image.getSize(url, (width, height) => resolve({ width, height }), error => resolve({ error }))
+    Image.getSize(
+      url,
+      (width, height) => resolve({ width, height }),
+      error => resolve({ error })
+    )
   })
 }
 
