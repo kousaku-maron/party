@@ -11,7 +11,10 @@ const usersRef = db.collection('users')
 
 const authChannel = () => {
   const channel = eventChannel(emit => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(user => emit({ user }), error => emit({ error }))
+    const unsubscribe = firebase.auth().onAuthStateChanged(
+      user => emit({ user }),
+      error => emit({ error })
+    )
     return unsubscribe
   })
   return channel

@@ -114,7 +114,11 @@ export const setUser = async (uid: string, user: UpdateUser) => {
       const messagesRef = getMessagesRef(roomID)
       const messagesSnapshot = await messagesRef.where('writerUID', '==', uid).get()
       messagesSnapshot.docs.map(messageDoc => {
-        batch.set(messageDoc.ref, updateDocument<UpdateMessage>({ user: messageUpdateUser }), { merge: true })
+        batch.set(
+          messageDoc.ref,
+          updateDocument<UpdateMessage>({ user: messageUpdateUser }),
+          { merge: true }
+        )
       })
     })
 

@@ -25,6 +25,7 @@ export const useMessages = (roomID: string) => {
       next: (snapshot: firebase.firestore.QuerySnapshot) => {
         const messages = snapshot.docs
           .filter(doc => doc.data().createdAt) // message送信後、一瞬createdAtがnullになるのでフィルタで弾く。
+          .filter(doc => doc.data().enabled ?? true) // enabledの項目がない場合も考慮して、フィルタリングさせている。
           .map(doc => {
             const message = buildMessage(doc.id, doc.data())
             return message
