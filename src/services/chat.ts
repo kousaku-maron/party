@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
-import firebase from '../repositories/firebase'
+import firebase, { functions } from '../repositories/firebase'
 import { buildMessage, Message, CreateMessage, systemUser } from '../entities'
 import { setMessage } from '../repositories/message'
 import { IMessage, Reply } from 'react-native-gifted-chat'
@@ -108,30 +108,13 @@ export const useGiftedChatTools = (roomID: string) => {
     [roomID]
   )
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onQuickReply = useCallback(
     async (replies: Reply[]) => {
       if (replies.length > 1) return null
       const eventLike = replies[0].value == 'true' ? true : false
-      const eventName = 'Nizikai'
-      const groupRef = roomsRef.doc(roomID).collection('groups')
-      const groupSnapShot = await groupRef.get()
-      const membersIDs = groupSnapShot.docs.map(doc => doc.id)
-      if (membersIDs.length == 0) return null
-      const membersID = membersIDs[0]
-      const membersRef = groupRef.doc(membersID).collection('members')
-      const memberSnapShot = await membersRef.where('memberID', '==', user.userID).get()
-      const memberIDs = memberSnapShot.docs.map(doc => {
-        return doc.id
-      })
-      const memberId = memberIDs.length > 1 ? memberIDs[0] : membersRef.doc().id
-      await membersRef.doc(memberId).set({
-        memberID: user.userID,
-        name: user.name,
-        ['is' + eventName + 'Like']: eventLike
-      })
+      await functions.httpsCallable('updateEventsLike')({ roomID, eventLike })
     },
-    [roomID, user.name, user.userID]
+    [roomID]
   )
 
   const onPressActionButton = useCallback(() => {
