@@ -17,8 +17,8 @@ export const buildUser = (data: firebase.firestore.DocumentData) => {
     uid: data.uid,
     userID: data.userID,
     name: data.name,
-    thumbnailURL: data.thumbnailURL || null,
-    gender: data.gender || null
+    thumbnailURL: data.thumbnailURL,
+    gender: data.gender
   }
 
   return newUser
