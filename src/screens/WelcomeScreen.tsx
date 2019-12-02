@@ -149,7 +149,7 @@ const makeStyles: MakeStyles = colors =>
       fontSize: 18
     },
     guestText: {
-      color: colors.foregrounds.onTintPrimary,
+      color: colors.foregrounds.primary,
       fontSize: 14
     },
     termText: {

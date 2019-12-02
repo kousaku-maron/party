@@ -20,10 +20,12 @@ export const useMessages = (roomID: string) => {
   useEffect(() => {
     const messagesRef = getMessagesRef(roomID).orderBy('createdAt', 'desc')
 
-    const unsubscribe = messagesRef.onSnapshot({
+    // MEMO: DEMO時に暴れて、アクセス制限かけられるほど投稿されると困るので、最新の30メッセージのみ取得する仕様にしている。
+    const unsubscribe = messagesRef.limit(30).onSnapshot({
       next: (snapshot: firebase.firestore.QuerySnapshot) => {
         const messages = snapshot.docs
           .filter(doc => doc.data().createdAt) // message送信後、一瞬createdAtがnullになるのでフィルタで弾く。
+          .filter(doc => doc.data().enabled ?? true) // enabledの項目がない場合も考慮して、フィルタリングさせている。
           .map(doc => {
             const message = buildMessage(doc.id, doc.data())
             return message
