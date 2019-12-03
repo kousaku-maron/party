@@ -32,6 +32,7 @@ const FlatDesignCard: React.FC<Props> = props => {
         <View style={styles.buttonContainer}>
           <View style={styles.buttonWrapper}>
             <RoundedButton
+              disabled={true} // MEMO: DEMO時に押されると厄介なので、押させない。
               color={colors.foregrounds.onTintPrimary}
               fullWidth={false}
               width={70}

@@ -10,7 +10,7 @@ type CustomHeaderNavigaitonOptions = {
 export const headerNavigationOptions = (props: NavigationStackScreenProps & CustomHeaderNavigaitonOptions) => {
   const colors = props.theme === 'dark' ? palette.dark : palette.light
   return {
-    headerTitle: props.title ? props.title : 'Nomoca',
+    headerTitle: props.title ?? 'Nomoca',
     headerBackTitle: null,
     headerTintColor: colors.foregrounds.primary,
     headerStyle: {

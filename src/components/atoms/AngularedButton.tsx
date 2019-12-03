@@ -29,10 +29,10 @@ const AngularedButton: React.FC<Props> = ({
       style={[
         styles.container,
         {
-          backgroundColor: color ? color : colors.tints.primary.main,
+          backgroundColor: color ?? colors.tints.primary.main,
           width: fullWidth ? '100%' : width,
           height,
-          padding: padding
+          padding
         }
       ]}
       disabled={disabled}

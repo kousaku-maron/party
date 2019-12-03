@@ -49,7 +49,7 @@ export const useSearchUsers = (options?: SearchUsersOption) => {
           return user
         })
         .filter(user => {
-          if (options && options.ignoreUserIDs) {
+          if (options?.ignoreUserIDs) {
             return !options.ignoreUserIDs.includes(user.userID)
           }
           return true

@@ -42,7 +42,7 @@ export const useCertificateEditTools = (uid: string) => {
   const [uploadCount, setUploadCount] = useState<number>(0)
 
   useEffect(() => {
-    if (!secure || !secure.certificateURL) return
+    if (!secure?.certificateURL) return
     setCurrentCertificateURL(null) // 一旦初期化させることで、再描写をさせている。
     setCurrentCertificateURL(secure.certificateURL)
   }, [secure, uid, uploadCount])

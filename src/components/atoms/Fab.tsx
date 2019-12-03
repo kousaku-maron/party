@@ -16,7 +16,7 @@ const Fab: React.FC<Props> = ({ color, disabled = false, size = 48, onPress, chi
       style={[
         styles.container,
         {
-          backgroundColor: color ? color : colors.tints.primary.main,
+          backgroundColor: color ?? colors.tints.primary.main,
           width: size,
           height: size,
           borderRadius: size / 2

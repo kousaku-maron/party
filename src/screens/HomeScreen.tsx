@@ -48,7 +48,7 @@ const HomeScreen = ({ navigation }: Props) => {
   const onPressEntryForDemo = useCallback(
     (party: Party) => {
       if (!user) return
-      if (!party.entryUIDs || !party.entryUIDs.includes(user.uid)) {
+      if (!party.entryUIDs?.includes(user.uid)) {
         entryDemoParty(party.id)
       }
 

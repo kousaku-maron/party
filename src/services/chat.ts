@@ -67,7 +67,7 @@ export const useGiftedChatTools = (roomID: string) => {
         user: {
           _id: user.uid,
           name: user.name,
-          avatar: user.thumbnailURL || defaultAvatar
+          avatar: user.thumbnailURL ?? defaultAvatar
         },
         quickReplies: message.quickReplies,
         image: message.imageURL,
@@ -83,7 +83,11 @@ export const useGiftedChatTools = (roomID: string) => {
 
       const newMessage: CreateMessage = {
         text: iMessage.text,
-        user,
+        user: {
+          ...user,
+          gender: user.gender ?? null,
+          thumbnailURL: user.thumbnailURL ?? null
+        },
         writerUID: user.uid,
         system: false
       }
