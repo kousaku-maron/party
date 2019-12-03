@@ -3,7 +3,7 @@ import firebase from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 import { getUser } from '../repositories/user'
 import { User, createDocument } from '../entities'
-import { entryPartyFlashCardTrue, entryPartyFlashCardFalse } from '../services/flashCard'
+import { showEntryPartyApplySunccessMessage, showEntryPartyApplyFailurMessage } from '../services/flashCard'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
@@ -105,9 +105,9 @@ export const entryPartyMembers = async (organizer, members: User[], partyID: str
 
   try {
     await batch.commit()
-    entryPartyFlashCardTrue()
+    showEntryPartyApplySunccessMessage()
   } catch (e) {
-    entryPartyFlashCardFalse()
+    showEntryPartyApplyFailurMessage()
     console.warn(e)
   }
 }

@@ -1,6 +1,6 @@
 import { showMessage } from 'react-native-flash-message'
 
-export const userEditFlashCardTrue = () => {
+export const showUserEditSuccessMessage = () => {
   showMessage({
     message: 'ユーザー情報を更新しました',
     type: 'success',
@@ -8,7 +8,7 @@ export const userEditFlashCardTrue = () => {
   })
 }
 
-export const userEditFlashCardFalse = () => {
+export const showUserEditFailurMessage = () => {
   showMessage({
     message: 'ユーザー情報の更新に失敗しました',
     type: 'danger',
@@ -16,7 +16,7 @@ export const userEditFlashCardFalse = () => {
   })
 }
 
-export const entryPartyFlashCardTrue = () => {
+export const showEntryPartyApplySunccessMessage = () => {
   showMessage({
     message: 'パーティーに参加申請しました',
     type: 'success',
@@ -24,7 +24,7 @@ export const entryPartyFlashCardTrue = () => {
   })
 }
 
-export const entryPartyFlashCardFalse = () => {
+export const showEntryPartyApplyFailurMessage = () => {
   showMessage({
     message: 'パーティーの参加申請に失敗しました',
     type: 'danger',
@@ -32,7 +32,7 @@ export const entryPartyFlashCardFalse = () => {
   })
 }
 
-export const entryPartyAcceptFlashCardTrue = () => {
+export const showEntryPartyAcceptedSuccessMessage = () => {
   showMessage({
     message: 'パーティー参加を承諾しました',
     type: 'success',
@@ -40,7 +40,7 @@ export const entryPartyAcceptFlashCardTrue = () => {
   })
 }
 
-export const entryPartyAcceptFlashCardFalse = () => {
+export const showEntryPartyAcceptedFailurMessage = () => {
   showMessage({
     message: 'パーティー参加の承諾に失敗しました',
     type: 'danger',
@@ -48,7 +48,7 @@ export const entryPartyAcceptFlashCardFalse = () => {
   })
 }
 
-export const entryPartyRejectFlashCardTrue = () => {
+export const showEntryPartyRejectSuccessMessage = () => {
   showMessage({
     message: 'パーティー参加を拒否しました',
     type: 'success',
@@ -56,7 +56,7 @@ export const entryPartyRejectFlashCardTrue = () => {
   })
 }
 
-export const entryPartyRejectFlashCardFalse = () => {
+export const showEntryPartyRejectFailurMessage = () => {
   showMessage({
     message: 'パーティー参加の拒否に失敗しました',
     type: 'danger',

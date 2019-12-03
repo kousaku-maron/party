@@ -1,6 +1,5 @@
 import { db, storage, functions } from './firebase'
 import { buildUser, UpdateUser, updateDocument } from '../entities'
-import { userEditFlashCardTrue, userEditFlashCardFalse } from '../services/flashCard'
 
 const storageRef = storage.ref('users')
 const usersRef = db.collection('users')
@@ -69,8 +68,6 @@ export const setUser = async (uid: string, user: UpdateUser) => {
         }),
         { merge: true }
       )
-      userEditFlashCardTrue()
-
       return { result: true }
     }
 
@@ -79,8 +76,6 @@ export const setUser = async (uid: string, user: UpdateUser) => {
     return { result: true }
   } catch (e) {
     console.warn(e)
-    userEditFlashCardFalse()
-
     return { result: false }
   }
 }
