@@ -112,7 +112,6 @@ export const useGiftedChatTools = (roomID: string) => {
     async (replies: Reply[]) => {
       if (replies.length > 1) return null
       const eventLike = replies[0].value ?? false
-      console.log(eventLike)
       await functions.httpsCallable('updateEventsLike')({ roomID, eventLike })
     },
     [roomID]
