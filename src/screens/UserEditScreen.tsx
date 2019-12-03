@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
 import { UpdateUser } from '../entities'
-import { UserEditScreenState } from '../containers/UserEditScreen'
+import { useAuthState, useUIActions } from '../store/hooks'
 import * as UserRepository from '../repositories/user'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUserEditTools } from '../services/user'
@@ -16,11 +16,11 @@ type OwnProps = {
   navigation: NavigationStackProp
 }
 
-type Props = OwnProps & UserEditScreenState
+type Props = OwnProps
 
-const UserEditScreen = (props: Props) => {
-  const { navigation, auth } = props
-  const { uid } = auth
+const UserEditScreen = ({ navigation }: Props) => {
+  const { uid } = useAuthState()
+  const { openLoadingModal, closeLoadingModal } = useUIActions()
 
   const styles = useStyles(makeStyles)
   const colors = useColors()
@@ -30,13 +30,15 @@ const UserEditScreen = (props: Props) => {
   )
 
   const updateUserState = useCallback(async () => {
+    openLoadingModal()
     const updateUser: UpdateUser = { uid, name, thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
     const { result } = await UserRepository.setUser(uid, updateUser)
     result === true ? showUserEditSuccessMessage() : showUserEditFailurMessage()
+    closeLoadingModal()
     if (result) {
       navigation.goBack()
     }
-  }, [name, navigation, thumbnailURL, uid, userID])
+  }, [closeLoadingModal, name, navigation, openLoadingModal, thumbnailURL, uid, userID])
 
   if (!fetched) {
     return <LoadingPage />

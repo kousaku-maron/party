@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from 'react'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { UserScreenState } from '../containers/UserScreen'
+import { useAuthState } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
-import { useCertificate } from '../services/secure'
+import { useCertificateEditTools } from '../services/secure'
 import { useModal } from '../services/modal'
 import { View, Text, Image, TouchableOpacity, StyleSheet, Platform } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
@@ -16,25 +16,33 @@ type OwnProps = {
   navigation: NavigationStackProp
 }
 
-type Props = OwnProps & UserScreenState
+type Props = OwnProps
 
-const UserScreen = (props: Props) => {
-  const { navigation, auth } = props
-  const { uid } = auth
+const UserScreen = ({ navigation }: Props) => {
+  const { uid } = useAuthState()
 
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
   const targetUserID = useMemo(() => {
-    if (navigation.state.params && navigation.state.params.userID) {
+    if (navigation.state.params?.userID) {
       return navigation.state.params.userID
     }
     return uid
   }, [navigation.state.params, uid])
 
+  const isMy = useMemo(() => {
+    if (navigation.state.params?.userID) {
+      return navigation.state.params.userID === uid
+    }
+    return true
+  }, [navigation.state.params, uid])
+
   const user = useUser(targetUserID)
   const modalTools = useModal()
-  const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificate(uid)
+  const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificateEditTools(
+    uid
+  )
 
   const _pickCertificateImage = useCallback(async () => {
     const { cancelled, uri } = await onChangeUpdateCertificateURL()
@@ -75,13 +83,13 @@ const UserScreen = (props: Props) => {
           <Text style={styles.idText}>@{user.userID}</Text>
         </View>
 
-        {user.isAccepted && (
+        {isMy && user.isAccepted && (
           <View style={styles.isAcceptedWrapper}>
             <Text style={styles.acceptCaptionText}>本人確認済み</Text>
           </View>
         )}
 
-        {!user.isAccepted && (
+        {isMy && !user.isAccepted && (
           <View style={styles.isNotacceptedWrapper}>
             <RoundedButton color={colors.tints.primary.main} fullWidth={true} onPress={_pickCertificateImage}>
               <Text style={styles.acceptText}>身分証をアップロードする</Text>
@@ -89,7 +97,7 @@ const UserScreen = (props: Props) => {
           </View>
         )}
 
-        {!user.isAccepted && (
+        {isMy && !user.isAccepted && (
           <View style={styles.acceptCaptionWrapper}>
             <Text style={styles.acceptCaptionText}>
               ※年齢確認のため、運転免許証もしくはパスポートをアップロードして下さい。
@@ -98,7 +106,7 @@ const UserScreen = (props: Props) => {
         )}
       </View>
 
-      {!user.isAccepted && currentCertificateURL && (
+      {isMy && !user.isAccepted && currentCertificateURL && (
         <View style={styles.cardWrapper}>
           <View style={styles.card}>
             <Image style={styles.certificate} resizeMode="contain" source={{ uri: currentCertificateURL }} />
@@ -107,11 +115,13 @@ const UserScreen = (props: Props) => {
         </View>
       )}
 
-      <TouchableOpacity style={styles.editFab} onPress={goToEdit}>
-        <AntDesign color="gray" name="edit" size={24} />
-      </TouchableOpacity>
+      {isMy && (
+        <TouchableOpacity style={styles.editFab} onPress={goToEdit}>
+          <AntDesign color="gray" name="edit" size={24} />
+        </TouchableOpacity>
+      )}
 
-      {uid === targetUserID && (
+      {isMy && (
         <TouchableOpacity style={styles.settingFab} onPress={goToSetting}>
           <AntDesign color="gray" name="setting" size={24} />
         </TouchableOpacity>

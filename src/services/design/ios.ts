@@ -11,10 +11,10 @@ export const X_ABOVE_TAB_NOTCH_HEIGHT = 34
 
 export const isIPhoneXAbove = () => {
   const { width, height } = Dimensions.get('window')
-  return Platform.OS === 'ios' && (width === X_ABOVE_WIDTH && height === X_ABOVE_HEIGHT)
+  return Platform.OS === 'ios' && width === X_ABOVE_WIDTH && height === X_ABOVE_HEIGHT
 }
 
 export const isIPhoneX = () => {
   const { width, height } = Dimensions.get('window')
-  return Platform.OS === 'ios' && (width === X_WIDTH && height === X_HEIGHT)
+  return Platform.OS === 'ios' && width === X_WIDTH && height === X_HEIGHT
 }

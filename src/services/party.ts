@@ -1,27 +1,28 @@
 import { useEffect, useState } from 'react'
-import firebase from '../repositories/firebase'
+import firebase, { functions } from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 import { getUser } from '../repositories/user'
 import { User, createDocument } from '../entities'
 import { showEntryPartyApplySunccessMessage, showEntryPartyApplyFailurMessage } from '../services/flashCard'
+import { useAuthState } from '../store/hooks'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
 
 export const useParties = () => {
   const [parties, setParties] = useState<Party[]>()
+  const auth = useAuthState()
+  const { user } = auth
 
   useEffect(() => {
-    const fetchData = async () => {
-      const snapShot = await partiesRef.orderBy('date').get()
-      const parties = snapShot.docs.map(doc => {
-        const party = buildParty(doc.id, doc.data())
-        return party
+    if (!user) return
+    partiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
+      const newParty: Party[] = snapShot.docs.map(doc => {
+        return buildParty(doc.id, doc.data())
       })
-      setParties(parties)
-    }
-    fetchData()
-  }, [])
+      setParties(newParty)
+    })
+  }, [parties, user])
   return parties
 }
 
@@ -73,6 +74,14 @@ export const entryParty = async (uid: string, partyID: string) => {
   })
 
   await batch.commit()
+}
+
+export const entryDemoParty = (partyID: string) => {
+  try {
+    functions.httpsCallable('entryParty')({ partyID })
+  } catch (e) {
+    console.warn(e)
+  }
 }
 
 export const entryPartyMembers = async (organizer, members: User[], partyID: string) => {

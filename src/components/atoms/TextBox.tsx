@@ -61,8 +61,8 @@ const CustomTextInput: React.FC<Props> = ({
         {
           width: fullWidth ? '100%' : width,
           height: height,
-          color: color ? color : colors.foregrounds.primary,
-          backgroundColor: backgroundColor ? backgroundColor : colors.system.gray
+          color: color ?? colors.foregrounds.primary,
+          backgroundColor: backgroundColor ?? colors.system.gray
         }
       ]}
       placeholder={placeholder}

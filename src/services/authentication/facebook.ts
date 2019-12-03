@@ -35,3 +35,35 @@ export const signInFacebook = async (): Promise<Result> => {
     return { error: e }
   }
 }
+
+export const linkWithFacebook = async (): Promise<Result> => {
+  try {
+    const { type, token } = await Facebook.logInWithReadPermissionsAsync(APPID, {
+      permissions: ['public_profile']
+    })
+
+    if (type == 'success') {
+      const credential = firebase.auth.FacebookAuthProvider.credential(token)
+      console.info(token)
+
+      firebase
+        .auth()
+        .currentUser.linkAndRetrieveDataWithCredential(credential)
+        .then(
+          usercred => {
+            const user = usercred.user
+            console.info('Anonymous account successfully upgraded', user)
+            return { success: true }
+          },
+          error => {
+            console.warn('Error upgrading anonymous account', error)
+            return { error }
+          }
+        )
+    }
+
+    return { cancelled: true }
+  } catch (e) {
+    return { error: e }
+  }
+}
