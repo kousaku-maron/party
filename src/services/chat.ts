@@ -111,9 +111,9 @@ export const useGiftedChatTools = (roomID: string) => {
   const onQuickReply = useCallback(
     async (replies: Reply[]) => {
       if (replies.length > 1) return null
-      const eventLike = replies[0].value == 'true' ? true : false
-      const resultUpdateEventLike = await functions.httpsCallable('updateEventsLike')({ roomID, eventLike })
-      console.log(resultUpdateEventLike.data.contents[0].value)
+      const eventLike = replies[0].value ?? false
+      console.log(eventLike)
+      await functions.httpsCallable('updateEventsLike')({ roomID, eventLike })
     },
     [roomID]
   )
