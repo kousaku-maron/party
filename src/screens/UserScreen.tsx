@@ -25,10 +25,17 @@ const UserScreen = ({ navigation }: Props) => {
   const colors = useColors()
 
   const targetUserID = useMemo(() => {
-    if (navigation.state.params && navigation.state.params.userID) {
+    if (navigation.state.params?.userID) {
       return navigation.state.params.userID
     }
     return uid
+  }, [navigation.state.params, uid])
+
+  const isMy = useMemo(() => {
+    if (navigation.state.params?.userID) {
+      return navigation.state.params.userID === uid
+    }
+    return true
   }, [navigation.state.params, uid])
 
   const user = useUser(targetUserID)
@@ -76,13 +83,13 @@ const UserScreen = ({ navigation }: Props) => {
           <Text style={styles.idText}>@{user.userID}</Text>
         </View>
 
-        {user.isAccepted && (
+        {isMy && user.isAccepted && (
           <View style={styles.isAcceptedWrapper}>
             <Text style={styles.acceptCaptionText}>本人確認済み</Text>
           </View>
         )}
 
-        {!user.isAccepted && (
+        {isMy && !user.isAccepted && (
           <View style={styles.isNotacceptedWrapper}>
             <RoundedButton color={colors.tints.primary.main} fullWidth={true} onPress={_pickCertificateImage}>
               <Text style={styles.acceptText}>身分証をアップロードする</Text>
@@ -90,7 +97,7 @@ const UserScreen = ({ navigation }: Props) => {
           </View>
         )}
 
-        {!user.isAccepted && (
+        {isMy && !user.isAccepted && (
           <View style={styles.acceptCaptionWrapper}>
             <Text style={styles.acceptCaptionText}>
               ※年齢確認のため、運転免許証もしくはパスポートをアップロードして下さい。
@@ -99,7 +106,7 @@ const UserScreen = ({ navigation }: Props) => {
         )}
       </View>
 
-      {!user.isAccepted && currentCertificateURL && (
+      {isMy && !user.isAccepted && currentCertificateURL && (
         <View style={styles.cardWrapper}>
           <View style={styles.card}>
             <Image style={styles.certificate} resizeMode="contain" source={{ uri: currentCertificateURL }} />
@@ -108,11 +115,13 @@ const UserScreen = ({ navigation }: Props) => {
         </View>
       )}
 
-      <TouchableOpacity style={styles.editFab} onPress={goToEdit}>
-        <AntDesign color="gray" name="edit" size={24} />
-      </TouchableOpacity>
+      {isMy && (
+        <TouchableOpacity style={styles.editFab} onPress={goToEdit}>
+          <AntDesign color="gray" name="edit" size={24} />
+        </TouchableOpacity>
+      )}
 
-      {uid === targetUserID && (
+      {isMy && (
         <TouchableOpacity style={styles.settingFab} onPress={goToSetting}>
           <AntDesign color="gray" name="setting" size={24} />
         </TouchableOpacity>

@@ -52,8 +52,8 @@ const CustomTextInput: React.FC<Props> = ({
         {
           width: fullWidth ? '100%' : width,
           height: height,
-          borderColor: borderColor ? borderColor : colors.foregrounds.primary,
-          color: color ? color : colors.foregrounds.primary
+          borderColor: borderColor ?? colors.foregrounds.primary,
+          color: color ?? colors.foregrounds.primary
         }
       ]}
       value={value}

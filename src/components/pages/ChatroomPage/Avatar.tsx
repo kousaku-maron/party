@@ -32,15 +32,15 @@ export const CustomAvatar = (
         currentMessage: { user }
       } = props
 
-      if (user && user.avatar && typeof user.avatar === 'string') {
+      if (user?.avatar && typeof user.avatar === 'string') {
         return <CacheImage style={styles.avatar} {...{ uri: user.avatar }} />
       }
 
-      if (user && user.avatar && typeof user.avatar === 'function') {
+      if (user?.avatar && typeof user.avatar === 'function') {
         return user.avatar([styles.avatar])
       }
 
-      if (user && user.avatar && typeof user.avatar === 'number') {
+      if (user?.avatar && typeof user.avatar === 'number') {
         return <Image source={user.avatar} style={styles.avatar} />
       }
 
