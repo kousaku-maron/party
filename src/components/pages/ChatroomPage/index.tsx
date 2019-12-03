@@ -11,13 +11,13 @@ import { CustomComposer } from './Composer'
 import { CustomDay } from './Day'
 import { useGiftedChatTools } from '../../../services/chat'
 import { useAuthState } from '../../../store/hooks'
-import { GiftedChat } from 'react-native-gifted-chat'
+import { GiftedChat, User } from 'react-native-gifted-chat'
 import SafeAreaView from 'react-native-safe-area-view'
 
-type OwnProps = { roomID: string }
+type OwnProps = { roomID: string; onPressAvatar?: (user: User) => void }
 type Props = OwnProps
 
-const ChatroomPage = ({ roomID }: Props) => {
+const ChatroomPage = ({ roomID, onPressAvatar }: Props) => {
   const styles = useStyles(makeStyles)
 
   const { uid } = useAuthState()
@@ -45,6 +45,11 @@ const ChatroomPage = ({ roomID }: Props) => {
           onSend={onSend}
           onQuickReply={onQuickReply}
           // onPressActionButton={onPressActionButton}
+          onPressAvatar={(user: User) => {
+            if (onPressAvatar) {
+              onPressAvatar(user)
+            }
+          }}
           renderBubble={renderBubble}
           renderAvatar={renderAvatar}
           renderSend={renderSend}
