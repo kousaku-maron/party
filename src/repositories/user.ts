@@ -93,7 +93,8 @@ export const setUser = async (uid: string, user: UpdateUser) => {
       )
     }
 
-    // message user update process
+    // TODO: firestore triggerに退避させる。
+    // ---------------------------------------
     const currentUser = await getUser(uid)
 
     const messageUpdateUser: MessageUser = {
@@ -125,6 +126,7 @@ export const setUser = async (uid: string, user: UpdateUser) => {
     await Promise.all(tasks)
 
     await batch.commit()
+    // ---------------------------------------
 
     return { result: true }
   } catch (e) {
