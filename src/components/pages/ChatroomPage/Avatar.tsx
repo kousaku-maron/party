@@ -29,7 +29,7 @@ export const CustomAvatar = (
   const renderAvatar = useCallback(
     (props: RenderAvatarProps) => {
       const {
-        currentMessage: { user },
+        currentMessage: { user, system },
         onPressAvatar
       } = props
 
@@ -37,7 +37,7 @@ export const CustomAvatar = (
         return (
           <TouchableOpacity
             onPress={() => {
-              if (onPressAvatar) {
+              if (onPressAvatar && !system) {
                 onPressAvatar(user)
               }
             }}
@@ -55,7 +55,7 @@ export const CustomAvatar = (
         return (
           <TouchableOpacity
             onPress={() => {
-              if (onPressAvatar) {
+              if (onPressAvatar && !system) {
                 onPressAvatar(user)
               }
             }}
