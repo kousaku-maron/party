@@ -33,7 +33,7 @@ const UserEditScreen = ({ navigation }: Props) => {
     openLoadingModal()
     const updateUser: UpdateUser = { uid, name, thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
     const { result } = await UserRepository.setUser(uid, updateUser)
-    result === true ? showUserEditSuccessMessage() : showUserEditFailurMessage()
+    result ? showUserEditSuccessMessage() : showUserEditFailurMessage()
     closeLoadingModal()
     if (result) {
       navigation.goBack()
