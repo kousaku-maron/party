@@ -31,7 +31,8 @@ const HomeNavigator = createStackNavigator(
     Main: HomeScreen,
     PartyEntry: PartyEntryScreen,
     PartyDetail: PartyDetailScreen,
-    Chat: ChatScreen
+    Chat: ChatScreen,
+    User: UserScreen
   },
   {
     initialRouteName: 'Main'

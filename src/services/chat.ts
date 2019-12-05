@@ -63,7 +63,7 @@ export const useGiftedChatTools = (roomID: string) => {
         _id: message.id,
         text: message.text,
         createdAt: message.createdAt,
-        system: message.user ? false : message.system, // systemがtrueだとアバター表示が面倒なため、userデータがあるメッセージはfalseにしている。
+        system: message.system,
         user: {
           _id: user.uid,
           name: user.name,

@@ -102,10 +102,10 @@ export const setUser = async (uid: string, user: UpdateUser) => {
       isAccepted: currentUser.isAccepted,
       isAnonymous: currentUser.isAnonymous,
       uid,
-      userID: user.userID || currentUser.userID,
+      userID: user.userID ?? currentUser.userID,
       name: user.name,
-      thumbnailURL: updatedThumbnailURL || currentUser.thumbnailURL,
-      gender: currentUser.gender
+      thumbnailURL: updatedThumbnailURL ?? currentUser.thumbnailURL,
+      gender: currentUser.gender ?? null
     }
 
     const roomsSnapshot = await roomsRef.where('entryUIDs', 'array-contains', uid).get()

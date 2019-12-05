@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { Image, TouchableOpacity, StyleSheet } from 'react-native'
 import { Image as CacheImage } from 'react-native-expo-image-cache'
 import { Avatar, AvatarProps, IMessage } from 'react-native-gifted-chat'
 import { useStyles, MakeStyles } from '../../../services/design'
@@ -29,11 +29,22 @@ export const CustomAvatar = (
   const renderAvatar = useCallback(
     (props: RenderAvatarProps) => {
       const {
-        currentMessage: { user }
+        currentMessage: { user, system },
+        onPressAvatar
       } = props
 
       if (user?.avatar && typeof user.avatar === 'string') {
-        return <CacheImage style={styles.avatar} {...{ uri: user.avatar }} />
+        return (
+          <TouchableOpacity
+            onPress={() => {
+              if (onPressAvatar && !system) {
+                onPressAvatar(user)
+              }
+            }}
+          >
+            <CacheImage style={styles.avatar} {...{ uri: user.avatar }} />
+          </TouchableOpacity>
+        )
       }
 
       if (user?.avatar && typeof user.avatar === 'function') {
@@ -41,7 +52,17 @@ export const CustomAvatar = (
       }
 
       if (user?.avatar && typeof user.avatar === 'number') {
-        return <Image source={user.avatar} style={styles.avatar} />
+        return (
+          <TouchableOpacity
+            onPress={() => {
+              if (onPressAvatar && !system) {
+                onPressAvatar(user)
+              }
+            }}
+          >
+            <Image source={user.avatar} style={styles.avatar} />
+          </TouchableOpacity>
+        )
       }
 
       return null
