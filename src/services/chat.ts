@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
-import firebase from '../repositories/firebase'
+import firebase, { functions } from '../repositories/firebase'
 import { buildMessage, Message, CreateMessage, systemUser } from '../entities'
 import { setMessage } from '../repositories/message'
 import { IMessage, Reply } from 'react-native-gifted-chat'
@@ -58,7 +58,6 @@ export const useGiftedChatTools = (roomID: string) => {
     if (_.isEmpty(messages)) return []
     return messages.map(message => {
       const user = message.user
-
       const iMessage: IMessage = {
         _id: message.id,
         text: message.text,
@@ -113,11 +112,14 @@ export const useGiftedChatTools = (roomID: string) => {
     [roomID]
   )
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onQuickReply = useCallback((replies: Reply[]) => {
-    // reply process
-    console.info(replies)
-  }, [])
+  const onQuickReply = useCallback(
+    async (replies: Reply[]) => {
+      if (replies.length > 1) return null
+      const eventLike = replies[0].value ?? false
+      await functions.httpsCallable('updateEventsLike')({ roomID, eventLike })
+    },
+    [roomID]
+  )
 
   const onPressActionButton = useCallback(() => {
     // select image and video process
