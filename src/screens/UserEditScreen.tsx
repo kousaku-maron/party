@@ -10,6 +10,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Fab, Thumbnail, TextInput } from '../components/atoms'
 import { LoadingPage } from '../components/pages'
+import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../services/flashCard'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -32,6 +33,7 @@ const UserEditScreen = ({ navigation }: Props) => {
     openLoadingModal()
     const updateUser: UpdateUser = { uid, name, thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
     const { result } = await UserRepository.setUser(uid, updateUser)
+    result ? showUserEditSuccessMessage() : showUserEditFailurMessage()
     closeLoadingModal()
     if (result) {
       navigation.goBack()

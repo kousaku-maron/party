@@ -81,6 +81,7 @@ export const setUser = async (uid: string, user: UpdateUser) => {
         }),
         { merge: true }
       )
+      return { result: true }
     }
 
     if (!user.thumbnailURL) {

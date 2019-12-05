@@ -3,6 +3,7 @@ import firebase, { functions } from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 import { getUser } from '../repositories/user'
 import { User, createDocument } from '../entities'
+import { showEntryPartyApplySunccessMessage, showEntryPartyApplyFailurMessage } from '../services/flashCard'
 import { useAuthState } from '../store/hooks'
 
 const db = firebase.firestore()
@@ -111,5 +112,11 @@ export const entryPartyMembers = async (organizer, members: User[], partyID: str
     )
   })
 
-  await batch.commit()
+  try {
+    await batch.commit()
+    showEntryPartyApplySunccessMessage()
+  } catch (e) {
+    showEntryPartyApplyFailurMessage()
+    console.warn(e)
+  }
 }
