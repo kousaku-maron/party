@@ -72,27 +72,17 @@ export const setUser = async (uid: string, user: UpdateUser) => {
       }
 
       updatedThumbnailURL = thumbnailURL
-
-      batch.set(
-        usersRef.doc(uid),
-        updateDocument({
-          name: user.name,
-          thumbnailURL
-        }),
-        { merge: true }
-      )
-      return { result: true }
     }
 
-    if (!user.thumbnailURL) {
-      batch.set(
-        usersRef.doc(uid),
-        updateDocument({
-          name: user.name
-        }),
-        { merge: true }
-      )
-    }
+    batch.set(
+      usersRef.doc(uid),
+      updateDocument<UpdateUser>({
+        uid,
+        name: user.name,
+        ...(updatedThumbnailURL && { thumbnailURL: updatedThumbnailURL })
+      }),
+      { merge: true }
+    )
 
     // TODO: firestore triggerに退避させる。
     // ---------------------------------------

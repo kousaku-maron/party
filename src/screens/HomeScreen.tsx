@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
@@ -22,6 +22,7 @@ const HomeScreen = ({ navigation }: Props) => {
   const genderModalTools = useModal()
   const isAcceptedModalTools = useModal()
 
+  const [isSendGender, setIsSendGender] = useState<boolean>(false)
   const onSetGender = useCallback(
     async (uid, gender) => {
       await setGender(uid, gender)
@@ -45,9 +46,18 @@ const HomeScreen = ({ navigation }: Props) => {
   //   [genderModalTools, isAcceptedModalTools, navigation, user]
   // )
 
+  useEffect(() => {
+    if (!user || isSendGender) return
+    if (!user.gender) {
+      genderModalTools.onOpen()
+      setIsSendGender(true)
+    }
+  }, [genderModalTools, isSendGender, user])
+
   const onPressEntryForDemo = useCallback(
     (party: Party) => {
-      if (!user) return
+      if (!user || !user.gender) return
+
       if (!party.entryUIDs?.includes(user.uid)) {
         entryDemoParty(party.id)
       }
