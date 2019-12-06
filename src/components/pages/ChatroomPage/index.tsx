@@ -17,7 +17,7 @@ import SafeAreaView from 'react-native-safe-area-view'
 type OwnProps = { roomID: string; onPressAvatar?: (user: User) => void }
 type Props = OwnProps
 
-const ChatroomPage = ({ roomID, onPressAvatar }: Props) => {
+const ChatroomPage = ({ roomID /*, onPressAvatar */ }: Props) => {
   const styles = useStyles(makeStyles)
 
   const { uid } = useAuthState()
@@ -45,11 +45,11 @@ const ChatroomPage = ({ roomID, onPressAvatar }: Props) => {
           onSend={onSend}
           onQuickReply={onQuickReply}
           // onPressActionButton={onPressActionButton}
-          onPressAvatar={(user: User) => {
-            if (onPressAvatar) {
-              onPressAvatar(user)
-            }
-          }}
+          // onPressAvatar={(user: User) => {
+          //   if (onPressAvatar) {
+          //     onPressAvatar(user)
+          //   }
+          // }}
           renderBubble={renderBubble}
           renderAvatar={renderAvatar}
           renderSend={renderSend}
