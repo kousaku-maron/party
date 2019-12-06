@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react'
 import firebase, { functions } from '../repositories/firebase'
 import { buildMessage, Message, CreateMessage, systemUser } from '../entities'
 import { setMessage } from '../repositories/message'
+import { showQuickRepliedSuccessMessage } from '../services/flashCard'
 import { IMessage, Reply } from 'react-native-gifted-chat'
 import { useAuthState } from '../store/auth'
 import _ from 'lodash'
@@ -62,7 +63,7 @@ export const useGiftedChatTools = (roomID: string) => {
         _id: message.id,
         text: message.text,
         createdAt: message.createdAt,
-        system: message.system,
+        system: user ? false : message.system,
         user: {
           _id: user.uid,
           name: user.name,
@@ -114,11 +115,17 @@ export const useGiftedChatTools = (roomID: string) => {
 
   const onQuickReply = useCallback(
     async (replies: Reply[]) => {
-      if (replies.length > 1) return null
-      const eventLike = replies[0].value ?? false
-      await functions.httpsCallable('updateEventsLike')({ roomID, eventLike })
+      if (replies.length === 0) return
+      await functions.httpsCallable('onQuickReplyEvents')({
+        gender: user.gender ?? 'female', // DEMO時の保険でfemaleをデフォルト値にしている。
+        roomID,
+        replies,
+        replyType: 'positive',
+        eventType: 'nizikai'
+      })
+      showQuickRepliedSuccessMessage()
     },
-    [roomID]
+    [roomID, user.gender]
   )
 
   const onPressActionButton = useCallback(() => {

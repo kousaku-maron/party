@@ -64,8 +64,16 @@ export const showEntryPartyRejectFailurMessage = () => {
   })
 }
 
+export const showQuickRepliedSuccessMessage = () => {
+  showMessage({
+    message: '回答を送信しました。',
+    type: 'success',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
 const styles = {
   flashCardMessage: {
-    fontSize: 18
+    fontSize: 14
   }
 }
