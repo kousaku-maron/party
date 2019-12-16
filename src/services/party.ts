@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
+import { useNavigation } from 'react-navigation-hooks'
 import firebase, { functions } from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
 import { getUser } from '../repositories/user'
 import { User, createDocument } from '../entities'
 import { showEntryPartyApplySunccessMessage, showEntryPartyApplyFailurMessage } from '../services/flashCard'
-import { useAuthState } from '../store/hooks'
+import { useAuthState, useUIActions, useRoomActions } from '../store/hooks'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
@@ -79,6 +80,40 @@ export const entryParty = async (uid: string, partyID: string) => {
   })
 
   await batch.commit()
+}
+
+export const useEntryDemoRoom = () => {
+  const { user } = useAuthState()
+  const { openLoadingModal, closeLoadingModal } = useUIActions()
+  const { entryDemoRoom } = useRoomActions()
+  const navigation = useNavigation()
+
+  const onPressEntryDemoRoom = useCallback(
+    (party: Party) => {
+      if (!user || !user.gender) return
+
+      if (!party.entryUIDs?.includes(user.uid)) {
+        openLoadingModal()
+
+        const onSuccess = () => {
+          closeLoadingModal()
+          navigation.navigate('Chat', { roomID: party.id })
+        }
+
+        const onFailure = () => {
+          closeLoadingModal()
+        }
+
+        entryDemoRoom({ roomID: party.id, onSuccess, onFailure })
+        return
+      }
+
+      navigation.navigate('Chat', { roomID: party.id })
+    },
+    [closeLoadingModal, entryDemoRoom, navigation, openLoadingModal, user]
+  )
+
+  return { onPressEntryDemoRoom }
 }
 
 export const entryDemoParty = async (partyID: string) => {
