@@ -16,8 +16,8 @@ type Props = OwnProps
 
 const HomeScreen = ({ navigation }: Props) => {
   const styles = useStyles(makeStyles)
-  const auth = useAuthState()
-  const { user } = auth
+  const { user, uid } = useAuthState()
+
   const parties = useParties()
   const genderModalTools = useModal()
   const isAcceptedModalTools = useModal()
@@ -55,16 +55,16 @@ const HomeScreen = ({ navigation }: Props) => {
   }, [genderModalTools, isSendGender, user])
 
   const onPressEntryForDemo = useCallback(
-    (party: Party) => {
+    async (party: Party) => {
       if (!user || !user.gender) return
 
       if (!party.entryUIDs?.includes(user.uid)) {
-        entryDemoParty(party.id)
+        await entryDemoParty(party.id)
       }
 
-      navigation.navigate('Chat', { roomID: party.id })
+      // navigation.navigate('Chat', { roomID: party.id })
     },
-    [navigation, user]
+    [user]
   )
 
   const FetchPartiesThumbnail = useCallback(
@@ -102,7 +102,7 @@ const HomeScreen = ({ navigation }: Props) => {
       {FetchPartiesThumbnail(parties)}
       <GenderModal
         isVisible={genderModalTools.isVisible}
-        uid={auth.uid}
+        uid={uid}
         title="あなたの性別は何ですか？"
         negative="キャンセル"
         positive="登録します"

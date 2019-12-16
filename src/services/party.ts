@@ -76,11 +76,13 @@ export const entryParty = async (uid: string, partyID: string) => {
   await batch.commit()
 }
 
-export const entryDemoParty = (partyID: string) => {
+export const entryDemoParty = async (partyID: string) => {
   try {
-    functions.httpsCallable('entryParty')({ partyID })
+    await functions.httpsCallable('entryParty')({ partyID })
+    return { result: true }
   } catch (e) {
     console.warn(e)
+    return { result: false }
   }
 }
 
