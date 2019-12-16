@@ -2,10 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { useParties, entryDemoParty } from '../services/party'
+import { useParties } from '../services/party'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
-import { useAuthState } from '../store/hooks'
+import { useAuthState, useUIActions, useRoomActions } from '../store/hooks'
 import { LoadingPage } from '../components/pages'
 import { Card, GenderModal, Modal } from '../components/organisms'
 import { setGender } from '../services/user'
@@ -17,6 +17,8 @@ type Props = OwnProps
 const HomeScreen = ({ navigation }: Props) => {
   const styles = useStyles(makeStyles)
   const { user, uid } = useAuthState()
+  const { entryDemoRoom } = useRoomActions()
+  const { openLoadingModal, closeLoadingModal } = useUIActions()
 
   const parties = useParties()
   const genderModalTools = useModal()
@@ -54,17 +56,30 @@ const HomeScreen = ({ navigation }: Props) => {
     }
   }, [genderModalTools, isSendGender, user])
 
+  // TODO: onPressEntryForDemoをservicesに退避させる。
   const onPressEntryForDemo = useCallback(
     async (party: Party) => {
       if (!user || !user.gender) return
 
       if (!party.entryUIDs?.includes(user.uid)) {
-        await entryDemoParty(party.id)
+        openLoadingModal()
+
+        const onSuccess = () => {
+          closeLoadingModal()
+          navigation.navigate('Chat', { roomID: party.id })
+        }
+
+        const onFailure = () => {
+          closeLoadingModal()
+        }
+
+        entryDemoRoom({ roomID: party.id, onSuccess, onFailure })
+        return
       }
 
-      // navigation.navigate('Chat', { roomID: party.id })
+      navigation.navigate('Chat', { roomID: party.id })
     },
-    [user]
+    [closeLoadingModal, entryDemoRoom, navigation, openLoadingModal, user]
   )
 
   const FetchPartiesThumbnail = useCallback(

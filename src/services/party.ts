@@ -16,13 +16,18 @@ export const useParties = () => {
 
   useEffect(() => {
     if (!user) return
-    partiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
+    const unsubscribe = partiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
       const newParty: Party[] = snapShot.docs.map(doc => {
         return buildParty(doc.id, doc.data())
       })
       setParties(newParty)
     })
+
+    return () => {
+      unsubscribe()
+    }
   }, [parties, user])
+
   return parties
 }
 
@@ -79,10 +84,10 @@ export const entryParty = async (uid: string, partyID: string) => {
 export const entryDemoParty = async (partyID: string) => {
   try {
     await functions.httpsCallable('entryParty')({ partyID })
-    return { result: true }
+    return { success: true }
   } catch (e) {
     console.warn(e)
-    return { result: false }
+    return { success: false, error: e }
   }
 }
 
