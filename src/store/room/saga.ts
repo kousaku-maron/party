@@ -1,23 +1,45 @@
-import { take, call } from 'redux-saga/effects'
+import { take, put, call } from 'redux-saga/effects'
 import { roomActions } from './actions'
 import { entryDemoParty } from '../../services/party'
 
-function* entryDemoPartyProcess() {
+function* entryDemoRoomRequestProcess() {
   while (true) {
-    const { payload } = yield take(roomActions.entryDemoRoom)
+    const { payload } = yield take(roomActions.entryDemoRoomRequest)
     const { roomID, onSuccess, onFailure } = payload
-    const { success, cancelled, error } = yield call(entryDemoParty, roomID)
+    const { success, error } = yield call(entryDemoParty, roomID)
 
-    if (success && !cancelled && !error) {
-      if (onSuccess) onSuccess()
+    if (success && !error) {
+      yield put(roomActions.entryDemoRoomSuccess({ onSuccess }))
     }
 
-    if (!success && !cancelled && error) {
-      if (onFailure) onFailure()
+    if (!success && error) {
+      yield put(roomActions.entryDemoRoomFailure({ onFailure }))
     }
   }
 }
 
-const saga = [entryDemoPartyProcess()]
+function* entryDemoRoomSuccessProcess() {
+  while (true) {
+    const { payload } = yield take(roomActions.entryDemoRoomSuccess)
+    const { onSuccess } = payload
+
+    if (onSuccess) {
+      onSuccess()
+    }
+  }
+}
+
+function* entryDemoRoomFailureProcess() {
+  while (true) {
+    const { payload } = yield take(roomActions.entryDemoRoomFailure)
+    const { onFailure } = payload
+
+    if (onFailure) {
+      onFailure()
+    }
+  }
+}
+
+const saga = [entryDemoRoomRequestProcess(), entryDemoRoomSuccessProcess(), entryDemoRoomFailureProcess()]
 
 export default saga

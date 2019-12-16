@@ -10,15 +10,17 @@ export interface Fetch {
 }
 
 export const roomActions = {
-  entryDemoRoom: actionCreator<Fetch & { roomID: string }>('ENTRY_DEMO_ROOM')
+  entryDemoRoomRequest: actionCreator<Fetch & { roomID: string }>('ENTRY_DEMO_ROOM_REQUEST'),
+  entryDemoRoomSuccess: actionCreator<Pick<Fetch, 'onSuccess'>>('ENTRY_DEMO_ROOM_SUCCESS'),
+  entryDemoRoomFailure: actionCreator<Pick<Fetch, 'onFailure'>>('ENTRY_DEMO_ROOM_FAILURE')
 }
 
 export const useRoomActions = () => {
   const dispatch = useDispatch()
 
   const entryDemoRoom = useCallback(
-    roomID => {
-      dispatch(roomActions.entryDemoRoom({ roomID }))
+    ({ roomID, onSuccess, onFailure }: Fetch & { roomID: string }) => {
+      dispatch(roomActions.entryDemoRoomRequest({ roomID, onSuccess, onFailure }))
     },
     [dispatch]
   )
