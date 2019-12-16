@@ -55,31 +55,6 @@ const HomeScreen = ({ navigation }: Props) => {
     }
   }, [genderModalTools, isSendGender, user])
 
-  // const onPressEntryForDemo = useCallback(
-  //   (party: Party) => {
-  //     if (!user || !user.gender) return
-
-  //     if (!party.entryUIDs?.includes(user.uid)) {
-  //       openLoadingModal()
-
-  //       const onSuccess = () => {
-  //         closeLoadingModal()
-  //         navigation.navigate('Chat', { roomID: party.id })
-  //       }
-
-  //       const onFailure = () => {
-  //         closeLoadingModal()
-  //       }
-
-  //       entryDemoRoom({ roomID: party.id, onSuccess, onFailure })
-  //       return
-  //     }
-
-  //     navigation.navigate('Chat', { roomID: party.id })
-  //   },
-  //   [closeLoadingModal, entryDemoRoom, navigation, openLoadingModal, user]
-  // )
-
   const FetchPartiesThumbnail = useCallback(
     (parties: Party[]) => {
       const thumbnailURLs = parties.map((party, index) => {
