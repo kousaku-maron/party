@@ -1,4 +1,5 @@
 import React from 'react'
+import { useScreens } from 'react-native-screens'
 import { Provider } from 'react-redux'
 import { AppearanceProvider, useColorScheme } from 'react-native-appearance'
 import configureStore from './src/store/configureStore'
@@ -10,6 +11,7 @@ const store = configureStore()
 
 const App = (): JSX.Element => {
   const theme = useColorScheme()
+  useScreens()
 
   return (
     <AppearanceProvider>

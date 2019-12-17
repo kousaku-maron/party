@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { useParties, entryDemoParty } from '../services/party'
+import { useParties, useEntryDemoRoom } from '../services/party'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
@@ -16,9 +16,10 @@ type Props = OwnProps
 
 const HomeScreen = ({ navigation }: Props) => {
   const styles = useStyles(makeStyles)
-  const auth = useAuthState()
-  const { user } = auth
+  const { user, uid } = useAuthState()
+
   const parties = useParties()
+  const { onPressEntryDemoRoom } = useEntryDemoRoom()
   const genderModalTools = useModal()
   const isAcceptedModalTools = useModal()
 
@@ -54,19 +55,6 @@ const HomeScreen = ({ navigation }: Props) => {
     }
   }, [genderModalTools, isSendGender, user])
 
-  const onPressEntryForDemo = useCallback(
-    (party: Party) => {
-      if (!user || !user.gender) return
-
-      if (!party.entryUIDs?.includes(user.uid)) {
-        entryDemoParty(party.id)
-      }
-
-      navigation.navigate('Chat', { roomID: party.id })
-    },
-    [navigation, user]
-  )
-
   const FetchPartiesThumbnail = useCallback(
     (parties: Party[]) => {
       const thumbnailURLs = parties.map((party, index) => {
@@ -81,17 +69,17 @@ const HomeScreen = ({ navigation }: Props) => {
               date={party.date}
               width={width}
               onPressEntry={() => {
-                onPressEntryForDemo(party)
+                onPressEntryDemoRoom(party)
               }}
               // TODO: PartyEntryScreenで閉じれるものは閉じた方が良いので、PartyEntryScreenで定義して使用する。
-              onPressDetail={() => navigation.navigate('PartyDetail', { partyID, onPressEntry: onPressEntryForDemo })}
+              onPressDetail={() => navigation.navigate('PartyDetail', { partyID, onPressEntry: onPressEntryDemoRoom })}
             />
           </View>
         )
       })
       return thumbnailURLs
     },
-    [navigation, onPressEntryForDemo, styles.container]
+    [navigation, onPressEntryDemoRoom, styles.container]
   )
 
   if (!parties) {
@@ -102,7 +90,7 @@ const HomeScreen = ({ navigation }: Props) => {
       {FetchPartiesThumbnail(parties)}
       <GenderModal
         isVisible={genderModalTools.isVisible}
-        uid={auth.uid}
+        uid={uid}
         title="あなたの性別は何ですか？"
         negative="キャンセル"
         positive="登録します"
