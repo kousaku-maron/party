@@ -23,3 +23,5 @@ export type EntryParty = Pick<Party, 'id'> & {
   userUIDs: string[]
   organizerUID: string
 }
+
+export type UpdateParty = Pick<Party, 'name' | 'thumbnailURL'> & { partyID?: string }
