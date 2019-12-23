@@ -28,7 +28,7 @@ export const useParties = () => {
     return () => {
       unsubscribe()
     }
-  }, [parties, user])
+  }, [user])
 
   return parties
 }
