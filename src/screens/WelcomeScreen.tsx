@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
 import { useAuthActions } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
+import { isAvailableSignInWithApple } from '../services/authentication'
 import { View, Text, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton } from '../components/atoms'
@@ -14,9 +15,15 @@ type OwnProps = {
 type Props = OwnProps
 
 const WelcomeScreen = ({ navigation }: Props) => {
-  const { signInFacebook, signInAnonymously } = useAuthActions()
+  const { signInApple, signInFacebook, signInAnonymously } = useAuthActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
+
+  const onSignInApple = useCallback(() => {
+    signInApple({
+      onSuccess: () => navigation.navigate('App')
+    })
+  }, [navigation, signInApple])
 
   const onSignInFacebook = useCallback(() => {
     signInFacebook({
@@ -49,6 +56,17 @@ const WelcomeScreen = ({ navigation }: Props) => {
         {/* <Image style={styles.image} resizeMode="contain" source={require('./../../assets/icons/cocktail.png')} /> */}
       </View>
       <View style={styles.actionArea}>
+        {isAvailableSignInWithApple() && (
+          <View style={styles.appleButtonWrapper}>
+            <RoundedButton color={colors.tints.primary.main} height={56} fullWidth={true} onPress={onSignInApple}>
+              <View style={styles.iconWrapper}>
+                <AntDesign name="apple1" size={32} color={colors.foregrounds.onTintPrimary} />
+              </View>
+              <Text style={styles.fbText}>AppleIDでログイン</Text>
+            </RoundedButton>
+          </View>
+        )}
+
         <View style={styles.facebookButtonWrapper}>
           <RoundedButton color={colors.tints.primary.main} height={56} fullWidth={true} onPress={onSignInFacebook}>
             <View style={styles.iconWrapper}>
@@ -117,6 +135,10 @@ const makeStyles: MakeStyles = colors =>
       justifyContent: 'center',
       alignItems: 'center',
       paddingTop: 134
+    },
+    appleButtonWrapper: {
+      width: '100%',
+      paddingBottom: 24
     },
     facebookButtonWrapper: {
       width: '100%',
