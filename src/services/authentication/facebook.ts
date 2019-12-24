@@ -12,13 +12,14 @@ type Result = {
 
 export const signInFacebook = async (): Promise<Result> => {
   try {
-    const { type, token } = await Facebook.logInWithReadPermissionsAsync(APPID, {
+    await Facebook.initializeAsync(APPID, 'party demo')
+    const result = await Facebook.logInWithReadPermissionsAsync({
       permissions: ['public_profile']
     })
 
-    if (type == 'success') {
-      const credential = firebase.auth.FacebookAuthProvider.credential(token)
-      console.info(token)
+    if (result.type == 'success') {
+      const credential = firebase.auth.FacebookAuthProvider.credential(result.token)
+      console.info(result.token)
 
       firebase
         .auth()
@@ -38,13 +39,14 @@ export const signInFacebook = async (): Promise<Result> => {
 
 export const linkWithFacebook = async (): Promise<Result> => {
   try {
-    const { type, token } = await Facebook.logInWithReadPermissionsAsync(APPID, {
+    await Facebook.initializeAsync(APPID, 'party demo')
+    const result = await Facebook.logInWithReadPermissionsAsync({
       permissions: ['public_profile']
     })
 
-    if (type == 'success') {
-      const credential = firebase.auth.FacebookAuthProvider.credential(token)
-      console.info(token)
+    if (result.type == 'success') {
+      const credential = firebase.auth.FacebookAuthProvider.credential(result.token)
+      console.info(result.token)
 
       firebase
         .auth()
