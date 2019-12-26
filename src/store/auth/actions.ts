@@ -11,6 +11,7 @@ export interface Fetch {
 }
 
 export const authActions = {
+  signInApple: actionCreator<Fetch>('SIGNIN_APPLE'),
   signInFacebook: actionCreator<Fetch>('SIGNIN_FACEBOOK'),
   signInAnonymously: actionCreator<Fetch>('SIGNIN_ANONYMOUSLY'),
   signOut: actionCreator<Fetch>('SIGNOUT'),
@@ -23,6 +24,13 @@ export const authActions = {
 
 export const useAuthActions = () => {
   const dispatch = useDispatch()
+
+  const signInApple = useCallback(
+    (fetch: Fetch) => {
+      dispatch(authActions.signInApple(fetch))
+    },
+    [dispatch]
+  )
 
   const signInFacebook = useCallback(
     (fetch: Fetch) => {
@@ -46,6 +54,7 @@ export const useAuthActions = () => {
   )
 
   return {
+    signInApple,
     signInFacebook,
     signInAnonymously,
     signOut

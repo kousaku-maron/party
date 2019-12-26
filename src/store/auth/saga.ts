@@ -5,7 +5,7 @@ import { authActions } from './actions'
 import { db } from '../../repositories/firebase'
 import firebase from '../../repositories/firebase'
 // import * as userRepository from '../../repositories/user'
-import { signInFacebook, signOut, signInAnonymously } from '../../services/authentication'
+import { signInApple, signInFacebook, signOut, signInAnonymously } from '../../services/authentication'
 
 const usersRef = db.collection('users')
 
@@ -62,6 +62,22 @@ function* getMyUser(uid: string) {
       yield put(authActions.getMyUserSuccess(user))
     } else {
       yield put(authActions.getMyUserFailure())
+    }
+  }
+}
+
+function* signInAppleProcess() {
+  while (true) {
+    const { payload } = yield take(authActions.signInApple)
+    const { onSuccess, onFailure } = payload
+    const { success, cancelled, error } = yield call(signInApple)
+
+    if (success && !cancelled && !error) {
+      if (onSuccess) onSuccess()
+    }
+
+    if (!success && !cancelled && error) {
+      if (onFailure) onFailure()
     }
   }
 }
@@ -128,6 +144,12 @@ function* signOutProcess() {
 //   }
 // }
 
-const saga = [checkAuthState(), signInFacebookProcess(), signInAnonymouslyProcess(), signOutProcess()]
+const saga = [
+  checkAuthState(),
+  signInAppleProcess(),
+  signInFacebookProcess(),
+  signInAnonymouslyProcess(),
+  signOutProcess()
+]
 
 export default saga
