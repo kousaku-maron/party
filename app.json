@@ -25,7 +25,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "usesAppleSignIn": true
     }
   }
 }

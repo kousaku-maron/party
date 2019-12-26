@@ -1,8 +1,6 @@
 import firebase from '../../repositories/firebase'
 import * as Facebook from 'expo-facebook'
 
-const APPID = '2544437788903140'
-
 type Result = {
   success?: boolean
   cancelled?: boolean
@@ -12,7 +10,7 @@ type Result = {
 
 export const signInFacebook = async (): Promise<Result> => {
   try {
-    await Facebook.initializeAsync(APPID, 'party demo')
+    await Facebook.initializeAsync(process.env.FACEBOOK_APP_ID, 'party demo')
     const result = await Facebook.logInWithReadPermissionsAsync({
       permissions: ['public_profile']
     })
@@ -39,7 +37,7 @@ export const signInFacebook = async (): Promise<Result> => {
 
 export const linkWithFacebook = async (): Promise<Result> => {
   try {
-    await Facebook.initializeAsync(APPID, 'party demo')
+    await Facebook.initializeAsync(process.env.FACEBOOK_APP_ID, 'party demo')
     const result = await Facebook.logInWithReadPermissionsAsync({
       permissions: ['public_profile']
     })
