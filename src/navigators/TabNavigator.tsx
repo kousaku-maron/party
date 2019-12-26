@@ -16,13 +16,13 @@ import {
 import { getTheme } from '../themes'
 import { isIPhoneX, isIPhoneXAbove, X_ABOVE_TAB_NOTCH_HEIGHT } from '../services/design'
 
-const getTabBarVisible = ({ navigation }) => {
-  const { routes } = navigation.state
-  if (routes.length > 1) {
-    return false
-  }
-  return true
-}
+// const getTabBarVisible = ({ navigation }) => {
+//   const { routes } = navigation.state
+//   if (routes.length > 1) {
+//     return false
+//   }
+//   return true
+// }
 
 const theme = getTheme()
 
@@ -65,8 +65,9 @@ const TabNavigator = createBottomTabNavigator(
   {
     Home: {
       screen: HomeNavigator,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       navigationOptions: ({ navigation }) => {
-        const tabBarVisible = getTabBarVisible({ navigation })
+        // const tabBarVisible = getTabBarVisible({ navigation })
         return {
           tabBarIcon: ({ tintColor, focused }) => {
             if (isIPhoneX() || isIPhoneXAbove()) {
@@ -74,14 +75,15 @@ const TabNavigator = createBottomTabNavigator(
             }
             return HomeIcon({ tintColor, focused })
           },
-          tabBarVisible
+          tabBarVisible: true
         }
       }
     },
     Post: {
       screen: PostNavigator,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       navigationOptions: ({ navigation }) => {
-        const tabBarVisible = getTabBarVisible({ navigation })
+        // const tabBarVisible = getTabBarVisible({ navigation })
         return {
           tabBarIcon: ({ tintColor, focused }) => {
             if (isIPhoneX() || isIPhoneXAbove()) {
@@ -89,14 +91,15 @@ const TabNavigator = createBottomTabNavigator(
             }
             return PostIcon({ tintColor, focused })
           },
-          tabBarVisible
+          tabBarVisible: true
         }
       }
     },
     User: {
       screen: UserNavigator,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       navigationOptions: ({ navigation }) => {
-        const tabBarVisible = getTabBarVisible({ navigation })
+        // const tabBarVisible = getTabBarVisible({ navigation })
         return {
           tabBarIcon: ({ tintColor, focused }) => {
             if (isIPhoneX() || isIPhoneXAbove()) {
@@ -104,7 +107,7 @@ const TabNavigator = createBottomTabNavigator(
             }
             return UserIcon({ tintColor, focused })
           },
-          tabBarVisible
+          tabBarVisible: true
         }
       }
     }
