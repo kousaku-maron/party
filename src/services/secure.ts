@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { InteractionManager } from 'react-native'
 import { db } from '../repositories/firebase'
 import { setCertificateImage } from '../repositories/certificate'
 import { updateSecure, getSecure } from '../repositories/secure'
@@ -20,16 +21,19 @@ const getSecureRef = (uid: string) => {
 
 export const useSecure = (uid: string) => {
   const [secure, setSecure] = useState<Secure>()
+
   useEffect(() => {
-    if (!uid) return
-    const secureRef = getSecureRef(uid)
-    const unsubscribe = secureRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
-      const secure = buildSecure(doc.data())
-      setSecure(secure)
+    InteractionManager.runAfterInteractions(() => {
+      if (!uid) return
+      const secureRef = getSecureRef(uid)
+      const unsubscribe = secureRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
+        const secure = buildSecure(doc.data())
+        setSecure(secure)
+      })
+      return () => {
+        unsubscribe()
+      }
     })
-    return () => {
-      unsubscribe()
-    }
   }, [uid])
 
   return secure

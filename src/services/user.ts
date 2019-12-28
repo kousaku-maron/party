@@ -5,6 +5,7 @@ import { getUser } from '../repositories/user'
 import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator'
 import * as Permissions from 'expo-permissions'
+import { InteractionManager } from 'react-native'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
 import { buildUser, User, updateDocument } from '../entities'
 
@@ -14,15 +15,17 @@ export const useUser = (uid: string) => {
   const [user, setUser] = useState<User>(null)
 
   useEffect(() => {
-    if (!uid) return
-    const userRef = usersRef.doc(uid)
-    const unsubscribe = userRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
-      const user = buildUser(doc.data())
-      setUser(user)
+    InteractionManager.runAfterInteractions(() => {
+      if (!uid) return
+      const userRef = usersRef.doc(uid)
+      const unsubscribe = userRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
+        const user = buildUser(doc.data())
+        setUser(user)
+      })
+      return () => {
+        unsubscribe()
+      }
     })
-    return () => {
-      unsubscribe()
-    }
   }, [uid])
 
   return user
