@@ -5,9 +5,9 @@ import { formatedDateFull } from '../../services/formatedDate'
 import { RoundedButton } from '../atoms'
 
 type Props = {
-  thumbnailURL: ImageSourcePropType //幹事のUri
-  name: string //Group Name
-  date: Date //開催日時
+  thumbnailURL: ImageSourcePropType
+  name: string
+  date: Date
   width: number
   isAppliedParty: boolean
   onPressDetail: () => void
