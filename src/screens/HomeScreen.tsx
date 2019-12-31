@@ -73,6 +73,7 @@ const HomeScreen = ({ navigation }: Props) => {
               }}
               // TODO: PartyEntryScreenで閉じれるものは閉じた方が良いので、PartyEntryScreenで定義して使用する。
               onPressDetail={() => navigation.navigate('PartyDetail', { partyID, onPressEntry: onPressEntryDemoRoom })}
+              onPressGroups={() => navigation.navigate('PartyGroups', { partyID, onPressEntry: onPressEntryDemoRoom })}
             />
           </View>
         )

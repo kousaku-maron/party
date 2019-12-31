@@ -11,7 +11,8 @@ import {
   TermsScreen,
   PrivacyScreen,
   PostScreen,
-  ChatScreen
+  ChatScreen,
+  PartyGroupsScreen
 } from '../screens'
 import { getTheme } from '../themes'
 import { isIPhoneX, isIPhoneXAbove, X_ABOVE_TAB_NOTCH_HEIGHT } from '../services/design'
@@ -31,6 +32,7 @@ const HomeNavigator = createStackNavigator(
     Main: HomeScreen,
     PartyEntry: PartyEntryScreen,
     PartyDetail: PartyDetailScreen,
+    PartyGroups: PartyGroupsScreen,
     Chat: ChatScreen,
     User: UserScreen
   },

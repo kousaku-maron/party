@@ -1,21 +1,21 @@
 import React from 'react'
-import { View, Text, Image, StyleSheet, ImageSourcePropType, TouchableOpacity } from 'react-native'
+import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native'
 import { useStyles, useColors, MakeStyles } from '../../services/design'
 import { formatedDateFull } from '../../services/formatedDate'
 import { AngularedButton } from '../atoms'
 
 type Props = {
-  uri: ImageSourcePropType
+  thumbnailURL: ImageSourcePropType
   name: string
   date: Date
   width: number
   partyID: string
+  isAppliedParty: boolean
   onPressDetail: () => void
   onPressEntry: () => void
-  onPressGroups: () => void
 }
 
-const MaterialDesignCard: React.FC<Props> = props => {
+const MaterialDesignGroupCard: React.FC<Props> = props => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
@@ -23,9 +23,7 @@ const MaterialDesignCard: React.FC<Props> = props => {
   return (
     <View>
       <View style={styles.imageBorderRadius}>
-        <TouchableOpacity onPress={props.onPressGroups}>
-          <Image style={[styles.image, { width: props.width }]} source={props.uri} />
-        </TouchableOpacity>
+        <Image style={[styles.image, { width: props.width }]} source={props.thumbnailURL} />
       </View>
       <View style={styles.description}>
         <View>
@@ -35,12 +33,13 @@ const MaterialDesignCard: React.FC<Props> = props => {
         <View style={styles.buttonContainer}>
           <View style={styles.buttonWrapper}>
             <AngularedButton
-              disabled={true} // MEMO: DEMO時に押されると厄介なので、押させない。
+              disabled={false}
               color={colors.foregrounds.onTintPrimary}
               fullWidth={false}
               width={70}
               height={30}
               padding={6}
+              //TODO:memberの詳細を表示するようにする
               onPress={props.onPressDetail}
             >
               <Text style={styles.buttonText}>詳細</Text>
@@ -48,6 +47,7 @@ const MaterialDesignCard: React.FC<Props> = props => {
           </View>
           <View style={styles.buttonWrapper}>
             <AngularedButton
+              disabled={props.isAppliedParty}
               color={colors.foregrounds.onTintPrimary}
               fullWidth={false}
               width={70}
@@ -55,7 +55,7 @@ const MaterialDesignCard: React.FC<Props> = props => {
               padding={6}
               onPress={props.onPressEntry}
             >
-              <Text style={styles.buttonText}>参加</Text>
+              <Text style={styles.buttonText}>申請</Text>
             </AngularedButton>
           </View>
         </View>
@@ -105,4 +105,4 @@ const makeStyles: MakeStyles = colors =>
     }
   })
 
-export default MaterialDesignCard
+export default MaterialDesignGroupCard

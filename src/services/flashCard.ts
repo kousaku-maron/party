@@ -32,6 +32,14 @@ export const showEntryPartyApplyFailurMessage = () => {
   })
 }
 
+export const showEntryPartyAlreadyApplied = () => {
+  showMessage({
+    message: '既にパーティーの参加を申請しています',
+    type: 'info',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
 export const showEntryPartyAcceptedSuccessMessage = () => {
   showMessage({
     message: 'パーティー参加を承諾しました',

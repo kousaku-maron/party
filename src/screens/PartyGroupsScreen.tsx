@@ -1,0 +1,70 @@
+import React, { useCallback } from 'react'
+import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
+import { NavigationStackProp } from 'react-navigation-stack'
+import { useGroups } from '../services/groups'
+import { useStyles, MakeStyles } from '../services/design'
+import { onApplyGroup } from '../services/groups'
+import { LoadingPage } from '../components/pages'
+import { GroupCard } from '../components/organisms'
+import { Group } from '../entities'
+import { useAuthState } from '../store/hooks'
+
+type OwnProps = { navigation: NavigationStackProp }
+type Props = OwnProps
+
+const PartyGroupsScreen = ({ navigation }: Props) => {
+  const styles = useStyles(makeStyles)
+
+  const { uid } = useAuthState()
+
+  const partyID = navigation.state.params.partyID
+  const groups = useGroups(partyID)
+
+  const FetchGroupsThumbnail = useCallback(
+    (groups: Group[]) => {
+      const thumbnailURLs = groups.map((group, index) => {
+        const uri = group.thumbnailURL
+
+        return (
+          <View key={index} style={styles.container}>
+            <GroupCard
+              thumbnailURL={{ uri }}
+              name={group.organizerName}
+              //MEMO: 時間を入れず，日付だけの方が良いか相談
+              date={group.date}
+              width={width}
+              isAppliedParty={group.appliedUIDs.includes(uid)}
+              onPressEntry={() => {
+                onApplyGroup(partyID, group, uid)
+              }}
+              //TODO: パーティーメンバーの詳細表示作成予定
+              onPressDetail={() => {
+                console.log('パーティーメンバーの詳細表示作成予定')
+              }}
+            />
+          </View>
+        )
+      })
+      return thumbnailURLs
+    },
+    [partyID, styles.container, uid]
+  )
+
+  if (!groups) {
+    return <LoadingPage />
+  }
+  return <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
+}
+
+const { width } = Dimensions.get('window')
+
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      width: width,
+      padding: 10,
+      backgroundColor: colors.backgrounds.primary
+    }
+  })
+
+export default PartyGroupsScreen

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native'
+import { View, Text, Image, StyleSheet, ImageSourcePropType, TouchableOpacity } from 'react-native'
 import { useStyles, useColors, MakeStyles } from '../../services/design'
 import { formatedDateFull } from '../../services/formatedDate'
 import { RoundedButton } from '../atoms'
@@ -11,6 +11,7 @@ type Props = {
   width: number
   onPressDetail: () => void
   onPressEntry: () => void
+  onPressGroups: () => void
 }
 
 const FlatDesignCard: React.FC<Props> = props => {
@@ -22,7 +23,9 @@ const FlatDesignCard: React.FC<Props> = props => {
   return (
     <View>
       <View style={styles.imageBorderRadius}>
-        <Image style={[styles.image, { width: props.width }]} source={props.uri} />
+        <TouchableOpacity onPress={props.onPressGroups}>
+          <Image style={[styles.image, { width: props.width }]} source={props.uri} />
+        </TouchableOpacity>
       </View>
       <View style={styles.description}>
         <View>
@@ -32,7 +35,7 @@ const FlatDesignCard: React.FC<Props> = props => {
         <View style={styles.buttonContainer}>
           <View style={styles.buttonWrapper}>
             <RoundedButton
-              disabled={true} // MEMO: DEMO時に押されると厄介なので、押させない。
+              disabled={false} // MEMO: DEMO時に押されると厄介なので、押させない。
               color={colors.foregrounds.onTintPrimary}
               fullWidth={false}
               width={70}

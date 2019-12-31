@@ -1,6 +1,6 @@
 import { db } from './firebase'
 import { buildParty, UpdateParty, updateDocument, createDocument, User } from '../entities'
-
+import { getGroup } from './groups'
 const partiesRef = db.collection('parties')
 
 export const getParty = async (partyID: string) => {
@@ -55,11 +55,13 @@ export const setParty = async (partyID: string, user: User) => {
   }
 }
 
+//TODO: 名前を変えてgroupsに入れたほうが良いか相談
 export const setPartyOrganizer = async (organizer: User, partyID: string, batch: firebase.firestore.WriteBatch) => {
   if (!organizer || !partyID) return
   const partyDoc = partiesRef.doc(partyID)
   const groupsRef = partyDoc.collection('groups')
-  const groupID = await getGroupID(partyID, organizer)
+  const group = await getGroup(partyID, organizer.uid)
+  const groupID = group.uid
 
   batch.set(
     groupsRef.doc(groupID),
@@ -72,6 +74,7 @@ export const setPartyOrganizer = async (organizer: User, partyID: string, batch:
   return batch
 }
 
+//TODO: 名前を変えてgroupsに入れたほうが良いか相談
 export const setPartyMembers = async (
   organizer: User,
   members: User[],
@@ -81,7 +84,8 @@ export const setPartyMembers = async (
   if (!members || !partyID) return
   const partyDoc = partiesRef.doc(partyID)
   const groupsRef = partyDoc.collection('groups')
-  const groupID = await getGroupID(partyID, organizer)
+  const group = await getGroup(partyID, organizer.uid)
+  const groupID = group.uid
   const membersRef = groupsRef.doc(groupID).collection('members')
 
   members.map(member => {
@@ -94,12 +98,4 @@ export const setPartyMembers = async (
     )
   })
   return batch
-}
-
-const getGroupID = async (partyID: string, organizer: User) => {
-  const partyDoc = partiesRef.doc(partyID)
-  const groupsRef = partyDoc.collection('groups')
-  const snapShot = await groupsRef.where('organizer', '==', organizer.uid).get()
-  const groupID = snapShot.docs[0].id
-  return groupID
 }
