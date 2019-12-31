@@ -2,15 +2,6 @@ import { db } from './firebase'
 import { buildGroup, UpdateGroup, updateDocument } from '../entities'
 const partiesRef = db.collection('parties')
 
-// const getGroupID = async (partyID: string, organizerID: string) => {
-//   const partyDoc = partiesRef.doc(partyID)
-//   const groupsRef = partyDoc.collection('groups')
-//   //MEMO: この構造だと，organizer一人一つまでしかpartyを展開できない
-//   const snapShot = await groupsRef.where('organizer', '==', organizerID).get()
-//   const groupID = snapShot.docs[0].id
-//   return groupID
-// }
-
 export const getGroup = async (partyID: string, groupUID: string) => {
   try {
     const snapShot = await partiesRef
