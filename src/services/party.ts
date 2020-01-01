@@ -2,9 +2,8 @@ import { useEffect, useState, useCallback } from 'react'
 import { useNavigation } from 'react-navigation-hooks'
 import firebase, { functions } from '../repositories/firebase'
 import { Party, buildParty } from '../entities'
-import { getUser } from '../repositories/user'
 import { useAuthState, useUIActions, useRoomActions } from '../store/hooks'
-import { getParty, setParty } from '../repositories/party'
+import { getParty } from '../repositories/party'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
@@ -44,12 +43,6 @@ export const useParty = (partyID: string) => {
   }, [partyID])
 
   return party
-}
-
-export const entryParty = async (uid: string, partyID: string) => {
-  const user = await getUser(uid)
-  if (!uid || !partyID) return
-  setParty(partyID, user)
 }
 
 export const useEntryDemoRoom = () => {

@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react'
 import { User, Group, buildGroup, UpdateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
-import { setGroup, setGroupOrganizer, setGroupMembers } from '../repositories/groups'
+import { updateGroup, setGroupOrganizer, setGroupMembers } from '../repositories/groups'
 import {
   showEntryPartyApplySunccessMessage,
   showEntryPartyApplyFailurMessage,
   showEntryPartyAlreadyApplied
 } from '../services/flashCard'
+import { getRandomID } from '../services/util'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
@@ -35,18 +36,17 @@ export const useGroups = (partyID: string) => {
   return groups
 }
 
-export const onApplyGroup = async (partyID: string, group: Group, userUID: string) => {
+export const onApplyGroup = async (partyID: string, groupID: string, group: Group, uid: string) => {
   //MEMO: OrganizerをUserとしている
   const goupAppliedUIDs = group.appliedUIDs
-  const isAppliedGroup = goupAppliedUIDs.includes(userUID)
+  const isAppliedGroup = goupAppliedUIDs.includes(uid)
   if (isAppliedGroup === true) {
     showEntryPartyAlreadyApplied()
     return
   }
 
-  group.appliedUIDs.push(userUID)
-  const updateGroup: UpdateGroup = {
-    uid: group.uid,
+  group.appliedUIDs.push(uid)
+  const _updateGroup: UpdateGroup = {
     organizerID: group.organizerID,
     organizerName: group.organizerName,
     thumbnailURL: group.thumbnailURL,
@@ -54,7 +54,7 @@ export const onApplyGroup = async (partyID: string, group: Group, userUID: strin
   }
 
   try {
-    setGroup(partyID, updateGroup)
+    updateGroup(partyID, groupID, _updateGroup)
     showEntryPartyApplySunccessMessage()
   } catch (e) {
     showEntryPartyApplyFailurMessage()
@@ -65,8 +65,9 @@ export const onApplyGroup = async (partyID: string, group: Group, userUID: strin
 export const entryGroupMembers = async (organizer: User, members: User[], partyID: string) => {
   const batch = db.batch()
   if (!members || !partyID) return
-  await setGroupOrganizer(organizer, partyID, batch)
-  await setGroupMembers(organizer, members, partyID, batch)
+  const groupID = getRandomID()
+  await setGroupOrganizer(organizer, partyID, groupID, batch)
+  await setGroupMembers(members, partyID, groupID, batch)
 
   try {
     await batch.commit()
