@@ -6,7 +6,7 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
-import { entryPartyMembers } from '../services/party'
+import { entryGroupMembers } from '../services/groups'
 import * as userRepository from '../repositories/user'
 import { LoadingPage, SearchUserPage } from '../components/pages'
 import { Thumbnail, RoundedButton } from '../components/atoms'
@@ -66,7 +66,7 @@ const PartyEntryScreen = ({ navigation }: Props) => {
   const onEntry = useCallback(() => {
     if (!enabledEntry) return
     const organizer = members[0]
-    entryPartyMembers(organizer, members, navigation.state.params.partyID)
+    entryGroupMembers(organizer, members, navigation.state.params.partyID)
     navigation.goBack()
   }, [enabledEntry, members, navigation])
 

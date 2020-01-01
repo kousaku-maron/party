@@ -1,6 +1,5 @@
 import { db } from './firebase'
 import { buildParty, UpdateParty, updateDocument, createDocument, User } from '../entities'
-import { getGroup } from './groups'
 const partiesRef = db.collection('parties')
 
 export const getParty = async (partyID: string) => {
@@ -53,49 +52,4 @@ export const setParty = async (partyID: string, user: User) => {
     console.warn(e)
     return { result: false }
   }
-}
-
-//TODO: 名前を変えてgroupsに入れたほうが良いか相談
-export const setPartyOrganizer = async (organizer: User, partyID: string, batch: firebase.firestore.WriteBatch) => {
-  if (!organizer || !partyID) return
-  const partyDoc = partiesRef.doc(partyID)
-  const groupsRef = partyDoc.collection('groups')
-  const group = await getGroup(partyID, organizer.uid)
-  const groupID = group.uid
-
-  batch.set(
-    groupsRef.doc(groupID),
-    createDocument({
-      organizerID: organizer.userID,
-      gender: organizer.gender
-    })
-  )
-
-  return batch
-}
-
-//TODO: 名前を変えてgroupsに入れたほうが良いか相談
-export const setPartyMembers = async (
-  organizer: User,
-  members: User[],
-  partyID: string,
-  batch: firebase.firestore.WriteBatch
-) => {
-  if (!members || !partyID) return
-  const partyDoc = partiesRef.doc(partyID)
-  const groupsRef = partyDoc.collection('groups')
-  const group = await getGroup(partyID, organizer.uid)
-  const groupID = group.uid
-  const membersRef = groupsRef.doc(groupID).collection('members')
-
-  members.map(member => {
-    batch.set(
-      membersRef.doc(),
-      createDocument({
-        memberID: member.userID,
-        gender: member.gender
-      })
-    )
-  })
-  return batch
 }

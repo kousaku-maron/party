@@ -1,13 +1,11 @@
 import React from 'react'
 import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native'
 import { useStyles, useColors, MakeStyles } from '../../services/design'
-import { formatedDateFull } from '../../services/formatedDate'
 import { AngularedButton } from '../atoms'
 
 type Props = {
   thumbnailURL: ImageSourcePropType
   name: string
-  date: Date
   width: number
   partyID: string
   isAppliedParty: boolean
@@ -19,7 +17,6 @@ const MaterialDesignGroupCard: React.FC<Props> = props => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
-  const date = formatedDateFull(props.date)
   return (
     <View>
       <View style={styles.imageBorderRadius}>
@@ -28,7 +25,6 @@ const MaterialDesignGroupCard: React.FC<Props> = props => {
       <View style={styles.description}>
         <View>
           <Text style={styles.name}>{props.name}</Text>
-          <Text style={styles.date}>{date}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.buttonWrapper}>
@@ -77,12 +73,6 @@ const makeStyles: MakeStyles = colors =>
       fontSize: 25,
       padding: 6,
       fontWeight: 'bold'
-    },
-    date: {
-      color: colors.foregrounds.onTintPrimary,
-      paddingRight: 6,
-      paddingLeft: 6,
-      paddingBottom: 6
     },
     description: {
       backgroundColor: colors.tints.primary.main,

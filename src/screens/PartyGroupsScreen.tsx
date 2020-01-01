@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
+import { headerNavigationOptions } from '../navigators/options'
 import { useGroups } from '../services/groups'
 import { useStyles, MakeStyles } from '../services/design'
 import { onApplyGroup } from '../services/groups'
@@ -30,8 +31,6 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
             <GroupCard
               thumbnailURL={{ uri }}
               name={group.organizerName}
-              //MEMO: 時間を入れず，日付だけの方が良いか相談
-              date={group.date}
               width={width}
               isAppliedParty={group.appliedUIDs.includes(uid)}
               onPressEntry={() => {
@@ -55,6 +54,8 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
   }
   return <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
 }
+
+PartyGroupsScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
 

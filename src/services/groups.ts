@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Group, buildGroup, UpdateGroup } from '../entities'
+import { User, Group, buildGroup, UpdateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
-import { setGroup } from '../repositories/groups'
+import { setGroup, setGroupOrganizer, setGroupMembers } from '../repositories/groups'
 import {
   showEntryPartyApplySunccessMessage,
   showEntryPartyApplyFailurMessage,
@@ -55,6 +55,21 @@ export const onApplyGroup = async (partyID: string, group: Group, userUID: strin
 
   try {
     setGroup(partyID, updateGroup)
+    showEntryPartyApplySunccessMessage()
+  } catch (e) {
+    showEntryPartyApplyFailurMessage()
+    console.warn(e)
+  }
+}
+
+export const entryGroupMembers = async (organizer: User, members: User[], partyID: string) => {
+  const batch = db.batch()
+  if (!members || !partyID) return
+  await setGroupOrganizer(organizer, partyID, batch)
+  await setGroupMembers(organizer, members, partyID, batch)
+
+  try {
+    await batch.commit()
     showEntryPartyApplySunccessMessage()
   } catch (e) {
     showEntryPartyApplyFailurMessage()
