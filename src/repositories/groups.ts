@@ -16,7 +16,6 @@ export const getGroup = async (partyID: string, groupID: string) => {
     return null
   }
 }
-
 export const updateGroup = async (partyID: string, groupID: string, group: UpdateGroup) => {
   try {
     const batch = db.batch()
