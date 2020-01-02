@@ -1,5 +1,5 @@
 import { db } from './firebase'
-import { buildGroup, UpdateGroup, updateDocument, User, createDocument } from '../entities'
+import { buildGroup, UpdateGroup, updateDocument, User, createDocument, UpdateMember, CreateGroup } from '../entities'
 const partiesRef = db.collection('parties')
 
 export const getGroup = async (partyID: string, groupID: string) => {
@@ -20,18 +20,21 @@ export const getGroup = async (partyID: string, groupID: string) => {
 export const updateGroup = async (partyID: string, groupID: string, group: UpdateGroup) => {
   try {
     const batch = db.batch()
-    batch.update(
+
+    batch.set(
       partiesRef
         .doc(partyID)
         .collection('groups')
         .doc(groupID),
       updateDocument<UpdateGroup>({
-        organizerID: group.organizerID,
+        organizerUID: group.organizerUID,
         organizerName: group.organizerName,
         thumbnailURL: group.thumbnailURL,
         appliedUIDs: group.appliedUIDs
-      })
+      }),
+      { merge: true }
     )
+
     await batch.commit()
   } catch (e) {
     console.warn(e)
@@ -39,46 +42,69 @@ export const updateGroup = async (partyID: string, groupID: string, group: Updat
   }
 }
 
-export const setGroupMembers = async (
-  members: User[],
-  partyID: string,
-  groupID: string,
-  batch: firebase.firestore.WriteBatch
-) => {
+export const setGroupMembers = async (members: User[], partyID: string, groupID: string) => {
   if (!members || !partyID) return
   const partyDoc = partiesRef.doc(partyID)
   const groupsRef = partyDoc.collection('groups')
   const membersRef = groupsRef.doc(groupID).collection('members')
+  const batch = db.batch()
 
   members.map(member => {
     batch.set(
       membersRef.doc(),
-      createDocument({
-        memberID: member.userID,
-        gender: member.gender
-      })
+      updateDocument<UpdateMember>({
+        memberUID: member.uid,
+        name: member.name,
+        thumbnailURL: member.thumbnailURL
+      }),
+      { merge: true }
     )
   })
   return batch
 }
 
-export const setGroupOrganizer = async (
-  organizer: User,
-  partyID: string,
-  groupID: string,
-  batch: firebase.firestore.WriteBatch
-) => {
+export const createGroupMembers = async (members: User[], partyID: string, groupID: string) => {
+  if (!members || !partyID) return
+  const partyDoc = partiesRef.doc(partyID)
+  const groupsRef = partyDoc.collection('groups')
+  const membersRef = groupsRef.doc(groupID).collection('members')
+  const batch = db.batch()
+
+  try {
+    members.map(member => {
+      batch.set(
+        membersRef.doc(),
+        createDocument({
+          memberID: member.userID,
+          gender: member.gender
+        }),
+        { merge: false }
+      )
+    })
+    await batch.commit()
+  } catch (e) {
+    console.warn(e)
+  }
+}
+
+export const createGroup = async (organizer: User, partyID: string, groupID: string) => {
   if (!organizer || !partyID) return
   const partyDoc = partiesRef.doc(partyID)
   const groupsRef = partyDoc.collection('groups')
+  const membersRef = groupsRef.doc(groupID).collection('members')
+  const batch = db.batch()
 
   batch.set(
-    groupsRef.doc(groupID),
-    createDocument({
-      organizerID: organizer.userID,
-      gender: organizer.gender
-    })
+    membersRef.doc(),
+    createDocument<CreateGroup>({
+      organizerUID: organizer.uid,
+      organizerName: organizer.name,
+      organizerGender: organizer.gender,
+      thumbnailURL: organizer.thumbnailURL,
+      enabled: true,
+      appliedUIDs: []
+    }),
+    { merge: false }
   )
-
   return batch
 }
