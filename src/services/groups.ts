@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { User, Group, buildGroup, UpdateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
-import { updateGroup, createGroup, createGroupMembers } from '../repositories/groups'
+import { updateGroup, setGroupOrganizer, setGroupMembers } from '../repositories/groups'
 import {
   showEntryPartyApplySunccessMessage,
   showEntryPartyApplyFailurMessage,
@@ -47,13 +47,14 @@ export const onApplyGroup = async (partyID: string, groupID: string, group: Grou
 
   group.appliedUIDs.push(uid)
   const _updateGroup: UpdateGroup = {
-    organizerUID: group.organizerUID,
+    organizerID: group.organizerID,
     organizerName: group.organizerName,
     thumbnailURL: group.thumbnailURL,
     appliedUIDs: group.appliedUIDs
   }
+
   try {
-    await updateGroup(partyID, groupID, _updateGroup)
+    updateGroup(partyID, groupID, _updateGroup)
     showEntryPartyApplySunccessMessage()
   } catch (e) {
     showEntryPartyApplyFailurMessage()
@@ -62,12 +63,14 @@ export const onApplyGroup = async (partyID: string, groupID: string, group: Grou
 }
 
 export const entryGroupMembers = async (organizer: User, members: User[], partyID: string) => {
+  const batch = db.batch()
   if (!members || !partyID) return
   const groupID = getRandomID()
+  await setGroupOrganizer(organizer, partyID, groupID, batch)
+  await setGroupMembers(members, partyID, groupID, batch)
 
   try {
-    await createGroup(organizer, partyID, groupID)
-    await createGroupMembers(members, partyID, groupID)
+    await batch.commit()
     showEntryPartyApplySunccessMessage()
   } catch (e) {
     showEntryPartyApplyFailurMessage()
