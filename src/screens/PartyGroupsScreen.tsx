@@ -19,13 +19,15 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
   const { uid } = useAuthState()
 
   const partyID = navigation.state.params.partyID
-  const groups = useGroups(partyID)
+  const { groupIDs, groups } = useGroups(partyID)
 
   const FetchGroupsThumbnail = useCallback(
-    (groups: Group[]) => {
+    (groupIDs: string[], groups: Group[]) => {
       const thumbnailURLs = groups.map((group, index) => {
         const uri = group.thumbnailURL
-        const groupID = group.id
+        //TODO: この書き方で大丈夫か確認. groupIDsもgroupも配列サイズは同じ予定ではあるが
+        //値がずれた場合どうするか...
+        const groupID = groupIDs[index]
 
         return (
           <View key={index} style={styles.container}>
@@ -35,7 +37,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
               width={width}
               isAppliedParty={group.appliedUIDs.includes(uid)}
               onPressEntry={() => {
-                onApplyGroup(partyID, groupID, group, uid)
+                onApplyGroup(uid, partyID, groupID, group)
               }}
               //TODO: パーティーメンバーの詳細表示作成予定
               onPressDetail={() => {
@@ -50,10 +52,10 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
     [partyID, styles.container, uid]
   )
 
-  if (!groups) {
+  if (!groups || !groupIDs || groups.length !== groupIDs.length) {
     return <LoadingPage />
   }
-  return <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
+  return <ScrollView>{FetchGroupsThumbnail(groupIDs, groups)}</ScrollView>
 }
 
 PartyGroupsScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)

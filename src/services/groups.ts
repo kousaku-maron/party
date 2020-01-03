@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { User, Group, buildGroup, UpdateGroup } from '../entities'
+import { User, Group, Member, buildGroup, UpdateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
 import { updateGroup, createGroup, createGroupMembers } from '../repositories/groups'
@@ -8,13 +8,15 @@ import {
   showEntryPartyApplyFailurMessage,
   showEntryPartyAlreadyApplied
 } from '../services/flashCard'
-import { getRandomID } from '../services/util'
+import _ from 'lodash'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
 
+//MEMO: userGroupsだけど，groupIDsも返すのは例外じゃないか相談
 export const useGroups = (partyID: string) => {
   const [groups, setGroups] = useState<Group[]>()
+  const [groupIDs, setgroupIDs] = useState<string[]>()
   const auth = useAuthState()
   const { user } = auth
 
@@ -23,9 +25,14 @@ export const useGroups = (partyID: string) => {
     if (!user) return
     const unsubscribe = groupsRef.where('enabled', '==', true).onSnapshot(snapShot => {
       const newGroups: Group[] = snapShot.docs.map(doc => {
-        return buildGroup(doc.id, doc.data())
+        return buildGroup(doc.data())
       })
+      const newGroupIDs: string[] = snapShot.docs.map(doc => {
+        return doc.id
+      })
+
       setGroups(newGroups)
+      setgroupIDs(newGroupIDs)
     })
 
     return () => {
@@ -33,10 +40,10 @@ export const useGroups = (partyID: string) => {
     }
   }, [partyID, user])
 
-  return groups
+  return { groupIDs, groups }
 }
 
-export const onApplyGroup = async (partyID: string, groupID: string, group: Group, uid: string) => {
+export const onApplyGroup = async (uid: string, partyID: string, groupID: string, group: Group) => {
   //MEMO: OrganizerをUserとしている
   const goupAppliedUIDs = group.appliedUIDs
   const isAppliedGroup = goupAppliedUIDs.includes(uid)
@@ -50,7 +57,7 @@ export const onApplyGroup = async (partyID: string, groupID: string, group: Grou
     organizerUID: group.organizerUID,
     organizerName: group.organizerName,
     thumbnailURL: group.thumbnailURL,
-    appliedUIDs: group.appliedUIDs
+    appliedUIDs: _.uniq([...group.appliedUIDs, uid])
   }
   try {
     await updateGroup(partyID, groupID, _updateGroup)
@@ -61,13 +68,25 @@ export const onApplyGroup = async (partyID: string, groupID: string, group: Grou
   }
 }
 
-export const entryGroupMembers = async (organizer: User, members: User[], partyID: string) => {
+export const entryGroupMembers = async (partyID: string, organizer: User, members: Member[]) => {
   if (!members || !partyID) return
-  const groupID = getRandomID()
+  //TODO: 関数作ったほうが良いのか？
+  const group: Group = {
+    organizerUID: organizer.uid,
+    organizerName: organizer.name,
+    organizerGender: organizer.gender,
+    thumbnailURL: organizer.thumbnailURL,
+    enabled: organizer.enabled,
+    appliedUIDs: []
+  }
 
   try {
-    await createGroup(organizer, partyID, groupID)
-    await createGroupMembers(members, partyID, groupID)
+    const { result, groupID } = await createGroup(partyID, group)
+    if (result === false && !groupID) {
+      showEntryPartyApplyFailurMessage()
+      return
+    }
+    await createGroupMembers(partyID, groupID, members)
     showEntryPartyApplySunccessMessage()
   } catch (e) {
     showEntryPartyApplyFailurMessage()

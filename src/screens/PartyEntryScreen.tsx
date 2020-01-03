@@ -66,7 +66,8 @@ const PartyEntryScreen = ({ navigation }: Props) => {
   const onEntry = useCallback(() => {
     if (!enabledEntry) return
     const organizer = members[0]
-    entryGroupMembers(organizer, members, navigation.state.params.partyID)
+    //TODO: 別プルリクにてmembersの型をUser[] -> Member[]
+    entryGroupMembers(navigation.state.params.partyID, organizer, members)
     navigation.goBack()
   }, [enabledEntry, members, navigation])
 
