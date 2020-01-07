@@ -11,7 +11,7 @@ export const headerNavigationOptions = (props: NavigationStackScreenProps & Cust
   const colors = props.theme === 'dark' ? palette.dark : palette.light
   return {
     headerTitle: props.title ?? 'Nomoca',
-    headerBackTitle: null,
+    headerBackTitleVisible: false,
     headerTintColor: colors.foregrounds.primary,
     headerStyle: {
       backgroundColor: colors.backgrounds.secondary
