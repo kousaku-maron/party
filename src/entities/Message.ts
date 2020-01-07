@@ -22,6 +22,7 @@ export type Message = {
   writerUID?: string
   system: boolean
   quickReplies?: QuickReplies
+  notified: boolean
 }
 
 export const buildMessage = (id: string, data: firebase.firestore.DocumentData) => {
@@ -34,14 +35,15 @@ export const buildMessage = (id: string, data: firebase.firestore.DocumentData) 
     user: data.user,
     writerUID: data.writerUID,
     system: data.system,
-    quickReplies: data.quickReplies
+    quickReplies: data.quickReplies,
+    notified: data.notified
   }
   return newMessage
 }
 
 export type CreateMessage = Pick<
   Message,
-  'text' | 'user' | 'writerUID' | 'system' | 'quickReplies' | 'imageURL' | 'videoURL'
+  'text' | 'user' | 'writerUID' | 'system' | 'quickReplies' | 'imageURL' | 'videoURL' | 'notified'
 >
 
 export type UpdateMessage = Pick<Message, 'user'>
