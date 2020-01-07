@@ -2,8 +2,7 @@ import { db } from './firebase'
 import { CreateMessage, UpdateMessage } from '../entities'
 import { createDocument, updateDocument } from '../entities'
 
-// MEMO: messagesの保存場所を一時的にparty直下にしている。
-const roomsRef = db.collection('parties')
+const roomsRef = db.collection('rooms')
 const getMessagesRef = (roomID: string) => {
   return roomsRef.doc(roomID).collection('messages')
 }
