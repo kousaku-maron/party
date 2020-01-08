@@ -1,5 +1,5 @@
 import { db } from './firebase'
-import { buildGroup, UpdateGroup, updateDocument, Member, createDocument, CreateGroup } from '../entities'
+import { buildGroup, UpdateGroup, updateDocument, User, createDocument, CreateGroup } from '../entities'
 const partiesRef = db.collection('parties')
 import { getRandomID } from '../services/util'
 
@@ -42,7 +42,7 @@ export const updateGroup = async (partyID: string, groupID: string, group: Updat
   }
 }
 
-export const setGroupMembers = async (partyID: string, groupID: string, members: Member[]) => {
+export const setGroupMembers = async (partyID: string, groupID: string, members: User[]) => {
   if (!members || !partyID) return
   const partyDoc = partiesRef.doc(partyID)
   const groupsRef = partyDoc.collection('groups')
@@ -50,16 +50,16 @@ export const setGroupMembers = async (partyID: string, groupID: string, members:
   const batch = db.batch()
   try {
     members.map(member => {
-      batch.set(membersRef.doc(), updateDocument<Member>(member), { merge: true })
+      batch.set(membersRef.doc(), updateDocument<User>(member), { merge: true })
     })
-    return { result: true, memberIDs: members.map(member => member.memberUID) }
+    return { result: true, memberIDs: members.map(member => member.uid) }
   } catch (e) {
     console.warn(e)
     return { result: false, memberIDs: null }
   }
 }
 
-export const createGroupMembers = async (partyID: string, groupID: string, members: Member[]) => {
+export const createGroupMembers = async (partyID: string, groupID: string, members: User[]) => {
   if (!members || !partyID) return
   const partyDoc = partiesRef.doc(partyID)
   const groupsRef = partyDoc.collection('groups')
@@ -70,9 +70,9 @@ export const createGroupMembers = async (partyID: string, groupID: string, membe
     members.map(member => {
       batch.set(
         membersRef.doc(),
-        createDocument<Member>({
-          memberUID: member.memberUID,
-          memberID: member.memberID,
+        createDocument<User>({
+          uid: member.uid,
+          userID: member.userID,
           enabled: member.enabled,
           isAccepted: member.isAccepted,
           isAnonymous: member.isAnonymous,
@@ -84,7 +84,7 @@ export const createGroupMembers = async (partyID: string, groupID: string, membe
       )
     })
     await batch.commit()
-    return { result: true, memberIDs: members.map(member => member.memberUID) }
+    return { result: true, memberIDs: members.map(member => member.uid) }
   } catch (e) {
     console.warn(e)
     return { result: false, memberIDs: null }

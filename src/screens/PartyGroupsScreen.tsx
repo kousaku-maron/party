@@ -25,6 +25,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
     (groups: Group[]) => {
       const thumbnailURLs = groups.map((group, index) => {
         const uri = group.thumbnailURL
+        const groupID = group.id
         return (
           <View key={index} style={styles.container}>
             <GroupCard
@@ -33,7 +34,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
               width={width}
               isAppliedParty={group.appliedUIDs.includes(uid)}
               onPressEntry={() => {
-                onApplyGroup(uid, partyID, group.groupID, group)
+                onApplyGroup(uid, partyID, groupID, group)
               }}
               //TODO: パーティーメンバーの詳細表示作成予定
               onPressDetail={() => {
