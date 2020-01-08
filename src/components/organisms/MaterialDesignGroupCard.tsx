@@ -1,52 +1,49 @@
 import React from 'react'
-import { View, Text, Image, StyleSheet, ImageSourcePropType, TouchableOpacity } from 'react-native'
+import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native'
 import { useStyles, useColors, MakeStyles } from '../../services/design'
-import { formatedDateFull } from '../../services/formatedDate'
-import { RoundedButton } from '../atoms'
+import { AngularedButton } from '../atoms'
 
 type Props = {
-  uri: ImageSourcePropType
+  thumbnailURL: ImageSourcePropType
   name: string
-  date: Date
   width: number
+  partyID: string
+  isAppliedParty: boolean
   onPressDetail: () => void
   onPressEntry: () => void
-  onPressGroups: () => void
 }
 
-const FlatDesignCard: React.FC<Props> = props => {
+const MaterialDesignGroupCard: React.FC<Props> = props => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
-
-  const date = formatedDateFull(props.date)
 
   return (
     <View>
       <View style={styles.imageBorderRadius}>
-        <TouchableOpacity onPress={props.onPressGroups}>
-          <Image style={[styles.image, { width: props.width }]} source={props.uri} />
-        </TouchableOpacity>
+        <Image style={[styles.image, { width: props.width }]} source={props.thumbnailURL} />
       </View>
       <View style={styles.description}>
         <View>
           <Text style={styles.name}>{props.name}</Text>
-          <Text style={styles.date}>{date}</Text>
         </View>
         <View style={styles.buttonContainer}>
           <View style={styles.buttonWrapper}>
-            <RoundedButton
+            <AngularedButton
+              disabled={false}
               color={colors.foregrounds.onTintPrimary}
               fullWidth={false}
               width={70}
               height={30}
               padding={6}
+              //TODO:memberの詳細を表示するようにする
               onPress={props.onPressDetail}
             >
               <Text style={styles.buttonText}>詳細</Text>
-            </RoundedButton>
+            </AngularedButton>
           </View>
           <View style={styles.buttonWrapper}>
-            <RoundedButton
+            <AngularedButton
+              disabled={props.isAppliedParty}
               color={colors.foregrounds.onTintPrimary}
               fullWidth={false}
               width={70}
@@ -54,8 +51,8 @@ const FlatDesignCard: React.FC<Props> = props => {
               padding={6}
               onPress={props.onPressEntry}
             >
-              <Text style={styles.buttonText}>参加</Text>
-            </RoundedButton>
+              <Text style={styles.buttonText}>申請</Text>
+            </AngularedButton>
           </View>
         </View>
       </View>
@@ -66,10 +63,6 @@ const FlatDesignCard: React.FC<Props> = props => {
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     imageBorderRadius: {
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0,
-      borderTopRightRadius: 16,
-      borderTopLeftRadius: 16,
       overflow: 'hidden'
     },
     image: {
@@ -81,25 +74,17 @@ const makeStyles: MakeStyles = colors =>
       padding: 6,
       fontWeight: 'bold'
     },
-    date: {
-      color: colors.foregrounds.onTintPrimary,
-      padding: 6
-    },
     description: {
       backgroundColor: colors.tints.primary.main,
       height: 80,
       justifyContent: 'space-between',
       padding: 6,
       flexDirection: 'row',
-      borderBottomLeftRadius: 16,
-      borderBottomRightRadius: 16,
-      borderTopRightRadius: 0,
-      borderTopLeftRadius: 0,
       overflow: 'hidden'
     },
     buttonContainer: {
-      display: 'flex',
-      flexDirection: 'column'
+      alignItems: 'flex-end',
+      flexDirection: 'row'
     },
     buttonWrapper: {
       padding: 3
@@ -110,4 +95,4 @@ const makeStyles: MakeStyles = colors =>
     }
   })
 
-export default FlatDesignCard
+export default MaterialDesignGroupCard
