@@ -1,5 +1,5 @@
 import React from 'react'
-import { AntDesign } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 import { View } from 'react-native'
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
   inset?: [number, number, number, number]
 }
 
-const PostIcon = ({ tintColor, focused, inset }: Props) => {
+const RoomIcon = ({ tintColor, focused, inset }: Props) => {
   if (inset) {
     return (
       <View
@@ -19,11 +19,11 @@ const PostIcon = ({ tintColor, focused, inset }: Props) => {
           paddingLeft: inset[3]
         }}
       >
-        <AntDesign name={focused ? 'pluscircle' : 'pluscircleo'} size={24} color={tintColor} />
+        <MaterialIcons name={focused ? 'chat-bubble' : 'chat-bubble-outline'} size={24} color={tintColor} />
       </View>
     )
   }
-  return <AntDesign name={focused ? 'pluscircle' : 'pluscircleo'} size={24} color={tintColor} />
+  return <MaterialIcons name={focused ? 'chat-bubble' : 'chat-bubble-outline'} size={24} color={tintColor} />
 }
 
-export default PostIcon
+export default RoomIcon

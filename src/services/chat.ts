@@ -10,8 +10,7 @@ import _ from 'lodash'
 
 const db = firebase.firestore()
 
-// MEMO: messagesの保存場所を一時的にparty直下にしている。
-const roomsRef = db.collection('parties')
+const roomsRef = db.collection('rooms')
 const getMessagesRef = (roomID: string) => {
   return roomsRef.doc(roomID).collection('messages')
 }
@@ -92,7 +91,8 @@ export const useGiftedChatTools = (roomID: string) => {
           thumbnailURL: user.thumbnailURL ?? null
         },
         writerUID: user.uid,
-        system: false
+        system: false,
+        notified: false
       }
 
       setMessage(roomID, newMessage)
@@ -108,7 +108,8 @@ export const useGiftedChatTools = (roomID: string) => {
         text: iMessage.text,
         user: systemUser,
         writerUID: systemUser.uid,
-        system: true
+        system: true,
+        notified: false
       }
 
       setMessage(roomID, newMessage)
