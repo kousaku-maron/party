@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
-import { HomeIcon, PostIcon, UserIcon } from '../components/atoms'
+import { HomeIcon, RoomIcon, UserIcon } from '../components/atoms'
 import {
   HomeScreen,
   PartyEntryScreen,
@@ -10,9 +10,9 @@ import {
   SettingScreen,
   TermsScreen,
   PrivacyScreen,
-  PostScreen,
   ChatScreen,
-  PartyGroupsScreen
+  PartyGroupsScreen,
+  RoomScreen
 } from '../screens'
 import { getTheme } from '../themes'
 import { isIPhoneX, isIPhoneXAbove, X_ABOVE_TAB_NOTCH_HEIGHT } from '../services/design'
@@ -41,9 +41,11 @@ const HomeNavigator = createStackNavigator(
   }
 )
 
-const PostNavigator = createStackNavigator(
+const RoomNavigator = createStackNavigator(
   {
-    Main: PostScreen
+    Main: RoomScreen,
+    Chat: ChatScreen,
+    User: UserScreen
   },
   {
     initialRouteName: 'Main'
@@ -81,17 +83,17 @@ const TabNavigator = createBottomTabNavigator(
         }
       }
     },
-    Post: {
-      screen: PostNavigator,
+    Room: {
+      screen: RoomNavigator,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       navigationOptions: ({ navigation }) => {
         // const tabBarVisible = getTabBarVisible({ navigation })
         return {
           tabBarIcon: ({ tintColor, focused }) => {
             if (isIPhoneX() || isIPhoneXAbove()) {
-              return PostIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
+              return RoomIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
             }
-            return PostIcon({ tintColor, focused })
+            return RoomIcon({ tintColor, focused })
           },
           tabBarVisible: true
         }

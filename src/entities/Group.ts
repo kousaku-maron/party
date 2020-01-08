@@ -1,4 +1,5 @@
 export type Group = {
+  groupID: string
   organizerUID: string
   organizerName: string
   organizerGender: string
@@ -7,8 +8,9 @@ export type Group = {
   appliedUIDs: string[]
 }
 
-export const buildGroup = (data: firebase.firestore.DocumentData) => {
+export const buildGroup = (groupID: string, data: firebase.firestore.DocumentData) => {
   const newGroup = {
+    groupID,
     organizerUID: data.organizerID,
     organizerName: data.organizerName,
     organizerGender: data.gender,
@@ -20,3 +22,4 @@ export const buildGroup = (data: firebase.firestore.DocumentData) => {
 }
 
 export type UpdateGroup = Pick<Group, 'organizerUID' | 'organizerName' | 'thumbnailURL' | 'appliedUIDs'>
+export type CreateGroup = Omit<Group, 'groupID'>
