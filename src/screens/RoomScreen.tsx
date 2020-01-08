@@ -1,10 +1,9 @@
 import React, { useCallback, useState } from 'react'
 import { NavigationStackProp } from 'react-navigation-stack'
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Dimensions, Platform } from 'react-native'
-import { RoomListItem } from '../components/organisms'
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native'
 import { isIPhoneX, isIPhoneXAbove, X_ABOVE_HEADER_NOTCH_HEIGHT, ANDROID_STATUS_BAR_HEIGHT } from '../services/design'
-import { useRoomsWithUser } from '../services/room'
 import { useStyles, MakeStyles } from '../services/design'
+import { ChatRoomListPage, SwipeCardPage } from '../components/pages'
 
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps
@@ -13,10 +12,9 @@ type Section = 'card' | 'chat'
 
 const RoomScreen = ({ navigation }: Props) => {
   const [section, setSection] = useState<Section>('chat')
-  const roomsWithUser = useRoomsWithUser()
   const styles = useStyles(makeStyles)
 
-  const onPress = useCallback(
+  const onPressRoom = useCallback(
     (roomID: string) => {
       navigation.navigate('Chat', { roomID })
     },
@@ -44,27 +42,8 @@ const RoomScreen = ({ navigation }: Props) => {
           </TouchableOpacity>
         </View>
 
-        {section === 'card' && (
-          <View>
-            <Text>card screen</Text>
-          </View>
-        )}
-
-        {section === 'chat' && (
-          <ScrollView>
-            {roomsWithUser.map(roomWithUser => (
-              <React.Fragment key={roomWithUser.id}>
-                <RoomListItem
-                  users={roomWithUser.users}
-                  onPress={() => {
-                    onPress(roomWithUser.id)
-                  }}
-                />
-                <View style={styles.divider} />
-              </React.Fragment>
-            ))}
-          </ScrollView>
-        )}
+        {section === 'card' && <SwipeCardPage />}
+        {section === 'chat' && <ChatRoomListPage onPressItem={onPressRoom} />}
       </View>
     </View>
   )
@@ -124,10 +103,6 @@ const makeStyles: MakeStyles = colors =>
     },
     tabActiveLabel: {
       color: colors.tints.primary.main
-    },
-    divider: {
-      borderBottomColor: colors.foregrounds.separator,
-      borderBottomWidth: hairlineWidth
     }
   })
 
