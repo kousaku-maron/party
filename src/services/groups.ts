@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react'
 import { InteractionManager } from 'react-native'
-import { Group, buildGroup } from '../entities'
+import { Group, buildGroup, UpdateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
+import { updateGroup } from '../repositories/groups'
+import {
+  showEntryPartyApplySunccessMessage,
+  showEntryPartyApplyFailurMessage,
+  showEntryPartyAlreadyApplied
+} from '../services/flashCard'
+import _ from 'lodash'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
@@ -31,4 +38,28 @@ export const useGroups = (partyID: string) => {
   }, [partyID, user])
 
   return groups
+}
+
+export const onApplyGroup = async (uid: string, partyID: string, groupID: string, group: Group) => {
+  //MEMO: OrganizerをUserとしている
+  const goupAppliedUIDs = group.appliedUIDs
+  const isAppliedGroup = goupAppliedUIDs.includes(uid)
+  if (isAppliedGroup === true) {
+    showEntryPartyAlreadyApplied()
+    return
+  }
+
+  const _updateGroup: UpdateGroup = {
+    organizerUID: group.organizerUID,
+    organizerName: group.organizerName,
+    thumbnailURL: group.thumbnailURL,
+    appliedUIDs: _.uniq([...group.appliedUIDs, uid])
+  }
+  try {
+    await updateGroup(partyID, groupID, _updateGroup)
+    showEntryPartyApplySunccessMessage()
+  } catch (e) {
+    showEntryPartyApplyFailurMessage()
+    console.warn(e)
+  }
 }
