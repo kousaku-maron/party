@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { InteractionManager } from 'react-native'
 import { useNavigation } from 'react-navigation-hooks'
 import firebase, { functions } from '../repositories/firebase'
 import { buildParty, Party } from '../entities'
@@ -17,17 +18,19 @@ export const useParties = () => {
   const { user } = auth
 
   useEffect(() => {
-    if (!user) return
-    const unsubscribe = partiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
-      const newParty: Party[] = snapShot.docs.map(doc => {
-        return buildParty(doc.id, doc.data())
+    InteractionManager.runAfterInteractions(() => {
+      if (!user) return
+      const unsubscribe = partiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
+        const newParty: Party[] = snapShot.docs.map(doc => {
+          return buildParty(doc.id, doc.data())
+        })
+        setParties(newParty)
       })
-      setParties(newParty)
-    })
 
-    return () => {
-      unsubscribe()
-    }
+      return () => {
+        unsubscribe()
+      }
+    })
   }, [user])
 
   return parties
@@ -35,6 +38,21 @@ export const useParties = () => {
 
 export const useParty = (partyID: string) => {
   const [party, setParty] = useState<Party>(null)
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      if (!partyID) return
+      const partyRef = partiesRef.doc(partyID)
+      const unsubscribe = partyRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
+        const party = buildParty(doc.id, doc.data())
+        setParty(party)
+      })
+      return () => {
+        unsubscribe()
+      }
+    })
+  }, [partyID])
+
   useEffect(() => {
     const asyncEffect = async () => {
       if (!partyID) return

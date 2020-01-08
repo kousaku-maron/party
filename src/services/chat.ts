@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
+import { InteractionManager } from 'react-native'
 import firebase, { functions } from '../repositories/firebase'
 import { buildMessage, Message, CreateMessage, systemUser } from '../entities'
 import { setMessage } from '../repositories/message'
@@ -18,31 +19,33 @@ export const useMessages = (roomID: string) => {
   const [messages, setMessages] = useState<Message[]>()
 
   useEffect(() => {
-    const messagesRef = getMessagesRef(roomID).orderBy('createdAt', 'desc')
+    InteractionManager.runAfterInteractions(() => {
+      const messagesRef = getMessagesRef(roomID).orderBy('createdAt', 'desc')
 
-    // MEMO: DEMO時に暴れて、アクセス制限かけられるほど投稿されると困るので、最新の30メッセージのみ取得する仕様にしている。
-    const unsubscribe = messagesRef.limit(30).onSnapshot({
-      next: (snapshot: firebase.firestore.QuerySnapshot) => {
-        const messages = snapshot.docs
-          .filter(doc => doc.data().createdAt) // message送信後、一瞬createdAtがnullになるのでフィルタで弾く。
-          .filter(doc => doc.data().enabled ?? true) // enabledの項目がない場合も考慮して、フィルタリングさせている。
-          .map(doc => {
-            const message = buildMessage(doc.id, doc.data())
-            return message
-          })
-        setMessages(messages)
-      },
-      error: (error: Error) => {
-        console.warn(error)
-      },
-      complete: () => {
-        // console.info('complete messages onSnaoshot.')
+      // MEMO: DEMO時に暴れて、アクセス制限かけられるほど投稿されると困るので、最新の30メッセージのみ取得する仕様にしている。
+      const unsubscribe = messagesRef.limit(30).onSnapshot({
+        next: (snapshot: firebase.firestore.QuerySnapshot) => {
+          const messages = snapshot.docs
+            .filter(doc => doc.data().createdAt) // message送信後、一瞬createdAtがnullになるのでフィルタで弾く。
+            .filter(doc => doc.data().enabled ?? true) // enabledの項目がない場合も考慮して、フィルタリングさせている。
+            .map(doc => {
+              const message = buildMessage(doc.id, doc.data())
+              return message
+            })
+          setMessages(messages)
+        },
+        error: (error: Error) => {
+          console.warn(error)
+        },
+        complete: () => {
+          // console.info('complete messages onSnaoshot.')
+        }
+      })
+
+      return () => {
+        unsubscribe()
       }
     })
-
-    return () => {
-      unsubscribe()
-    }
   }, [roomID])
 
   return messages
