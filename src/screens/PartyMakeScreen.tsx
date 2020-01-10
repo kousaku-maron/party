@@ -5,7 +5,7 @@ import { headerNavigationOptions } from '../navigators/options'
 import { User, CreateGroup } from '../entities'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
-import { onCreatePartyGroup } from '../services/groups'
+import { onCreateGroup } from '../services/groups'
 import { useAuthState } from '../store/hooks'
 import * as userRepository from '../repositories/user'
 import { LoadingPage, SearchUserPage } from '../components/pages'
@@ -76,7 +76,7 @@ const PartyMakeScreen = ({ navigation }: Props) => {
         enabled: true,
         appliedUIDs: []
       }
-      onCreatePartyGroup(partyID, newGroup, members)
+      onCreateGroup(partyID, newGroup, members)
       navigation.goBack()
     },
     [enabledCreate, members, navigation, partyID]

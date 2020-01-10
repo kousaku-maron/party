@@ -58,11 +58,11 @@ export const onApplyGroup = async (uid: string, partyID: string, groupID: string
   }
   try {
     await updateGroup(partyID, groupID, _updateGroup)
-    showEntryPartyApplySunccessMessage()
   } catch (e) {
     showEntryPartyApplyFailurMessage()
     console.warn(e)
   }
+  showEntryPartyApplySunccessMessage()
 }
 
 export const onCreatePartyGroup = async (partyID: string, group: CreateGroup, members: User[]) => {
@@ -79,7 +79,6 @@ export const onCreatePartyGroup = async (partyID: string, group: CreateGroup, me
       showCreatePartyGroupFailurMessage()
       return
     }
-    console.log(resultCreateGroup)
 
     if (resultCreateGroup === true && resultCreateGroupMembers === true) {
       showCreatePartyGroupSunccessMessage()

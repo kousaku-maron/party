@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
@@ -21,11 +21,16 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
   const partyID = navigation.state.params.partyID
   const groups = useGroups(partyID)
 
+  const [isCreatedGroup, setIsCreatedGroup] = useState<boolean>(false)
+
   const FetchGroupsThumbnail = useCallback(
     (groups: Group[]) => {
       const thumbnailURLs = groups.map((group, index) => {
         const uri = group.thumbnailURL
         const groupID = group.id
+        if (group.organizerUID === uid && isCreatedGroup === false) {
+          setIsCreatedGroup(true)
+        }
         return (
           <View key={index} style={styles.thumbnailContainer}>
             <GroupCard
@@ -46,7 +51,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
       })
       return thumbnailURLs
     },
-    [partyID, styles.thumbnailContainer, uid]
+    [isCreatedGroup, partyID, styles.thumbnailContainer, uid]
   )
 
   if (!groups) {
@@ -57,6 +62,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
       <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
       <View style={styles.entryButtonWrapper}>
         <CirclePlusFab
+          disabled={isCreatedGroup}
           onPress={() => {
             navigation.navigate('PartyMake', { uid, partyID })
           }}
