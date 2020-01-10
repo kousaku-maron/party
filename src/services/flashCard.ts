@@ -80,6 +80,22 @@ export const showQuickRepliedSuccessMessage = () => {
   })
 }
 
+export const showCreatePartyGroupSunccessMessage = () => {
+  showMessage({
+    message: 'パーティーを作成しました',
+    type: 'success',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showCreatePartyGroupFailurMessage = () => {
+  showMessage({
+    message: 'パーティーの作成に失敗しました',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
 const styles = {
   flashCardMessage: {
     fontSize: 14

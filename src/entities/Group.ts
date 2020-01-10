@@ -11,9 +11,9 @@ export type Group = {
 export const buildGroup = (id: string, data: firebase.firestore.DocumentData) => {
   const newGroup = {
     id,
-    organizerUID: data.organizerID,
+    organizerUID: data.organizerUID,
     organizerName: data.organizerName,
-    organizerGender: data.gender,
+    organizerGender: data.organizerGender,
     thumbnailURL: data.thumbnailURL,
     enabled: data.enabled,
     appliedUIDs: data.appliedUIDs

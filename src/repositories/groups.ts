@@ -2,7 +2,8 @@ import { db } from './firebase'
 import { buildGroup, UpdateGroup, updateDocument, User, createDocument, CreateGroup } from '../entities'
 const partiesRef = db.collection('parties')
 import { getRandomID } from '../services/util'
-
+const noUserThumbnail =
+  'https://firebasestorage.googleapis.com/v0/b/insta-693eb.appspot.com/o/users%2Fno_ser%2Fno_user.png?alt=media&token=e12d3a21-fd74-460d-bbf3-ea8175a7f50d'
 export const getGroup = async (partyID: string, groupID: string) => {
   try {
     const snapShot = await partiesRef
@@ -78,44 +79,44 @@ export const createGroupMembers = async (partyID: string, groupID: string, membe
           isAnonymous: member.isAnonymous,
           name: member.name,
           gender: member.gender,
-          thumbnailURL: member.thumbnailURL
+          thumbnailURL: member.thumbnailURL ?? noUserThumbnail
         }),
         { merge: false }
       )
     })
     await batch.commit()
-    return { result: true, memberIDs: members.map(member => member.uid) }
+    return { resultCreateGroupMembers: true, memberIDs: members.map(member => member.uid) }
   } catch (e) {
     console.warn(e)
-    return { result: false, memberIDs: null }
+    return { resultCreateGroupMembers: false, memberIDs: null }
   }
 }
 
 export const createGroup = async (partyID: string, group: CreateGroup) => {
   const groupID = getRandomID()
-  if (!partyID || !groupID || group) return
+  if (!partyID || !groupID || !group) return
+
   try {
     const partyDoc = partiesRef.doc(partyID)
     const groupsRef = partyDoc.collection('groups')
-    const membersRef = groupsRef.doc(groupID).collection('members')
     const batch = db.batch()
 
     batch.set(
-      membersRef.doc(),
+      groupsRef.doc(groupID),
       createDocument<CreateGroup>({
         organizerUID: group.organizerUID,
         organizerName: group.organizerName,
         organizerGender: group.organizerGender,
-        thumbnailURL: group.thumbnailURL,
+        thumbnailURL: group.thumbnailURL ?? noUserThumbnail,
         enabled: true,
-        appliedUIDs: []
+        appliedUIDs: ['']
       }),
       { merge: false }
     )
     await batch.commit()
-    return { result: true, groupID }
+    return { resultCreateGroup: true, groupID }
   } catch (e) {
     console.warn(e)
-    return { result: false, groupID: null }
+    return { resultCreateGroup: false, groupID: null }
   }
 }

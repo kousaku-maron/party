@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { InteractionManager } from 'react-native'
-import { Group, buildGroup, UpdateGroup } from '../entities'
+import { User, Group, buildGroup, UpdateGroup, CreateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
-import { updateGroup } from '../repositories/groups'
+import { updateGroup, createGroup, createGroupMembers } from '../repositories/groups'
 import {
   showEntryPartyApplySunccessMessage,
   showEntryPartyApplyFailurMessage,
-  showEntryPartyAlreadyApplied
+  showEntryPartyAlreadyApplied,
+  showCreatePartyGroupSunccessMessage,
+  showCreatePartyGroupFailurMessage
 } from '../services/flashCard'
 import _ from 'lodash'
 
@@ -41,7 +43,6 @@ export const useGroups = (partyID: string) => {
 }
 
 export const onApplyGroup = async (uid: string, partyID: string, groupID: string, group: Group) => {
-  //MEMO: OrganizerをUserとしている
   const goupAppliedUIDs = group.appliedUIDs
   const isAppliedGroup = goupAppliedUIDs.includes(uid)
   if (isAppliedGroup === true) {
@@ -53,13 +54,38 @@ export const onApplyGroup = async (uid: string, partyID: string, groupID: string
     organizerUID: group.organizerUID,
     organizerName: group.organizerName,
     thumbnailURL: group.thumbnailURL,
-    appliedUIDs: _.uniq([...group.appliedUIDs, uid])
+    appliedUIDs: _.uniq([...group.appliedUIDs.filter(_appliedUID => _appliedUID !== ''), uid])
   }
   try {
     await updateGroup(partyID, groupID, _updateGroup)
     showEntryPartyApplySunccessMessage()
   } catch (e) {
     showEntryPartyApplyFailurMessage()
+    console.warn(e)
+  }
+}
+
+export const onCreatePartyGroup = async (partyID: string, group: CreateGroup, members: User[]) => {
+  try {
+    const { resultCreateGroup, groupID } = await createGroup(partyID, group)
+    if (resultCreateGroup === false) {
+      showCreatePartyGroupFailurMessage()
+      return
+    }
+
+    const { resultCreateGroupMembers } = await createGroupMembers(partyID, groupID, members)
+
+    if (resultCreateGroupMembers === false) {
+      showCreatePartyGroupFailurMessage()
+      return
+    }
+    console.log(resultCreateGroup)
+
+    if (resultCreateGroup === true && resultCreateGroupMembers === true) {
+      showCreatePartyGroupSunccessMessage()
+    }
+  } catch (e) {
+    showCreatePartyGroupFailurMessage()
     console.warn(e)
   }
 }

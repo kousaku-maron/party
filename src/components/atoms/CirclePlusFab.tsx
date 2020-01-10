@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
-import { TouchableOpacity, GestureResponderEvent, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-native'
 import { useColors } from '../../services/design'
+import { AntDesign } from '@expo/vector-icons'
 
 type Props = {
   color?: string
@@ -10,14 +11,7 @@ type Props = {
   padding?: number
 }
 
-const CirclePlusButton: React.FC<Props> = ({
-  color,
-  inactiveColor,
-  disabled = false,
-  onPress,
-  children,
-  padding = 12
-}) => {
+const CirclePlusFab: React.FC<Props> = ({ color, inactiveColor, disabled = false, onPress, children }) => {
   const colors = useColors()
 
   const _color = useMemo(() => {
@@ -43,7 +37,6 @@ const CirclePlusButton: React.FC<Props> = ({
           width: 48,
           height: 48,
           borderRadius: 24,
-          padding: padding,
           shadowOffset: { width: 1, height: 1 },
           shadowColor: colors.foregrounds.primary,
           shadowOpacity: 0.3
@@ -52,22 +45,7 @@ const CirclePlusButton: React.FC<Props> = ({
       disabled={disabled}
       onPress={onPress}
     >
-      <View
-        style={[
-          styles.verticalLine,
-          {
-            backgroundColor: colors.tints.primary.light
-          }
-        ]}
-      />
-      <View
-        style={[
-          styles.horizontalLine,
-          {
-            backgroundColor: colors.tints.primary.light
-          }
-        ]}
-      />
+      <AntDesign name="plus" size={32} color={colors.tints.primary.light} style={{ justifyContent: 'center' }} />
       {children}
     </TouchableOpacity>
   )
@@ -79,16 +57,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row'
-  },
-  verticalLine: {
-    height: 6,
-    width: 32
-  },
-  horizontalLine: {
-    height: 32,
-    width: 6,
-    position: 'absolute'
   }
 })
 
-export default CirclePlusButton
+export default CirclePlusFab

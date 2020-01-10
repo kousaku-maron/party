@@ -2,14 +2,13 @@ import React, { useCallback } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { useGroups } from '../services/groups'
+import { useGroups, onApplyGroup } from '../services/groups'
 import { useStyles, MakeStyles } from '../services/design'
-import { onApplyGroup } from '../services/groups'
 import { LoadingPage } from '../components/pages'
 import { GroupCard } from '../components/organisms'
 import { Group } from '../entities'
 import { useAuthState } from '../store/hooks'
-import { CirclePlusButton } from '../components/atoms'
+import { CirclePlusFab } from '../components/atoms'
 
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps
@@ -57,7 +56,11 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
       <View style={styles.entryButtonWrapper}>
-        <CirclePlusButton></CirclePlusButton>
+        <CirclePlusFab
+          onPress={() => {
+            navigation.navigate('PartyMake', { uid, partyID })
+          }}
+        ></CirclePlusFab>
       </View>
     </View>
   )

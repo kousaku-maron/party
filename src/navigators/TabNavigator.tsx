@@ -12,6 +12,7 @@ import {
   PrivacyScreen,
   ChatScreen,
   PartyGroupsScreen,
+  PartyMakeScreen,
   RoomScreen
 } from '../screens'
 import { getTheme } from '../themes'
@@ -32,6 +33,7 @@ const HomeNavigator = createStackNavigator(
     Main: HomeScreen,
     PartyEntry: PartyEntryScreen,
     PartyDetail: PartyDetailScreen,
+    PartyMake: PartyMakeScreen,
     PartyGroups: PartyGroupsScreen,
     Chat: ChatScreen,
     User: UserScreen
