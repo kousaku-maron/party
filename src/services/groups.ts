@@ -54,7 +54,7 @@ export const onApplyGroup = async (uid: string, partyID: string, groupID: string
     organizerUID: group.organizerUID,
     organizerName: group.organizerName,
     thumbnailURL: group.thumbnailURL,
-    appliedUIDs: _.uniq([...group.appliedUIDs, uid])
+    appliedUIDs: _.uniq([...group.appliedUIDs.filter(_appliedUID => _appliedUID !== ''), uid])
   }
   try {
     await updateGroup(partyID, groupID, _updateGroup)

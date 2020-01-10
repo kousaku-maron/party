@@ -109,7 +109,7 @@ export const createGroup = async (partyID: string, group: CreateGroup) => {
         organizerGender: group.organizerGender,
         thumbnailURL: group.thumbnailURL ?? noUserThumbnail,
         enabled: true,
-        appliedUIDs: []
+        appliedUIDs: ['']
       }),
       { merge: false }
     )
