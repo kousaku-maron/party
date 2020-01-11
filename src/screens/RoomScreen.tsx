@@ -69,13 +69,12 @@ const APPBAR_HEIGHT = Platform.select({
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
-      paddingTop: TOP_SPACE,
+      position: 'relative',
       width: '100%',
       height: '100%'
     },
     inner: {
-      position: 'relative',
-      paddingTop: APPBAR_HEIGHT,
+      paddingTop: APPBAR_HEIGHT + TOP_SPACE,
       width: '100%',
       height: '100%',
       display: 'flex',
@@ -86,8 +85,9 @@ const makeStyles: MakeStyles = colors =>
       position: 'absolute',
       display: 'flex',
       flexDirection: 'row',
+      paddingTop: TOP_SPACE,
       width: fullWidth,
-      height: APPBAR_HEIGHT,
+      height: APPBAR_HEIGHT + TOP_SPACE,
       backgroundColor: colors.backgrounds.secondary,
       borderBottomColor: colors.foregrounds.separator,
       borderBottomWidth: hairlineWidth,
