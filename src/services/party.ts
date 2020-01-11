@@ -2,12 +2,9 @@ import { useEffect, useState, useCallback } from 'react'
 import { InteractionManager } from 'react-native'
 import { useNavigation } from 'react-navigation-hooks'
 import firebase, { functions } from '../repositories/firebase'
-import { buildParty, Party } from '../entities'
-import { getUser } from '../repositories/user'
-import { User } from '../entities'
-import { showEntryPartyApplySunccessMessage, showEntryPartyApplyFailurMessage } from '../services/flashCard'
+import { Party, buildParty } from '../entities'
 import { useAuthState, useUIActions, useRoomActions } from '../store/hooks'
-import { getParty, setParty, setPartyMembers, setPartyOrganizer } from '../repositories/party'
+import { getParty } from '../repositories/party'
 
 const db = firebase.firestore()
 const partiesRef = db.collection('parties')
@@ -66,12 +63,6 @@ export const useParty = (partyID: string) => {
   return party
 }
 
-export const entryParty = async (uid: string, partyID: string) => {
-  const user = await getUser(uid)
-  if (!uid || !partyID) return
-  setParty(partyID, user)
-}
-
 export const useEntryDemoRoom = () => {
   const { user } = useAuthState()
   const { openLoadingModal, closeLoadingModal } = useUIActions()
@@ -113,20 +104,5 @@ export const entryDemoParty = async (partyID: string) => {
   } catch (e) {
     console.warn(e)
     return { success: false, error: e }
-  }
-}
-
-export const entryPartyMembers = async (organizer: User, members: User[], partyID: string) => {
-  const batch = db.batch()
-  if (!members || !partyID) return
-  await setPartyOrganizer(organizer, partyID, batch)
-  await setPartyMembers(organizer, members, partyID, batch)
-
-  try {
-    await batch.commit()
-    showEntryPartyApplySunccessMessage()
-  } catch (e) {
-    showEntryPartyApplyFailurMessage()
-    console.warn(e)
   }
 }

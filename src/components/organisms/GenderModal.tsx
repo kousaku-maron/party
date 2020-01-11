@@ -30,7 +30,6 @@ const GenderModal: React.FC<Props> = props => {
         selectedValue={genderVal}
         onValueChange={itemValue => {
           setGenderVal(itemValue)
-          console.log(itemValue)
         }}
       >
         <Picker.Item label="女性" value={'female'} />

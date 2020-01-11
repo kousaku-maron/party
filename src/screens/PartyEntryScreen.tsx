@@ -6,7 +6,6 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
-import { entryPartyMembers } from '../services/party'
 import * as userRepository from '../repositories/user'
 import { LoadingPage, SearchUserPage } from '../components/pages'
 import { Thumbnail, RoundedButton } from '../components/atoms'
@@ -65,10 +64,10 @@ const PartyEntryScreen = ({ navigation }: Props) => {
 
   const onEntry = useCallback(() => {
     if (!enabledEntry) return
-    const organizer = members[0]
-    entryPartyMembers(organizer, members, navigation.state.params.partyID)
+    //TODO: entryGroupMembers(navigation.state.params.partyID, organizer, members)作成
+    //membersの型をUser[] -> Member[]
     navigation.goBack()
-  }, [enabledEntry, members, navigation])
+  }, [enabledEntry, navigation])
 
   useEffect(() => {
     const fetchMyUser = async () => {
