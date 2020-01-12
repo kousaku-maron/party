@@ -2550,11 +2550,6 @@ crypto-js@^3.1.9-1:
   resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
   integrity sha1-/aGedh/Ad+Af+/3G6f38WeiAbNg=
 
-crypto@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/crypto/-/crypto-1.0.1.tgz#2af1b7cad8175d24c8a1b0778255794a21803037"
-  integrity sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==
-
 css-in-js-utils@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/css-in-js-utils/-/css-in-js-utils-2.0.1.tgz#3b472b398787291b47cfe3e44fecfdd9e914ba99"
@@ -3109,6 +3104,11 @@ expo-constants@~8.0.0:
   integrity sha512-NGRwSWfhwNFA9WVLXwqnSDPJJ4DdXTqEkl9Fr9PcyW5VCoFgz7uke256E1YZsYhOE0Ph365lu/5jjZs+MRmRog==
   dependencies:
     ua-parser-js "^0.7.19"
+
+expo-crypto@~8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/expo-crypto/-/expo-crypto-8.0.0.tgz#2aeab604cfced71e4be25cd7daf01cc8c5b3dace"
+  integrity sha512-4oOJDp+3IFvLoTp5PQCeJEBtdBxqYTb9pXAtPwF9KKQCtTuWFM/OG9GQ9lmaWY+oJU8wE3WK8Oplmlf5F8tTrg==
 
 expo-error-recovery@~1.0.0:
   version "1.0.0"
