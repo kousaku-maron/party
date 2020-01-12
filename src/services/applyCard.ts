@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { InteractionManager } from 'react-native'
 import firebase from '../repositories/firebase'
 import { ApplyCard, buildApplyCard } from '../entities'
 import { useAuthState } from '../store/hooks'
+import { useTinderSwipeAnimation } from '../services/swipeAnimation'
 
 const db = firebase.firestore()
 
@@ -15,7 +16,7 @@ const getApplyCardsRef = (uid: string) => {
   return applyCardsRef
 }
 
-export const useApplyCards = () => {
+export const useAppliedCards = () => {
   const [cards, setCards] = useState<ApplyCard[]>()
   const auth = useAuthState()
   const { user } = auth
@@ -38,4 +39,29 @@ export const useApplyCards = () => {
   }, [user])
 
   return cards
+}
+
+export const useReplyToAppliedCard = () => {
+  const onApprove = useCallback(() => {
+    // delete card
+    // create room
+    console.info('delete card, create room')
+  }, [])
+
+  const onReject = useCallback(() => {
+    // delete card
+    console.info('delete card')
+  }, [])
+
+  return { onApprove, onReject }
+}
+
+export const useSwipeApplyCard = () => {
+  const { onApprove, onReject } = useReplyToAppliedCard()
+  const { panHandlers, targetStyle } = useTinderSwipeAnimation({
+    onSwipeLeft: onApprove,
+    onSwipeRight: onReject
+  })
+
+  return { panHandlers, targetStyle }
 }
