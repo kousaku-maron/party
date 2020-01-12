@@ -1,9 +1,12 @@
 import { useEffect, useState, useCallback } from 'react'
 import { InteractionManager } from 'react-native'
 import firebase from '../repositories/firebase'
-import { ApplyCard, buildApplyCard } from '../entities'
+import { ApplyCard, buildApplyCard, CreateRoom } from '../entities'
 import { useAuthState } from '../store/hooks'
 import { useTinderSwipeAnimation } from '../services/swipeAnimation'
+import { deleteAppliedCard } from '../repositories/appliedCard'
+import { createRoom } from '../repositories/room'
+import _ from 'lodash'
 
 const db = firebase.firestore()
 
@@ -27,7 +30,7 @@ export const useAppliedCards = () => {
       const applyCardsRef = getApplyCardsRef(user.uid)
       const unsubscribe = applyCardsRef.onSnapshot(snapShot => {
         const newApplyCards: ApplyCard[] = snapShot.docs.map(doc => {
-          return buildApplyCard(doc.data())
+          return buildApplyCard(doc.id, doc.data())
         })
         setCards(newApplyCards)
       })
@@ -42,25 +45,32 @@ export const useAppliedCards = () => {
 }
 
 export const useReplyToAppliedCard = () => {
-  const onApprove = useCallback(() => {
-    // delete card
-    // create room
-    console.info('delete card, create room')
+  const onApprove = useCallback((uid: string, card: ApplyCard) => {
+    deleteAppliedCard(uid, card.id)
+
+    const room: CreateRoom = {
+      enabled: true,
+      roomHash: 'roomHashtemp',
+      entryUIDs: _.uniq([uid, ...card.users.map(user => user.uid)])
+    }
+
+    createRoom(room)
   }, [])
 
-  const onReject = useCallback(() => {
-    // delete card
-    console.info('delete card')
+  const onReject = useCallback((uid: string, card: ApplyCard) => {
+    deleteAppliedCard(uid, card.id)
   }, [])
 
   return { onApprove, onReject }
 }
 
-export const useSwipeApplyCard = () => {
+// MEMO: hooks利用時の引数に変化が生まれないようにするために、uidを引数にとるようにしている。
+//       スワイプ設計を見直す。
+export const useSwipeApplyCard = (uid: string, card: ApplyCard) => {
   const { onApprove, onReject } = useReplyToAppliedCard()
   const { panHandlers, targetStyle } = useTinderSwipeAnimation({
-    onSwipeLeft: onApprove,
-    onSwipeRight: onReject
+    onSwipeLeft: () => onReject(uid, card),
+    onSwipeRight: () => onApprove(uid, card)
   })
 
   return { panHandlers, targetStyle }
