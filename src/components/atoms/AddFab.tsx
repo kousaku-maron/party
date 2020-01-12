@@ -23,7 +23,10 @@ const AddFab: React.FC<Props> = ({ color, disabled = false, onPress, children, s
           backgroundColor: color ?? colors.backgrounds.tertiary,
           width: size,
           height: size,
-          borderRadius: size / 2
+          borderRadius: size / 2,
+          shadowOffset: { width: 1, height: 1 },
+          shadowColor: colors.foregrounds.primary,
+          shadowOpacity: 0.3
         }
       ]}
       disabled={disabled}
