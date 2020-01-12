@@ -6,7 +6,7 @@ import { useAuthState } from '../store/hooks'
 import { useTinderSwipeAnimation } from '../services/swipeAnimation'
 import { deleteAppliedCard } from '../repositories/appliedCard'
 import { createRoom } from '../repositories/room'
-import { createHash } from 'crypto'
+import * as Crypto from 'expo-crypto'
 import _ from 'lodash'
 
 const db = firebase.firestore()
@@ -46,7 +46,7 @@ export const useAppliedCards = () => {
 }
 
 export const useReplyToAppliedCard = () => {
-  const onApprove = useCallback((uid: string, card: ApplyCard) => {
+  const onApprove = useCallback(async (uid: string, card: ApplyCard) => {
     deleteAppliedCard(uid, card.id)
 
     const entryUIDs = _.uniq([uid, ...card.users.map(user => user.uid)])
@@ -56,13 +56,13 @@ export const useReplyToAppliedCard = () => {
       .sort()
       .join('')
 
-    const roomHash = createHash('sha256')
-      .update(baseStr, 'utf8')
-      .digest('hex')
+    const digest = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, baseStr, {
+      encoding: Crypto.CryptoEncoding.HEX
+    })
 
     const room: CreateRoom = {
       enabled: true,
-      roomHash,
+      roomHash: digest,
       entryUIDs
     }
 
