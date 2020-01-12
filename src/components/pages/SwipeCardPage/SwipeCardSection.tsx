@@ -3,6 +3,7 @@ import { View, Text, Animated, StyleSheet, Dimensions } from 'react-native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useStyles, MakeStyles } from '../../../services/design'
 import { useSwipeApplyCard } from '../../../services/applyCard'
+import { useAuthState } from '../../../store/hooks'
 import { Thumbnail } from '../../atoms'
 import { ApplyCard } from '../../../entities'
 
@@ -20,9 +21,10 @@ type Props = {
 }
 
 export const SwipeCardSection = ({ card, swipeable = false }: Props) => {
+  const { uid } = useAuthState()
   const styles = useStyles(makeStyles)
   const insets = useSafeArea()
-  const { panHandlers, targetStyle } = useSwipeApplyCard()
+  const { panHandlers, targetStyle } = useSwipeApplyCard(uid, card)
 
   if (swipeable) {
     return (
