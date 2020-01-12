@@ -65,26 +65,31 @@ export const onApplyGroup = async (uid: string, partyID: string, groupID: string
   showEntryPartyApplySunccessMessage()
 }
 
-export const onCreatePartyGroup = async (partyID: string, group: CreateGroup, members: User[]) => {
+export const onCreateGroup = async (partyID: string, group: CreateGroup, members: User[]) => {
   try {
-    const { resultCreateGroup, groupID } = await createGroup(partyID, group)
-    if (resultCreateGroup === false) {
+    const setMembers: User[] = members.map(member => {
+      const setMember: User = {
+        uid: member.uid,
+        userID: member.userID,
+        enabled: member.enabled,
+        isAccepted: member.isAccepted,
+        isAnonymous: member.isAnonymous,
+        name: member.name,
+        gender: member.gender,
+        thumbnailURL: member.thumbnailURL ?? 'null'
+      }
+      return setMember
+    })
+    const { result: resultCreateGroup, groupID } = await createGroup(partyID, group)
+    const { result: resultCreateGroupMembers } = await createGroupMembers(partyID, groupID, setMembers)
+
+    if (resultCreateGroupMembers === false && resultCreateGroup === false) {
       showCreatePartyGroupFailurMessage()
       return
-    }
-
-    const { resultCreateGroupMembers } = await createGroupMembers(partyID, groupID, members)
-
-    if (resultCreateGroupMembers === false) {
-      showCreatePartyGroupFailurMessage()
-      return
-    }
-
-    if (resultCreateGroup === true && resultCreateGroupMembers === true) {
-      showCreatePartyGroupSunccessMessage()
     }
   } catch (e) {
     showCreatePartyGroupFailurMessage()
     console.warn(e)
   }
+  showCreatePartyGroupSunccessMessage()
 }

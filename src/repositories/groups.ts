@@ -1,9 +1,8 @@
 import { db } from './firebase'
 import { buildGroup, UpdateGroup, updateDocument, User, createDocument, CreateGroup } from '../entities'
-const partiesRef = db.collection('parties')
 import { getRandomID } from '../services/util'
-const noUserThumbnail =
-  'https://firebasestorage.googleapis.com/v0/b/insta-693eb.appspot.com/o/users%2Fno_ser%2Fno_user.png?alt=media&token=e12d3a21-fd74-460d-bbf3-ea8175a7f50d'
+
+const partiesRef = db.collection('parties')
 export const getGroup = async (partyID: string, groupID: string) => {
   try {
     const snapShot = await partiesRef
@@ -27,12 +26,7 @@ export const updateGroup = async (partyID: string, groupID: string, group: Updat
         .doc(partyID)
         .collection('groups')
         .doc(groupID),
-      updateDocument<UpdateGroup>({
-        organizerUID: group.organizerUID,
-        organizerName: group.organizerName,
-        thumbnailURL: group.thumbnailURL,
-        appliedUIDs: group.appliedUIDs
-      }),
+      updateDocument<UpdateGroup>(group),
       { merge: true }
     )
 
@@ -53,10 +47,10 @@ export const setGroupMembers = async (partyID: string, groupID: string, members:
     members.map(member => {
       batch.set(membersRef.doc(), updateDocument<User>(member), { merge: true })
     })
-    return { result: true, memberIDs: members.map(member => member.uid) }
+    return { result: true, ids: members.map(member => member.uid) }
   } catch (e) {
     console.warn(e)
-    return { result: false, memberIDs: null }
+    return { result: false, ids: null }
   }
 }
 
@@ -66,29 +60,15 @@ export const createGroupMembers = async (partyID: string, groupID: string, membe
   const groupsRef = partyDoc.collection('groups')
   const membersRef = groupsRef.doc(groupID).collection('members')
   const batch = db.batch()
-
   try {
     members.map(member => {
-      batch.set(
-        membersRef.doc(),
-        createDocument<User>({
-          uid: member.uid,
-          userID: member.userID,
-          enabled: member.enabled,
-          isAccepted: member.isAccepted,
-          isAnonymous: member.isAnonymous,
-          name: member.name,
-          gender: member.gender,
-          thumbnailURL: member.thumbnailURL ?? noUserThumbnail
-        }),
-        { merge: false }
-      )
+      batch.set(membersRef.doc(), createDocument<User>(member), { merge: false })
     })
     await batch.commit()
-    return { resultCreateGroupMembers: true, memberIDs: members.map(member => member.uid) }
+    return { result: true, ids: members.map(member => member.uid) }
   } catch (e) {
     console.warn(e)
-    return { resultCreateGroupMembers: false, memberIDs: null }
+    return { result: false, ids: null }
   }
 }
 
@@ -101,22 +81,11 @@ export const createGroup = async (partyID: string, group: CreateGroup) => {
     const groupsRef = partyDoc.collection('groups')
     const batch = db.batch()
 
-    batch.set(
-      groupsRef.doc(groupID),
-      createDocument<CreateGroup>({
-        organizerUID: group.organizerUID,
-        organizerName: group.organizerName,
-        organizerGender: group.organizerGender,
-        thumbnailURL: group.thumbnailURL ?? noUserThumbnail,
-        enabled: true,
-        appliedUIDs: ['']
-      }),
-      { merge: false }
-    )
+    batch.set(groupsRef.doc(groupID), createDocument<CreateGroup>(group), { merge: false })
     await batch.commit()
-    return { resultCreateGroup: true, groupID }
+    return { result: true, groupID }
   } catch (e) {
     console.warn(e)
-    return { resultCreateGroup: false, groupID: null }
+    return { result: false, groupID: null }
   }
 }

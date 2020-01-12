@@ -28,8 +28,8 @@ const PartyMakeScreen = ({ navigation }: Props) => {
   const partyID = navigation.state.params.partyID
 
   const { isVisible, onClose, onOpen } = useModal()
-  const [organizer, setOrganizer] = useState<User | null>()
-  const [members, setMembers] = useState<(User | null)[]>([])
+  const [organizer, setOrganizer] = useState<User>()
+  const [members, setMembers] = useState<User[]>([])
 
   const [focusMemberIndex, setFocusMemberIndex] = useState<number>(0)
 
@@ -72,7 +72,7 @@ const PartyMakeScreen = ({ navigation }: Props) => {
         organizerUID: organizer.uid,
         organizerName: organizer.name,
         organizerGender: organizer.gender,
-        thumbnailURL: organizer.thumbnailURL,
+        thumbnailURL: organizer.thumbnailURL ?? null,
         enabled: true,
         appliedUIDs: []
       }

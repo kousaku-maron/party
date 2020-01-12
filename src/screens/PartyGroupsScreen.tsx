@@ -8,7 +8,7 @@ import { LoadingPage } from '../components/pages'
 import { GroupCard } from '../components/organisms'
 import { Group } from '../entities'
 import { useAuthState } from '../store/hooks'
-import { CirclePlusFab } from '../components/atoms'
+import { AddFab } from '../components/atoms'
 
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps
@@ -34,7 +34,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
         return (
           <View key={index} style={styles.thumbnailContainer}>
             <GroupCard
-              thumbnailURL={{ uri }}
+              thumbnailURL={uri}
               name={group.organizerName}
               width={width}
               isAppliedParty={group.appliedUIDs.includes(uid)}
@@ -61,12 +61,13 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
       <View style={styles.entryButtonWrapper}>
-        <CirclePlusFab
+        <AddFab
           disabled={isCreatedGroup}
+          size={fabNormalSize}
           onPress={() => {
             navigation.navigate('PartyMake', { uid, partyID })
           }}
-        ></CirclePlusFab>
+        ></AddFab>
       </View>
     </View>
   )
@@ -75,6 +76,8 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
 PartyGroupsScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
+const materialMaergin = 16
+const fabNormalSize = 52
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
@@ -91,9 +94,9 @@ const makeStyles: MakeStyles = colors =>
     },
     entryButtonWrapper: {
       position: 'absolute',
-      paddingHorizontal: 24,
-      paddingLeft: width * 0.8,
-      bottom: 24
+      paddingHorizontal: materialMaergin,
+      paddingLeft: width - (fabNormalSize + materialMaergin),
+      bottom: materialMaergin
     },
     entryText: {
       fontSize: 20,
