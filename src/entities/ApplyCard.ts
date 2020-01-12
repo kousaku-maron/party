@@ -11,14 +11,16 @@ type User = {
 }
 
 export type ApplyCard = {
+  id: string
   partyID: string
   groupID: string
   organizerUID: string
   users: User[]
 }
 
-export const buildApplyCard = (data: firebase.firestore.DocumentData) => {
+export const buildApplyCard = (id: string, data: firebase.firestore.DocumentData) => {
   const newApplyCard: ApplyCard = {
+    id,
     partyID: data.partyID,
     groupID: data.groupID,
     organizerUID: data.organizerUID,
