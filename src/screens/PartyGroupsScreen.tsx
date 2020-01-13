@@ -28,7 +28,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
       const thumbnailURLs = groups.map((group, index) => {
         const uri = group.thumbnailURL
         const groupID = group.id
-        if (group.organizerUID === uid && isCreatedGroup === false) {
+        if (group.organizerUID === uid && !isCreatedGroup) {
           setIsCreatedGroup(true)
         }
         return (
@@ -76,7 +76,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
 PartyGroupsScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
-const materialMaergin = 16
+const materialMargin = 16
 const fabNormalSize = 52
 
 const makeStyles: MakeStyles = colors =>
@@ -94,9 +94,8 @@ const makeStyles: MakeStyles = colors =>
     },
     entryButtonWrapper: {
       position: 'absolute',
-      paddingHorizontal: materialMaergin,
-      paddingLeft: width - (fabNormalSize + materialMaergin),
-      bottom: materialMaergin
+      right: materialMargin,
+      bottom: materialMargin
     },
     entryText: {
       fontSize: 20,

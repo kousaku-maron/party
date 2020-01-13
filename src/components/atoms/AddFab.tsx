@@ -20,19 +20,21 @@ const AddFab: React.FC<Props> = ({ color, disabled = false, onPress, children, s
       style={[
         styles.container,
         {
-          backgroundColor: color ?? colors.backgrounds.tertiary,
+          backgroundColor: color ?? colors.tints.primary.main,
           width: size,
           height: size,
-          borderRadius: size / 2,
-          shadowOffset: { width: 1, height: 1 },
-          shadowColor: colors.foregrounds.primary,
-          shadowOpacity: 0.3
+          borderRadius: size / 2
         }
       ]}
       disabled={disabled}
       onPress={onPress}
     >
-      <AntDesign name="plus" size={size - 16} color={colors.tints.primary.light} style={{ justifyContent: 'center' }} />
+      <AntDesign
+        name="plus"
+        size={size - 16}
+        color={colors.backgrounds.tertiary}
+        style={{ justifyContent: 'center' }}
+      />
       {children}
     </TouchableOpacity>
   )

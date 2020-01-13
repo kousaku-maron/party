@@ -83,7 +83,7 @@ export const onCreateGroup = async (partyID: string, group: CreateGroup, members
     const { result: resultCreateGroup, groupID } = await createGroup(partyID, group)
     const { result: resultCreateGroupMembers } = await createGroupMembers(partyID, groupID, setMembers)
 
-    if (resultCreateGroupMembers === false && resultCreateGroup === false) {
+    if (!resultCreateGroupMembers && !resultCreateGroup) {
       showCreatePartyGroupFailurMessage()
       return
     }
