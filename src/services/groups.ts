@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { InteractionManager } from 'react-native'
-import { Group, buildGroup, UpdateGroup } from '../entities'
+import { User, Group, buildGroup, UpdateGroup, CreateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
-import { updateGroup } from '../repositories/groups'
+import { updateGroup, createGroup, createGroupMembers } from '../repositories/groups'
 import {
   showEntryPartyApplySunccessMessage,
   showEntryPartyApplyFailurMessage,
-  showEntryPartyAlreadyApplied
+  showEntryPartyAlreadyApplied,
+  showCreatePartyGroupSunccessMessage,
+  showCreatePartyGroupFailurMessage
 } from '../services/flashCard'
 import _ from 'lodash'
 
@@ -41,7 +43,6 @@ export const useGroups = (partyID: string) => {
 }
 
 export const onApplyGroup = async (uid: string, partyID: string, groupID: string, group: Group) => {
-  //MEMO: OrganizerをUserとしている
   const goupAppliedUIDs = group.appliedUIDs
   const isAppliedGroup = goupAppliedUIDs.includes(uid)
   if (isAppliedGroup === true) {
@@ -57,9 +58,38 @@ export const onApplyGroup = async (uid: string, partyID: string, groupID: string
   }
   try {
     await updateGroup(partyID, groupID, _updateGroup)
-    showEntryPartyApplySunccessMessage()
   } catch (e) {
     showEntryPartyApplyFailurMessage()
     console.warn(e)
   }
+  showEntryPartyApplySunccessMessage()
+}
+
+export const onCreateGroup = async (partyID: string, group: CreateGroup, members: User[]) => {
+  try {
+    const setMembers: User[] = members.map(member => {
+      const setMember: User = {
+        uid: member.uid,
+        userID: member.userID,
+        enabled: member.enabled,
+        isAccepted: member.isAccepted,
+        isAnonymous: member.isAnonymous,
+        name: member.name,
+        gender: member.gender,
+        thumbnailURL: member.thumbnailURL ?? 'null'
+      }
+      return setMember
+    })
+    const { result: resultCreateGroup, groupID } = await createGroup(partyID, group)
+    const { result: resultCreateGroupMembers } = await createGroupMembers(partyID, groupID, setMembers)
+
+    if (!resultCreateGroupMembers && !resultCreateGroup) {
+      showCreatePartyGroupFailurMessage()
+      return
+    }
+  } catch (e) {
+    showCreatePartyGroupFailurMessage()
+    console.warn(e)
+  }
+  showCreatePartyGroupSunccessMessage()
 }

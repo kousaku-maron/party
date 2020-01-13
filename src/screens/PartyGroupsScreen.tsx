@@ -1,14 +1,14 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { useGroups } from '../services/groups'
+import { useGroups, onApplyGroup } from '../services/groups'
 import { useStyles, MakeStyles } from '../services/design'
-import { onApplyGroup } from '../services/groups'
 import { LoadingPage } from '../components/pages'
 import { GroupCard } from '../components/organisms'
 import { Group } from '../entities'
 import { useAuthState } from '../store/hooks'
+import { AddFab } from '../components/atoms'
 
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps
@@ -21,15 +21,20 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
   const partyID = navigation.state.params.partyID
   const groups = useGroups(partyID)
 
+  const [isCreatedGroup, setIsCreatedGroup] = useState<boolean>(false)
+
   const FetchGroupsThumbnail = useCallback(
     (groups: Group[]) => {
       const thumbnailURLs = groups.map((group, index) => {
         const uri = group.thumbnailURL
         const groupID = group.id
+        if (group.organizerUID === uid && !isCreatedGroup) {
+          setIsCreatedGroup(true)
+        }
         return (
-          <View key={index} style={styles.container}>
+          <View key={index} style={styles.thumbnailContainer}>
             <GroupCard
-              thumbnailURL={{ uri }}
+              thumbnailURL={uri}
               name={group.organizerName}
               width={width}
               isAppliedParty={group.appliedUIDs.includes(uid)}
@@ -46,25 +51,55 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
       })
       return thumbnailURLs
     },
-    [partyID, styles.container, uid]
+    [isCreatedGroup, partyID, styles.thumbnailContainer, uid]
   )
 
   if (!groups) {
     return <LoadingPage />
   }
-  return <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
+  return (
+    <View style={styles.container}>
+      <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
+      <View style={styles.entryButtonWrapper}>
+        <AddFab
+          disabled={isCreatedGroup}
+          size={fabNormalSize}
+          onPress={() => {
+            navigation.navigate('PartyMake', { uid, partyID })
+          }}
+        ></AddFab>
+      </View>
+    </View>
+  )
 }
 
 PartyGroupsScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
+const materialMargin = 16
+const fabNormalSize = 52
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      backgroundColor: colors.backgrounds.primary
+    },
+    thumbnailContainer: {
       width: width,
       padding: 10,
       backgroundColor: colors.backgrounds.primary
+    },
+    entryButtonWrapper: {
+      position: 'absolute',
+      right: materialMargin,
+      bottom: materialMargin
+    },
+    entryText: {
+      fontSize: 20,
+      color: colors.foregrounds.onTintPrimary
     }
   })
 

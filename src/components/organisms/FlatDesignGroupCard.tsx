@@ -1,10 +1,10 @@
 import React from 'react'
-import { View, Text, Image, StyleSheet, ImageSourcePropType } from 'react-native'
+import { View, Text, Image, StyleSheet } from 'react-native'
 import { useStyles, useColors, MakeStyles } from '../../services/design'
 import { RoundedButton } from '../atoms'
 
 type Props = {
-  thumbnailURL: ImageSourcePropType
+  thumbnailURL: string
   name: string
   width: number
   isAppliedParty: boolean
@@ -19,7 +19,15 @@ const FlatDesignGroupCard: React.FC<Props> = props => {
   return (
     <View>
       <View style={styles.imageBorderRadius}>
-        <Image style={[styles.image, { width: props.width }]} source={props.thumbnailURL} />
+        {props.thumbnailURL && (
+          <Image style={[styles.image, { width: props.width }]} source={{ uri: props.thumbnailURL }} />
+        )}
+        {!props.thumbnailURL && (
+          <Image
+            style={[styles.image, { width: props.width }]}
+            source={require('../../../assets/images/no_user.png')}
+          />
+        )}
       </View>
       <View style={styles.description}>
         <View>
