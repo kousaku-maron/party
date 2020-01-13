@@ -3105,6 +3105,11 @@ expo-constants@~8.0.0:
   dependencies:
     ua-parser-js "^0.7.19"
 
+expo-crypto@~8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/expo-crypto/-/expo-crypto-8.0.0.tgz#2aeab604cfced71e4be25cd7daf01cc8c5b3dace"
+  integrity sha512-4oOJDp+3IFvLoTp5PQCeJEBtdBxqYTb9pXAtPwF9KKQCtTuWFM/OG9GQ9lmaWY+oJU8wE3WK8Oplmlf5F8tTrg==
+
 expo-error-recovery@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/expo-error-recovery/-/expo-error-recovery-1.0.0.tgz#2ca9d59fcd16c5c881af877993731056f2d46afe"

@@ -72,7 +72,7 @@ const makeStyles: MakeStyles = colors =>
       backgroundColor: colors.backgrounds.secondary,
       borderBottomColor: colors.foregrounds.separator,
       borderBottomWidth: hairlineWidth,
-      zIndex: 500
+      zIndex: 1100
     },
     closeWrapper: {
       position: 'absolute',
