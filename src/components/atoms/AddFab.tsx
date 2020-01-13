@@ -30,10 +30,14 @@ const AddFab: React.FC<Props> = ({ color, disabled = false, onPress, children, s
       onPress={onPress}
     >
       <AntDesign
-        name="plus"
-        size={size - 16}
-        color={colors.backgrounds.tertiary}
-        style={{ justifyContent: 'center' }}
+        style={[
+          {
+            name: 'plus',
+            size: size - 16,
+            color: colors.foregrounds.onTintPrimary,
+            style: { justifyContent: 'center' }
+          }
+        ]}
       />
       {children}
     </TouchableOpacity>
