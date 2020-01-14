@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, StyleSheet } from 'react-native'
+import { TouchableOpacity, StyleSheet, GestureResponderEvent } from 'react-native'
 import { useColors, MakeStyles, useStyles } from '../../services/design'
 import { AntDesign } from '@expo/vector-icons'
 
@@ -7,7 +7,7 @@ type Props = {
   color?: string
   inactiveColor?: string
   disabled?: boolean
-  onPress?: () => void
+  onPress?: (event: GestureResponderEvent) => void
   padding?: number
   size: number
 }
