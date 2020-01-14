@@ -9,6 +9,7 @@ import { GroupCard } from '../components/organisms'
 import { Group } from '../entities'
 import { useAuthState } from '../store/hooks'
 import { AddFab } from '../components/atoms'
+import { showCreatePartyGroupAlreadyCreatedMessage } from '../services/flashCard'
 
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps
@@ -54,6 +55,18 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
     [isCreatedGroup, partyID, styles.thumbnailContainer, uid]
   )
 
+  const onPressAddFab = useCallback(
+    (uid, partyID, isCreatedGroup) => {
+      if (!isCreatedGroup) {
+        navigation.navigate('PartyMake', { uid, partyID })
+      }
+      if (isCreatedGroup) {
+        showCreatePartyGroupAlreadyCreatedMessage()
+      }
+    },
+    [navigation]
+  )
+
   if (!groups) {
     return <LoadingPage />
   }
@@ -62,10 +75,9 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
       <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
       <View style={styles.entryButtonWrapper}>
         <AddFab
-          disabled={isCreatedGroup}
           size={fabNormalSize}
           onPress={() => {
-            navigation.navigate('PartyMake', { uid, partyID })
+            onPressAddFab(uid, partyID, isCreatedGroup)
           }}
         ></AddFab>
       </View>

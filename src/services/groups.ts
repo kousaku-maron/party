@@ -7,7 +7,7 @@ import { updateGroup, createGroup, createGroupMembers } from '../repositories/gr
 import {
   showEntryPartyApplySunccessMessage,
   showEntryPartyApplyFailurMessage,
-  showEntryPartyAlreadyApplied,
+  showEntryPartyAlreadyAppliedMessage,
   showCreatePartyGroupSunccessMessage,
   showCreatePartyGroupFailurMessage
 } from '../services/flashCard'
@@ -46,7 +46,7 @@ export const onApplyGroup = async (uid: string, partyID: string, groupID: string
   const goupAppliedUIDs = group.appliedUIDs
   const isAppliedGroup = goupAppliedUIDs.includes(uid)
   if (isAppliedGroup === true) {
-    showEntryPartyAlreadyApplied()
+    showEntryPartyAlreadyAppliedMessage()
     return
   }
 

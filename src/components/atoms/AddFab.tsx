@@ -1,19 +1,20 @@
 import React from 'react'
-import { TouchableOpacity, GestureResponderEvent, StyleSheet } from 'react-native'
-import { useColors } from '../../services/design'
+import { TouchableOpacity, StyleSheet } from 'react-native'
+import { useColors, MakeStyles, useStyles } from '../../services/design'
 import { AntDesign } from '@expo/vector-icons'
 
 type Props = {
   color?: string
   inactiveColor?: string
   disabled?: boolean
-  onPress?: (event: GestureResponderEvent) => void
+  onPress?: () => void
   padding?: number
   size: number
 }
 
 const AddFab: React.FC<Props> = ({ color, disabled = false, onPress, children, size = 56 }) => {
   const colors = useColors()
+  const styles = useStyles(makeStyles)
 
   return (
     <TouchableOpacity
@@ -29,27 +30,23 @@ const AddFab: React.FC<Props> = ({ color, disabled = false, onPress, children, s
       disabled={disabled}
       onPress={onPress}
     >
-      <AntDesign
-        style={[
-          {
-            name: 'plus',
-            size: size - 16,
-            color: colors.foregrounds.onTintPrimary,
-            style: { justifyContent: 'center' }
-          }
-        ]}
-      />
+      <AntDesign name="plus" size={size - 16} style={[styles.antDesign]} />
       {children}
     </TouchableOpacity>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    antDesign: {
+      color: colors.foregrounds.onTintPrimary,
+      justifyContent: 'center'
+    }
+  })
 
 export default AddFab
