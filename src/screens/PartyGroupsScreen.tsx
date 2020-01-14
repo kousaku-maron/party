@@ -24,25 +24,23 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
   useEffect(() => {
     if (!groups) return
     const _isCreatedGroup = groups.some(group => group.organizerUID === uid)
+
     setIsCreatedGroup(_isCreatedGroup)
   }, [groups, isCreatedGroup, uid])
 
-  const useAddFab = () => {
+  const useAddFab = isCreatedGroup => {
     const { uid } = useAuthState()
-    const onPressAddFab = useCallback(
-      (partyID, isCreatedGroup) => {
-        if (!isCreatedGroup) {
-          navigation.navigate('PartyMake', { uid, partyID })
-        }
-        if (isCreatedGroup) {
-          showCreatePartyGroupAlreadyCreatedMessage()
-        }
-      },
-      [uid]
-    )
+
+    const onPressAddFab = useCallback(() => {
+      if (isCreatedGroup) {
+        showCreatePartyGroupAlreadyCreatedMessage()
+        return
+      }
+      navigation.navigate('PartyMake', { uid, partyID })
+    }, [isCreatedGroup, uid])
     return { onPressAddFab }
   }
-  const { onPressAddFab } = useAddFab()
+  const { onPressAddFab } = useAddFab(isCreatedGroup)
   const { onPressApplyGroup } = useApplyGroup()
 
   const FetchGroupsThumbnail = useCallback(
@@ -80,12 +78,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
       <View style={styles.entryButtonWrapper}>
-        <AddFab
-          size={fabNormalSize}
-          onPress={() => {
-            onPressAddFab(partyID, isCreatedGroup)
-          }}
-        />
+        <AddFab size={fabNormalSize} onPress={onPressAddFab} />
       </View>
     </View>
   )
