@@ -28,19 +28,13 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
     setIsCreatedGroup(_isCreatedGroup)
   }, [groups, isCreatedGroup, uid])
 
-  const useAddFab = isCreatedGroup => {
-    const { uid } = useAuthState()
-
-    const onPressAddFab = useCallback(() => {
-      if (isCreatedGroup) {
-        showCreatePartyGroupAlreadyCreatedMessage()
-        return
-      }
-      navigation.navigate('PartyMake', { uid, partyID })
-    }, [isCreatedGroup, uid])
-    return { onPressAddFab }
-  }
-  const { onPressAddFab } = useAddFab(isCreatedGroup)
+  const onPressAddFab = useCallback(() => {
+    if (isCreatedGroup) {
+      showCreatePartyGroupAlreadyCreatedMessage()
+      return
+    }
+    navigation.navigate('PartyMake', { uid, partyID })
+  }, [isCreatedGroup, navigation, partyID, uid])
   const { onPressApplyGroup } = useApplyGroup()
 
   const FetchGroupsThumbnail = useCallback(
