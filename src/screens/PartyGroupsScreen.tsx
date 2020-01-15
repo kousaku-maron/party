@@ -1,36 +1,47 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
-import { useGroups, onApplyGroup } from '../services/groups'
+import { useGroups, useApplyGroup } from '../services/groups'
 import { useStyles, MakeStyles } from '../services/design'
 import { LoadingPage } from '../components/pages'
 import { GroupCard } from '../components/organisms'
 import { Group } from '../entities'
 import { useAuthState } from '../store/hooks'
 import { AddFab } from '../components/atoms'
+import { showCreatePartyGroupAlreadyCreatedMessage } from '../services/flashCard'
 
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps
 
 const PartyGroupsScreen = ({ navigation }: Props) => {
   const styles = useStyles(makeStyles)
-
   const { uid } = useAuthState()
-
   const partyID = navigation.state.params.partyID
   const groups = useGroups(partyID)
-
   const [isCreatedGroup, setIsCreatedGroup] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!groups) return
+    const _isCreatedGroup = groups.some(group => group.organizerUID === uid)
+
+    setIsCreatedGroup(_isCreatedGroup)
+  }, [groups, isCreatedGroup, uid])
+
+  const onPressAddFab = useCallback(() => {
+    if (isCreatedGroup) {
+      showCreatePartyGroupAlreadyCreatedMessage()
+      return
+    }
+    navigation.navigate('PartyMake', { uid, partyID })
+  }, [isCreatedGroup, navigation, partyID, uid])
+  const { onPressApplyGroup } = useApplyGroup()
 
   const FetchGroupsThumbnail = useCallback(
     (groups: Group[]) => {
       const thumbnailURLs = groups.map((group, index) => {
         const uri = group.thumbnailURL
         const groupID = group.id
-        if (group.organizerUID === uid && !isCreatedGroup) {
-          setIsCreatedGroup(true)
-        }
         return (
           <View key={index} style={styles.thumbnailContainer}>
             <GroupCard
@@ -39,7 +50,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
               width={width}
               isAppliedParty={group.appliedUIDs.includes(uid)}
               onPressEntry={() => {
-                onApplyGroup(uid, partyID, groupID, group)
+                onPressApplyGroup(partyID, groupID, group)
               }}
               //TODO: パーティーメンバーの詳細表示作成予定
               onPressDetail={() => {
@@ -51,7 +62,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
       })
       return thumbnailURLs
     },
-    [isCreatedGroup, partyID, styles.thumbnailContainer, uid]
+    [onPressApplyGroup, partyID, styles.thumbnailContainer, uid]
   )
 
   if (!groups) {
@@ -61,13 +72,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
       <View style={styles.entryButtonWrapper}>
-        <AddFab
-          disabled={isCreatedGroup}
-          size={fabNormalSize}
-          onPress={() => {
-            navigation.navigate('PartyMake', { uid, partyID })
-          }}
-        ></AddFab>
+        <AddFab size={fabNormalSize} onPress={onPressAddFab} />
       </View>
     </View>
   )

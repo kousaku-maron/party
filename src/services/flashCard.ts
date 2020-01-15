@@ -32,10 +32,10 @@ export const showEntryPartyApplyFailurMessage = () => {
   })
 }
 
-export const showEntryPartyAlreadyApplied = () => {
+export const showEntryPartyAlreadyAppliedMessage = () => {
   showMessage({
     message: '既にパーティーの参加を申請しています',
-    type: 'info',
+    type: 'danger',
     titleStyle: styles.flashCardMessage
   })
 }
@@ -91,6 +91,14 @@ export const showCreatePartyGroupSunccessMessage = () => {
 export const showCreatePartyGroupFailurMessage = () => {
   showMessage({
     message: 'パーティーの作成に失敗しました',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showCreatePartyGroupAlreadyCreatedMessage = () => {
+  showMessage({
+    message: 'パーティーはすでに作成済みです',
     type: 'danger',
     titleStyle: styles.flashCardMessage
   })

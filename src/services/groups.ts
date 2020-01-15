@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { InteractionManager } from 'react-native'
 import { User, Group, buildGroup, UpdateGroup, CreateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
@@ -7,7 +7,7 @@ import { updateGroup, createGroup, createGroupMembers } from '../repositories/gr
 import {
   showEntryPartyApplySunccessMessage,
   showEntryPartyApplyFailurMessage,
-  showEntryPartyAlreadyApplied,
+  showEntryPartyAlreadyAppliedMessage,
   showCreatePartyGroupSunccessMessage,
   showCreatePartyGroupFailurMessage
 } from '../services/flashCard'
@@ -42,27 +42,35 @@ export const useGroups = (partyID: string) => {
   return groups
 }
 
-export const onApplyGroup = async (uid: string, partyID: string, groupID: string, group: Group) => {
-  const goupAppliedUIDs = group.appliedUIDs
-  const isAppliedGroup = goupAppliedUIDs.includes(uid)
-  if (isAppliedGroup === true) {
-    showEntryPartyAlreadyApplied()
-    return
-  }
+export const useApplyGroup = () => {
+  const { uid } = useAuthState()
 
-  const _updateGroup: UpdateGroup = {
-    organizerUID: group.organizerUID,
-    organizerName: group.organizerName,
-    thumbnailURL: group.thumbnailURL,
-    appliedUIDs: _.uniq([...group.appliedUIDs, uid])
-  }
-  try {
-    await updateGroup(partyID, groupID, _updateGroup)
-  } catch (e) {
-    showEntryPartyApplyFailurMessage()
-    console.warn(e)
-  }
-  showEntryPartyApplySunccessMessage()
+  const onPressApplyGroup = useCallback(
+    async (partyID: string, groupID: string, group: Group) => {
+      const goupAppliedUIDs = group.appliedUIDs
+      const isAppliedGroup = goupAppliedUIDs.includes(uid)
+      if (isAppliedGroup === true) {
+        showEntryPartyAlreadyAppliedMessage()
+        return
+      }
+
+      const _updateGroup: UpdateGroup = {
+        organizerUID: group.organizerUID,
+        organizerName: group.organizerName,
+        thumbnailURL: group.thumbnailURL,
+        appliedUIDs: _.uniq([...group.appliedUIDs, uid])
+      }
+      try {
+        await updateGroup(partyID, groupID, _updateGroup)
+      } catch (e) {
+        showEntryPartyApplyFailurMessage()
+        console.warn(e)
+      }
+      showEntryPartyApplySunccessMessage()
+    },
+    [uid]
+  )
+  return { onPressApplyGroup }
 }
 
 export const onCreateGroup = async (partyID: string, group: CreateGroup, members: User[]) => {
