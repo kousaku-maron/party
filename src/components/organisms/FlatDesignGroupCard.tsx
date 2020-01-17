@@ -17,8 +17,8 @@ const FlatDesignGroupCard: React.FC<Props> = props => {
   const colors = useColors()
 
   return (
-    <View>
-      <View style={styles.imageBorderRadius}>
+    <View style={styles.container}>
+      <View style={styles.imageWrapper}>
         {props.thumbnailURL && (
           <Image style={[styles.image, { width: props.width }]} source={{ uri: props.thumbnailURL }} />
         )}
@@ -68,7 +68,14 @@ const FlatDesignGroupCard: React.FC<Props> = props => {
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
-    imageBorderRadius: {
+    container: {
+      alignItems: 'flex-end',
+      width: '100%',
+      height: 285
+    },
+    imageWrapper: {
+      height: '70%',
+      width: '100%',
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
       borderTopRightRadius: 16,
@@ -76,7 +83,8 @@ const makeStyles: MakeStyles = colors =>
       overflow: 'hidden'
     },
     image: {
-      height: 200
+      width: '100%',
+      height: '100%'
     },
     name: {
       color: colors.foregrounds.onTintPrimary,
@@ -86,7 +94,8 @@ const makeStyles: MakeStyles = colors =>
     },
     description: {
       backgroundColor: colors.tints.primary.main,
-      height: 80,
+      width: '100%',
+      height: '30%',
       justifyContent: 'space-between',
       padding: 6,
       flexDirection: 'row',

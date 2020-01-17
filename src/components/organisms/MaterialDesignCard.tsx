@@ -21,8 +21,8 @@ const MaterialDesignCard: React.FC<Props> = props => {
 
   const date = formatedDateFull(props.date)
   return (
-    <View>
-      <View style={styles.imageBorderRadius}>
+    <View style={styles.container}>
+      <View style={styles.imageWrapper}>
         <TouchableOpacity onPress={props.onPressGroups}>
           <Image style={[styles.image, { width: props.width }]} source={props.uri} />
         </TouchableOpacity>
@@ -65,11 +65,19 @@ const MaterialDesignCard: React.FC<Props> = props => {
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
-    imageBorderRadius: {
+    container: {
+      alignItems: 'flex-end',
+      width: '100%',
+      height: 285
+    },
+    imageWrapper: {
+      width: '100%',
+      height: '80%',
       overflow: 'hidden'
     },
     image: {
-      height: 200
+      width: '100%',
+      height: '100%'
     },
     name: {
       color: colors.foregrounds.onTintPrimary,
@@ -85,7 +93,8 @@ const makeStyles: MakeStyles = colors =>
     },
     description: {
       backgroundColor: colors.tints.primary.main,
-      height: 80,
+      width: '100%',
+      height: '20%',
       justifyContent: 'space-between',
       padding: 6,
       flexDirection: 'row',
