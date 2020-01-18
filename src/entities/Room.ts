@@ -16,3 +16,5 @@ export const buildRoom = (id: string, data: firebase.firestore.DocumentData) => 
   }
   return newRoom
 }
+
+export type CreateRoom = Omit<Room, 'id'>

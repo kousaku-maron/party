@@ -97,7 +97,7 @@ const WelcomeScreen = ({ navigation }: Props) => {
   )
 }
 
-WelcomeScreen.navigationOptions = () => ({ header: null, headerBackTitle: null })
+WelcomeScreen.navigationOptions = () => ({ headerShown: false })
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
