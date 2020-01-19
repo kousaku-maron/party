@@ -33,8 +33,8 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
       showCreatePartyGroupAlreadyCreatedMessage()
       return
     }
-    navigation.navigate('PartyMake', { uid, partyID })
-  }, [isCreatedGroup, navigation, partyID, uid])
+    navigation.navigate('PartyMake', { partyID })
+  }, [isCreatedGroup, navigation, partyID])
   const { onPressApplyGroup } = useApplyGroup()
 
   const FetchGroupsThumbnail = useCallback(
@@ -52,9 +52,8 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
               onPressEntry={() => {
                 onPressApplyGroup(partyID, groupID, group)
               }}
-              //TODO: パーティーメンバーの詳細表示作成予定
               onPressDetail={() => {
-                console.log('パーティーメンバーの詳細表示作成予定')
+                navigation.navigate('GroupDetail', { partyID, groupID })
               }}
             />
           </View>
@@ -62,7 +61,7 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
       })
       return thumbnailURLs
     },
-    [onPressApplyGroup, partyID, styles.thumbnailContainer, uid]
+    [navigation, onPressApplyGroup, partyID, styles.thumbnailContainer, uid]
   )
 
   if (!groups) {

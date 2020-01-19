@@ -3,7 +3,8 @@ import { InteractionManager } from 'react-native'
 import { User, Group, buildGroup, UpdateGroup, CreateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
-import { updateGroup, createGroup, createGroupMembers } from '../repositories/groups'
+import { updateGroup, createGroup } from '../repositories/group'
+import { createMembers } from '../repositories/member'
 import {
   showEntryPartyApplySunccessMessage,
   showEntryPartyApplyFailurMessage,
@@ -84,12 +85,12 @@ export const onCreateGroup = async (partyID: string, group: CreateGroup, members
         isAnonymous: member.isAnonymous,
         name: member.name,
         gender: member.gender,
-        thumbnailURL: member.thumbnailURL ?? 'null'
+        thumbnailURL: member.thumbnailURL ?? null
       }
       return setMember
     })
     const { result: resultCreateGroup, groupID } = await createGroup(partyID, group)
-    const { result: resultCreateGroupMembers } = await createGroupMembers(partyID, groupID, setMembers)
+    const { result: resultCreateGroupMembers } = await createMembers(partyID, groupID, setMembers)
 
     if (!resultCreateGroupMembers && !resultCreateGroup) {
       showCreatePartyGroupFailurMessage()

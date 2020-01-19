@@ -12,6 +12,7 @@ import {
   PrivacyScreen,
   ChatScreen,
   PartyGroupsScreen,
+  GroupDetailScreen,
   PartyMakeScreen,
   RoomScreen
 } from '../screens'
@@ -35,6 +36,7 @@ const HomeNavigator = createStackNavigator(
     PartyDetail: PartyDetailScreen,
     PartyMake: PartyMakeScreen,
     PartyGroups: PartyGroupsScreen,
+    GroupDetail: GroupDetailScreen,
     Chat: ChatScreen,
     User: UserScreen
   },
