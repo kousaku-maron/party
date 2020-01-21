@@ -6,7 +6,6 @@ import { isAvailableSignInWithApple } from '../services/authentication'
 import { View, Text, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton } from '../components/atoms'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 type OwnProps = {
   navigation: NavigationStackProp
@@ -15,7 +14,7 @@ type OwnProps = {
 type Props = OwnProps
 
 const WelcomeScreen = ({ navigation }: Props) => {
-  const { signInApple, signInFacebook, signInAnonymously } = useAuthActions()
+  const { signInApple, signInGoogle } = useAuthActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
@@ -25,17 +24,11 @@ const WelcomeScreen = ({ navigation }: Props) => {
     })
   }, [navigation, signInApple])
 
-  const onSignInFacebook = useCallback(() => {
-    signInFacebook({
+  const onSignInGoogle = useCallback(() => {
+    signInGoogle({
       onSuccess: () => navigation.navigate('App')
     })
-  }, [navigation, signInFacebook])
-
-  const onSignInAnonymously = useCallback(() => {
-    signInAnonymously({
-      onSuccess: () => navigation.navigate('App')
-    })
-  }, [navigation, signInAnonymously])
+  }, [navigation, signInGoogle])
 
   const goToTerms = useCallback(() => {
     navigation.navigate('Terms')
@@ -47,14 +40,10 @@ const WelcomeScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.overlay} /> */}
       <View style={styles.titleArea}>
         <Text style={styles.titleText}>DEMO</Text>
-        {/* <Text style={styles.subText}>今すぐ、飲みに行こう</Text> */}
       </View>
-      <View style={styles.imageArea}>
-        {/* <Image style={styles.image} resizeMode="contain" source={require('./../../assets/icons/cocktail.png')} /> */}
-      </View>
+      <View style={styles.imageArea} />
       <View style={styles.actionArea}>
         {isAvailableSignInWithApple() && (
           <View style={styles.appleButtonWrapper}>
@@ -62,24 +51,18 @@ const WelcomeScreen = ({ navigation }: Props) => {
               <View style={styles.iconWrapper}>
                 <AntDesign name="apple1" size={32} color={colors.foregrounds.onTintPrimary} />
               </View>
-              <Text style={styles.fbText}>AppleIDでログイン</Text>
+              <Text style={styles.appleText}>AppleIDでログイン</Text>
             </RoundedButton>
           </View>
         )}
 
-        <View style={styles.facebookButtonWrapper}>
-          <RoundedButton color={colors.tints.primary.main} height={56} fullWidth={true} onPress={onSignInFacebook}>
+        <View style={styles.googleButtonWrapper}>
+          <RoundedButton color={colors.tints.primary.main} height={56} fullWidth={true} onPress={onSignInGoogle}>
             <View style={styles.iconWrapper}>
-              <AntDesign name="facebook-square" size={32} color={colors.foregrounds.onTintPrimary} />
+              <AntDesign name="google" size={32} color={colors.foregrounds.onTintPrimary} />
             </View>
-            <Text style={styles.fbText}>Facebookでログイン</Text>
+            <Text style={styles.googleText}>Googleでログイン</Text>
           </RoundedButton>
-        </View>
-
-        <View style={styles.guestButtonWrapper}>
-          <TouchableOpacity onPress={onSignInAnonymously}>
-            <Text style={styles.guestText}>ゲストでログイン</Text>
-          </TouchableOpacity>
         </View>
 
         <Text style={styles.termText}>
@@ -108,15 +91,6 @@ const makeStyles: MakeStyles = colors =>
       alignItems: 'center',
       backgroundColor: colors.backgrounds.primary
     },
-    // overlay: {
-    //   flex: 1,
-    //   position: 'absolute',
-    //   left: 0,
-    //   top: 0,
-    //   backgroundColor: colors.primary.main,
-    //   width: Dimensions.get('window').width,
-    //   height: Dimensions.get('window').height
-    // },
     titleArea: {
       flex: 1,
       justifyContent: 'center',
@@ -140,15 +114,8 @@ const makeStyles: MakeStyles = colors =>
       width: '100%',
       paddingBottom: 24
     },
-    facebookButtonWrapper: {
+    googleButtonWrapper: {
       width: '100%',
-      paddingBottom: 24
-    },
-    guestButtonWrapper: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
       paddingBottom: 24
     },
     iconWrapper: {
@@ -166,13 +133,13 @@ const makeStyles: MakeStyles = colors =>
       fontSize: 20,
       letterSpacing: 4
     },
-    fbText: {
+    appleText: {
       color: colors.foregrounds.onTintPrimary,
       fontSize: 18
     },
-    guestText: {
-      color: colors.foregrounds.primary,
-      fontSize: 14
+    googleText: {
+      color: colors.foregrounds.onTintPrimary,
+      fontSize: 18
     },
     termText: {
       color: colors.foregrounds.secondary,
