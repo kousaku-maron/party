@@ -1,5 +1,5 @@
 import React from 'react'
-import { Home } from '../../@design/vector-icons'
+import { Icons } from '../../@assets/vector-icons'
 import { View } from 'react-native'
 
 type Props = {
@@ -20,11 +20,11 @@ const HomeIcon = ({ tintColor, focused, inset }: Props) => {
           paddingLeft: inset[3]
         }}
       >
-        <Home size={24} color={tintColor} />
+        <Icons name="home" size={24} color={tintColor} />
       </View>
     )
   }
-  return <Home size={24} color={tintColor} />
+  return <Icons name="home" size={24} color={tintColor} />
 }
 
 export default HomeIcon

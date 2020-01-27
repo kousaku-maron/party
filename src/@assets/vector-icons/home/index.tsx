@@ -8,7 +8,7 @@ const getSvgXmlData = (color: string) => {
   return svgXmlData
 }
 
-export const Home = ({ size = 24, color = 'black' }: IconProps) => {
+export const HomeIcon = ({ size = 24, color = 'black' }: IconProps) => {
   return (
     <View>
       <SvgUri svgXmlData={getSvgXmlData(color)} width={size} height={size} />

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Chat } from '../../@design/vector-icons'
+import { Icons } from '../../@assets/vector-icons'
 import { View } from 'react-native'
 
 type Props = {
@@ -20,11 +20,11 @@ const RoomIcon = ({ tintColor, focused, inset }: Props) => {
           paddingLeft: inset[3]
         }}
       >
-        <Chat size={24} color={tintColor} />
+        <Icons name="chat" size={24} color={tintColor} />
       </View>
     )
   }
-  return <Chat size={24} color={tintColor} />
+  return <Icons name="chat" size={24} color={tintColor} />
 }
 
 export default RoomIcon

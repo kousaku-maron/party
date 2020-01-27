@@ -1,5 +1,5 @@
 import React from 'react'
-import { User } from '../../@design/vector-icons'
+import { Icons } from '../../@assets/vector-icons'
 import { View } from 'react-native'
 
 type Props = {
@@ -20,11 +20,11 @@ const UserIcon = ({ tintColor, focused, inset }: Props) => {
           paddingLeft: inset[3]
         }}
       >
-        <User size={24} color={tintColor} />
+        <Icons name="user" size={24} color={tintColor} />
       </View>
     )
   }
-  return <User size={24} color={tintColor} />
+  return <Icons name="user" size={24} color={tintColor} />
 }
 
 export default UserIcon
