@@ -20,12 +20,10 @@ const HomeIcon = ({ tintColor, focused, inset }: Props) => {
           paddingLeft: inset[3]
         }}
       >
-        {/* <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} size={24} color={tintColor} /> */}
         <Home size={24} color={tintColor} />
       </View>
     )
   }
-  // return <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} size={24} color={tintColor} />
   return <Home size={24} color={tintColor} />
 }
 
