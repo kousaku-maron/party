@@ -1,5 +1,5 @@
 import React from 'react'
-import { MaterialIcons } from '@expo/vector-icons'
+import { Chat } from '../../@design/vector-icons'
 import { View } from 'react-native'
 
 type Props = {
@@ -8,6 +8,7 @@ type Props = {
   inset?: [number, number, number, number]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const RoomIcon = ({ tintColor, focused, inset }: Props) => {
   if (inset) {
     return (
@@ -19,11 +20,11 @@ const RoomIcon = ({ tintColor, focused, inset }: Props) => {
           paddingLeft: inset[3]
         }}
       >
-        <MaterialIcons name={focused ? 'chat-bubble' : 'chat-bubble-outline'} size={24} color={tintColor} />
+        <Chat size={24} color={tintColor} />
       </View>
     )
   }
-  return <MaterialIcons name={focused ? 'chat-bubble' : 'chat-bubble-outline'} size={24} color={tintColor} />
+  return <Chat size={24} color={tintColor} />
 }
 
 export default RoomIcon

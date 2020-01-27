@@ -1,5 +1,5 @@
 import React from 'react'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Home } from '../../@design/vector-icons'
 import { View } from 'react-native'
 
 type Props = {
@@ -8,6 +8,7 @@ type Props = {
   inset?: [number, number, number, number]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const HomeIcon = ({ tintColor, focused, inset }: Props) => {
   if (inset) {
     return (
@@ -19,11 +20,13 @@ const HomeIcon = ({ tintColor, focused, inset }: Props) => {
           paddingLeft: inset[3]
         }}
       >
-        <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} size={24} color={tintColor} />
+        {/* <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} size={24} color={tintColor} /> */}
+        <Home size={24} color={tintColor} />
       </View>
     )
   }
-  return <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} size={24} color={tintColor} />
+  // return <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} size={24} color={tintColor} />
+  return <Home size={24} color={tintColor} />
 }
 
 export default HomeIcon
