@@ -10,7 +10,8 @@ import { LoadingModal } from './src/components/organisms'
 
 // MEMO: react最新バージョンに対応仕切れていないライブラリがあるため、特定の警告を画面に表示させないようにしている。
 YellowBox.ignoreWarnings([
-  'Warning: componentWillMount has been renamed, and is not recommended for use. See https://fb.me/react-async-component-lifecycle-hooks for details.'
+  'Warning: componentWillMount has been renamed, and is not recommended for use. See https://fb.me/react-async-component-lifecycle-hooks for details.',
+  'Warning: componentWillReceiveProps has been renamed, and is not recommended for use. See https://fb.me/react-async-component-lifecycle-hooks for details.'
 ])
 
 const store = configureStore()
