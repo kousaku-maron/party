@@ -1,5 +1,5 @@
 import React from 'react'
-import { FontAwesome } from '@expo/vector-icons'
+import { Icons } from '../../@assets/vector-icons'
 import { View } from 'react-native'
 
 type Props = {
@@ -8,6 +8,7 @@ type Props = {
   inset?: [number, number, number, number]
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const UserIcon = ({ tintColor, focused, inset }: Props) => {
   if (inset) {
     return (
@@ -19,11 +20,11 @@ const UserIcon = ({ tintColor, focused, inset }: Props) => {
           paddingLeft: inset[3]
         }}
       >
-        <FontAwesome name={focused ? 'user' : 'user-o'} size={24} color={tintColor} />
+        <Icons name="user" size={24} color={tintColor} />
       </View>
     )
   }
-  return <FontAwesome name={focused ? 'user' : 'user-o'} size={24} color={tintColor} />
+  return <Icons name="user" size={24} color={tintColor} />
 }
 
 export default UserIcon
