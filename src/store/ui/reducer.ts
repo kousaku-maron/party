@@ -2,15 +2,18 @@ import { useSelector } from 'react-redux'
 import { reducerWithInitialState } from 'typescript-fsa-reducers'
 import { uiActions } from './actions'
 import { AppState } from '../configureStore'
+import { ColorSchemeName } from 'react-native-appearance'
 
 export interface UI {
   showLoadingModal: boolean
-  theme: 'dark' | 'light'
+  theme: ColorSchemeName
+  tabState: 'home' | 'chat' | 'user'
 }
 
 const initialState: UI = {
   showLoadingModal: false,
-  theme: 'dark'
+  theme: 'dark',
+  tabState: 'home'
 }
 
 export const uiReducer = reducerWithInitialState(initialState)
@@ -22,6 +25,9 @@ export const uiReducer = reducerWithInitialState(initialState)
   })
   .case(uiActions.setTheme, (state, theme) => {
     return { ...state, theme }
+  })
+  .case(uiActions.setTabState, (state, tabState) => {
+    return { ...state, tabState }
   })
 
 export const useUIState = () => {
