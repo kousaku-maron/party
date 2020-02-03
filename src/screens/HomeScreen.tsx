@@ -7,6 +7,7 @@ import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
 import { LoadingPage } from '../components/pages'
+import { BottomTabLayout } from '../components/templates'
 import { Card, GenderModal, Modal } from '../components/organisms'
 import { setGender } from '../services/user'
 import { Party } from '../entities/Party'
@@ -87,28 +88,30 @@ const HomeScreen = ({ navigation }: Props) => {
     return <LoadingPage />
   }
   return (
-    <ScrollView>
-      {FetchPartiesThumbnail(parties)}
-      <GenderModal
-        isVisible={genderModalTools.isVisible}
-        uid={uid}
-        title="あなたの性別は何ですか？"
-        negative="キャンセル"
-        positive="登録します"
-        onPositive={(uid, gender) => {
-          onSetGender(uid, gender)
-        }}
-        onNegative={genderModalTools.onClose}
-      />
-      <Modal
-        isVisible={isAcceptedModalTools.isVisible}
-        title={'本人確認中です。\n承認されるまでお待ちください。'}
-        negative="戻る"
-        positive="OK"
-        onPositive={isAcceptedModalTools.onClose}
-        onNegative={isAcceptedModalTools.onClose}
-      />
-    </ScrollView>
+    <BottomTabLayout>
+      <ScrollView>
+        {FetchPartiesThumbnail(parties)}
+        <GenderModal
+          isVisible={genderModalTools.isVisible}
+          uid={uid}
+          title="あなたの性別は何ですか？"
+          negative="キャンセル"
+          positive="登録します"
+          onPositive={(uid, gender) => {
+            onSetGender(uid, gender)
+          }}
+          onNegative={genderModalTools.onClose}
+        />
+        <Modal
+          isVisible={isAcceptedModalTools.isVisible}
+          title={'本人確認中です。\n承認されるまでお待ちください。'}
+          negative="戻る"
+          positive="OK"
+          onPositive={isAcceptedModalTools.onClose}
+          onNegative={isAcceptedModalTools.onClose}
+        />
+      </ScrollView>
+    </BottomTabLayout>
   )
 }
 
@@ -119,7 +122,7 @@ const { width } = Dimensions.get('window')
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
-      width: width,
+      width,
       padding: 10,
       backgroundColor: colors.backgrounds.primary
     }
