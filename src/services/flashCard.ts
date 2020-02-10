@@ -104,6 +104,30 @@ export const showCreatePartyGroupAlreadyCreatedMessage = () => {
   })
 }
 
+export const showCreateBlockUserSunccessMessage = () => {
+  showMessage({
+    message: 'ユーザーをブロックしました',
+    type: 'success',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showCreateBlockUserFailurMessage = () => {
+  showMessage({
+    message: 'ユーザーのブロックに失敗しました',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showCreateBlockUserAlreadyBlockedMessage = () => {
+  showMessage({
+    message: 'このユーザーはすでにブロック済みです',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
 const styles = {
   flashCardMessage: {
     fontSize: 14

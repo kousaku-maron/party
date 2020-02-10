@@ -85,7 +85,8 @@ export const onCreateGroup = async (partyID: string, group: CreateGroup, members
         isAnonymous: member.isAnonymous,
         name: member.name,
         gender: member.gender,
-        thumbnailURL: member.thumbnailURL ?? null
+        ...(member.thumbnailURL && { thumbnailURL: member.thumbnailURL }),
+        ...(member.blockUIDs && { blockUIDs: member.blockUIDs })
       }
       return setMember
     })
