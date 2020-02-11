@@ -19,7 +19,7 @@ export const createBlockUser = async (uid: string, blockUser: User) => {
         userID: blockUser.userID,
         name: blockUser.name,
         ...(blockUser.thumbnailURL && { thumbnailURL: blockUser.thumbnailURL }),
-        gender: blockUser.gender,
+        ...(blockUser.gender && { gender: blockUser.gender }),
         ...(blockUser.blockUIDs && { blockUIDs: blockUser.blockUIDs })
       }),
       { merge: false }
