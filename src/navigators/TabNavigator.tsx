@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 import { createStackNavigator } from 'react-navigation-stack'
-import { HomeIcon, RoomIcon, UserIcon } from '../components/atoms'
 import {
   HomeScreen,
   PartyEntryScreen,
@@ -16,18 +15,6 @@ import {
   PartyMakeScreen,
   RoomScreen
 } from '../screens'
-import { getTheme } from '../themes'
-import { isIPhoneX, isIPhoneXAbove, X_ABOVE_TAB_NOTCH_HEIGHT } from '../services/design'
-
-// const getTabBarVisible = ({ navigation }) => {
-//   const { routes } = navigation.state
-//   if (routes.length > 1) {
-//     return false
-//   }
-//   return true
-// }
-
-const theme = getTheme()
 
 const HomeNavigator = createStackNavigator(
   {
@@ -71,78 +58,35 @@ const UserNavigator = createStackNavigator(
 
 const TabNavigator = createBottomTabNavigator(
   {
-    Home: {
+    HomeSection: {
       screen: HomeNavigator,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      navigationOptions: ({ navigation }) => {
-        // const tabBarVisible = getTabBarVisible({ navigation })
+      navigationOptions: () => {
         return {
-          tabBarIcon: ({ tintColor, focused }) => {
-            if (isIPhoneX() || isIPhoneXAbove()) {
-              return HomeIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
-            }
-            return HomeIcon({ tintColor, focused })
-          },
-          tabBarVisible: true
+          tabBarVisible: false
         }
       }
     },
-    Room: {
+    RoomSection: {
       screen: RoomNavigator,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      navigationOptions: ({ navigation }) => {
-        // const tabBarVisible = getTabBarVisible({ navigation })
+      navigationOptions: () => {
         return {
-          tabBarIcon: ({ tintColor, focused }) => {
-            if (isIPhoneX() || isIPhoneXAbove()) {
-              return RoomIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
-            }
-            return RoomIcon({ tintColor, focused })
-          },
-          tabBarVisible: true
+          tabBarVisible: false
         }
       }
     },
-    User: {
+    UserSection: {
       screen: UserNavigator,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      navigationOptions: ({ navigation }) => {
-        // const tabBarVisible = getTabBarVisible({ navigation })
+      navigationOptions: () => {
         return {
-          tabBarIcon: ({ tintColor, focused }) => {
-            if (isIPhoneX() || isIPhoneXAbove()) {
-              return UserIcon({ tintColor, focused, inset: [0, 0, X_ABOVE_TAB_NOTCH_HEIGHT, 0] })
-            }
-            return UserIcon({ tintColor, focused })
-          },
-          tabBarVisible: true
+          tabBarVisible: false
         }
       }
     }
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'HomeSection',
     tabBarOptions: {
-      activeTintColor: {
-        dark: theme.dark.tints.primary.main,
-        light: theme.light.tints.primary.main
-      },
-      inactiveTintColor: {
-        dark: theme.dark.system.gray,
-        light: theme.light.system.gray
-      },
-      activeBackgroundColor: {
-        dark: theme.dark.backgrounds.secondary,
-        light: theme.light.backgrounds.secondary
-      },
-      inactiveBackgroundColor: {
-        dark: theme.dark.backgrounds.secondary,
-        light: theme.light.backgrounds.secondary
-      },
       showLabel: false,
-      style: {
-        height: isIPhoneX() || isIPhoneXAbove() ? 49 + X_ABOVE_TAB_NOTCH_HEIGHT : 49
-      },
       safeAreaInset: { bottom: 'never', top: 'never' }
     }
   }

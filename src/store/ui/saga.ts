@@ -1,11 +1,11 @@
 import { take, put, call } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
-import { Appearance } from 'react-native-appearance'
+import { Appearance, ColorSchemeName } from 'react-native-appearance'
 import { uiActions } from './actions'
 
 const themeChannel = () => {
   const channel = eventChannel(emit => {
-    const subscription = Appearance.addChangeListener(({ colorScheme }: { colorScheme: 'dark' | 'light' }) => {
+    const subscription = Appearance.addChangeListener(({ colorScheme }: { colorScheme: ColorSchemeName }) => {
       emit({ colorScheme })
     })
     return () => subscription.remove()

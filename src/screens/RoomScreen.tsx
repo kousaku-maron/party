@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from '
 import { isIPhoneX, isIPhoneXAbove, X_ABOVE_HEADER_NOTCH_HEIGHT, ANDROID_STATUS_BAR_HEIGHT } from '../services/design'
 import { useStyles, MakeStyles } from '../services/design'
 import { ChatRoomListPage, SwipeCardPage } from '../components/pages'
+import { BottomTabLayout } from '../components/templates'
 
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps
@@ -30,22 +31,24 @@ const RoomScreen = ({ navigation }: Props) => {
   }, [])
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inner}>
-        {/* TODO: タブをコンポーネント化 */}
-        <View style={styles.tabs}>
-          <TouchableOpacity style={styles.tab} onPress={onPressCardTab}>
-            <Text style={section === 'card' ? styles.tabActiveLabel : styles.tabLabel}>カード</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.tab} onPress={onPressChatTab}>
-            <Text style={section === 'chat' ? styles.tabActiveLabel : styles.tabLabel}>メッセージ</Text>
-          </TouchableOpacity>
-        </View>
+    <BottomTabLayout>
+      <View style={styles.container}>
+        <View style={styles.inner}>
+          {/* TODO: タブをコンポーネント化 */}
+          <View style={styles.tabs}>
+            <TouchableOpacity style={styles.tab} onPress={onPressCardTab}>
+              <Text style={section === 'card' ? styles.tabActiveLabel : styles.tabLabel}>カード</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.tab} onPress={onPressChatTab}>
+              <Text style={section === 'chat' ? styles.tabActiveLabel : styles.tabLabel}>メッセージ</Text>
+            </TouchableOpacity>
+          </View>
 
-        {section === 'card' && <SwipeCardPage />}
-        {section === 'chat' && <ChatRoomListPage onPressItem={onPressRoom} />}
+          {section === 'card' && <SwipeCardPage />}
+          {section === 'chat' && <ChatRoomListPage onPressItem={onPressRoom} />}
+        </View>
       </View>
-    </View>
+    </BottomTabLayout>
   )
 }
 
