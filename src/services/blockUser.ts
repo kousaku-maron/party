@@ -1,4 +1,6 @@
-import { User, UpdateUser } from '../entities/User'
+import { useState, useEffect } from 'react'
+import { InteractionManager } from 'react-native'
+import { User, UpdateUser, buildUser } from '../entities/User'
 import { useAuthState } from '../store/hooks'
 import { createBlockUser } from '../repositories/blockUser'
 import { setUser } from '../repositories/user'
@@ -8,6 +10,8 @@ import {
   showCreateBlockUserAlreadyBlockedMessage
 } from '../services/flashCard'
 import _ from 'lodash'
+import firebase from '../repositories/firebase'
+const db = firebase.firestore()
 
 export const useBlockUser = () => {
   const { user } = useAuthState()
@@ -38,4 +42,32 @@ export const useBlockUser = () => {
     }
   }
   return { blockUser }
+}
+
+export const useBlockUsers = () => {
+  const [blockUsers, setblockUsers] = useState<User[]>()
+  const auth = useAuthState()
+  const { uid } = auth
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      if (!uid) return
+      const blockUsersRef = db
+        .collection('users')
+        .doc(uid)
+        .collection('blockUsers')
+      const unsubscribe = blockUsersRef.onSnapshot(snapShot => {
+        const newBlockUsers: User[] = snapShot.docs.map(doc => {
+          return buildUser(doc.data())
+        })
+        setblockUsers(newBlockUsers)
+      })
+
+      return () => {
+        unsubscribe()
+      }
+    })
+  }, [uid])
+
+  return blockUsers
 }
