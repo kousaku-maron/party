@@ -1,6 +1,7 @@
 import { User, UpdateUser } from '../entities/User'
+import { useAuthState } from '../store/hooks'
 import { createBlockUser } from '../repositories/blockUser'
-import { setUser, getUser } from '../repositories/user'
+import { setUser } from '../repositories/user'
 import {
   showCreateBlockUserSunccessMessage,
   showCreateBlockUserFailurMessage,
@@ -8,39 +9,33 @@ import {
 } from '../services/flashCard'
 import _ from 'lodash'
 
-export const blockUser = async (user: User, blockUID: string) => {
-  try {
-    if (user.blockUIDs.includes(blockUID)) {
-      showCreateBlockUserAlreadyBlockedMessage()
-      return
-    }
+export const useBlockUser = () => {
+  const { user } = useAuthState()
 
-    const updateUser: UpdateUser = {
-      uid: user.uid,
-      name: user.name,
-      ...(user.thumbnailURL && { thumbnailURL: user.thumbnailURL }),
-      userID: user.userID,
-      blockUIDs: _.uniq([...(user.blockUIDs ?? []), blockUID])
-    }
-    setUser(user.uid, updateUser)
+  const blockUser = async (blockedUser: User) => {
+    const blockUID = blockedUser.uid
+    try {
+      if (user.blockUIDs.includes(blockUID)) {
+        showCreateBlockUserAlreadyBlockedMessage()
+        return
+      }
 
-    const blockUser = await getUser(blockUID)
-    const newBlockUser: User = {
-      enabled: blockUser.enabled,
-      isAccepted: blockUser.isAccepted,
-      isAnonymous: blockUser.isAnonymous,
-      uid: blockUser.uid,
-      userID: blockUser.userID,
-      name: blockUser.name,
-      ...(user.thumbnailURL && { thumbnailURL: user.thumbnailURL }),
-      gender: blockUser.gender,
-      ...(user.blockUIDs && { blockUIDs: user.blockUIDs })
-    }
-    createBlockUser(user.uid, newBlockUser)
+      const updateUser: UpdateUser = {
+        uid: user.uid,
+        name: user.name,
+        ...(user.thumbnailURL && { thumbnailURL: user.thumbnailURL }),
+        userID: user.userID,
+        blockUIDs: _.uniq(user.blockUIDs ? [...user.blockUIDs, blockUID] : [blockUID])
+      }
+      setUser(user.uid, updateUser)
 
-    showCreateBlockUserSunccessMessage()
-  } catch (e) {
-    console.warn(e)
-    showCreateBlockUserFailurMessage()
+      createBlockUser(user.uid, blockedUser)
+
+      showCreateBlockUserSunccessMessage()
+    } catch (e) {
+      console.warn(e)
+      showCreateBlockUserFailurMessage()
+    }
   }
+  return { blockUser }
 }

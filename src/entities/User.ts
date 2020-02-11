@@ -7,7 +7,7 @@ export type User = {
   name: string
   thumbnailURL?: string
   gender?: string
-  blockUIDs: string[]
+  blockUIDs?: string[]
 }
 
 export const buildUser = (data: firebase.firestore.DocumentData) => {
