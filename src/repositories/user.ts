@@ -73,7 +73,8 @@ export const setUser = async (uid: string, user: UpdateUser) => {
       updateDocument<UpdateUser>({
         uid,
         name: user.name,
-        ...(updatedThumbnailURL && { thumbnailURL: updatedThumbnailURL })
+        ...(updatedThumbnailURL && { thumbnailURL: updatedThumbnailURL }),
+        ...(user.blockUIDs && { blockUIDs: user.blockUIDs })
       }),
       { merge: true }
     )
