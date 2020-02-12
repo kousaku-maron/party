@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { NavigationStackProp } from 'react-navigation-stack'
 import { useAuthState, useAuthActions } from '../store/hooks'
 import { useStyles, MakeStyles } from '../services/design'
 import { useSecure, usePushNotifications } from '../services/secure'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, Dimensions } from 'react-native'
+import { TabStackLayout } from '../components/templates'
 import { PushNotificationListItem } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 
@@ -41,33 +41,35 @@ const SettingScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <PushNotificationListItem
-        isExist={secure.pushTokens && secure.pushTokens.includes(pushNotificationsTools.deviceToken)}
-        onAccept={pushNotificationsTools.onAccept}
-        onReject={pushNotificationsTools.onReject}
-      />
+    <TabStackLayout>
+      <ScrollView style={styles.container}>
+        <PushNotificationListItem
+          isExist={secure.pushTokens && secure.pushTokens.includes(pushNotificationsTools.deviceToken)}
+          onAccept={pushNotificationsTools.onAccept}
+          onReject={pushNotificationsTools.onReject}
+        />
 
-      <TouchableOpacity style={styles.listItem} onPress={goToTerms}>
-        <Text style={styles.primaryText}>利用規約</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.listItem} onPress={goToTerms}>
+          <Text style={styles.primaryText}>利用規約</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.listItem} onPress={goToPrivacy}>
-        <Text style={styles.primaryText}>プライバシーポリシー</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.listItem} onPress={goToPrivacy}>
+          <Text style={styles.primaryText}>プライバシーポリシー</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.listItem}>
-        <Text style={styles.primaryText}>退会する</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.listItem}>
+          <Text style={styles.primaryText}>退会する</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.listItem} onPress={onSignOut}>
-        <Text style={styles.signoutText}>サインアウト</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <TouchableOpacity style={styles.listItem} onPress={onSignOut}>
+          <Text style={styles.signoutText}>サインアウト</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </TabStackLayout>
   )
 }
 
-SettingScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
+SettingScreen.navigationOptions = () => ({ headerShown: false })
 
 const hairlineWidth = StyleSheet.hairlineWidth
 const width = Dimensions.get('window').width

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { NavigationStackProp } from 'react-navigation-stack'
 import { useParties, useEntryDemoRoom } from '../services/party'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
@@ -115,7 +114,7 @@ const HomeScreen = ({ navigation }: Props) => {
   )
 }
 
-HomeScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
+HomeScreen.navigationOptions = () => ({ headerShown: false })
 
 const { width } = Dimensions.get('window')
 

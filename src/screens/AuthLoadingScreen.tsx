@@ -31,7 +31,7 @@ const AuthLoadingScreen = ({ navigation }: Props) => {
   )
 }
 
-AuthLoadingScreen.navigationOptions = () => ({ header: null })
+AuthLoadingScreen.navigationOptions = () => ({ headerShown: false })
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({

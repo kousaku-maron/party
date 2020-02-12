@@ -1,10 +1,10 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { NavigationStackProp } from 'react-navigation-stack'
 import { useGroups, useApplyGroup } from '../services/groups'
 import { useStyles, MakeStyles } from '../services/design'
 import { LoadingPage } from '../components/pages'
+import { TabStackLayout } from '../components/templates'
 import { GroupCard } from '../components/organisms'
 import { Group } from '../entities'
 import { useAuthState } from '../store/hooks'
@@ -68,16 +68,18 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
     return <LoadingPage />
   }
   return (
-    <View style={styles.container}>
-      <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
-      <View style={styles.entryButtonWrapper}>
-        <AddFab size={fabNormalSize} onPress={onPressAddFab} />
+    <TabStackLayout>
+      <View style={styles.container}>
+        <ScrollView>{FetchGroupsThumbnail(groups)}</ScrollView>
+        <View style={styles.entryButtonWrapper}>
+          <AddFab size={fabNormalSize} onPress={onPressAddFab} />
+        </View>
       </View>
-    </View>
+    </TabStackLayout>
   )
 }
 
-PartyGroupsScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
+PartyGroupsScreen.navigationOptions = () => ({ headerShown: false })
 
 const { width } = Dimensions.get('window')
 const materialMargin = 16

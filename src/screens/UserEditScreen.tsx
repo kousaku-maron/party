@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { NavigationStackProp } from 'react-navigation-stack'
 import { UpdateUser } from '../entities'
 import { useAuthState, useUIActions } from '../store/hooks'
 import * as UserRepository from '../repositories/user'
@@ -10,6 +9,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Fab, Thumbnail, TextInput } from '../components/atoms'
 import { LoadingPage } from '../components/pages'
+import { TabStackLayout } from '../components/templates'
 import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../services/flashCard'
 
 type OwnProps = {
@@ -45,35 +45,37 @@ const UserEditScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.editFab}>
-        <Fab color={colors.tints.primary.main} onPress={updateUserState}>
-          <MaterialIcons color={colors.foregrounds.onTintPrimary} name="done" size={24} />
-        </Fab>
-      </View>
+    <TabStackLayout>
+      <View style={styles.container}>
+        <View style={styles.editFab}>
+          <Fab color={colors.tints.primary.main} onPress={updateUserState}>
+            <MaterialIcons color={colors.foregrounds.onTintPrimary} name="done" size={24} />
+          </Fab>
+        </View>
 
-      <View style={styles.thumbnailWrapper}>
-        <Thumbnail uri={thumbnailURL} size={200} onPress={onChangeThumbnailURL} />
-      </View>
+        <View style={styles.thumbnailWrapper}>
+          <Thumbnail uri={thumbnailURL} size={200} onPress={onChangeThumbnailURL} />
+        </View>
 
-      <View>
-        <View style={styles.nameWrapper}>
-          <Text style={styles.titleText}>ネーム</Text>
-          <TextInput value={name} onChangeText={onChangeName}></TextInput>
+        <View>
+          <View style={styles.nameWrapper}>
+            <Text style={styles.titleText}>ネーム</Text>
+            <TextInput value={name} onChangeText={onChangeName}></TextInput>
+          </View>
+        </View>
+
+        <View>
+          <View style={styles.userIDWrapper}>
+            <Text style={styles.titleText}>ID</Text>
+            <TextInput value={userID} onChangeText={onChangeUserID}></TextInput>
+          </View>
         </View>
       </View>
-
-      <View>
-        <View style={styles.userIDWrapper}>
-          <Text style={styles.titleText}>ID</Text>
-          <TextInput value={userID} onChangeText={onChangeUserID}></TextInput>
-        </View>
-      </View>
-    </View>
+    </TabStackLayout>
   )
 }
 
-UserEditScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
+UserEditScreen.navigationOptions = () => ({ headerShown: false })
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({

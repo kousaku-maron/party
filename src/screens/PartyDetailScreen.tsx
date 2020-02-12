@@ -1,8 +1,8 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from 'react-native'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { NavigationStackProp } from 'react-navigation-stack'
 import { formatedDateMonthDateHour } from '../services/formatedDate'
+import { TabStackLayout } from '../components/templates'
 import { RoundedButton } from '../components/atoms'
 import { useParty } from '../services/party'
 import { useStyles, useColors, MakeStyles } from '../services/design'
@@ -28,32 +28,34 @@ const PartyDetailScreen = ({ navigation }: Props) => {
   const dateStr = formatedDateMonthDateHour(date)
 
   return (
-    <View style={styles.container}>
-      <ScrollView>
-        <View style={styles.inner}>
-          <Image style={[styles.image, { width: width }]} source={{ uri }} />
-          <View style={styles.descriptionContainer}>
-            <Text style={styles.areaText}>エリア: {party.name}</Text>
-            <Text style={styles.dateText}>日時: {dateStr}</Text>
+    <TabStackLayout>
+      <View style={styles.container}>
+        <ScrollView>
+          <View style={styles.inner}>
+            <Image style={[styles.image, { width: width }]} source={{ uri }} />
+            <View style={styles.descriptionContainer}>
+              <Text style={styles.areaText}>エリア: {party.name}</Text>
+              <Text style={styles.dateText}>日時: {dateStr}</Text>
+            </View>
           </View>
+        </ScrollView>
+        <View style={styles.entryButtonWrapper}>
+          <RoundedButton
+            color={colors.tints.primary.main}
+            fullWidth={true}
+            height={48}
+            padding={6}
+            onPress={navigation.state.params.onPressEntry}
+          >
+            <Text style={styles.entryButtonText}>参加</Text>
+          </RoundedButton>
         </View>
-      </ScrollView>
-      <View style={styles.entryButtonWrapper}>
-        <RoundedButton
-          color={colors.tints.primary.main}
-          fullWidth={true}
-          height={48}
-          padding={6}
-          onPress={navigation.state.params.onPressEntry}
-        >
-          <Text style={styles.entryButtonText}>参加</Text>
-        </RoundedButton>
       </View>
-    </View>
+    </TabStackLayout>
   )
 }
 
-PartyDetailScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
+PartyDetailScreen.navigationOptions = () => ({ headerShown: false })
 
 const { width } = Dimensions.get('window')
 const descriptionFontSize = 24

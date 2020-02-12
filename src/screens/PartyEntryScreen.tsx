@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { NavigationStackProp } from 'react-navigation-stack'
 import { User } from '../entities'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { useModal } from '../services/modal'
@@ -8,6 +7,7 @@ import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
 import * as userRepository from '../repositories/user'
 import { LoadingPage, SearchUserPage } from '../components/pages'
+import { TabStackLayout } from '../components/templates'
 import { Thumbnail, RoundedButton } from '../components/atoms'
 import _ from 'lodash'
 
@@ -83,58 +83,60 @@ const PartyEntryScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <View style={styles.container}>
-      {/* MEMO: 今後、ScrollViewで囲う可能性があるため、Viewで括っている */}
-      <View>
-        <View style={styles.inner}>
-          <View style={styles.titleWrapper}>
-            <Text style={styles.titleText}>参加ユーザー</Text>
-          </View>
-          <View>
-            {members.map((member, index) => {
-              if (!member) {
+    <TabStackLayout>
+      <View style={styles.container}>
+        {/* MEMO: 今後、ScrollViewで囲う可能性があるため、Viewで括っている */}
+        <View>
+          <View style={styles.inner}>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.titleText}>参加ユーザー</Text>
+            </View>
+            <View>
+              {members.map((member, index) => {
+                if (!member) {
+                  return (
+                    <View key={index} style={styles.memberWrapper}>
+                      <Thumbnail size={100} onPress={() => onSearch(index)} />
+                    </View>
+                  )
+                }
+
                 return (
-                  <View key={index} style={styles.memberWrapper}>
-                    <Thumbnail size={100} onPress={() => onSearch(index)} />
+                  <View key={member.uid} style={styles.memberWrapper}>
+                    <View style={styles.thumbnailWrapper}>
+                      {index === 0 ? (
+                        <Thumbnail size={100} uri={member.thumbnailURL} />
+                      ) : (
+                        <Thumbnail size={100} onPress={() => onSearch(index)} />
+                      )}
+                    </View>
+                    <Text style={styles.nameText}>{member.name}</Text>
+                    <Text style={styles.idText}>@{member.userID}</Text>
                   </View>
                 )
-              }
-
-              return (
-                <View key={member.uid} style={styles.memberWrapper}>
-                  <View style={styles.thumbnailWrapper}>
-                    {index === 0 ? (
-                      <Thumbnail size={100} uri={member.thumbnailURL} />
-                    ) : (
-                      <Thumbnail size={100} onPress={() => onSearch(index)} />
-                    )}
-                  </View>
-                  <Text style={styles.nameText}>{member.name}</Text>
-                  <Text style={styles.idText}>@{member.userID}</Text>
-                </View>
-              )
-            })}
+              })}
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.entryButtonWrapper}>
-        <RoundedButton disabled={!enabledEntry} fullWidth={true} height={48} onPress={onEntry}>
-          <Text style={styles.entryText}>参加する</Text>
-        </RoundedButton>
-      </View>
+        <View style={styles.entryButtonWrapper}>
+          <RoundedButton disabled={!enabledEntry} fullWidth={true} height={48} onPress={onEntry}>
+            <Text style={styles.entryText}>参加する</Text>
+          </RoundedButton>
+        </View>
 
-      <SearchUserPage
-        isVisible={isVisible}
-        onClose={onClose}
-        onSelectUser={onSelectUser}
-        ignoreUserIDs={ignoreUserIDs}
-      />
-    </View>
+        <SearchUserPage
+          isVisible={isVisible}
+          onClose={onClose}
+          onSelectUser={onSelectUser}
+          ignoreUserIDs={ignoreUserIDs}
+        />
+      </View>
+    </TabStackLayout>
   )
 }
 
-PartyEntryScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
+PartyEntryScreen.navigationOptions = () => ({ headerShown: false })
 
 const width = Dimensions.get('window').width
 

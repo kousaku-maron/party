@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from 'react'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { NavigationStackProp } from 'react-navigation-stack'
 import { useAuthState } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
@@ -140,7 +139,7 @@ const UserScreen = ({ navigation }: Props) => {
   )
 }
 
-UserScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
+UserScreen.navigationOptions = () => ({ headerShown: false })
 
 // const hairlineWidth = StyleSheet.hairlineWidth
 

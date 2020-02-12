@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { NavigationStackProp } from 'react-navigation-stack'
 import { useStyles, MakeStyles } from '../services/design'
 import { LoadingPage } from '../components/pages'
+import { TabStackLayout } from '../components/templates'
 import { MembersCard } from '../components/organisms'
 import { User } from '../entities'
 import { useMembers } from '../services/members'
@@ -36,13 +36,15 @@ const GroupDetailScreen = ({ navigation }: Props) => {
     return <LoadingPage />
   }
   return (
-    <View style={styles.container}>
-      <ScrollView>{FetchMembersThumbnail(members)}</ScrollView>
-    </View>
+    <TabStackLayout>
+      <View style={styles.container}>
+        <ScrollView>{FetchMembersThumbnail(members)}</ScrollView>
+      </View>
+    </TabStackLayout>
   )
 }
 
-GroupDetailScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
+GroupDetailScreen.navigationOptions = () => ({ headerShown: false })
 
 const { width } = Dimensions.get('window')
 
@@ -58,6 +60,11 @@ const makeStyles: MakeStyles = colors =>
       width: width,
       padding: 10,
       backgroundColor: colors.backgrounds.primary
+    },
+    backContainer: {
+      position: 'absolute',
+      top: 12,
+      left: 12
     }
   })
 
