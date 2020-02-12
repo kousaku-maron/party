@@ -12,7 +12,7 @@ type Props = {
   size?: number
 }
 
-const AddFab: React.FC<Props> = ({ color, disabled = false, onPress, children, size = 48, padding = 8 }) => {
+const BackButton: React.FC<Props> = ({ color, disabled = false, onPress, children, size = 48, padding = 8 }) => {
   const colors = useColors()
   const styles = useStyles(makeStyles)
 
@@ -21,7 +21,6 @@ const AddFab: React.FC<Props> = ({ color, disabled = false, onPress, children, s
       style={[
         styles.container,
         {
-          backgroundColor: color ?? colors.tints.primary.main,
           borderRadius: (size + padding * 2) / 2,
           padding
         }
@@ -29,13 +28,13 @@ const AddFab: React.FC<Props> = ({ color, disabled = false, onPress, children, s
       disabled={disabled}
       onPress={onPress}
     >
-      <AntDesign name="plus" size={size} style={[styles.antDesign]} />
+      <AntDesign name="left" size={size} color={color ?? colors.foregrounds.primary} style={[styles.antDesign]} />
       {children}
     </TouchableOpacity>
   )
 }
 
-const makeStyles: MakeStyles = colors =>
+const makeStyles: MakeStyles = () =>
   StyleSheet.create({
     container: {
       display: 'flex',
@@ -43,9 +42,8 @@ const makeStyles: MakeStyles = colors =>
       alignItems: 'center'
     },
     antDesign: {
-      color: colors.foregrounds.onTintPrimary,
       justifyContent: 'center'
     }
   })
 
-export default AddFab
+export default BackButton

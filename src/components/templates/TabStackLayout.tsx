@@ -1,12 +1,12 @@
-import React, { useCallback, useState, useEffect } from 'react'
-import { StyleSheet, Dimensions, View } from 'react-native'
+import React, { useEffect, useCallback, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 import { useNavigation } from 'react-navigation-hooks'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useStyles, MakeStyles } from '../../services/design'
-import { BottomTab } from '../organisms'
 import { BackButton } from '../atoms'
 
-const BottomTabLayout: React.FC<{}> = ({ children }) => {
+// TODO: 命名を考える。
+const TabStackLayout: React.FC<{}> = ({ children }) => {
   const navigation = useNavigation()
   const inset = useSafeArea()
   const styles = useStyles(makeStyles)
@@ -29,12 +29,6 @@ const BottomTabLayout: React.FC<{}> = ({ children }) => {
   return (
     <React.Fragment>
       {children}
-      {!enabledGoBack && (
-        <View style={[styles.tabContainer, { paddingBottom: inset.bottom }]}>
-          <BottomTab fullWidth={true} />
-        </View>
-      )}
-
       {enabledGoBack && (
         <View style={[styles.backIconContainer, { paddingTop: inset.top }]}>
           <BackButton onPress={goBack} />
@@ -44,16 +38,8 @@ const BottomTabLayout: React.FC<{}> = ({ children }) => {
   )
 }
 
-const fullWidth = Dimensions.get('window').width
-
 const makeStyles: MakeStyles = () =>
   StyleSheet.create({
-    tabContainer: {
-      position: 'absolute',
-      bottom: 0,
-      width: fullWidth,
-      paddingHorizontal: 12
-    },
     backIconContainer: {
       position: 'absolute',
       top: 0,
@@ -61,4 +47,4 @@ const makeStyles: MakeStyles = () =>
     }
   })
 
-export default BottomTabLayout
+export default TabStackLayout
