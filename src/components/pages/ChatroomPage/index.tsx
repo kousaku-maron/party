@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { View, StyleSheet } from 'react-native'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { useStyles, MakeStyles } from '../../../services/design'
+import { TabStackLayout } from '../../templates'
 import { CustomBubble } from './Bubble'
 import { CustomAvatar } from './Avatar'
 import { CustomSend } from './Send'
@@ -32,35 +33,37 @@ const ChatroomPage = ({ roomID /*, onPressAvatar */ }: Props) => {
   const renderDay = useCallback(props => <CustomDay {...props} />, [])
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.inner}>
-        <GiftedChat
-          placeholder="Aa"
-          messages={messages}
-          user={{ _id: uid }}
-          alwaysShowSend={true}
-          renderAvatarOnTop={true}
-          showAvatarForEveryMessage={true}
-          isKeyboardInternallyHandled={false}
-          onSend={onSend}
-          onQuickReply={onQuickReply}
-          // onPressActionButton={onPressActionButton}
-          // onPressAvatar={(user: User) => {
-          //   if (onPressAvatar) {
-          //     onPressAvatar(user)
-          //   }
-          // }}
-          renderBubble={renderBubble}
-          renderAvatar={renderAvatar}
-          renderSend={renderSend}
-          renderInputToolbar={renderInputToolbar}
-          renderComposer={renderComposer}
-          // renderActions={renderActions}
-          renderDay={renderDay}
-        />
-      </View>
-      <KeyboardSpacer />
-    </SafeAreaView>
+    <TabStackLayout>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.inner}>
+          <GiftedChat
+            placeholder="Aa"
+            messages={messages}
+            user={{ _id: uid }}
+            alwaysShowSend={true}
+            renderAvatarOnTop={true}
+            showAvatarForEveryMessage={true}
+            isKeyboardInternallyHandled={false}
+            onSend={onSend}
+            onQuickReply={onQuickReply}
+            // onPressActionButton={onPressActionButton}
+            // onPressAvatar={(user: User) => {
+            //   if (onPressAvatar) {
+            //     onPressAvatar(user)
+            //   }
+            // }}
+            renderBubble={renderBubble}
+            renderAvatar={renderAvatar}
+            renderSend={renderSend}
+            renderInputToolbar={renderInputToolbar}
+            renderComposer={renderComposer}
+            // renderActions={renderActions}
+            renderDay={renderDay}
+          />
+        </View>
+        <KeyboardSpacer />
+      </SafeAreaView>
+    </TabStackLayout>
   )
 }
 

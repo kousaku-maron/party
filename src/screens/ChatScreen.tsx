@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import { User } from 'react-native-gifted-chat'
 import { ChatroomPage } from '../components/pages'
-import { TabStackLayout } from '../components/templates'
 import { NavigationStackProp } from 'react-navigation-stack'
 
 type OwnProps = { navigation: NavigationStackProp }
@@ -17,11 +16,7 @@ const ChatScreen = ({ navigation }: Props) => {
     [navigation]
   )
 
-  return (
-    <TabStackLayout>
-      <ChatroomPage roomID={roomID} onPressAvatar={onPressAvatar} />
-    </TabStackLayout>
-  )
+  return <ChatroomPage roomID={roomID} onPressAvatar={onPressAvatar} />
 }
 
 ChatScreen.navigationOptions = () => ({ headerShown: false })

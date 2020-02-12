@@ -60,11 +60,6 @@ const makeStyles: MakeStyles = colors =>
       width: width,
       padding: 10,
       backgroundColor: colors.backgrounds.primary
-    },
-    backContainer: {
-      position: 'absolute',
-      top: 12,
-      left: 12
     }
   })
 
