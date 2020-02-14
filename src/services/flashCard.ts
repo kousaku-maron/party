@@ -152,6 +152,46 @@ export const showApplyFriendAlreadyappliedMessage = () => {
   })
 }
 
+export const showAcceptFriendSunccessMessage = () => {
+  showMessage({
+    message: '友達申請を承認しました',
+    type: 'success',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showAcceptFriendFailurMessage = () => {
+  showMessage({
+    message: '友達申請承認に失敗しました',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showAcceptFriendAlreadyacceptedMessage = () => {
+  showMessage({
+    message: 'このユーザーはすでに友達です',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showRefuseFriendSunccessMessage = () => {
+  showMessage({
+    message: '友達申請を拒否しました',
+    type: 'success',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showRefuseFriendFailurMessage = () => {
+  showMessage({
+    message: '友達申請拒否に失敗しました',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
 const styles = {
   flashCardMessage: {
     fontSize: 14

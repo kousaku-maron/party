@@ -83,7 +83,6 @@ const HomeScreen = ({ navigation }: Props) => {
     },
     [navigation, onPressEntryDemoRoom, styles.container]
   )
-
   if (!parties) {
     return <LoadingPage />
   }
