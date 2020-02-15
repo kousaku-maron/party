@@ -75,8 +75,8 @@ export const setUser = async (uid: string, user: UpdateUser) => {
         name: user.name,
         ...(updatedThumbnailURL && { thumbnailURL: updatedThumbnailURL }),
         ...(user.blockUIDs && { blockUIDs: user.blockUIDs }),
-        ...(user.appliedFriendsUIDs && { appliedFriendsUIDs: user.appliedFriendsUIDs }),
-        ...(user.acceptedFriendsUIDs && { acceptedFriendsUIDs: user.acceptedFriendsUIDs })
+        ...(user.appliedFriendUIDs && { appliedFriendUIDs: user.appliedFriendUIDs }),
+        ...(user.friendUIDs && { friendUIDs: user.friendUIDs })
       }),
       { merge: true }
     )

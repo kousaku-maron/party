@@ -87,8 +87,8 @@ export const onCreateGroup = async (partyID: string, group: CreateGroup, members
         ...(member.gender && { gender: member.gender }),
         ...(member.thumbnailURL && { thumbnailURL: member.thumbnailURL }),
         ...(member.blockUIDs && { blockUIDs: member.blockUIDs }),
-        ...(member.appliedFriendsUIDs && { appliedFriendsUIDs: member.appliedFriendsUIDs }),
-        ...(member.acceptedFriendsUIDs && { acceptedFriendsUIDs: member.acceptedFriendsUIDs })
+        ...(member.appliedFriendUIDs && { appliedFriendUIDs: member.appliedFriendUIDs }),
+        ...(member.friendUIDs && { friendUIDs: member.friendUIDs })
       }
       return setMember
     })

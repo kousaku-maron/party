@@ -5,24 +5,24 @@ import { createDocument } from '../entities/Document'
 const db = firebase.firestore()
 const usersRef = db.collection('users')
 
-export const createAcceptedUser = async (uid: string, acceptedFriend: User) => {
-  const acceptedFriendsRef = usersRef.doc(uid).collection('acceptedFriends')
+export const createAcceptedFriendUser = async (uid: string, acceptedFriendUser: User) => {
+  const friendUsersRef = usersRef.doc(uid).collection('friendUsers')
   const batch = db.batch()
   try {
     batch.set(
-      acceptedFriendsRef.doc(),
+      friendUsersRef.doc(),
       createDocument<User>({
-        enabled: acceptedFriend.enabled,
-        isAccepted: acceptedFriend.isAccepted,
-        isAnonymous: acceptedFriend.isAnonymous,
-        uid: acceptedFriend.uid,
-        userID: acceptedFriend.userID,
-        name: acceptedFriend.name,
-        ...(acceptedFriend.thumbnailURL && { thumbnailURL: acceptedFriend.thumbnailURL }),
-        ...(acceptedFriend.gender && { gender: acceptedFriend.gender }),
-        ...(acceptedFriend.blockUIDs && { blockUIDs: acceptedFriend.blockUIDs }),
-        ...(acceptedFriend.appliedFriendsUIDs && { appliedFriendsUIDs: acceptedFriend.appliedFriendsUIDs }),
-        ...(acceptedFriend.acceptedFriendsUIDs && { acceptedFriendsUIDs: acceptedFriend.acceptedFriendsUIDs })
+        enabled: acceptedFriendUser.enabled,
+        isAccepted: acceptedFriendUser.isAccepted,
+        isAnonymous: acceptedFriendUser.isAnonymous,
+        uid: acceptedFriendUser.uid,
+        userID: acceptedFriendUser.userID,
+        name: acceptedFriendUser.name,
+        ...(acceptedFriendUser.thumbnailURL && { thumbnailURL: acceptedFriendUser.thumbnailURL }),
+        ...(acceptedFriendUser.gender && { gender: acceptedFriendUser.gender }),
+        ...(acceptedFriendUser.blockUIDs && { blockUIDs: acceptedFriendUser.blockUIDs }),
+        ...(acceptedFriendUser.appliedFriendUIDs && { appliedFriendUIDs: acceptedFriendUser.appliedFriendUIDs }),
+        ...(acceptedFriendUser.friendUIDs && { friendUIDs: acceptedFriendUser.friendUIDs })
       }),
       { merge: false }
     )

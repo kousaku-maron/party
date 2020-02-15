@@ -22,7 +22,7 @@ export const createBlockUser = async (uid: string, blockUser: User) => {
         ...(blockUser.gender && { gender: blockUser.gender }),
         ...(blockUser.blockUIDs && { blockUIDs: blockUser.blockUIDs }),
         ...(blockUser.appliedFriendsUIDs && { appliedFriendsUIDs: blockUser.appliedFriendsUIDs }),
-        ...(blockUser.acceptedFriendsUIDs && { acceptedFriendsUIDs: blockUser.acceptedFriendsUIDs })
+        ...(blockUser.friendUIDs && { friendUIDs: blockUser.friendUIDs })
       }),
       { merge: false }
     )

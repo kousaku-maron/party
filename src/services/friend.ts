@@ -2,8 +2,8 @@ import { functions } from '../repositories/firebase'
 import { useAuthState } from '../store/hooks'
 import { User, UpdateUser } from '../entities/User'
 import { setUser } from '../repositories/user'
-import { deleteAppliedFriend, getAppliedFriendUID } from '../repositories/appliedFriend'
-import { createAcceptedUser } from '../repositories/acceptedFriend'
+import { deleteAppliedFriendUser, getAppliedFriendUserUID } from '../repositories/appliedFriend'
+import { createAcceptedFriendUser } from '../repositories/acceptedFriend'
 import {
   showApplyFriendSunccessMessage,
   showApplyFriendFailurMessage,
@@ -19,14 +19,14 @@ import _ from 'lodash'
 
 export const useApplyFriend = () => {
   const { uid } = useAuthState()
-  const applyFriend = async (appliedFriend: User) => {
-    const appliedFriendsUID = appliedFriend.uid
+  const applyFriend = async (appliedFriendUser: User) => {
+    const appliedFriendUID = appliedFriendUser.uid
     try {
-      if (appliedFriend.appliedFriendsUIDs && appliedFriend.appliedFriendsUIDs.includes(uid)) {
+      if (appliedFriendUser.appliedFriendUIDs && appliedFriendUser.appliedFriendUIDs.includes(uid)) {
         showApplyFriendAlreadyappliedMessage()
         return
       }
-      await functions.httpsCallable('applyFriend')({ appliedFriendsUID })
+      await functions.httpsCallable('applyFriend')({ appliedFriendUID })
       showApplyFriendSunccessMessage()
     } catch (e) {
       showApplyFriendFailurMessage()
@@ -38,10 +38,10 @@ export const useApplyFriend = () => {
 
 export const useAcceptFriend = () => {
   const { uid, user } = useAuthState()
-  const acceptFriend = async (acceptedFriend: User) => {
-    const acceptedFriendsUID = acceptedFriend.uid
+  const acceptFriend = async (acceptedFriendUser: User) => {
+    const friendUID = acceptedFriendUser.uid
     try {
-      if (acceptedFriend.acceptedFriendsUIDs && acceptedFriend.acceptedFriendsUIDs.includes(uid)) {
+      if (acceptedFriendUser.friendUIDs && acceptedFriendUser.friendUIDs.includes(uid)) {
         showAcceptFriendAlreadyacceptedMessage()
         return
       }
@@ -49,14 +49,12 @@ export const useAcceptFriend = () => {
         uid: user.uid,
         name: user.name,
         thumbnailURL: user.thumbnailURL,
-        appliedFriendsUIDs: _.without(user.appliedFriendsUIDs, acceptedFriendsUID),
-        acceptedFriendsUIDs: _.uniq(
-          user.acceptedFriendsUIDs ? [acceptedFriendsUID, ...user.acceptedFriendsUIDs] : [acceptedFriendsUID]
-        )
+        appliedFriendUIDs: _.without(user.appliedFriendUIDs, friendUID),
+        friendUIDs: _.uniq(user.friendUIDs ? [friendUID, ...user.friendUIDs] : [friendUID])
       }
-      const appliedUserUID = await getAppliedFriendUID(uid, acceptedFriendsUID)
-      createAcceptedUser(uid, acceptedFriend)
-      deleteAppliedFriend(uid, appliedUserUID)
+      const appliedFriendUserUID = await getAppliedFriendUserUID(uid, friendUID)
+      createAcceptedFriendUser(uid, acceptedFriendUser)
+      deleteAppliedFriendUser(uid, appliedFriendUserUID)
       setUser(uid, newUser)
       showAcceptFriendSunccessMessage()
     } catch (e) {
@@ -76,11 +74,11 @@ export const useRefuseFriend = () => {
         uid: user.uid,
         name: user.name,
         thumbnailURL: user.thumbnailURL,
-        appliedFriendsUIDs: _.without(user.appliedFriendsUIDs, refusedFriendsUID)
+        appliedFriendUIDs: _.without(user.appliedFriendUIDs, refusedFriendsUID)
       }
-      const appliedUserUID = await getAppliedFriendUID(uid, refusedFriendsUID)
+      const appliedFriendUserUID = await getAppliedFriendUserUID(uid, refusedFriendsUID)
       setUser(uid, newUser)
-      deleteAppliedFriend(uid, appliedUserUID)
+      deleteAppliedFriendUser(uid, appliedFriendUserUID)
       showRefuseFriendSunccessMessage()
     } catch (e) {
       showRefuseFriendFailurMessage()

@@ -5,24 +5,24 @@ import { createDocument } from '../entities/Document'
 const db = firebase.firestore()
 const usersRef = db.collection('users')
 
-export const createAppliedFriend = async (uid: string, appliedFriend: User) => {
-  const appliedFriendRef = usersRef.doc(uid).collection('appliedFriends')
+export const createAppliedFriendUser = async (uid: string, appliedFriendUser: User) => {
+  const appliedFriendUserRef = usersRef.doc(uid).collection('appliedFriendUsers')
   const batch = db.batch()
   try {
     batch.set(
-      appliedFriendRef.doc(),
+      appliedFriendUserRef.doc(),
       createDocument<User>({
-        enabled: appliedFriend.enabled,
-        isAccepted: appliedFriend.isAccepted,
-        isAnonymous: appliedFriend.isAnonymous,
-        uid: appliedFriend.uid,
-        userID: appliedFriend.userID,
-        name: appliedFriend.name,
-        ...(appliedFriend.thumbnailURL && { thumbnailURL: appliedFriend.thumbnailURL }),
-        ...(appliedFriend.gender && { gender: appliedFriend.gender }),
-        ...(appliedFriend.blockUIDs && { blockUIDs: appliedFriend.blockUIDs }),
-        ...(appliedFriend.appliedFriendsUIDs && { appliedFriendsUIDs: appliedFriend.appliedFriendsUIDs }),
-        ...(appliedFriend.acceptedFriendsUIDs && { acceptedFriendsUIDs: appliedFriend.acceptedFriendsUIDs })
+        enabled: appliedFriendUser.enabled,
+        isAccepted: appliedFriendUser.isAccepted,
+        isAnonymous: appliedFriendUser.isAnonymous,
+        uid: appliedFriendUser.uid,
+        userID: appliedFriendUser.userID,
+        name: appliedFriendUser.name,
+        ...(appliedFriendUser.thumbnailURL && { thumbnailURL: appliedFriendUser.thumbnailURL }),
+        ...(appliedFriendUser.gender && { gender: appliedFriendUser.gender }),
+        ...(appliedFriendUser.blockUIDs && { blockUIDs: appliedFriendUser.blockUIDs }),
+        ...(appliedFriendUser.appliedFriendUIDs && { appliedFriendUIDs: appliedFriendUser.appliedFriendUIDs }),
+        ...(appliedFriendUser.friendUIDs && { friendUIDs: appliedFriendUser.friendUIDs })
       }),
       { merge: false }
     )
@@ -32,23 +32,23 @@ export const createAppliedFriend = async (uid: string, appliedFriend: User) => {
   }
 }
 
-export const deleteAppliedFriend = async (uid: string, appliedFriendUID: string) => {
-  const appliedFriendsRef = usersRef
+export const deleteAppliedFriendUser = async (uid: string, appliedFriendUID: string) => {
+  const appliedFriendUserRef = usersRef
     .doc(uid)
-    .collection('appliedFriends')
+    .collection('appliedFriendUsers')
     .doc(appliedFriendUID)
   const batch = db.batch()
   try {
-    batch.delete(appliedFriendsRef)
+    batch.delete(appliedFriendUserRef)
     await batch.commit()
   } catch (e) {
     console.warn(e)
   }
 }
 
-export const getAppliedFriendUID = async (uid: string, appliedFriendUID: string) => {
-  const appliedFriendsRef = usersRef.doc(uid).collection('appliedFriends')
-  const snapshot = await appliedFriendsRef.where('uid', '==', appliedFriendUID).get()
+export const getAppliedFriendUserUID = async (uid: string, appliedFriendUID: string) => {
+  const appliedFriendUsersRef = usersRef.doc(uid).collection('appliedFriendUsers')
+  const snapshot = await appliedFriendUsersRef.where('uid', '==', appliedFriendUID).get()
 
   if (snapshot.docs.length !== 1) {
     console.warn('There are  mroe than two uids')
