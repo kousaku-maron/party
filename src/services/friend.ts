@@ -38,10 +38,10 @@ export const useApplyFriend = () => {
 
 export const useAcceptFriend = () => {
   const { uid, user } = useAuthState()
-  const acceptFriend = async (friendUser: User) => {
-    const friendUID = friendUser.uid
+  const acceptFriend = async (friend: User) => {
+    const friendUID = friend.uid
     try {
-      if (friendUser.friendUIDs && friendUser.friendUIDs.includes(uid)) {
+      if (friend.friendUIDs && friend.friendUIDs.includes(uid)) {
         showAcceptFriendAlreadyacceptedMessage()
         return
       }
@@ -53,7 +53,7 @@ export const useAcceptFriend = () => {
         friendUIDs: _.uniq(user.friendUIDs ? [friendUID, ...user.friendUIDs] : [friendUID])
       }
       const appliedFriendUserUID = await getAppliedFriendUserUID(uid, friendUID)
-      createfriend(uid, friendUser)
+      createfriend(uid, friend)
       deleteAppliedFriendUser(uid, appliedFriendUserUID)
       setUser(uid, newUser)
       await functions.httpsCallable('acceptFriend')({ friendUID })
