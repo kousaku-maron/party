@@ -3,7 +3,7 @@ import { useAuthState } from '../store/hooks'
 import { User, UpdateUser } from '../entities/User'
 import { setUser } from '../repositories/user'
 import { deleteAppliedFriendUser, getAppliedFriendUserUID } from '../repositories/appliedFriend'
-import { createAcceptedFriendUser } from '../repositories/acceptedFriend'
+import { createfriend } from '../repositories/friend'
 import {
   showApplyFriendSunccessMessage,
   showApplyFriendFailurMessage,
@@ -38,10 +38,10 @@ export const useApplyFriend = () => {
 
 export const useAcceptFriend = () => {
   const { uid, user } = useAuthState()
-  const acceptFriend = async (acceptedFriendUser: User) => {
-    const friendUID = acceptedFriendUser.uid
+  const acceptFriend = async (friendUser: User) => {
+    const friendUID = friendUser.uid
     try {
-      if (acceptedFriendUser.friendUIDs && acceptedFriendUser.friendUIDs.includes(uid)) {
+      if (friendUser.friendUIDs && friendUser.friendUIDs.includes(uid)) {
         showAcceptFriendAlreadyacceptedMessage()
         return
       }
@@ -53,9 +53,10 @@ export const useAcceptFriend = () => {
         friendUIDs: _.uniq(user.friendUIDs ? [friendUID, ...user.friendUIDs] : [friendUID])
       }
       const appliedFriendUserUID = await getAppliedFriendUserUID(uid, friendUID)
-      createAcceptedFriendUser(uid, acceptedFriendUser)
+      createfriend(uid, friendUser)
       deleteAppliedFriendUser(uid, appliedFriendUserUID)
       setUser(uid, newUser)
+      await functions.httpsCallable('acceptFriend')({ friendUID })
       showAcceptFriendSunccessMessage()
     } catch (e) {
       showAcceptFriendFailurMessage()
