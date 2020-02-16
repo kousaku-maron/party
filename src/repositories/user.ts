@@ -38,7 +38,7 @@ const setUserID = async (uid: string, userID: string) => {
 export const getUser = async (uid: string) => {
   try {
     const snapshot = await usersRef.doc(uid).get()
-    const user = buildUser(snapshot.data())
+    const user = buildUser(snapshot.id, snapshot.data())
     return user
   } catch (e) {
     console.warn(e)

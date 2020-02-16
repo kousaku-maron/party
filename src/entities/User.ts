@@ -1,4 +1,5 @@
 export type User = {
+  id: string
   enabled: boolean
   isAccepted: boolean
   isAnonymous: boolean
@@ -12,8 +13,9 @@ export type User = {
   friendUIDs?: string[]
 }
 
-export const buildUser = (data: firebase.firestore.DocumentData) => {
+export const buildUser = (id: string, data: firebase.firestore.DocumentData) => {
   const newUser = {
+    id: data.id,
     enabled: data.enabled,
     isAccepted: data.isAccepted,
     isAnonymous: data.isAnonymous,
