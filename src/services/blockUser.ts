@@ -58,7 +58,7 @@ export const useBlockUsers = () => {
         .collection('blockUsers')
       const unsubscribe = blockUsersRef.onSnapshot(snapShot => {
         const newBlockUsers: User[] = snapShot.docs.map(doc => {
-          return buildUser(doc.data())
+          return buildUser(doc.id, doc.data())
         })
         setblockUsers(newBlockUsers)
       })

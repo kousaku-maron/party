@@ -41,7 +41,7 @@ const userChannel = (uid: string) => {
     const unsubscribe = userRef.onSnapshot(
       (doc: firebase.firestore.DocumentSnapshot) => {
         if (!doc.exists) return null
-        const user = buildUser(doc.data())
+        const user = buildUser(doc.id, doc.data())
         emit({ user })
       },
       (error: Error) => {

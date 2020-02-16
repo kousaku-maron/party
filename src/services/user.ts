@@ -19,7 +19,7 @@ export const useUser = (uid: string) => {
       if (!uid) return
       const userRef = usersRef.doc(uid)
       const unsubscribe = userRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
-        const user = buildUser(doc.data())
+        const user = buildUser(doc.id, doc.data())
         setUser(user)
       })
       return () => {
@@ -48,7 +48,7 @@ export const useSearchUsers = (options?: SearchUsersOption) => {
 
       const users = snapshot.docs
         .map(doc => {
-          const user = buildUser(doc.data())
+          const user = buildUser(doc.id, doc.data())
           return user
         })
         .filter(user => {

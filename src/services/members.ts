@@ -22,7 +22,7 @@ export const useMembers = (partyID: string, groupID: string) => {
       if (!user) return
       const unsubscribe = membersRef.onSnapshot(snapShot => {
         const newMembers: User[] = snapShot.docs.map(doc => {
-          return buildUser(doc.data())
+          return buildUser(doc.id, doc.data())
         })
 
         setMembers(newMembers)

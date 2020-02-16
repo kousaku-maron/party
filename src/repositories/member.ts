@@ -10,7 +10,7 @@ export const getMembers = async (partyID: string, groupID: string) => {
     .collection('mambers')
   try {
     const snapShot = await membersRef.get()
-    const members = snapShot.docs.map(doc => buildUser(doc))
+    const members = snapShot.docs.map(doc => buildUser(doc.id, doc))
     return members
   } catch (e) {
     console.warn(e)
