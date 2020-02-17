@@ -2,6 +2,7 @@ import { QuickReplies } from 'react-native-gifted-chat'
 
 // same User type
 export type MessageUser = {
+  id: string
   enabled: boolean
   isAccepted: boolean
   isAnonymous: boolean
@@ -10,6 +11,9 @@ export type MessageUser = {
   name: string
   thumbnailURL?: string
   gender?: string
+  blockUIDs?: string[]
+  appliedFriendUIDs?: string[]
+  friendUIDs?: string[]
 }
 
 export type Message = {
@@ -49,6 +53,7 @@ export type CreateMessage = Pick<
 export type UpdateMessage = Pick<Message, 'user'>
 
 export const systemUser: MessageUser = {
+  id: 'admin',
   enabled: true,
   isAccepted: true,
   isAnonymous: false,

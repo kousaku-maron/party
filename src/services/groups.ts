@@ -78,17 +78,18 @@ export const onCreateGroup = async (partyID: string, group: CreateGroup, members
   try {
     const setMembers: User[] = members.map(member => {
       const setMember: User = {
+        id: member.id,
         uid: member.uid,
         userID: member.userID,
         enabled: member.enabled,
         isAccepted: member.isAccepted,
         isAnonymous: member.isAnonymous,
         name: member.name,
-        ...(member.gender && { gender: member.gender }),
-        ...(member.thumbnailURL && { thumbnailURL: member.thumbnailURL }),
-        ...(member.blockUIDs && { blockUIDs: member.blockUIDs }),
-        ...(member.appliedFriendUIDs && { appliedFriendUIDs: member.appliedFriendUIDs }),
-        ...(member.friendUIDs && { friendUIDs: member.friendUIDs })
+        gender: member.gender,
+        thumbnailURL: member.thumbnailURL,
+        blockUIDs: member.blockUIDs,
+        appliedFriendUIDs: member.appliedFriendUIDs,
+        friendUIDs: member.friendUIDs
       }
       return setMember
     })

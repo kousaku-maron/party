@@ -12,17 +12,18 @@ export const createfriend = async (uid: string, friend: User) => {
     batch.set(
       friendsRef.doc(),
       createDocument<User>({
+        id: friend.id,
         enabled: friend.enabled,
         isAccepted: friend.isAccepted,
         isAnonymous: friend.isAnonymous,
         uid: friend.uid,
         userID: friend.userID,
         name: friend.name,
-        ...(friend.thumbnailURL && { thumbnailURL: friend.thumbnailURL }),
-        ...(friend.gender && { gender: friend.gender }),
-        ...(friend.blockUIDs && { blockUIDs: friend.blockUIDs }),
-        ...(friend.appliedFriendUIDs && { appliedFriendUIDs: friend.appliedFriendUIDs }),
-        ...(friend.friendUIDs && { friendUIDs: friend.friendUIDs })
+        thumbnailURL: friend.thumbnailURL,
+        gender: friend.gender,
+        blockUIDs: friend.blockUIDs,
+        appliedFriendUIDs: friend.appliedFriendUIDs,
+        friendUIDs: friend.friendUIDs
       }),
       { merge: false }
     )

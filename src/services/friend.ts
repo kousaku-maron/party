@@ -2,7 +2,7 @@ import { functions } from '../repositories/firebase'
 import { useAuthState } from '../store/hooks'
 import { User, UpdateUser } from '../entities/User'
 import { setUser } from '../repositories/user'
-import { deleteAppliedFriendUser, getAppliedFriendUserUID } from '../repositories/appliedFriend'
+import { deleteAppliedFriendUser, getAppliedFriendUser } from '../repositories/appliedFriend'
 import { createfriend } from '../repositories/friend'
 import {
   showApplyFriendSunccessMessage,
@@ -52,9 +52,10 @@ export const useAcceptFriend = () => {
         appliedFriendUIDs: _.without(user.appliedFriendUIDs, friendUID),
         friendUIDs: _.uniq(user.friendUIDs ? [friendUID, ...user.friendUIDs] : [friendUID])
       }
-      const appliedFriendUserUID = await getAppliedFriendUserUID(uid, friendUID)
+      const appliedFriendUser = await getAppliedFriendUser(uid, friendUID)
+      const appliedFriendUserID = appliedFriendUser.id
       createfriend(uid, friend)
-      deleteAppliedFriendUser(uid, appliedFriendUserUID)
+      deleteAppliedFriendUser(uid, appliedFriendUserID)
       setUser(uid, newUser)
       await functions.httpsCallable('acceptFriend')({ friendUID })
       showAcceptFriendSunccessMessage()
@@ -77,9 +78,10 @@ export const useRefuseFriend = () => {
         thumbnailURL: user.thumbnailURL,
         appliedFriendUIDs: _.without(user.appliedFriendUIDs, refusedFriendsUID)
       }
-      const appliedFriendUserUID = await getAppliedFriendUserUID(uid, refusedFriendsUID)
+      const appliedFriendUser = await getAppliedFriendUser(uid, refusedFriendsUID)
+      const appliedFriendUserID = appliedFriendUser.id
       setUser(uid, newUser)
-      deleteAppliedFriendUser(uid, appliedFriendUserUID)
+      deleteAppliedFriendUser(uid, appliedFriendUserID)
       showRefuseFriendSunccessMessage()
     } catch (e) {
       showRefuseFriendFailurMessage()

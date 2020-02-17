@@ -12,17 +12,18 @@ export const createBlockUser = async (uid: string, blockUser: User) => {
     batch.set(
       blockUserRef.doc(),
       createDocument<User>({
+        id: blockUser.id,
         enabled: blockUser.enabled,
         isAccepted: blockUser.isAccepted,
         isAnonymous: blockUser.isAnonymous,
         uid: blockUser.uid,
         userID: blockUser.userID,
         name: blockUser.name,
-        ...(blockUser.thumbnailURL && { thumbnailURL: blockUser.thumbnailURL }),
-        ...(blockUser.gender && { gender: blockUser.gender }),
-        ...(blockUser.blockUIDs && { blockUIDs: blockUser.blockUIDs }),
-        ...(blockUser.appliedFriendsUIDs && { appliedFriendsUIDs: blockUser.appliedFriendsUIDs }),
-        ...(blockUser.friendUIDs && { friendUIDs: blockUser.friendUIDs })
+        thumbnailURL: blockUser.thumbnailURL,
+        gender: blockUser.gender,
+        blockUIDs: blockUser.blockUIDs,
+        appliedFriendUIDs: blockUser.appliedFriendUIDs,
+        friendUIDs: blockUser.friendUIDs
       }),
       { merge: false }
     )

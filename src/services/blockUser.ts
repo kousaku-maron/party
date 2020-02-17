@@ -27,7 +27,7 @@ export const useBlockUser = () => {
       const updateUser: UpdateUser = {
         uid: user.uid,
         name: user.name,
-        ...(user.thumbnailURL && { thumbnailURL: user.thumbnailURL }),
+        thumbnailURL: user.thumbnailURL,
         userID: user.userID,
         blockUIDs: _.uniq(user.blockUIDs ? [...user.blockUIDs, blockUID] : [blockUID])
       }

@@ -1,5 +1,5 @@
 import firebase from './firebase'
-import { User } from '../entities/User'
+import { User, buildUser } from '../entities/User'
 import { createDocument } from '../entities/Document'
 
 const db = firebase.firestore()
@@ -12,17 +12,18 @@ export const createAppliedFriendUser = async (uid: string, appliedFriendUser: Us
     batch.set(
       appliedFriendUserRef.doc(),
       createDocument<User>({
+        id: appliedFriendUser.id,
         enabled: appliedFriendUser.enabled,
         isAccepted: appliedFriendUser.isAccepted,
         isAnonymous: appliedFriendUser.isAnonymous,
         uid: appliedFriendUser.uid,
         userID: appliedFriendUser.userID,
         name: appliedFriendUser.name,
-        ...(appliedFriendUser.thumbnailURL && { thumbnailURL: appliedFriendUser.thumbnailURL }),
-        ...(appliedFriendUser.gender && { gender: appliedFriendUser.gender }),
-        ...(appliedFriendUser.blockUIDs && { blockUIDs: appliedFriendUser.blockUIDs }),
-        ...(appliedFriendUser.appliedFriendUIDs && { appliedFriendUIDs: appliedFriendUser.appliedFriendUIDs }),
-        ...(appliedFriendUser.friendUIDs && { friendUIDs: appliedFriendUser.friendUIDs })
+        thumbnailURL: appliedFriendUser.thumbnailURL,
+        gender: appliedFriendUser.gender,
+        blockUIDs: appliedFriendUser.blockUIDs,
+        appliedFriendUIDs: appliedFriendUser.appliedFriendUIDs,
+        friendUIDs: appliedFriendUser.friendUIDs
       }),
       { merge: false }
     )
@@ -46,7 +47,7 @@ export const deleteAppliedFriendUser = async (uid: string, appliedFriendUID: str
   }
 }
 
-export const getAppliedFriendUserUID = async (uid: string, appliedFriendUID: string) => {
+export const getAppliedFriendUser = async (uid: string, appliedFriendUID: string) => {
   const appliedFriendUsersRef = usersRef.doc(uid).collection('appliedFriendUsers')
   const snapshot = await appliedFriendUsersRef.where('uid', '==', appliedFriendUID).get()
 
@@ -54,5 +55,6 @@ export const getAppliedFriendUserUID = async (uid: string, appliedFriendUID: str
     console.warn('There are  mroe than two uids')
     return
   }
-  return snapshot.docs[0].id
+  const appliedFriendUser = buildUser(snapshot.docs[0].id, snapshot.docs[0].data)
+  return appliedFriendUser
 }

@@ -13,8 +13,8 @@ export const createRoom = async (room: CreateRoom) => {
     createDocument<CreateRoom>({
       enabled: room.enabled,
       roomHash: room.roomHash,
-      ...(room.thumbnailURL && { thumbnailURL: room.thumbnailURL }),
-      ...(room.entryUIDs && { entryUIDs: room.entryUIDs })
+      thumbnailURL: room.thumbnailURL,
+      entryUIDs: room.entryUIDs
     }),
     { merge: false }
   )

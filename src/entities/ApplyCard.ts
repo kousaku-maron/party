@@ -1,13 +1,17 @@
 // same origin User type
 type User = {
+  id: string
   enabled: boolean
   isAccepted: boolean
   isAnonymous: boolean
   uid: string
   userID: string
-  name?: string
+  name: string
   thumbnailURL?: string
   gender?: string
+  blockUIDs?: string[]
+  appliedFriendUIDs?: string[]
+  friendUIDs?: string[]
 }
 
 export type ApplyCard = {
