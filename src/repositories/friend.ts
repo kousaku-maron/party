@@ -6,11 +6,11 @@ const db = firebase.firestore()
 const usersRef = db.collection('users')
 
 export const createfriend = async (uid: string, friend: User) => {
-  const friendUsersRef = usersRef.doc(uid).collection('friendUsers')
+  const friendsRef = usersRef.doc(uid).collection('friends')
   const batch = db.batch()
   try {
     batch.set(
-      friendUsersRef.doc(),
+      friendsRef.doc(),
       createDocument<User>({
         enabled: friend.enabled,
         isAccepted: friend.isAccepted,
