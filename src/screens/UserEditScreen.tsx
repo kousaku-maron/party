@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { useNavigation } from '@react-navigation/native'
 import { UpdateUser } from '../entities'
 import { useAuthState, useUIActions } from '../store/hooks'
 import * as UserRepository from '../repositories/user'
@@ -12,13 +11,8 @@ import { Fab, Thumbnail, TextInput } from '../components/atoms'
 import { LoadingPage } from '../components/pages'
 import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../services/flashCard'
 
-type OwnProps = {
-  navigation: NavigationStackProp
-}
-
-type Props = OwnProps
-
-const UserEditScreen = ({ navigation }: Props) => {
+const UserEditScreen = () => {
+  const navigation = useNavigation()
   const { uid } = useAuthState()
   const { openLoadingModal, closeLoadingModal } = useUIActions()
 
@@ -72,8 +66,6 @@ const UserEditScreen = ({ navigation }: Props) => {
     </View>
   )
 }
-
-UserEditScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({

@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
-import { User } from '../entities'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+import { User } from '../entities'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
@@ -11,15 +10,10 @@ import { LoadingPage, SearchUserPage } from '../components/pages'
 import { Thumbnail, RoundedButton } from '../components/atoms'
 import _ from 'lodash'
 
-type OwnProps = {
-  navigation: NavigationStackProp
-}
-
-type Props = OwnProps
-
 const MEMBERS_COUNT = 2
 
-const PartyEntryScreen = ({ navigation }: Props) => {
+const PartyEntryScreen = () => {
+  const navigation = useNavigation()
   const { uid } = useAuthState()
 
   const styles = useStyles(makeStyles)
@@ -133,8 +127,6 @@ const PartyEntryScreen = ({ navigation }: Props) => {
     </View>
   )
 }
-
-PartyEntryScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const width = Dimensions.get('window').width
 

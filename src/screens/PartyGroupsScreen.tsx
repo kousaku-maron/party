@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
+import { RouteParams } from '../navigators/RouteProps'
 import { useGroups, useApplyGroup } from '../services/groups'
 import { useStyles, MakeStyles } from '../services/design'
 import { LoadingPage } from '../components/pages'
@@ -11,13 +11,12 @@ import { useAuthState } from '../store/hooks'
 import { AddFab } from '../components/atoms'
 import { showCreatePartyGroupAlreadyCreatedMessage } from '../services/flashCard'
 
-type OwnProps = { navigation: NavigationStackProp }
-type Props = OwnProps
-
-const PartyGroupsScreen = ({ navigation }: Props) => {
+const PartyGroupsScreen = () => {
+  const navigation = useNavigation()
+  const route = useRoute<RouteProp<RouteParams, 'PartyGroups'>>()
   const styles = useStyles(makeStyles)
   const { uid } = useAuthState()
-  const partyID = navigation.state.params.partyID
+  const partyID = route.params.partyID
   const groups = useGroups(partyID)
   const [isCreatedGroup, setIsCreatedGroup] = useState<boolean>(false)
 
@@ -76,8 +75,6 @@ const PartyGroupsScreen = ({ navigation }: Props) => {
     </View>
   )
 }
-
-PartyGroupsScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
 const materialMargin = 16

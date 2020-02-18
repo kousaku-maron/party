@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react'
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
+import { RouteParams } from '../navigators/RouteProps'
 import { User, CreateGroup } from '../entities'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
@@ -12,20 +12,16 @@ import { LoadingPage, SearchUserPage } from '../components/pages'
 import { Thumbnail, RoundedButton } from '../components/atoms'
 import _ from 'lodash'
 
-type OwnProps = {
-  navigation: NavigationStackProp
-}
-
-type Props = OwnProps
-
 const MEMBERS_COUNT = 2
 
-const PartyMakeScreen = ({ navigation }: Props) => {
+const PartyMakeScreen = () => {
+  const navigation = useNavigation()
+  const route = useRoute<RouteProp<RouteParams, 'PartyMake'>>()
   const { uid } = useAuthState()
 
   const styles = useStyles(makeStyles)
 
-  const partyID = navigation.state.params.partyID
+  const partyID = route.params.partyID
 
   const { isVisible, onClose, onOpen } = useModal()
   const [organizer, setOrganizer] = useState<User>()
@@ -153,8 +149,6 @@ const PartyMakeScreen = ({ navigation }: Props) => {
     </View>
   )
 }
-
-PartyMakeScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const width = Dimensions.get('window').width
 
