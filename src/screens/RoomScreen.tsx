@@ -1,17 +1,15 @@
 import React, { useCallback, useState } from 'react'
-import { NavigationStackProp } from 'react-navigation-stack'
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { isIPhoneX, isIPhoneXAbove, X_ABOVE_HEADER_NOTCH_HEIGHT, ANDROID_STATUS_BAR_HEIGHT } from '../services/design'
 import { useStyles, MakeStyles } from '../services/design'
 import { ChatRoomListPage, SwipeCardPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 
-type OwnProps = { navigation: NavigationStackProp }
-type Props = OwnProps
-
 type Section = 'card' | 'chat'
 
-const RoomScreen = ({ navigation }: Props) => {
+const RoomScreen = () => {
+  const navigation = useNavigation()
   const [section, setSection] = useState<Section>('chat')
   const styles = useStyles(makeStyles)
 

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { useNavigation } from '@react-navigation/native'
 import { useAuthActions } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { isAvailableSignInWithApple } from '../services/authentication'
@@ -7,13 +7,8 @@ import { View, Text, StyleSheet } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton } from '../components/atoms'
 
-type OwnProps = {
-  navigation: NavigationStackProp
-}
-
-type Props = OwnProps
-
-const WelcomeScreen = ({ navigation }: Props) => {
+const WelcomeScreen = () => {
+  const navigation = useNavigation()
   const { signInApple, signInGoogle } = useAuthActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
@@ -79,8 +74,6 @@ const WelcomeScreen = ({ navigation }: Props) => {
     </View>
   )
 }
-
-WelcomeScreen.navigationOptions = () => ({ headerShown: false })
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({

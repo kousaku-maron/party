@@ -1,20 +1,18 @@
 import React, { useCallback } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { useRoute, RouteProp } from '@react-navigation/native'
+import { RouteParams } from '../navigators/RouteProps'
 import { useStyles, MakeStyles } from '../services/design'
 import { LoadingPage } from '../components/pages'
 import { MembersCard } from '../components/organisms'
 import { User } from '../entities'
 import { useMembers } from '../services/members'
 
-type OwnProps = { navigation: NavigationStackProp }
-type Props = OwnProps
-
-const GroupDetailScreen = ({ navigation }: Props) => {
+const GroupDetailScreen = () => {
+  const route = useRoute<RouteProp<RouteParams, 'GroupDetail'>>()
   const styles = useStyles(makeStyles)
-  const partyID = navigation.state.params.partyID
-  const groupID = navigation.state.params.groupID
+  const partyID = route.params.partyID
+  const groupID = route.params.groupID
   const members = useMembers(partyID, groupID)
 
   const FetchMembersThumbnail = useCallback(
@@ -41,8 +39,6 @@ const GroupDetailScreen = ({ navigation }: Props) => {
     </View>
   )
 }
-
-GroupDetailScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
 

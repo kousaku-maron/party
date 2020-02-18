@@ -1,23 +1,19 @@
 import React from 'react'
 import { View, Text, StyleSheet, Dimensions, Image, ScrollView } from 'react-native'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { useRoute, RouteProp } from '@react-navigation/native'
+import { RouteParams } from '../navigators/RouteProps'
 import { formatedDateMonthDateHour } from '../services/formatedDate'
 import { RoundedButton } from '../components/atoms'
 import { useParty } from '../services/party'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { LoadingPage } from '../components/pages'
 
-type OwnProps = {
-  navigation: NavigationStackProp
-}
-type Props = OwnProps
-
-const PartyDetailScreen = ({ navigation }: Props) => {
+const PartyDetailScreen = () => {
+  const route = useRoute<RouteProp<RouteParams, 'PartyDetail'>>()
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
-  const partyID = navigation.state.params.partyID
+  const partyID = route.params.partyID
   const party = useParty(partyID)
 
   if (!party) {
@@ -39,21 +35,13 @@ const PartyDetailScreen = ({ navigation }: Props) => {
         </View>
       </ScrollView>
       <View style={styles.entryButtonWrapper}>
-        <RoundedButton
-          color={colors.tints.primary.main}
-          fullWidth={true}
-          height={48}
-          padding={6}
-          onPress={navigation.state.params.onPressEntry}
-        >
+        <RoundedButton color={colors.tints.primary.main} fullWidth={true} height={48} padding={6}>
           <Text style={styles.entryButtonText}>参加</Text>
         </RoundedButton>
       </View>
     </View>
   )
 }
-
-PartyDetailScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
 const descriptionFontSize = 24

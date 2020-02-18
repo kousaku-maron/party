@@ -1,16 +1,11 @@
 import React, { useEffect } from 'react'
-import { NavigationStackProp } from 'react-navigation-stack'
+import { useNavigation } from '@react-navigation/native'
 import { useAuthState } from '../store/hooks'
 import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 
-type OwnProps = {
-  navigation: NavigationStackProp
-}
-
-type Props = OwnProps
-
-const AuthLoadingScreen = ({ navigation }: Props) => {
+const AuthLoadingScreen = () => {
+  const navigation = useNavigation()
   const auth = useAuthState()
   const styles = useStyles(makeStyles)
   const colors = useColors()

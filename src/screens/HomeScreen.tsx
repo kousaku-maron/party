@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { useNavigation } from '@react-navigation/native'
 import { useParties, useEntryDemoRoom } from '../services/party'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
@@ -12,10 +11,8 @@ import { Card, GenderModal, Modal } from '../components/organisms'
 import { setGender } from '../services/user'
 import { Party } from '../entities/Party'
 
-type OwnProps = { navigation: NavigationStackProp }
-type Props = OwnProps
-
-const HomeScreen = ({ navigation }: Props) => {
+const HomeScreen = () => {
+  const navigation = useNavigation()
   const styles = useStyles(makeStyles)
   const { user, uid } = useAuthState()
 
@@ -113,8 +110,6 @@ const HomeScreen = ({ navigation }: Props) => {
     </BottomTabLayout>
   )
 }
-
-HomeScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const { width } = Dimensions.get('window')
 
