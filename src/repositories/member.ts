@@ -1,5 +1,5 @@
 import { db } from './firebase'
-import { UpdateUser, CreateUser, buildUser, updateDocument, createDocument } from '../entities'
+import { CreateUser, buildUser, createDocument } from '../entities'
 
 const partiesRef = db.collection('parties')
 export const getMembers = async (partyID: string, groupID: string) => {
@@ -14,23 +14,6 @@ export const getMembers = async (partyID: string, groupID: string) => {
     return members
   } catch (e) {
     console.warn(e)
-  }
-}
-
-export const setMembers = async (partyID: string, groupID: string, members: UpdateUser[]) => {
-  if (!members || !partyID) return
-  const partyDoc = partiesRef.doc(partyID)
-  const groupsRef = partyDoc.collection('groups')
-  const membersRef = groupsRef.doc(groupID).collection('members')
-  const batch = db.batch()
-  try {
-    members.map(member => {
-      batch.set(membersRef.doc(), updateDocument<UpdateUser>(member), { merge: true })
-    })
-    return { result: true, ids: members.map(member => member.uid) }
-  } catch (e) {
-    console.warn(e)
-    return { result: false, ids: null }
   }
 }
 
