@@ -1,5 +1,5 @@
 import { db } from './firebase'
-import { User, buildUser, updateDocument, createDocument } from '../entities'
+import { UpdateUser, CreateUser, buildUser, updateDocument, createDocument } from '../entities'
 
 const partiesRef = db.collection('parties')
 export const getMembers = async (partyID: string, groupID: string) => {
@@ -17,7 +17,7 @@ export const getMembers = async (partyID: string, groupID: string) => {
   }
 }
 
-export const setMembers = async (partyID: string, groupID: string, members: User[]) => {
+export const setMembers = async (partyID: string, groupID: string, members: UpdateUser[]) => {
   if (!members || !partyID) return
   const partyDoc = partiesRef.doc(partyID)
   const groupsRef = partyDoc.collection('groups')
@@ -25,7 +25,7 @@ export const setMembers = async (partyID: string, groupID: string, members: User
   const batch = db.batch()
   try {
     members.map(member => {
-      batch.set(membersRef.doc(), updateDocument<User>(member), { merge: true })
+      batch.set(membersRef.doc(), updateDocument<UpdateUser>(member), { merge: true })
     })
     return { result: true, ids: members.map(member => member.uid) }
   } catch (e) {
@@ -34,7 +34,7 @@ export const setMembers = async (partyID: string, groupID: string, members: User
   }
 }
 
-export const createMembers = async (partyID: string, groupID: string, members: User[]) => {
+export const createMembers = async (partyID: string, groupID: string, members: CreateUser[]) => {
   if (!members || !partyID) return
   const partyDoc = partiesRef.doc(partyID)
   const groupsRef = partyDoc.collection('groups')
@@ -42,7 +42,7 @@ export const createMembers = async (partyID: string, groupID: string, members: U
   const batch = db.batch()
   try {
     members.map(member => {
-      batch.set(membersRef.doc(), createDocument<User>(member), { merge: false })
+      batch.set(membersRef.doc(), createDocument<CreateUser>(member), { merge: false })
     })
     await batch.commit()
     return { result: true, ids: members.map(member => member.uid) }

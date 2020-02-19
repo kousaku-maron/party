@@ -1,5 +1,6 @@
 import { db, storage, functions } from './firebase'
 import { buildUser, UpdateUser, updateDocument } from '../entities'
+import _ from 'lodash'
 
 const storageRef = storage.ref('users')
 const usersRef = db.collection('users')
@@ -71,12 +72,8 @@ export const setUser = async (uid: string, user: UpdateUser) => {
     batch.set(
       usersRef.doc(uid),
       updateDocument<UpdateUser>({
-        uid,
-        name: user.name,
-        thumbnailURL: updatedThumbnailURL,
-        blockUIDs: user.blockUIDs,
-        appliedFriendUIDs: user.appliedFriendUIDs,
-        friendUIDs: user.friendUIDs
+        ..._.omit(user, 'thumbnailURL'),
+        ...(updatedThumbnailURL && { thumbnailURL: updatedThumbnailURL })
       }),
       { merge: true }
     )

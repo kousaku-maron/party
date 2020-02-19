@@ -46,16 +46,14 @@ export const useAcceptFriend = () => {
         return
       }
       const newUser: UpdateUser = {
-        uid: user.uid,
-        name: user.name,
-        thumbnailURL: user.thumbnailURL,
+        ..._.pick(user, 'uid', 'name', 'thumbnailURL'),
         appliedFriendUIDs: _.without(user.appliedFriendUIDs, friendUID),
         friendUIDs: _.uniq(user.friendUIDs ? [friendUID, ...user.friendUIDs] : [friendUID])
       }
       const appliedFriendUser = await getAppliedFriendUser(uid, friendUID)
-      const appliedFriendUserID = appliedFriendUser.id
+      const appliedFriendUserUID = appliedFriendUser.id
       createfriend(uid, friend)
-      deleteAppliedFriendUser(uid, appliedFriendUserID)
+      deleteAppliedFriendUser(uid, appliedFriendUserUID)
       setUser(uid, newUser)
       await functions.httpsCallable('acceptFriend')({ friendUID })
       showAcceptFriendSunccessMessage()
@@ -79,9 +77,9 @@ export const useRefuseFriend = () => {
         appliedFriendUIDs: _.without(user.appliedFriendUIDs, refusedFriendsUID)
       }
       const appliedFriendUser = await getAppliedFriendUser(uid, refusedFriendsUID)
-      const appliedFriendUserID = appliedFriendUser.id
+      const appliedFriendUserUID = appliedFriendUser.id
       setUser(uid, newUser)
-      deleteAppliedFriendUser(uid, appliedFriendUserID)
+      deleteAppliedFriendUser(uid, appliedFriendUserUID)
       showRefuseFriendSunccessMessage()
     } catch (e) {
       showRefuseFriendFailurMessage()

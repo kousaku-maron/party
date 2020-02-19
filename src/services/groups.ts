@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { InteractionManager } from 'react-native'
-import { User, Group, buildGroup, UpdateGroup, CreateGroup } from '../entities'
+import { User, CreateUser, Group, buildGroup, UpdateGroup, CreateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
 import { updateGroup, createGroup } from '../repositories/group'
@@ -56,9 +56,7 @@ export const useApplyGroup = () => {
       }
 
       const _updateGroup: UpdateGroup = {
-        organizerUID: group.organizerUID,
-        organizerName: group.organizerName,
-        thumbnailURL: group.thumbnailURL,
+        ..._.pick(group, 'organizerUID', 'organizerName', 'thumbnailURL'),
         appliedUIDs: _.uniq([...group.appliedUIDs, uid])
       }
       try {
@@ -76,20 +74,9 @@ export const useApplyGroup = () => {
 
 export const onCreateGroup = async (partyID: string, group: CreateGroup, members: User[]) => {
   try {
-    const setMembers: User[] = members.map(member => {
-      const setMember: User = {
-        id: member.id,
-        uid: member.uid,
-        userID: member.userID,
-        enabled: member.enabled,
-        isAccepted: member.isAccepted,
-        isAnonymous: member.isAnonymous,
-        name: member.name,
-        gender: member.gender,
-        thumbnailURL: member.thumbnailURL,
-        blockUIDs: member.blockUIDs,
-        appliedFriendUIDs: member.appliedFriendUIDs,
-        friendUIDs: member.friendUIDs
+    const setMembers: CreateUser[] = members.map(member => {
+      const setMember: CreateUser = {
+        ..._.omit(member, 'id')
       }
       return setMember
     })

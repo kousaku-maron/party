@@ -39,3 +39,4 @@ export type UpdateUser = Pick<User, 'uid' | 'name' | 'thumbnailURL'> & {
   appliedFriendUIDs?: string[]
   friendUIDs?: string[]
 }
+export type CreateUser = Omit<User, 'id'>

@@ -1,6 +1,7 @@
 import firebase from './firebase'
-import { User, buildUser } from '../entities/User'
+import { User, CreateUser, buildUser } from '../entities/User'
 import { createDocument } from '../entities/Document'
+import _ from 'lodash'
 
 const db = firebase.firestore()
 const usersRef = db.collection('users')
@@ -11,19 +12,8 @@ export const createAppliedFriendUser = async (uid: string, appliedFriendUser: Us
   try {
     batch.set(
       appliedFriendUserRef.doc(),
-      createDocument<User>({
-        id: appliedFriendUser.id,
-        enabled: appliedFriendUser.enabled,
-        isAccepted: appliedFriendUser.isAccepted,
-        isAnonymous: appliedFriendUser.isAnonymous,
-        uid: appliedFriendUser.uid,
-        userID: appliedFriendUser.userID,
-        name: appliedFriendUser.name,
-        thumbnailURL: appliedFriendUser.thumbnailURL,
-        gender: appliedFriendUser.gender,
-        blockUIDs: appliedFriendUser.blockUIDs,
-        appliedFriendUIDs: appliedFriendUser.appliedFriendUIDs,
-        friendUIDs: appliedFriendUser.friendUIDs
+      createDocument<CreateUser>({
+        ..._.omit(appliedFriendUser, 'id')
       }),
       { merge: false }
     )
