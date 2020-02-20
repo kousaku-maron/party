@@ -1,7 +1,6 @@
 import firebase from './firebase'
 import { User, CreateUser, buildUser } from '../entities/User'
 import { createDocument } from '../entities/Document'
-import _ from 'lodash'
 
 const db = firebase.firestore()
 const usersRef = db.collection('users')
@@ -9,14 +8,10 @@ const usersRef = db.collection('users')
 export const createAppliedFriendUser = async (uid: string, appliedFriendUser: User) => {
   const appliedFriendUserRef = usersRef.doc(uid).collection('appliedFriendUsers')
   const batch = db.batch()
+  const { id, ...others } = appliedFriendUser// eslint-disable-line
+  const omittedAppliedFriendUser = { ...others }
   try {
-    batch.set(
-      appliedFriendUserRef.doc(),
-      createDocument<CreateUser>({
-        ..._.omit(appliedFriendUser, 'id')
-      }),
-      { merge: false }
-    )
+    batch.set(appliedFriendUserRef.doc(), createDocument<CreateUser>(omittedAppliedFriendUser), { merge: false })
     await batch.commit()
   } catch (e) {
     console.warn(e)

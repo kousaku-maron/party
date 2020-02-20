@@ -23,8 +23,10 @@ export const useBlockUser = () => {
         showCreateBlockUserAlreadyBlockedMessage()
         return
       }
+      const { uid, name, thumbnailURL } = user
+      const pickedUser = { uid, name, thumbnailURL }
       const updateUser: UpdateUser = {
-        ..._.pick(user, 'uid', 'name', 'thumbnailURL'),
+        ...pickedUser,
         blockUIDs: _.uniq(user.blockUIDs ? [...user.blockUIDs, blockUID] : [blockUID])
       }
       setUser(user.uid, updateUser)

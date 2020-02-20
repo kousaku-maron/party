@@ -54,9 +54,11 @@ export const useApplyGroup = () => {
         showEntryPartyAlreadyAppliedMessage()
         return
       }
+      const { organizerUID, organizerName, thumbnailURL } = group
+      const pickedGroup = { organizerUID, organizerName, thumbnailURL }
 
       const _updateGroup: UpdateGroup = {
-        ..._.pick(group, 'organizerUID', 'organizerName', 'thumbnailURL'),
+        ...pickedGroup,
         appliedUIDs: _.uniq([...group.appliedUIDs, uid])
       }
       try {
@@ -75,8 +77,10 @@ export const useApplyGroup = () => {
 export const onCreateGroup = async (partyID: string, group: CreateGroup, members: User[]) => {
   try {
     const setMembers: CreateUser[] = members.map(member => {
+      const { id, ...others } = member// eslint-disable-line
+      const omittedMember = { ...others }
       const setMember: CreateUser = {
-        ..._.omit(member, 'id')
+        ...omittedMember
       }
       return setMember
     })
