@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { StyleSheet, Dimensions, ScrollView, View } from 'react-native'
+import { StyleSheet, Dimensions, ScrollView, View, Button } from 'react-native'
 import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
 import { headerNavigationOptions } from '../navigators/options'
 import { useParties, useEntryDemoRoom } from '../services/party'
@@ -11,6 +11,7 @@ import { BottomTabLayout } from '../components/templates'
 import { Card, GenderModal, Modal } from '../components/organisms'
 import { setGender } from '../services/user'
 import { Party } from '../entities/Party'
+import { useReportUser } from '../services/report'
 
 type OwnProps = { navigation: NavigationStackProp }
 type Props = OwnProps
@@ -83,11 +84,18 @@ const HomeScreen = ({ navigation }: Props) => {
     },
     [navigation, onPressEntryDemoRoom, styles.container]
   )
+  const { reportUser } = useReportUser()
   if (!parties) {
     return <LoadingPage />
   }
   return (
     <BottomTabLayout>
+      <Button
+        title="Push Here"
+        onPress={() => {
+          reportUser(user, 'hoge')
+        }}
+      ></Button>
       <ScrollView>
         {FetchPartiesThumbnail(parties)}
         <GenderModal

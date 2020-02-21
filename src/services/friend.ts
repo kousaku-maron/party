@@ -14,7 +14,6 @@ import {
   showRefuseFriendSunccessMessage,
   showRefuseFriendFailurMessage
 } from './flashCard'
-
 import _ from 'lodash'
 
 export const useApplyFriend = () => {
