@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { InteractionManager } from 'react-native'
-import { useNavigation } from 'react-navigation-hooks'
+import { useNavigation } from '@react-navigation/native'
 import firebase, { functions } from '../repositories/firebase'
 import { Party, buildParty } from '../entities'
 import { useAuthState, useUIActions, useRoomActions } from '../store/hooks'

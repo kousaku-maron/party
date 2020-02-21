@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
+import { RouteParams } from '../navigators/RouteProps'
 import { useAuthState } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
@@ -13,31 +13,27 @@ import { UploadCertificateModal } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 
-type OwnProps = {
-  navigation: NavigationStackProp
-}
-
-type Props = OwnProps
-
-const UserScreen = ({ navigation }: Props) => {
+const UserScreen = () => {
+  const navigation = useNavigation()
+  const route = useRoute<RouteProp<RouteParams, 'User'>>()
   const { uid } = useAuthState()
 
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
   const targetUserID = useMemo(() => {
-    if (navigation.state.params?.userID) {
-      return navigation.state.params.userID
+    if (route.params?.userID) {
+      return route.params.userID
     }
     return uid
-  }, [navigation.state.params, uid])
+  }, [route.params, uid])
 
   const isMy = useMemo(() => {
-    if (navigation.state.params?.userID) {
-      return navigation.state.params.userID === uid
+    if (route.params?.userID) {
+      return route.params.userID === uid
     }
     return true
-  }, [navigation.state.params, uid])
+  }, [route.params, uid])
 
   const user = useUser(targetUserID)
   const modalTools = useModal()
@@ -139,8 +135,6 @@ const UserScreen = ({ navigation }: Props) => {
     </BottomTabLayout>
   )
 }
-
-UserScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 // const hairlineWidth = StyleSheet.hairlineWidth
 

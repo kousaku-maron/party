@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { View, TouchableOpacity, StyleSheet } from 'react-native'
-import { useNavigation } from 'react-navigation-hooks'
+import { useNavigation } from '@react-navigation/native'
 import { useColors, MakeStyles, useStyles } from '../../services/design'
 import { useUIActions, useUIState } from '../../store/hooks'
 import { Icons } from '../../@assets/vector-icons'

@@ -1,8 +1,9 @@
 import React from 'react'
+import { NavigationContainer } from '@react-navigation/native'
 import { YellowBox } from 'react-native'
 import { enableScreens } from 'react-native-screens'
 import { Provider } from 'react-redux'
-import { AppearanceProvider, useColorScheme } from 'react-native-appearance'
+import { AppearanceProvider } from 'react-native-appearance'
 import configureStore from './src/store/configureStore'
 import AppNavigator from './src/navigators/AppNavigator'
 import FlashMessage from 'react-native-flash-message'
@@ -17,17 +18,18 @@ YellowBox.ignoreWarnings([
 const store = configureStore()
 
 const App = (): JSX.Element => {
-  const theme = useColorScheme()
   enableScreens()
 
   return (
-    <AppearanceProvider>
-      <Provider store={store}>
-        <AppNavigator theme={theme} />
-        <FlashMessage position="top" />
-        <LoadingModal />
-      </Provider>
-    </AppearanceProvider>
+    <NavigationContainer>
+      <AppearanceProvider>
+        <Provider store={store}>
+          <AppNavigator />
+          <FlashMessage position="top" />
+          <LoadingModal />
+        </Provider>
+      </AppearanceProvider>
+    </NavigationContainer>
   )
 }
 

@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
-import { NavigationStackProp, NavigationStackScreenProps } from 'react-navigation-stack'
-import { headerNavigationOptions } from '../navigators/options'
+import { useNavigation } from '@react-navigation/native'
 import { useAuthState, useAuthActions } from '../store/hooks'
 import { useStyles, MakeStyles } from '../services/design'
 import { useSecure, usePushNotifications } from '../services/secure'
@@ -8,13 +7,8 @@ import { TouchableOpacity, ScrollView, Text, StyleSheet, Dimensions } from 'reac
 import { PushNotificationListItem } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 
-type OwnProps = {
-  navigation: NavigationStackProp
-}
-
-type Props = OwnProps
-
-const SettingScreen = ({ navigation }: Props) => {
+const SettingScreen = () => {
+  const navigation = useNavigation()
   const { user } = useAuthState()
   const { signOut } = useAuthActions()
   const styles = useStyles(makeStyles)
@@ -66,8 +60,6 @@ const SettingScreen = ({ navigation }: Props) => {
     </ScrollView>
   )
 }
-
-SettingScreen.navigationOptions = (props: NavigationStackScreenProps) => headerNavigationOptions(props)
 
 const hairlineWidth = StyleSheet.hairlineWidth
 const width = Dimensions.get('window').width
