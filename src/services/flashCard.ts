@@ -192,6 +192,30 @@ export const showRefuseFriendFailurMessage = () => {
   })
 }
 
+export const showReportUserSunccessMessage = () => {
+  showMessage({
+    message: 'ユーザーを通報しました',
+    type: 'success',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showReportUserAlreadyacceptedMessage = () => {
+  showMessage({
+    message: 'このユーザーはすでに通報済みです',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showReportUserFailurMessage = () => {
+  showMessage({
+    message: 'ユーザーの通報に失敗しました',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
 const styles = {
   flashCardMessage: {
     fontSize: 14
