@@ -69,7 +69,7 @@ const HomeScreen = () => {
             <Text style={styles.parimaryTitleText}>人気</Text>
           </View>
           <Carousel
-            data={parties}
+            data={parties} // TODO: 人気パーティーのデータをどのようにして取得するかロジックを考える必要あり。
             renderItem={renderItem}
             itemWidth={320}
             activeSlideAlignment={'start'}
