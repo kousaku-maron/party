@@ -7,19 +7,26 @@ type Props = {
   size?: number
   disabled?: boolean
   onPress?: (event: GestureResponderEvent) => void
+  borderColor?: string
+  borderWidth?: number
 }
 
-const Thumbnail: React.FC<Props> = ({ uri, disabled = false, size = 24, onPress }) => {
+const Thumbnail: React.FC<Props> = ({ uri, borderColor, borderWidth, disabled = false, size = 24, onPress }) => {
   const styles = useStyles(makeStyles)
 
   if (!onPress) {
     return (
       <View style={[styles.container, { width: size, height: size, borderRadius: size / 2 }]}>
-        {uri && <Image source={{ uri }} style={{ width: size, height: size, borderRadius: size / 2 }} />}
+        {uri && (
+          <Image
+            source={{ uri }}
+            style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+          />
+        )}
         {!uri && (
           <Image
             source={require('../../../assets/images/no_user.png')}
-            style={{ width: size, height: size, borderRadius: size / 2 }}
+            style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
           />
         )}
       </View>
@@ -32,11 +39,16 @@ const Thumbnail: React.FC<Props> = ({ uri, disabled = false, size = 24, onPress 
       disabled={disabled}
       onPress={onPress}
     >
-      {uri && <Image source={{ uri }} style={{ width: size, height: size, borderRadius: size / 2 }} />}
+      {uri && (
+        <Image
+          source={{ uri }}
+          style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+        />
+      )}
       {!uri && (
         <Image
           source={require('../../../assets/images/no_user.png')}
-          style={{ width: size, height: size, borderRadius: size / 2 }}
+          style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
         />
       )}
     </TouchableOpacity>
