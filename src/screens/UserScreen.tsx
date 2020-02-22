@@ -1,15 +1,13 @@
 import React, { useCallback, useMemo } from 'react'
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
+import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
 import { useAuthState } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
-import { useCertificateEditTools } from '../services/secure'
-import { useModal } from '../services/modal'
-import { View, Text, Image, TouchableOpacity, StyleSheet, Platform } from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
-import { RoundedButton, Thumbnail } from '../components/atoms'
-import { UploadCertificateModal } from '../components/organisms'
+import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
+import { Feather, AntDesign } from '@expo/vector-icons'
+import { Thumbnail, Fab, DotsIcon } from '../components/atoms'
 import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 
@@ -20,6 +18,7 @@ const UserScreen = () => {
 
   const styles = useStyles(makeStyles)
   const colors = useColors()
+  const inset = useSafeArea()
 
   const targetUserID = useMemo(() => {
     if (route.params?.userID) {
@@ -35,23 +34,17 @@ const UserScreen = () => {
     return true
   }, [route.params, uid])
 
+  // TODO: ブロックしているユーザーかチェック
+  const isBlocked = useMemo(() => {
+    return false
+  }, [])
+
+  // TODO: フレンドかチェック
+  const isFriend = useMemo(() => {
+    return false
+  }, [])
+
   const user = useUser(targetUserID)
-  const modalTools = useModal()
-  const { onChangeUpdateCertificateURL, currentCertificateURL, uploadCertificateURL, upload } = useCertificateEditTools(
-    uid
-  )
-
-  const _pickCertificateImage = useCallback(async () => {
-    const { cancelled, uri } = await onChangeUpdateCertificateURL()
-    if (!cancelled && uri) {
-      modalTools.onOpen()
-    }
-  }, [modalTools, onChangeUpdateCertificateURL])
-
-  const onUpload = useCallback(() => {
-    upload()
-    modalTools.onClose()
-  }, [modalTools, upload])
 
   const goToEdit = useCallback(() => {
     navigation.navigate('UserEdit')
@@ -68,75 +61,91 @@ const UserScreen = () => {
   return (
     <BottomTabLayout>
       <View style={styles.container}>
-        <View style={styles.profileContainer}>
-          <View style={styles.thumbnailWrapper}>
-            <Thumbnail uri={user.thumbnailURL} size={150} />
-          </View>
-
-          <View style={styles.nameWrapper}>
-            <Text style={styles.nameText}>{user.name}</Text>
-          </View>
-
-          <View style={styles.idWrapper}>
-            <Text style={styles.idText}>@{user.userID}</Text>
-          </View>
-
-          {isMy && user.isAccepted && (
-            <View style={styles.isAcceptedWrapper}>
-              <Text style={styles.acceptCaptionText}>本人確認済み</Text>
-            </View>
-          )}
-
-          {isMy && !user.isAccepted && (
-            <View style={styles.isNotacceptedWrapper}>
-              <RoundedButton color={colors.tints.primary.main} fullWidth={true} onPress={_pickCertificateImage}>
-                <Text style={styles.acceptText}>身分証をアップロードする</Text>
-              </RoundedButton>
-            </View>
-          )}
-
-          {isMy && !user.isAccepted && (
-            <View style={styles.acceptCaptionWrapper}>
-              <Text style={styles.acceptCaptionText}>
-                ※年齢確認のため、運転免許証もしくはパスポートをアップロードして下さい。
-              </Text>
-            </View>
-          )}
+        <View style={[styles.header, { paddingTop: inset.top }]}>
+          <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
+            <DotsIcon />
+          </TouchableOpacity>
         </View>
 
-        {isMy && !user.isAccepted && currentCertificateURL && (
-          <View style={styles.cardWrapper}>
-            <View style={styles.card}>
-              <Image style={styles.certificate} resizeMode="contain" source={{ uri: currentCertificateURL }} />
-              <Text style={styles.acceptCaptionText}>※提出済み</Text>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.profileContainer}>
+            <View style={styles.profileWrapper}>
+              <View style={[styles.thumbnailWrapper, styles.withShadow]}>
+                <Thumbnail uri={user.thumbnailURL} size={82} />
+              </View>
+
+              <View style={styles.nameWrapper}>
+                <Text style={styles.nameText}>{user.name}</Text>
+              </View>
+
+              <View style={styles.idWrapper}>
+                <Text style={styles.idText}>@{user.userID}</Text>
+              </View>
+
+              <View style={styles.introWrapper}>
+                <Text style={styles.introText}>
+                  自己紹介分、サンプル。私の趣味はボルダリングです！運動も飲みも好きなので、あそびましょー。
+                </Text>
+              </View>
+
+              {isFriend && !isBlocked && !isMy && (
+                <View style={styles.friendTextWrapper}>
+                  <Text style={styles.friendText}>ともだち</Text>
+                </View>
+              )}
+
+              {isBlocked && !isMy && (
+                <View style={styles.blockTextWrapper}>
+                  <Text style={styles.blockText}>ブロック中</Text>
+                </View>
+              )}
             </View>
           </View>
-        )}
 
-        {isMy && (
-          <TouchableOpacity style={styles.editFab} onPress={goToEdit}>
-            <AntDesign color="gray" name="edit" size={24} />
-          </TouchableOpacity>
-        )}
+          <View style={styles.contentsContainer}>
+            {isMy && (
+              <View style={[styles.fabWrapper, styles.withBloom]}>
+                <Fab size={64} onPress={goToEdit}>
+                  <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={36} />
+                </Fab>
+              </View>
+            )}
 
-        {isMy && (
-          <TouchableOpacity style={styles.settingFab} onPress={goToSetting}>
-            <AntDesign color="gray" name="setting" size={24} />
-          </TouchableOpacity>
-        )}
+            {!isMy && !isFriend && !isBlocked && (
+              <View style={[styles.fabWrapper, styles.withBloom]}>
+                <Fab size={64}>
+                  <AntDesign name="adduser" color={colors.foregrounds.onTintPrimary} size={36} />
+                </Fab>
+              </View>
+            )}
 
-        <UploadCertificateModal
-          isVisible={modalTools.isVisible}
-          url={uploadCertificateURL}
-          onClose={modalTools.onClose}
-          onUpload={onUpload}
-        />
+            {!isBlocked && (
+              <View style={styles.cardsContainer}>
+                <Text style={styles.contentsTitleText}>参加中</Text>
+              </View>
+            )}
+
+            {!isBlocked && (
+              <View style={styles.friendsContainer}>
+                <Text style={styles.contentsTitleText}>ともだち</Text>
+              </View>
+            )}
+
+            {isBlocked && (
+              <View style={styles.blockMessageContainer}>
+                <Text style={styles.blockMessageText}>ブロックしたユーザーの</Text>
+                <Text style={styles.blockMessageText}>情報は見れません</Text>
+              </View>
+            )}
+          </View>
+        </ScrollView>
       </View>
     </BottomTabLayout>
   )
 }
 
 // const hairlineWidth = StyleSheet.hairlineWidth
+const fullHeight = Dimensions.get('window').height
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
@@ -148,22 +157,50 @@ const makeStyles: MakeStyles = colors =>
       position: 'relative',
       backgroundColor: colors.backgrounds.primary
     },
-    editFab: {
-      position: 'absolute',
-      right: 26,
-      bottom: 24
+    scrollView: {
+      width: '100%'
     },
-    settingFab: {
-      position: 'absolute',
-      right: 58,
-      bottom: 24
+    header: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      height: 88
     },
     profileContainer: {
       display: 'flex',
-      justifyContent: 'center',
+      justifyContent: 'flex-end',
       alignItems: 'center',
       width: '100%',
-      height: 400
+      height: fullHeight * 0.7
+    },
+    contentsContainer: {
+      position: 'relative',
+      display: 'flex',
+      width: '100%',
+      minHeight: fullHeight * 0.3,
+      backgroundColor: colors.backgrounds.secondary,
+      paddingVertical: 84,
+      paddingHorizontal: 32
+    },
+    cardsContainer: {
+      paddingBottom: 48
+    },
+    friendContainer: {},
+    blockMessageContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    dotsWrapper: {
+      display: 'flex',
+      marginRight: 12
+    },
+    fabWrapper: {
+      position: 'absolute',
+      top: -32,
+      right: 32
     },
     thumbnailWrapper: {
       paddingBottom: 12
@@ -174,34 +211,17 @@ const makeStyles: MakeStyles = colors =>
     idWrapper: {
       paddingBottom: 24
     },
-    isAcceptedWrapper: {
+    introWrapper: {
+      width: '60%',
+      paddingBottom: 32
+    },
+    profileWrapper: {
       display: 'flex',
-      justifyContent: 'center',
-      paddingBottom: 24
-    },
-    isNotacceptedWrapper: {
-      width: 250,
-      paddingBottom: 3
-    },
-    acceptCaptionWrapper: {
-      width: 250
-    },
-    cardWrapper: {
-      paddingBottom: 24
-    },
-    card: {
-      display: 'flex',
-      justifyContent: 'center',
       alignItems: 'center',
-      width: '80%',
-      padding: 24,
-      borderRadius: Platform.OS === 'ios' ? 16 : 3,
-      backgroundColor: colors.backgrounds.secondary
+      paddingBottom: 32
     },
-    certificate: {
-      width: 200,
-      height: 200
-    },
+    friendTextWrapper: {},
+    blockTextWrapper: {},
     nameText: {
       fontSize: 18,
       color: colors.foregrounds.primary
@@ -210,13 +230,47 @@ const makeStyles: MakeStyles = colors =>
       fontSize: 12,
       color: colors.foregrounds.secondary
     },
-    acceptText: {
+    introText: {
       fontSize: 14,
-      color: colors.foregrounds.onTintPrimary
+      color: colors.foregrounds.secondary,
+      textAlign: 'center'
     },
-    acceptCaptionText: {
-      fontSize: 12,
-      color: colors.foregrounds.secondary
+    friendText: {
+      fontSize: 20,
+      color: colors.tints.primary.main
+    },
+    blockText: {
+      fontSize: 20,
+      color: 'red' // どうしよう...
+    },
+    contentsTitleText: {
+      fontSize: 24,
+      color: colors.foregrounds.primary,
+      fontWeight: 'bold'
+    },
+    blockMessageText: {
+      fontSize: 20,
+      color: colors.foregrounds.placeholder
+    },
+    withShadow: {
+      shadowColor: 'black', // どうしよう
+      shadowOffset: {
+        width: 2,
+        height: 2
+      },
+      shadowRadius: 4,
+      shadowOpacity: 0.1,
+      elevation: 4
+    },
+    withBloom: {
+      shadowColor: colors.tints.primary.main,
+      shadowOffset: {
+        width: 0,
+        height: 0
+      },
+      shadowRadius: 5,
+      shadowOpacity: 1,
+      elevation: 5
     }
   })
 
