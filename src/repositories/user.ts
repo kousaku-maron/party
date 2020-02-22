@@ -68,15 +68,14 @@ export const setUser = async (uid: string, user: UpdateUser) => {
       updatedThumbnailURL = thumbnailURL
     }
 
+    const { thumbnailURL, ...others } = user// eslint-disable-line
+    const omittedUser = { ...others }
+
     batch.set(
       usersRef.doc(uid),
       updateDocument<UpdateUser>({
-        uid,
-        name: user.name,
-        ...(updatedThumbnailURL && { thumbnailURL: updatedThumbnailURL }),
-        ...(user.blockUIDs && { blockUIDs: user.blockUIDs }),
-        ...(user.appliedFriendUIDs && { appliedFriendUIDs: user.appliedFriendUIDs }),
-        ...(user.friendUIDs && { friendUIDs: user.friendUIDs })
+        ...omittedUser,
+        ...(updatedThumbnailURL && { thumbnailURL: updatedThumbnailURL })
       }),
       { merge: true }
     )

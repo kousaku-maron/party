@@ -2,7 +2,7 @@ import { functions } from '../repositories/firebase'
 import { useAuthState } from '../store/hooks'
 import { User, UpdateUser } from '../entities/User'
 import { setUser } from '../repositories/user'
-import { deleteAppliedFriendUser, getAppliedFriendUserUID } from '../repositories/appliedFriend'
+import { deleteAppliedFriendUser, getAppliedFriendUser } from '../repositories/appliedFriend'
 import { createfriend } from '../repositories/friend'
 import {
   showApplyFriendSunccessMessage,
@@ -14,7 +14,6 @@ import {
   showRefuseFriendSunccessMessage,
   showRefuseFriendFailurMessage
 } from './flashCard'
-
 import _ from 'lodash'
 
 export const useApplyFriend = () => {
@@ -45,14 +44,17 @@ export const useAcceptFriend = () => {
         showAcceptFriendAlreadyacceptedMessage()
         return
       }
+
+      const { name, thumbnailURL } = user
       const newUser: UpdateUser = {
-        uid: user.uid,
-        name: user.name,
-        thumbnailURL: user.thumbnailURL,
+        uid,
+        name,
+        thumbnailURL,
         appliedFriendUIDs: _.without(user.appliedFriendUIDs, friendUID),
         friendUIDs: _.uniq(user.friendUIDs ? [friendUID, ...user.friendUIDs] : [friendUID])
       }
-      const appliedFriendUserUID = await getAppliedFriendUserUID(uid, friendUID)
+      const appliedFriendUser = await getAppliedFriendUser(uid, friendUID)
+      const appliedFriendUserUID = appliedFriendUser.id
       createfriend(uid, friend)
       deleteAppliedFriendUser(uid, appliedFriendUserUID)
       setUser(uid, newUser)
@@ -77,7 +79,8 @@ export const useRefuseFriend = () => {
         thumbnailURL: user.thumbnailURL,
         appliedFriendUIDs: _.without(user.appliedFriendUIDs, refusedFriendsUID)
       }
-      const appliedFriendUserUID = await getAppliedFriendUserUID(uid, refusedFriendsUID)
+      const appliedFriendUser = await getAppliedFriendUser(uid, refusedFriendsUID)
+      const appliedFriendUserUID = appliedFriendUser.id
       setUser(uid, newUser)
       deleteAppliedFriendUser(uid, appliedFriendUserUID)
       showRefuseFriendSunccessMessage()

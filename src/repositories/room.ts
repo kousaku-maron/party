@@ -11,10 +11,7 @@ export const createRoom = async (room: CreateRoom) => {
   batch.set(
     roomID,
     createDocument<CreateRoom>({
-      enabled: room.enabled,
-      roomHash: room.roomHash,
-      ...(room.thumbnailURL && { thumbnailURL: room.thumbnailURL }),
-      ...(room.entryUIDs && { entryUIDs: room.entryUIDs })
+      ...room
     }),
     { merge: false }
   )

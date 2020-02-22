@@ -1,5 +1,5 @@
 import firebase from './firebase'
-import { User } from '../entities/User'
+import { User, CreateUser } from '../entities/User'
 import { createDocument } from '../entities/Document'
 
 const db = firebase.firestore()
@@ -8,24 +8,10 @@ const usersRef = db.collection('users')
 export const createfriend = async (uid: string, friend: User) => {
   const friendsRef = usersRef.doc(uid).collection('friends')
   const batch = db.batch()
+  const { id, ...others } = friend// eslint-disable-line
+  const omittedFriend = { ...others }
   try {
-    batch.set(
-      friendsRef.doc(),
-      createDocument<User>({
-        enabled: friend.enabled,
-        isAccepted: friend.isAccepted,
-        isAnonymous: friend.isAnonymous,
-        uid: friend.uid,
-        userID: friend.userID,
-        name: friend.name,
-        ...(friend.thumbnailURL && { thumbnailURL: friend.thumbnailURL }),
-        ...(friend.gender && { gender: friend.gender }),
-        ...(friend.blockUIDs && { blockUIDs: friend.blockUIDs }),
-        ...(friend.appliedFriendUIDs && { appliedFriendUIDs: friend.appliedFriendUIDs }),
-        ...(friend.friendUIDs && { friendUIDs: friend.friendUIDs })
-      }),
-      { merge: false }
-    )
+    batch.set(friendsRef.doc(), createDocument<CreateUser>(omittedFriend), { merge: false })
     await batch.commit()
   } catch (e) {
     console.warn(e)

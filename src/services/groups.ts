@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { InteractionManager } from 'react-native'
-import { User, Group, buildGroup, UpdateGroup, CreateGroup } from '../entities'
+import { User, CreateUser, Group, buildGroup, UpdateGroup, CreateGroup } from '../entities'
 import { useAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
 import { updateGroup, createGroup } from '../repositories/group'
@@ -54,11 +54,11 @@ export const useApplyGroup = () => {
         showEntryPartyAlreadyAppliedMessage()
         return
       }
+      const { organizerUID, organizerName, thumbnailURL } = group
+      const pickedGroup = { organizerUID, organizerName, thumbnailURL }
 
       const _updateGroup: UpdateGroup = {
-        organizerUID: group.organizerUID,
-        organizerName: group.organizerName,
-        thumbnailURL: group.thumbnailURL,
+        ...pickedGroup,
         appliedUIDs: _.uniq([...group.appliedUIDs, uid])
       }
       try {
@@ -76,19 +76,11 @@ export const useApplyGroup = () => {
 
 export const onCreateGroup = async (partyID: string, group: CreateGroup, members: User[]) => {
   try {
-    const setMembers: User[] = members.map(member => {
-      const setMember: User = {
-        uid: member.uid,
-        userID: member.userID,
-        enabled: member.enabled,
-        isAccepted: member.isAccepted,
-        isAnonymous: member.isAnonymous,
-        name: member.name,
-        ...(member.gender && { gender: member.gender }),
-        ...(member.thumbnailURL && { thumbnailURL: member.thumbnailURL }),
-        ...(member.blockUIDs && { blockUIDs: member.blockUIDs }),
-        ...(member.appliedFriendUIDs && { appliedFriendUIDs: member.appliedFriendUIDs }),
-        ...(member.friendUIDs && { friendUIDs: member.friendUIDs })
+    const setMembers: CreateUser[] = members.map(member => {
+      const { id, ...others } = member// eslint-disable-line
+      const omittedMember = { ...others }
+      const setMember: CreateUser = {
+        ...omittedMember
       }
       return setMember
     })

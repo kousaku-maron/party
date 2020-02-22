@@ -14,7 +14,7 @@ export const buildGroup = (id: string, data: firebase.firestore.DocumentData) =>
     organizerUID: data.organizerUID,
     organizerName: data.organizerName,
     organizerGender: data.organizerGender,
-    thumbnailURL: data.thumbnailURL,
+    ...(data.thumbnailURL && { thumbnailURL: data.thumbnailURL }),
     enabled: data.enabled,
     appliedUIDs: data.appliedUIDs
   }

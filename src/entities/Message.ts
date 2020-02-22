@@ -10,6 +10,9 @@ export type MessageUser = {
   name: string
   thumbnailURL?: string
   gender?: string
+  blockUIDs?: string[]
+  appliedFriendUIDs?: string[]
+  friendUIDs?: string[]
 }
 
 export type Message = {

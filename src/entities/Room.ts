@@ -11,8 +11,8 @@ export const buildRoom = (id: string, data: firebase.firestore.DocumentData) => 
     id,
     enabled: data.enabled,
     roomHash: data.roomHash,
-    thumbnailURL: data.thumbnailURL,
-    entryUIDs: data.entryUIDs
+    ...(data.thumbnailURL && { thumbnailURL: data.thumbnailURL }),
+    ...(data.entryUIDs && { entryUIDs: data.entryUIDs })
   }
   return newRoom
 }
