@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native'
 import { BlurView } from 'expo-blur'
+import { AntDesign } from '@expo/vector-icons'
 import { useUIState } from '../../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../../services/design'
 import { Party, User } from '../../entities'
@@ -78,7 +79,9 @@ const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 320,
       </View>
       <View style={styles.countWrapper}>
         <BlurView intensity={30} tint={blurTint} style={styles.countTag}>
-          <Text style={styles.countText}>Icon: {tempCount}</Text>
+          <Text style={styles.countText}>
+            <AntDesign name="user" size={18} /> {tempCount}
+          </Text>
         </BlurView>
       </View>
     </TouchableOpacity>
