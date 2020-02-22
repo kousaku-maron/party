@@ -44,8 +44,12 @@ export const useAcceptFriend = () => {
         showAcceptFriendAlreadyacceptedMessage()
         return
       }
+
+      const { name, thumbnailURL } = user
       const newUser: UpdateUser = {
-        ..._.pick(user, 'uid', 'name', 'thumbnailURL'),
+        uid,
+        name,
+        thumbnailURL,
         appliedFriendUIDs: _.without(user.appliedFriendUIDs, friendUID),
         friendUIDs: _.uniq(user.friendUIDs ? [friendUID, ...user.friendUIDs] : [friendUID])
       }

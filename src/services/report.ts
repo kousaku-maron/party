@@ -1,16 +1,14 @@
 import { functions } from '../repositories/firebase'
-import { User, UpdateUser } from '../entities/User'
+import { User } from '../entities/User'
 import { useAuthState } from '../store/hooks'
-import { setUser } from '../repositories/user'
 import {
   showReportUserSunccessMessage,
   showReportUserFailurMessage,
   showReportUserAlreadyacceptedMessage
 } from './flashCard'
-import _ from 'lodash'
 
 export const useReportUser = () => {
-  const { uid, user } = useAuthState()
+  const { uid } = useAuthState()
 
   const reportUser = async (reportedUser: User, comment: string) => {
     const reportedUserUID = reportedUser.id
@@ -20,14 +18,6 @@ export const useReportUser = () => {
         return
       }
 
-      const newUser: UpdateUser = {
-        ..._.pick(user, 'uid', 'name', 'thumbnailURL'),
-        reportedUserUIDs: _.uniq(
-          user.reportedUserUIDs ? [reportedUserUID, ...user.reportedUserUIDs] : [reportedUserUID]
-        )
-      }
-
-      setUser(uid, newUser)
       await functions.httpsCallable('reportUser')({ reportedUserUID, comment })
       showReportUserSunccessMessage()
     } catch (e) {
