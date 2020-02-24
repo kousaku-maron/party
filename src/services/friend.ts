@@ -58,11 +58,7 @@ export const useRefuseFriend = () => {
       if (refusedFriend.applyFriendUIDs && refusedFriend.applyFriendUIDs.includes(uid)) {
         await functions.httpsCallable('refuseFriend')({ refusedFriendUID })
         showRefuseFriendSunccessMessage()
-        return
       }
-
-      showRefuseFriendFailurMessage()
-      return
     } catch (e) {
       showRefuseFriendFailurMessage()
       console.warn(e)
