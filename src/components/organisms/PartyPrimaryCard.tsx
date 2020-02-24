@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native'
 import { BlurView } from 'expo-blur'
 import { AntDesign } from '@expo/vector-icons'
-import { useUIState } from '../../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../../services/design'
 import { Party, User } from '../../entities'
 import { Thumbnail } from '../atoms'
@@ -16,24 +15,20 @@ type Props = {
   onPress?: () => void
 }
 
-// MEMO: partyドキュメントから取得しないといけない。
-const tempCount = 102
-
 const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 320, height = 480, disabled = false }) => {
-  const { theme } = useUIState()
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
-  const blurTint = useMemo(() => {
-    return theme === 'light' ? 'light' : 'dark'
-  }, [theme])
+  const count = useMemo(() => {
+    return party.entryUIDs ? party.entryUIDs.length : 0
+  }, [party.entryUIDs])
 
   return (
     <TouchableOpacity disabled={disabled} onPress={onPress} style={[styles.container, { width, height }]}>
       <Image source={{ uri: party.thumbnailURL }} style={styles.image} />
       <View style={styles.contentsWrapper}>
         <View style={styles.mainInfoTagWrapper}>
-          <BlurView intensity={30} tint={blurTint} style={styles.mainInfoTag}>
+          <BlurView intensity={10} tint="light" style={styles.mainInfoTag}>
             <View style={styles.titleTextWrapper}>
               <Text style={styles.titleText}>{party.name}</Text>
             </View>
@@ -43,7 +38,7 @@ const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 320,
           </BlurView>
         </View>
 
-        <BlurView intensity={30} tint={blurTint} style={styles.avatarsTag}>
+        <BlurView intensity={50} tint="light" style={styles.avatarsTag}>
           <View style={styles.avatarsWrapper}>
             {users.map((user, i) => {
               if (i === 0) {
@@ -71,16 +66,16 @@ const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 320,
 
             <View style={styles.othersWrapper}>
               <View style={styles.others}>
-                <Text style={styles.otherText}>+ {tempCount - users.length}</Text>
+                <Text style={styles.otherText}>+ {count - users.length}</Text>
               </View>
             </View>
           </View>
         </BlurView>
       </View>
       <View style={styles.countWrapper}>
-        <BlurView intensity={30} tint={blurTint} style={styles.countTag}>
+        <BlurView intensity={50} tint="light" style={styles.countTag}>
           <Text style={styles.countText}>
-            <AntDesign name="user" size={18} /> {tempCount}
+            <AntDesign name="user" size={18} /> {count}
           </Text>
         </BlurView>
       </View>
