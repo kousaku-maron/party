@@ -71,9 +71,11 @@ const HomeScreen = () => {
           <Carousel
             data={parties} // TODO: 人気パーティーのデータをどのようにして取得するかロジックを考える必要あり。
             renderItem={renderItem}
-            itemWidth={320}
+            itemWidth={320 + 30} // MEMO: add 30px margin
             activeSlideAlignment={'start'}
             sliderWidth={Dimensions.get('window').width}
+            slideStyle={{ paddingLeft: 24 }}
+            inactiveSlideOpacity={0.4}
           />
 
           {/* MEMO: カルーセル自体にcssを設定したくなかったので、別コンポーネントでレイアウト調整している */}
@@ -127,8 +129,7 @@ const makeStyles: MakeStyles = colors =>
     },
     scrollView: {
       display: 'flex',
-      width: '100%',
-      paddingHorizontal: 24
+      width: '100%'
     },
     parimaryTitleTextWrapper: {
       width: '100%',
@@ -142,7 +143,8 @@ const makeStyles: MakeStyles = colors =>
       width: '100%',
       flexWrap: 'wrap',
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      paddingHorizontal: 24
     },
     secondaryCardWrapper: {
       paddingBottom: 24
@@ -150,20 +152,17 @@ const makeStyles: MakeStyles = colors =>
     parimaryTitleText: {
       fontSize: 32,
       fontWeight: 'bold',
-      color: colors.foregrounds.primary
+      color: colors.foregrounds.primary,
+      paddingLeft: 24
     },
     secondaryTitleText: {
       fontSize: 24,
       fontWeight: 'bold',
-      color: colors.foregrounds.primary
+      color: colors.foregrounds.primary,
+      paddingLeft: 24
     },
     carouselBottomSpace: {
       paddingBottom: 60
-    },
-    temp: {
-      width: 100,
-      height: 200,
-      backgroundColor: 'red'
     }
   })
 
