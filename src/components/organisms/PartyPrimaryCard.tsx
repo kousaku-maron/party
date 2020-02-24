@@ -127,6 +127,10 @@ const makeStyles: MakeStyles = colors =>
       padding: 6
     },
     countTag: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minWidth: 60,
       borderRadius: 16,
       padding: 6
     },
@@ -146,7 +150,7 @@ const makeStyles: MakeStyles = colors =>
     },
     titleText: {
       color: colors.foregrounds.onTintPrimary, // これどうしよう...
-      fontSize: 20
+      fontSize: 24
     },
     areaText: {
       color: colors.foregrounds.onTintPrimary, // これどうしよう...

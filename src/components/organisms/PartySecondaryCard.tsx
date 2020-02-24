@@ -77,6 +77,10 @@ const makeStyles: MakeStyles = colors =>
       padding: 6
     },
     countTag: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minWidth: 60,
       borderRadius: 16,
       padding: 6
     },
