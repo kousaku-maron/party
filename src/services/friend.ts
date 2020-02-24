@@ -1,9 +1,6 @@
 import { functions } from '../repositories/firebase'
 import { useAuthState } from '../store/hooks'
-import { User, UpdateUser } from '../entities/User'
-import { setUser } from '../repositories/user'
-import { deleteAppliedFriendUser, getAppliedFriendUser } from '../repositories/appliedFriend'
-import { createfriend } from '../repositories/friend'
+import { User } from '../entities/User'
 import {
   showApplyFriendSunccessMessage,
   showApplyFriendFailurMessage,
@@ -14,7 +11,6 @@ import {
   showRefuseFriendSunccessMessage,
   showRefuseFriendFailurMessage
 } from './flashCard'
-import _ from 'lodash'
 
 export const useApplyFriend = () => {
   const { uid } = useAuthState()
@@ -36,7 +32,7 @@ export const useApplyFriend = () => {
 }
 
 export const useAcceptFriend = () => {
-  const { uid, user } = useAuthState()
+  const { uid } = useAuthState()
   const acceptFriend = async (friend: User) => {
     const friendUID = friend.uid
     try {
@@ -44,20 +40,6 @@ export const useAcceptFriend = () => {
         showAcceptFriendAlreadyacceptedMessage()
         return
       }
-
-      const { name, thumbnailURL } = user
-      const newUser: UpdateUser = {
-        uid,
-        name,
-        thumbnailURL,
-        appliedFriendUIDs: _.without(user.appliedFriendUIDs, friendUID),
-        friendUIDs: _.uniq(user.friendUIDs ? [friendUID, ...user.friendUIDs] : [friendUID])
-      }
-      const appliedFriendUser = await getAppliedFriendUser(uid, friendUID)
-      const appliedFriendUserUID = appliedFriendUser.id
-      createfriend(uid, friend)
-      deleteAppliedFriendUser(uid, appliedFriendUserUID)
-      setUser(uid, newUser)
       await functions.httpsCallable('acceptFriend')({ friendUID })
       showAcceptFriendSunccessMessage()
     } catch (e) {
@@ -69,21 +51,18 @@ export const useAcceptFriend = () => {
 }
 
 export const useRefuseFriend = () => {
-  const { uid, user } = useAuthState()
+  const { uid } = useAuthState()
   const refuseFriend = async (refusedFriend: User) => {
-    const refusedFriendsUID = refusedFriend.uid
+    const refusedFriendUID = refusedFriend.uid
     try {
-      const newUser: UpdateUser = {
-        uid: user.uid,
-        name: user.name,
-        thumbnailURL: user.thumbnailURL,
-        appliedFriendUIDs: _.without(user.appliedFriendUIDs, refusedFriendsUID)
+      if (refusedFriend.applyFriendUIDs && refusedFriend.applyFriendUIDs.includes(uid)) {
+        await functions.httpsCallable('refuseFriend')({ refusedFriendUID })
+        showRefuseFriendSunccessMessage()
+        return
       }
-      const appliedFriendUser = await getAppliedFriendUser(uid, refusedFriendsUID)
-      const appliedFriendUserUID = appliedFriendUser.id
-      setUser(uid, newUser)
-      deleteAppliedFriendUser(uid, appliedFriendUserUID)
-      showRefuseFriendSunccessMessage()
+
+      showRefuseFriendFailurMessage()
+      return
     } catch (e) {
       showRefuseFriendFailurMessage()
       console.warn(e)
