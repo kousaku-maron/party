@@ -3,6 +3,11 @@ package com.partyclient;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.webview.RNCWebViewPackage;
+import com.horcrux.svg.SvgPackage;
+import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
+import io.expo.appearance.RNCAppearancePackage;
+import org.reactnative.maskedview.RNCMaskedViewPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -40,6 +45,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNCWebViewPackage(),
+            new SvgPackage(),
+            new SafeAreaContextPackage(),
+            new RNCAppearancePackage(),
+            new RNCMaskedViewPackage(),
           new ReanimatedPackage(),
           new RNGestureHandlerPackage(),
           new RNScreensPackage(),

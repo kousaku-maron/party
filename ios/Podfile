@@ -43,4 +43,14 @@ target 'partyclient' do
 
   # Automatically detect installed unimodules
   use_unimodules!
+  pod 'RNCMaskedView', :path => '../node_modules/@react-native-community/masked-view'
+
+  pod 'react-native-appearance', :path => '../node_modules/react-native-appearance'
+
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
 end
