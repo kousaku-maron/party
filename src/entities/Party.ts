@@ -4,7 +4,7 @@ export type Party = {
   thumbnailURL?: string
   enabled: boolean
   date: Date
-  entryUIDs?: string[] // 一時的にパラメーター設置。
+  entryUIDs?: string[]
 }
 
 export const buildParty = (id: string, data: firebase.firestore.DocumentData) => {

@@ -78,7 +78,15 @@ const RoomNavigator = () => (
 
 const UserNavigator = () => (
   <Stack.Navigator initialRouteName="Main">
-    <Stack.Screen name="Main" component={UserScreen} options={{ headerShown: false }} />
+    <Stack.Screen
+      name="Main"
+      component={UserScreen}
+      options={{
+        headerTitle: 'プロフィール',
+        headerBackTitleVisible: false,
+        headerTransparent: true
+      }}
+    />
     <Stack.Screen
       name="UserEdit"
       component={UserEditScreen}

@@ -12,7 +12,9 @@ const BottomTabLayout: React.FC<{}> = ({ children }) => {
     <React.Fragment>
       {children}
       <View style={[styles.tabContainer, { paddingBottom: inset.bottom }]}>
-        <BottomTab fullWidth={true} />
+        <View style={styles.withShadow}>
+          <BottomTab fullWidth={true} />
+        </View>
       </View>
     </React.Fragment>
   )
@@ -27,6 +29,16 @@ const makeStyles: MakeStyles = () =>
       bottom: 0,
       width: fullWidth,
       paddingHorizontal: 12
+    },
+    withShadow: {
+      shadowColor: 'black', // どうしよう
+      shadowOffset: {
+        width: 4,
+        height: 4
+      },
+      shadowRadius: 4,
+      shadowOpacity: 0.1,
+      elevation: 4
     }
   })
 

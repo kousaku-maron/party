@@ -1,7 +1,7 @@
 export const dark = {
   tints: {
     primary: {
-      main: '#e42e33',
+      main: '#FFBD53', // main以外の設定できていない。
       light: '#ff675d',
       dark: '#aa000c'
     },
@@ -45,7 +45,7 @@ export const dark = {
     onTintSenary: 'rgb(255, 255, 255)'
   },
   backgrounds: {
-    primary: 'rgb(0, 0, 0)',
+    primary: '#404040',
     secondary: 'rgb(28, 28, 30)',
     tertiary: 'rgb(44, 44, 46)'
   },
@@ -63,7 +63,7 @@ export const dark = {
 export const light = {
   tints: {
     primary: {
-      main: '#e42e33',
+      main: '#FFBD53', // main以外の設定できていない。
       light: '#ff675d',
       dark: '#aa000c'
     },
@@ -107,8 +107,8 @@ export const light = {
     onTintSenary: 'rgb(255, 255, 255)'
   },
   backgrounds: {
-    primary: 'rgb(255, 255, 255)',
-    secondary: 'rgb(242, 242, 247)',
+    primary: '#f8f8f8',
+    secondary: 'rgb(252, 252, 252)',
     tertiary: 'rgb(255, 255, 255)'
   },
   system: {

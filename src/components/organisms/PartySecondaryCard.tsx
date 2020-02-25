@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native'
 import { BlurView } from 'expo-blur'
-import { useUIState } from '../../store/hooks'
+import { AntDesign } from '@expo/vector-icons'
 import { useStyles, MakeStyles } from '../../services/design'
 import { Party } from '../../entities'
 
@@ -13,23 +13,19 @@ type Props = {
   onPress?: () => void
 }
 
-// MEMO: partyドキュメントから取得しないといけない。
-const tempCount = 102
-
 const PartySecondaryCard: React.FC<Props> = ({ party, onPress, width = 160, height = 240, disabled = false }) => {
-  const { theme } = useUIState()
   const styles = useStyles(makeStyles)
 
-  const blurTint = useMemo(() => {
-    return theme === 'light' ? 'light' : 'dark'
-  }, [theme])
+  const count = useMemo(() => {
+    return party.entryUIDs ? party.entryUIDs.length : 0
+  }, [party.entryUIDs])
 
   return (
     <TouchableOpacity disabled={disabled} onPress={onPress} style={[styles.container, { width, height }]}>
       <Image source={{ uri: party.thumbnailURL }} style={styles.image} />
       <View style={styles.contentsWrapper}>
         <View style={styles.mainInfoTagWrapper}>
-          <BlurView intensity={30} tint={blurTint} style={styles.mainInfoTag}>
+          <BlurView intensity={10} tint="light" style={styles.mainInfoTag}>
             <View style={styles.titleTextWrapper}>
               <Text style={styles.titleText}>{party.name}</Text>
             </View>
@@ -40,8 +36,10 @@ const PartySecondaryCard: React.FC<Props> = ({ party, onPress, width = 160, heig
         </View>
       </View>
       <View style={styles.countWrapper}>
-        <BlurView intensity={30} tint={blurTint} style={styles.countTag}>
-          <Text style={styles.countText}>Icon: {tempCount}</Text>
+        <BlurView intensity={50} tint="light" style={styles.countTag}>
+          <Text style={styles.countText}>
+            <AntDesign name="user" size={18} /> {count}
+          </Text>
         </BlurView>
       </View>
     </TouchableOpacity>
@@ -73,14 +71,16 @@ const makeStyles: MakeStyles = colors =>
       paddingBottom: 6
     },
     areaTextWrapper: {},
-    mainInfoTagWrapper: {
-      paddingBottom: 12
-    },
+    mainInfoTagWrapper: {},
     mainInfoTag: {
       borderRadius: 12,
       padding: 6
     },
     countTag: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minWidth: 60,
       borderRadius: 16,
       padding: 6
     },
