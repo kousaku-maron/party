@@ -1,5 +1,5 @@
 import { functions } from '../repositories/firebase'
-import { User } from '../entities/User'
+import { User, Report } from '../entities'
 import { useAuthState } from '../store/hooks'
 import {
   showReportUserSunccessMessage,
@@ -11,14 +11,20 @@ export const useReportUser = () => {
   const { uid } = useAuthState()
 
   const reportUser = async (reportedUser: User, comment: string) => {
-    const reportedUserUID = reportedUser.id
+    const reportedUID = reportedUser.id
     try {
-      if (reportedUser.reportUserUIDs && reportedUser.reportUserUIDs.includes(uid)) {
+      if (reportedUser.reportUIDs && reportedUser.reportUIDs.includes(uid)) {
         showReportUserAlreadyacceptedMessage()
         return
       }
 
-      await functions.httpsCallable('reportUser')({ reportedUserUID, comment })
+      const report: Report = {
+        reportUID: uid,
+        reportedUID,
+        comment
+      }
+
+      await functions.httpsCallable('reportUser')({ report })
       showReportUserSunccessMessage()
     } catch (e) {
       showReportUserFailurMessage()
