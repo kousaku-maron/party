@@ -27,6 +27,9 @@
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
       "usesAppleSignIn": true
-    }
-  }
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
+  },
+  "displayName": "party",
+  "name": "partyclient"
 }
