@@ -45,6 +45,31 @@ export const useAppliedCards = () => {
   return cards
 }
 
+export const useAppliedCardsByType = (type: string) => {
+  const [cards, setCards] = useState<ApplyCard[]>()
+  const auth = useAuthState()
+  const { user } = auth
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      if (!user) return
+      const applyCardsRef = getApplyCardsRef(user.uid).where('type', '==', type)
+      const unsubscribe = applyCardsRef.onSnapshot(snapShot => {
+        const newApplyCards: ApplyCard[] = snapShot.docs.map(doc => {
+          return buildApplyCard(doc.id, doc.data())
+        })
+        setCards(newApplyCards)
+      })
+
+      return () => {
+        unsubscribe()
+      }
+    })
+  }, [type, user])
+
+  return cards
+}
+
 export const useReplyToAppliedCard = () => {
   const onApprove = useCallback(async (uid: string, card: ApplyCard) => {
     deleteAppliedCard(uid, card.id)
