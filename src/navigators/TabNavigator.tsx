@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import {
   HomeScreen,
+  SwipeCardScreen,
   PartyEntryScreen,
   UserScreen,
   UserEditScreen,
@@ -22,6 +23,11 @@ const Stack = createStackNavigator()
 const HomeNavigator = () => (
   <Stack.Navigator initialRouteName="Main">
     <Stack.Screen name="Main" component={HomeScreen} options={{ headerShown: false }} />
+    <Stack.Screen
+      name="SwipeCard"
+      component={SwipeCardScreen}
+      options={{ headerBackTitleVisible: false, headerTransparent: true, headerTitle: null }}
+    />
     <Stack.Screen
       name="PartyEntry"
       component={PartyEntryScreen}
