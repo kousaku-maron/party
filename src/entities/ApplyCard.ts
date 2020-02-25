@@ -10,12 +10,17 @@ type User = {
   thumbnailURL?: string
   gender?: string
   blockUIDs?: string[]
+  blockedUIDs?: string[]
+  applyFriendUIDs?: string[]
   appliedFriendUIDs?: string[]
   friendUIDs?: string[]
+  reportUIDs?: string[]
+  reportedUIDs?: string[]
 }
 
 export type ApplyCard = {
   id: string
+  type: string // ex. "demo" "today" ...
   partyID: string
   groupID: string
   organizerUID: string
@@ -25,6 +30,7 @@ export type ApplyCard = {
 export const buildApplyCard = (id: string, data: firebase.firestore.DocumentData) => {
   const newApplyCard: ApplyCard = {
     id,
+    type: data.type,
     partyID: data.partyID,
     groupID: data.groupID,
     organizerUID: data.organizerUID,
