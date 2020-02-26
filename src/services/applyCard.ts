@@ -46,7 +46,7 @@ export const useAppliedCards = () => {
 }
 
 export const useAppliedCardsByType = (type: string) => {
-  const [cards, setCards] = useState<ApplyCard[]>()
+  const [cards, setCards] = useState<ApplyCard[]>([])
   const auth = useAuthState()
   const { user } = auth
 

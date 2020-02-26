@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { Thumbnail } from '../atoms'
 import { useStyles, MakeStyles } from '../../services/design'
 import { ApplyCard } from '../../entities'
@@ -12,11 +13,16 @@ type Props = {
 
 const SwipeCard: React.FC<Props> = ({ card, width = 320, height = 280 }) => {
   const styles = useStyles(makeStyles)
+  const navigation = useNavigation()
+
+  const onPressAvatar = useCallback(() => {
+    navigation.navigate('User', { userID: card.organizerUID })
+  }, [card.organizerUID, navigation])
 
   return (
     <View style={[styles.container, { width, height }]}>
-      <View style={[styles.avatarWrapper, { left: width / 2 - 42 }]}>
-        <Thumbnail uri={card.users[0].thumbnailURL} size={82} />
+      <View style={[styles.avatarWrapper, { left: width / 2 - 42 }, styles.withShadow]}>
+        <Thumbnail uri={card.users[0].thumbnailURL} size={82} onPress={onPressAvatar} />
       </View>
 
       <View style={styles.nameWrapper}>
@@ -86,6 +92,16 @@ const makeStyles: MakeStyles = colors =>
     numberText: {
       fontSize: 20,
       color: colors.tints.primary.main
+    },
+    withShadow: {
+      shadowColor: 'black', // どうしよう
+      shadowOffset: {
+        width: 2,
+        height: 2
+      },
+      shadowRadius: 4,
+      shadowOpacity: 0.1,
+      elevation: 4
     }
   })
 

@@ -18,12 +18,24 @@ type User = {
   reportedUIDs?: string[]
 }
 
+// same origin Party type
+type Party = {
+  id: string
+  name: string
+  type: string
+  thumbnailURL?: string
+  enabled: boolean
+  date: Date
+  entryUIDs?: string[]
+}
+
 export type ApplyCard = {
   id: string
   type: string // ex. "demo" "today" ...
   partyID: string
   groupID: string
   organizerUID: string
+  party: Party
   users: User[]
 }
 
@@ -34,6 +46,7 @@ export const buildApplyCard = (id: string, data: firebase.firestore.DocumentData
     partyID: data.partyID,
     groupID: data.groupID,
     organizerUID: data.organizerUID,
+    party: data.party,
     users: data.users
   }
 

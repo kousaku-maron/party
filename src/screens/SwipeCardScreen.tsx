@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react'
-import { View, StyleSheet, Dimensions } from 'react-native'
+import React, { useCallback, useState, useMemo } from 'react'
+import { View, Text, StyleSheet, Dimensions, ImageBackground } from 'react-native'
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import Carousel from 'react-native-snap-carousel'
@@ -20,7 +20,24 @@ const SwipeCardScreen = () => {
 
   const cards = useAppliedCardsByType(type)
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [slideIndex, setSlideIndex] = useState<number>(0)
+
+  const backgroundURL = useMemo(() => {
+    if (cards.length === 0) {
+      return undefined
+    }
+
+    return cards[slideIndex].party.thumbnailURL
+  }, [cards, slideIndex])
+
+  const title = useMemo(() => {
+    if (cards.length === 0) {
+      return undefined
+    }
+
+    return cards[slideIndex].party.name
+  }, [cards, slideIndex])
+
   const onPressGlass = useCallback(() => {
     console.info('push glass button!')
   }, [])
@@ -33,30 +50,51 @@ const SwipeCardScreen = () => {
             <SwipeCard card={item} />
           </View>
           <View style={[styles.fabWrapper, styles.withBloom, { left: 320 / 2 - 40 }]}>
-            <Fab size={80}>
+            <Fab size={80} onPress={onPressGlass}>
               <MaterialCommunityIcons name="glass-wine" size={56} color={colors.foregrounds.onTintPrimary} />
             </Fab>
           </View>
         </View>
       )
     },
-    [colors.foregrounds.onTintPrimary, styles.cardContainer, styles.fabWrapper, styles.withBloom, styles.withShadow]
+    [
+      colors.foregrounds.onTintPrimary,
+      onPressGlass,
+      styles.cardContainer,
+      styles.fabWrapper,
+      styles.withBloom,
+      styles.withShadow
+    ]
   )
 
+  const onSnapToItem = useCallback((slideIndex: number) => {
+    setSlideIndex(slideIndex)
+  }, [])
+
   return (
-    <View style={[styles.container, { paddingTop: inset.top }]}>
+    <ImageBackground
+      blurRadius={15}
+      source={{ uri: backgroundURL }}
+      style={[styles.container, { paddingTop: inset.top }]}
+    >
       <View style={styles.inner}>
+        <View style={styles.titleTextWrapper}>
+          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.areaText}>東京エリア</Text>
+        </View>
+
         <Carousel
           data={cards}
           renderItem={renderItem}
+          onSnapToItem={onSnapToItem}
           itemWidth={320}
           activeSlideAlignment={'center'}
           sliderWidth={Dimensions.get('window').width}
-          slideStyle={{ marginTop: Dimensions.get('window').height * 0.5 }}
-          inactiveSlideOpacity={0.4}
+          slideStyle={{ marginTop: Dimensions.get('window').height * 0.3 }}
+          inactiveSlideOpacity={0.6}
         />
       </View>
-    </View>
+    </ImageBackground>
   )
 }
 
@@ -75,6 +113,19 @@ const makeStyles: MakeStyles = colors =>
     fabWrapper: {
       position: 'absolute',
       bottom: 10
+    },
+    titleTextWrapper: {
+      paddingTop: Dimensions.get('window').height * 0.2,
+      display: 'flex',
+      alignItems: 'center'
+    },
+    titleText: {
+      fontSize: 24,
+      color: colors.foregrounds.onTintPrimary
+    },
+    areaText: {
+      fontSize: 20,
+      color: colors.foregrounds.onTintPrimary
     },
     withShadow: {
       shadowColor: 'black', // どうしよう

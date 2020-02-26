@@ -32,9 +32,8 @@ const HomeScreen = () => {
   }, [user])
 
   const onPressParty = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (party: Party) => {
-      navigation.navigate('SwipeCard', { type: 'today' }) // TODO: partyにtypeを付与し、それを使う。
+    ({ type }: Party) => {
+      navigation.navigate('SwipeCard', { type })
     },
     [navigation]
   )
