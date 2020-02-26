@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { StyleSheet, ScrollView, View, Text, Dimensions } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import Carousel from 'react-native-snap-carousel'
 import { Party } from '../entities'
@@ -14,6 +15,7 @@ import { setGender } from '../services/user'
 
 const HomeScreen = () => {
   const { top: insetTop, bottom: insetBottom } = useSafeArea()
+  const navigation = useNavigation()
   const styles = useStyles(makeStyles)
   const { user, uid } = useAuthState()
 
@@ -28,6 +30,13 @@ const HomeScreen = () => {
     }
     return [user, user, user]
   }, [user])
+
+  const onPressParty = useCallback(
+    ({ type }: Party) => {
+      navigation.navigate('SwipeCard', { type })
+    },
+    [navigation]
+  )
 
   const [isSendGender, setIsSendGender] = useState<boolean>(false)
   const onSetGender = useCallback(
@@ -48,11 +57,9 @@ const HomeScreen = () => {
 
   const renderItem = useCallback(
     ({ item }: { item: Party }) => {
-      return (
-        <PartyPrimaryCard key={item.id} party={item} users={tempUsers} onPress={() => console.info('push card!')} />
-      )
+      return <PartyPrimaryCard key={item.id} party={item} users={tempUsers} onPress={onPressParty} />
     },
-    [tempUsers]
+    [onPressParty, tempUsers]
   )
 
   if (!parties) {
@@ -92,6 +99,7 @@ const HomeScreen = () => {
                   party={party}
                   width={Dimensions.get('window').width * 0.4}
                   height={Dimensions.get('window').width * 0.55}
+                  onPress={onPressParty}
                 />
               </View>
             ))}

@@ -10,7 +10,7 @@ type Props = {
   height?: number
   width?: number
   disabled?: boolean
-  onPress?: () => void
+  onPress?: (party: Party) => void
 }
 
 const PartySecondaryCard: React.FC<Props> = ({ party, onPress, width = 160, height = 240, disabled = false }) => {
@@ -21,7 +21,7 @@ const PartySecondaryCard: React.FC<Props> = ({ party, onPress, width = 160, heig
   }, [party.entryUIDs])
 
   return (
-    <TouchableOpacity disabled={disabled} onPress={onPress} style={[styles.container, { width, height }]}>
+    <TouchableOpacity disabled={disabled} onPress={() => onPress(party)} style={[styles.container, { width, height }]}>
       <Image source={{ uri: party.thumbnailURL }} style={styles.image} />
       <View style={styles.contentsWrapper}>
         <View style={styles.mainInfoTagWrapper}>

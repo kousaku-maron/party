@@ -16,4 +16,7 @@ export type RouteParams = {
   User: {
     userID?: string
   }
+  SwipeCard: {
+    type: string
+  }
 }
