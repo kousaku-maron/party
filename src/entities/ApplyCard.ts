@@ -14,21 +14,35 @@ type User = {
   friendUIDs?: string[]
 }
 
+//same as Party type
+//MEMO: Partyのtypeに何入れるか決めていないからとりあえず？にしている
+type Party = {
+  id: string
+  type?: string
+  name: string
+  thumbnailURL?: string
+  enabled: boolean
+  date: Date
+  entryUIDs?: string[] // 一時的にパラメーター設置。
+}
+
 export type ApplyCard = {
   id: string
-  partyID: string
+  type: string
   groupID: string
   organizerUID: string
   users: User[]
+  party: Party
 }
 
 export const buildApplyCard = (id: string, data: firebase.firestore.DocumentData) => {
   const newApplyCard: ApplyCard = {
     id,
-    partyID: data.partyID,
+    type: data.type,
     groupID: data.groupID,
     organizerUID: data.organizerUID,
-    users: data.users
+    users: data.users,
+    party: data.party
   }
 
   return newApplyCard
