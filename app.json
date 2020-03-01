@@ -24,6 +24,7 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.party.Party",
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
       "usesAppleSignIn": true
