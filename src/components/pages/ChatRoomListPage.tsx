@@ -2,47 +2,42 @@ import React, { useCallback } from 'react'
 import { View, ScrollView, StyleSheet } from 'react-native'
 import { useRoomsWithUser } from '../../services/room'
 import { useStyles, MakeStyles } from '../../services/design'
-import { RoomListItem } from '../../components/organisms'
+import { Room } from '../../entities'
+import { ShadowBase } from '../../components/atoms'
+import { RoomCard } from '../../components/organisms'
 
-type OwnProps = { onPressItem: (roomID: string) => void }
+type OwnProps = { onPress: (roomID: string) => void }
 type Props = OwnProps
 
-const ChatRoomListPage = ({ onPressItem }: Props) => {
-  const roomsWithUser = useRoomsWithUser()
+const ChatRoomListPage = ({ onPress }: Props) => {
+  const roomsWithUser = useRoomsWithUser() // TODO: roomに"users"を保存させるので、"useRooms"に変える。
   const styles = useStyles(makeStyles)
 
-  const onPress = useCallback(
-    (roomID: string) => {
-      if (!onPressItem) return
-      onPressItem(roomID)
+  const onPressCard = useCallback(
+    (room: Room) => {
+      if (!onPress) return
+      onPress(room.id)
     },
-    [onPressItem]
+    [onPress]
   )
 
   return (
     <ScrollView>
       {roomsWithUser.map(roomWithUser => (
-        <React.Fragment key={roomWithUser.id}>
-          <RoomListItem
-            users={roomWithUser.users}
-            onPress={() => {
-              onPress(roomWithUser.id)
-            }}
-          />
-          <View style={styles.divider} />
-        </React.Fragment>
+        <View key={roomWithUser.id} style={styles.cardWrapper}>
+          <ShadowBase>
+            <RoomCard room={roomWithUser} onPress={onPressCard} fullWidth={true} />
+          </ShadowBase>
+        </View>
       ))}
     </ScrollView>
   )
 }
 
-const hairlineWidth = StyleSheet.hairlineWidth
-
-const makeStyles: MakeStyles = colors =>
+const makeStyles: MakeStyles = () =>
   StyleSheet.create({
-    divider: {
-      borderBottomColor: colors.foregrounds.separator,
-      borderBottomWidth: hairlineWidth
+    cardWrapper: {
+      paddingBottom: 10
     }
   })
 

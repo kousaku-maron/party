@@ -1,3 +1,4 @@
+// TODO: Roomに"users: User[]", "newMessage?: Message"を保存させるようにする。
 export type Room = {
   id: string
   enabled: boolean
