@@ -10,8 +10,12 @@ type User = {
   thumbnailURL?: string
   gender?: string
   blockUIDs?: string[]
+  blockedUIDs?: string[]
+  applyFriendUIDs?: string[]
   appliedFriendUIDs?: string[]
   friendUIDs?: string[]
+  reportUIDs?: string[]
+  reportedUIDs?: string[]
 }
 
 //same as Party type
