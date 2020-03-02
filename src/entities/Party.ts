@@ -1,7 +1,6 @@
-//MEMO: Partyのtypeに何入れるか決めていないからとりあえず？にしている
 export type Party = {
   id: string
-  type?: string
+  type: string
   name: string
   thumbnailURL?: string
   enabled: boolean

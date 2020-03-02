@@ -15,10 +15,9 @@ type User = {
 }
 
 //same as Party type
-//MEMO: Partyのtypeに何入れるか決めていないからとりあえず？にしている
 type Party = {
   id: string
-  type?: string
+  type: string
   name: string
   thumbnailURL?: string
   enabled: boolean
@@ -29,9 +28,10 @@ type Party = {
 export type ApplyCard = {
   id: string
   type: string
+  partyID: string
   groupID: string
   organizerUID: string
-  users: User[]
+  members: User[]
   party: Party
 }
 
@@ -39,9 +39,10 @@ export const buildApplyCard = (id: string, data: firebase.firestore.DocumentData
   const newApplyCard: ApplyCard = {
     id,
     type: data.type,
+    partyID: data.partyID,
     groupID: data.groupID,
     organizerUID: data.organizerUID,
-    users: data.users,
+    members: data.members,
     party: data.party
   }
 
