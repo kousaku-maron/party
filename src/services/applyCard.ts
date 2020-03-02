@@ -74,7 +74,7 @@ export const useReplyToAppliedCard = () => {
   const onApprove = useCallback(async (uid: string, card: ApplyCard) => {
     deleteAppliedCard(uid, card.id)
 
-    const entryUIDs = _.uniq([uid, ...card.users.map(user => user.uid)])
+    const entryUIDs = _.uniq([uid, ...card.members.map(user => user.uid)])
 
     const baseStr = entryUIDs
       .slice()

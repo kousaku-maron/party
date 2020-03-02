@@ -22,15 +22,15 @@ const SwipeCard: React.FC<Props> = ({ card, width = 320, height = 280 }) => {
   return (
     <View style={[styles.container, { width, height }]}>
       <View style={[styles.avatarWrapper, { left: width / 2 - 42 }, styles.withShadow]}>
-        <Thumbnail uri={card.users[0].thumbnailURL} size={82} onPress={onPressAvatar} />
+        <Thumbnail uri={card.members[0].thumbnailURL} size={82} onPress={onPressAvatar} />
       </View>
 
       <View style={styles.nameWrapper}>
-        <Text style={styles.nameText}>{card.users[0].name}</Text>
+        <Text style={styles.nameText}>{card.members[0].name}</Text>
       </View>
 
       <View style={styles.idWrapper}>
-        <Text style={styles.idText}>@{card.users[0].userID}</Text>
+        <Text style={styles.idText}>@{card.members[0].userID}</Text>
       </View>
 
       <View style={styles.introWrapper}>

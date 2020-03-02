@@ -35,16 +35,16 @@ export const SwipeCardSection = ({ card, swipeable = false }: Props) => {
         <View style={[styles.card, { height: SCREEN_HEIGHT - TOP_SPACE - BOTTOM_SPACE - 98 - insets.top }]}>
           <View style={styles.cardHeader}>
             <View style={styles.thumnails}>
-              {card.users.slice(0, showAvatarCount).map((user, index) => (
+              {card.members.slice(0, showAvatarCount).map((user, index) => (
                 <View key={user.uid} style={index === 0 ? styles.thumbnailWrapper : styles.subThumbnailWrapper}>
                   <Thumbnail size={96} uri={user.thumbnailURL} />
                 </View>
               ))}
 
-              {card.users.length > showAvatarCount && (
+              {card.members.length > showAvatarCount && (
                 <View style={styles.hiddenAvatarCountWrapper}>
                   <View style={styles.hiddenAvatarCount}>
-                    <Text style={styles.hiddenAvatarCountText}>+{card.users.length - showAvatarCount}</Text>
+                    <Text style={styles.hiddenAvatarCountText}>+{card.members.length - showAvatarCount}</Text>
                   </View>
                 </View>
               )}
@@ -66,16 +66,16 @@ export const SwipeCardSection = ({ card, swipeable = false }: Props) => {
       <View style={[styles.card, { height: SCREEN_HEIGHT - TOP_SPACE - BOTTOM_SPACE - 98 - insets.top }]}>
         <View style={styles.cardHeader}>
           <View style={styles.thumnails}>
-            {card.users.slice(0, showAvatarCount).map((user, index) => (
+            {card.members.slice(0, showAvatarCount).map((user, index) => (
               <View key={user.uid} style={index === 0 ? styles.thumbnailWrapper : styles.subThumbnailWrapper}>
                 <Thumbnail size={96} uri={user.thumbnailURL} />
               </View>
             ))}
 
-            {card.users.length > showAvatarCount && (
+            {card.members.length > showAvatarCount && (
               <View style={styles.hiddenAvatarCountWrapper}>
                 <View style={styles.hiddenAvatarCount}>
-                  <Text style={styles.hiddenAvatarCountText}>+{card.users.length - showAvatarCount}</Text>
+                  <Text style={styles.hiddenAvatarCountText}>+{card.members.length - showAvatarCount}</Text>
                 </View>
               </View>
             )}
