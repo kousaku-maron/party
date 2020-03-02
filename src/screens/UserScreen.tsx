@@ -7,7 +7,7 @@ import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
 import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import { Feather, AntDesign } from '@expo/vector-icons'
-import { Thumbnail, Fab, DotsIcon } from '../components/atoms'
+import { Thumbnail, Fab, DotsIcon, ShadowBase, BloomBase } from '../components/atoms'
 import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 
@@ -70,8 +70,10 @@ const UserScreen = () => {
         <ScrollView style={styles.scrollView}>
           <View style={styles.profileContainer}>
             <View style={styles.profileWrapper}>
-              <View style={[styles.thumbnailWrapper, styles.withShadow]}>
-                <Thumbnail uri={user.thumbnailURL} size={82} />
+              <View style={styles.thumbnailWrapper}>
+                <ShadowBase intensity={2}>
+                  <Thumbnail uri={user.thumbnailURL} size={82} />
+                </ShadowBase>
               </View>
 
               <View style={styles.nameWrapper}>
@@ -104,18 +106,22 @@ const UserScreen = () => {
 
           <View style={styles.contentsContainer}>
             {isMy && (
-              <View style={[styles.fabWrapper, styles.withBloom]}>
-                <Fab size={64} onPress={goToEdit}>
-                  <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={36} />
-                </Fab>
+              <View style={styles.fabWrapper}>
+                <BloomBase>
+                  <Fab size={64} onPress={goToEdit}>
+                    <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={36} />
+                  </Fab>
+                </BloomBase>
               </View>
             )}
 
             {!isMy && !isFriend && !isBlocked && (
-              <View style={[styles.fabWrapper, styles.withBloom]}>
-                <Fab size={64}>
-                  <AntDesign name="adduser" color={colors.foregrounds.onTintPrimary} size={36} />
-                </Fab>
+              <View style={styles.fabWrapper}>
+                <BloomBase>
+                  <Fab size={64}>
+                    <AntDesign name="adduser" color={colors.foregrounds.onTintPrimary} size={36} />
+                  </Fab>
+                </BloomBase>
               </View>
             )}
 
@@ -251,26 +257,6 @@ const makeStyles: MakeStyles = colors =>
     blockMessageText: {
       fontSize: 20,
       color: colors.foregrounds.placeholder
-    },
-    withShadow: {
-      shadowColor: 'black', // どうしよう
-      shadowOffset: {
-        width: 2,
-        height: 2
-      },
-      shadowRadius: 4,
-      shadowOpacity: 0.1,
-      elevation: 4
-    },
-    withBloom: {
-      shadowColor: colors.tints.primary.main,
-      shadowOffset: {
-        width: 0,
-        height: 0
-      },
-      shadowRadius: 5,
-      shadowOpacity: 1,
-      elevation: 5
     }
   })
 

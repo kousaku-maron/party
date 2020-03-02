@@ -8,6 +8,7 @@ import { useParties } from '../services/party'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
+import { ShadowBase } from '../components/atoms'
 import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 import { PartyPrimaryCard, PartySecondaryCard, GenderModal, Modal } from '../components/organisms'
@@ -57,7 +58,11 @@ const HomeScreen = () => {
 
   const renderItem = useCallback(
     ({ item }: { item: Party }) => {
-      return <PartyPrimaryCard key={item.id} party={item} users={tempUsers} onPress={onPressParty} />
+      return (
+        <ShadowBase intensity={2}>
+          <PartyPrimaryCard key={item.id} party={item} users={tempUsers} onPress={onPressParty} />
+        </ShadowBase>
+      )
     },
     [onPressParty, tempUsers]
   )
@@ -95,12 +100,14 @@ const HomeScreen = () => {
           <View style={styles.allPartiesWrapper}>
             {parties.map(party => (
               <View key={party.id} style={styles.secondaryCardWrapper}>
-                <PartySecondaryCard
-                  party={party}
-                  width={Dimensions.get('window').width * 0.4}
-                  height={Dimensions.get('window').width * 0.55}
-                  onPress={onPressParty}
-                />
+                <ShadowBase>
+                  <PartySecondaryCard
+                    party={party}
+                    width={Dimensions.get('window').width * 0.4}
+                    height={Dimensions.get('window').width * 0.55}
+                    onPress={onPressParty}
+                  />
+                </ShadowBase>
               </View>
             ))}
           </View>
