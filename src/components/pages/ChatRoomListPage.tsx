@@ -22,7 +22,7 @@ const ChatRoomListPage = ({ onPress }: Props) => {
   )
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.scrollView}>
       {roomsWithUser.map(roomWithUser => (
         <View key={roomWithUser.id} style={styles.cardWrapper}>
           <ShadowBase>
@@ -36,7 +36,13 @@ const ChatRoomListPage = ({ onPress }: Props) => {
 
 const makeStyles: MakeStyles = () =>
   StyleSheet.create({
+    scrollView: {
+      width: '100%',
+      paddingVertical: 24,
+      paddingHorizontal: 12
+    },
     cardWrapper: {
+      width: '100%',
       paddingBottom: 10
     }
   })

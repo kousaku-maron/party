@@ -1,19 +1,5 @@
 import { QuickReplies } from 'react-native-gifted-chat'
-
-// same User type
-export type MessageUser = {
-  enabled: boolean
-  isAccepted: boolean
-  isAnonymous: boolean
-  uid: string
-  userID: string
-  name: string
-  thumbnailURL?: string
-  gender?: string
-  blockUIDs?: string[]
-  appliedFriendUIDs?: string[]
-  friendUIDs?: string[]
-}
+import { User, buildUser } from './User'
 
 export type Message = {
   id: string
@@ -21,7 +7,7 @@ export type Message = {
   createdAt: Date
   imageURL?: string
   videoURL?: string
-  user?: MessageUser
+  user?: User
   writerUID?: string
   system: boolean
   quickReplies?: QuickReplies
@@ -35,7 +21,7 @@ export const buildMessage = (id: string, data: firebase.firestore.DocumentData) 
     createdAt: data.createdAt.toDate(),
     imageURL: data.imageURL,
     videoURL: data.videoURL,
-    user: data.user,
+    user: buildUser(data.user.id, data.user),
     writerUID: data.writerUID,
     system: data.system,
     quickReplies: data.quickReplies,
@@ -51,7 +37,7 @@ export type CreateMessage = Pick<
 
 export type UpdateMessage = Pick<Message, 'user'>
 
-export const systemUser: MessageUser = {
+export const systemUser: Omit<User, 'id'> = {
   enabled: true,
   isAccepted: true,
   isAnonymous: false,

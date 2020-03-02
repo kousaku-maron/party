@@ -43,7 +43,7 @@ const RoomScreen = () => {
           </View>
 
           {section === 'card' && <SwipeCardPage />}
-          {section === 'chat' && <ChatRoomListPage onPressItem={onPressRoom} />}
+          {section === 'chat' && <ChatRoomListPage onPress={onPressRoom} />}
         </View>
       </View>
     </BottomTabLayout>
@@ -72,7 +72,8 @@ const makeStyles: MakeStyles = colors =>
     container: {
       position: 'relative',
       width: '100%',
-      height: '100%'
+      height: '100%',
+      backgroundColor: colors.backgrounds.primary
     },
     inner: {
       paddingTop: APPBAR_HEIGHT + TOP_SPACE,

@@ -75,7 +75,8 @@ const makeStyles: MakeStyles = colors =>
       alignItems: 'center',
       flexDirection: 'row',
       borderRadius: 10,
-      padding: 12
+      padding: 12,
+      backgroundColor: colors.backgrounds.secondary
     },
     head: {
       display: 'flex',
@@ -88,6 +89,8 @@ const makeStyles: MakeStyles = colors =>
       alignItems: 'center'
     },
     usersWrapper: {
+      display: 'flex',
+      flexDirection: 'row',
       paddingRight: 10
     },
     thumbnailWrapper: {},
@@ -98,7 +101,8 @@ const makeStyles: MakeStyles = colors =>
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
-      height: 55
+      height: 55,
+      paddingVertical: 8
     },
     nameText: {
       color: colors.foregrounds.primary,
