@@ -1,3 +1,3 @@
-import { dark, light } from './gorgeous'
+import { dark, light } from './normal'
 
 export const getTheme = () => ({ dark, light })

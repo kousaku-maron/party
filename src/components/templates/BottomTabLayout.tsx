@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet, Dimensions, View } from 'react-native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useStyles, MakeStyles } from '../../services/design'
+import { ShadowBase } from '../atoms'
 import { BottomTab } from '../organisms'
 
 const BottomTabLayout: React.FC<{}> = ({ children }) => {
@@ -12,9 +13,9 @@ const BottomTabLayout: React.FC<{}> = ({ children }) => {
     <React.Fragment>
       {children}
       <View style={[styles.tabContainer, { paddingBottom: inset.bottom }]}>
-        <View style={styles.withShadow}>
+        <ShadowBase intensity={2}>
           <BottomTab fullWidth={true} />
-        </View>
+        </ShadowBase>
       </View>
     </React.Fragment>
   )
@@ -29,16 +30,6 @@ const makeStyles: MakeStyles = () =>
       bottom: 0,
       width: fullWidth,
       paddingHorizontal: 12
-    },
-    withShadow: {
-      shadowColor: 'black', // どうしよう
-      shadowOffset: {
-        width: 4,
-        height: 4
-      },
-      shadowRadius: 4,
-      shadowOpacity: 0.1,
-      elevation: 4
     }
   })
 
