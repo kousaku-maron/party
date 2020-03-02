@@ -27,9 +27,10 @@ const BloomBase: React.FC<Props> = ({ intensity = 3, color, children }) => {
 
   return (
     <View
-      style={
-        (styles.withShadow, { shadowColor: color ?? colors.tints.primary.main, shadowRadius, elevation: shadowRadius })
-      }
+      style={[
+        styles.withBloom,
+        { shadowColor: color ?? colors.tints.primary.main, shadowRadius, elevation: shadowRadius }
+      ]}
     >
       {children}
     </View>

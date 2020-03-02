@@ -23,7 +23,7 @@ const ShadowBase: React.FC<Props> = ({ intensity = 1, children }) => {
     return 24
   }, [intensity])
 
-  return <View style={(styles.withShadow, { shadowRadius, elevation: shadowRadius })}>{children}</View>
+  return <View style={[styles.withShadow, { shadowRadius, elevation: shadowRadius }]}>{children}</View>
 }
 const makeStyles: MakeStyles = () =>
   StyleSheet.create({
