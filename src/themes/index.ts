@@ -1,2 +1,2 @@
-export { dark as gorgeousDark, light as gorgeousLight } from './gorgeous'
+export { dark as normalDark, light as normalLight } from './normal'
 export * from './getTheme'
