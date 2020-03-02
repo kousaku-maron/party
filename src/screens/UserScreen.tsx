@@ -247,7 +247,7 @@ const makeStyles: MakeStyles = colors =>
     },
     blockText: {
       fontSize: 20,
-      color: 'red' // どうしよう...
+      color: colors.system.red
     },
     contentsTitleText: {
       fontSize: 24,
