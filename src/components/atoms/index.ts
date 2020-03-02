@@ -1,3 +1,5 @@
+export { default as ShadowBase } from './ShadowBase'
+export { default as BloomBase } from './BloomBase'
 export { default as RoundedButton } from './RoundedButton'
 export { default as AngularedButton } from './AngularedButton'
 export { default as Fab } from './Fab'
