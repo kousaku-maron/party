@@ -11,6 +11,7 @@ type Props = {
   height?: number
   onPress?: (event: GestureResponderEvent) => void
   padding?: number
+  outlined?: boolean
 }
 
 const RoundedButton: React.FC<Props> = ({
@@ -22,7 +23,8 @@ const RoundedButton: React.FC<Props> = ({
   height,
   onPress,
   children,
-  padding = 12
+  padding = 12,
+  outlined = false
 }) => {
   const colors = useColors()
 
@@ -45,7 +47,8 @@ const RoundedButton: React.FC<Props> = ({
       style={[
         styles.container,
         {
-          backgroundColor: disabled ? _inactiveColor : _color,
+          ...(!outlined && { backgroundColor: disabled ? _inactiveColor : _color }),
+          ...(outlined && { borderColor: disabled ? _inactiveColor : _color, borderWidth: 1 }),
           width: fullWidth ? '100%' : width,
           height,
           borderRadius: height ? height / 2 : 25,
