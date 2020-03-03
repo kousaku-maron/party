@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import firebase from '../repositories/firebase'
-import { buildRoom, Room, User, Message } from '../entities'
+import { buildRoom, Room, User } from '../entities'
 import { useAuthState } from '../store/hooks'
 import { getUser } from '../repositories/user'
 
@@ -33,7 +33,7 @@ export const useRooms = () => {
 }
 
 export const useRoomsWithUser = () => {
-  const [roomsWithUser, setRoomWithUser] = useState<(Room & { users: User[]; newMessage?: Message })[]>([])
+  const [roomsWithUser, setRoomWithUser] = useState<(Room & { users: User[] })[]>([])
   const rooms = useRooms()
 
   useEffect(() => {

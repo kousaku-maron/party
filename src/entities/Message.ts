@@ -37,7 +37,9 @@ export type CreateMessage = Pick<
 
 export type UpdateMessage = Pick<Message, 'user'>
 
-export const systemUser: Omit<User, 'id'> = {
+// MEMO:　そろそろコレ消し去りたい...
+export const systemUser: User = {
+  id: 'admin', // 一時的
   enabled: true,
   isAccepted: true,
   isAnonymous: false,
