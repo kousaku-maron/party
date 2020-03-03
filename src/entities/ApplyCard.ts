@@ -1,33 +1,5 @@
-// same origin User type
-type User = {
-  id: string
-  enabled: boolean
-  isAccepted: boolean
-  isAnonymous: boolean
-  uid: string
-  userID: string
-  name: string
-  thumbnailURL?: string
-  gender?: string
-  blockUIDs?: string[]
-  blockedUIDs?: string[]
-  applyFriendUIDs?: string[]
-  appliedFriendUIDs?: string[]
-  friendUIDs?: string[]
-  reportUIDs?: string[]
-  reportedUIDs?: string[]
-}
-
-//same as Party type
-type Party = {
-  id: string
-  type: string
-  name: string
-  thumbnailURL?: string
-  enabled: boolean
-  date: Date
-  entryUIDs?: string[] // 一時的にパラメーター設置。
-}
+import { User, buildUser } from './User'
+import { Party, buildParty } from './Party'
 
 export type ApplyCard = {
   id: string
@@ -46,8 +18,8 @@ export const buildApplyCard = (id: string, data: firebase.firestore.DocumentData
     partyID: data.partyID,
     groupID: data.groupID,
     organizerUID: data.organizerUID,
-    members: data.members,
-    party: data.party
+    members: data.members.map(member => buildUser(member.id, member)),
+    party: buildParty(data.party.id, data.party)
   }
 
   return newApplyCard

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, ScrollView, View, Text, Dimensions } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
@@ -23,14 +23,6 @@ const HomeScreen = () => {
   const parties = useParties()
   const genderModalTools = useModal()
   const isAcceptedModalTools = useModal()
-
-  // TODO: どうやってユーザーデータ取得するか考える。
-  const tempUsers = useMemo(() => {
-    if (!user) {
-      return []
-    }
-    return [user, user, user]
-  }, [user])
 
   const onPressParty = useCallback(
     ({ type }: Party) => {
@@ -59,12 +51,13 @@ const HomeScreen = () => {
   const renderItem = useCallback(
     ({ item }: { item: Party }) => {
       return (
+        // TODO: どうやってユーザーデータ取得するか考える。
         <ShadowBase intensity={2}>
-          <PartyPrimaryCard key={item.id} party={item} users={tempUsers} onPress={onPressParty} />
+          <PartyPrimaryCard key={item.id} party={item} users={[]} onPress={onPressParty} />
         </ShadowBase>
       )
     },
-    [onPressParty, tempUsers]
+    [onPressParty]
   )
 
   if (!parties) {
