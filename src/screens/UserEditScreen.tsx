@@ -8,7 +8,7 @@ import { useUserEditTools } from '../services/user'
 import { View, StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Fab, Thumbnail } from '../components/atoms'
-import { TextField } from '../components/moleculers'
+import { TextField, SelectField } from '../components/moleculers'
 import { LoadingPage } from '../components/pages'
 import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../services/flashCard'
 
@@ -58,6 +58,10 @@ const UserEditScreen = () => {
       <View style={styles.userIDWrapper}>
         <TextField label="ID" value={userID} onChangeText={onChangeUserID} />
       </View>
+
+      <View style={styles.preferNumberWrapper}>
+        <SelectField label="希望人数" value="2〜3人で飲みたい" />
+      </View>
     </View>
   )
 }
@@ -87,6 +91,11 @@ const makeStyles: MakeStyles = colors =>
       paddingBottom: 24
     },
     userIDWrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+      paddingBottom: 24
+    },
+    preferNumberWrapper: {
       display: 'flex',
       flexDirection: 'column',
       paddingBottom: 24
