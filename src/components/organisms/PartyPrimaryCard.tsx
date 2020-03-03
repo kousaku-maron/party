@@ -15,7 +15,7 @@ type Props = {
   onPress?: (party: Party) => void
 }
 
-const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 320, height = 480, disabled = false }) => {
+const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 260, height = 380, disabled = false }) => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
@@ -45,21 +45,16 @@ const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 320,
                 return (
                   <Thumbnail
                     key={user.id}
-                    size={38}
+                    size={32}
                     uri={user.thumbnailURL}
-                    borderColor={colors.foregrounds.onTintPrimary}
+                    borderColor={colors.system.white}
                     borderWidth={1}
                   />
                 )
               }
               return (
                 <View key={user.id} style={styles.avatarWrapper}>
-                  <Thumbnail
-                    size={38}
-                    uri={user.thumbnailURL}
-                    borderColor={colors.foregrounds.onTintPrimary}
-                    borderWidth={1}
-                  />
+                  <Thumbnail size={32} uri={user.thumbnailURL} borderColor={colors.system.white} borderWidth={1} />
                 </View>
               )
             })}
@@ -75,7 +70,7 @@ const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 320,
       <View style={styles.countWrapper}>
         <BlurView intensity={50} tint="light" style={styles.countTag}>
           <Text style={styles.countText}>
-            <AntDesign name="user" size={18} /> {count}
+            <AntDesign name="user" size={16} /> {count}
           </Text>
         </BlurView>
       </View>
@@ -96,13 +91,13 @@ const makeStyles: MakeStyles = colors =>
     },
     contentsWrapper: {
       position: 'absolute',
-      left: 12,
-      bottom: 12
+      left: 10,
+      bottom: 10
     },
     countWrapper: {
       position: 'absolute',
-      right: 12,
-      top: 12
+      right: 10,
+      top: 10
     },
     titleTextWrapper: {
       paddingBottom: 6
@@ -130,48 +125,39 @@ const makeStyles: MakeStyles = colors =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minWidth: 60,
-      borderRadius: 16,
-      padding: 6
+      height: 30,
+      minWidth: 60, // 幅は70が理想値
+      borderRadius: 15
     },
     avatarsTag: {
-      borderRadius: 24,
+      borderRadius: 23,
       padding: 6
     },
     others: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      width: 38,
-      height: 38,
-      borderRadius: 19,
-      borderColor: colors.foregrounds.onTintPrimary, // これどうしよう...
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      borderColor: colors.system.white,
       borderWidth: 1
     },
     titleText: {
-      color: colors.foregrounds.onTintPrimary, // これどうしよう...
-      fontSize: 24
-    },
-    areaText: {
-      color: colors.foregrounds.onTintPrimary, // これどうしよう...
+      color: colors.system.white,
       fontSize: 16
     },
+    areaText: {
+      color: colors.system.white,
+      fontSize: 12
+    },
     countText: {
-      color: colors.foregrounds.onTintPrimary, // これどうしよう...
+      color: colors.system.white,
       fontSize: 16
     },
     otherText: {
-      color: colors.foregrounds.onTintPrimary, // これどうしよう...
+      color: colors.system.white,
       fontSize: 12
-    },
-    imageWrapper: {
-      width: '100%',
-      height: '70%',
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0,
-      borderTopRightRadius: 16,
-      borderTopLeftRadius: 16,
-      overflow: 'hidden'
     }
   })
 

@@ -53,6 +53,8 @@ export const dark = {
   system: {
     blue: '#0a84ff',
     red: '#ff6753',
+    white: '#ffffff',
+    black: '#000000',
     gray: '#8e8e93',
     gray2: '#aeaeb2',
     gray3: '#c7c7cc',
@@ -117,6 +119,8 @@ export const light = {
   system: {
     blue: '#007aff',
     red: '#ff6753',
+    white: '#ffffff',
+    black: '#000000',
     gray: '#8e8e93',
     gray2: '#aeaeb2',
     gray3: '#c7c7cc',
