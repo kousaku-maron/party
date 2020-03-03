@@ -13,7 +13,7 @@ type Props = {
   onPress?: (party: Party) => void
 }
 
-const PartySecondaryCard: React.FC<Props> = ({ party, onPress, width = 160, height = 240, disabled = false }) => {
+const PartySecondaryCard: React.FC<Props> = ({ party, onPress, width = 145, height = 175, disabled = false }) => {
   const styles = useStyles(makeStyles)
 
   const count = useMemo(() => {
@@ -38,7 +38,7 @@ const PartySecondaryCard: React.FC<Props> = ({ party, onPress, width = 160, heig
       <View style={styles.countWrapper}>
         <BlurView intensity={50} tint="light" style={styles.countTag}>
           <Text style={styles.countText}>
-            <AntDesign name="user" size={18} /> {count}
+            <AntDesign name="user" size={10} /> {count}
           </Text>
         </BlurView>
       </View>
@@ -50,12 +50,12 @@ const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
       position: 'relative',
-      borderRadius: 20
+      borderRadius: 10
     },
     image: {
       width: '100%',
       height: '100%',
-      borderRadius: 20
+      borderRadius: 10
     },
     contentsWrapper: {
       position: 'absolute',
@@ -80,21 +80,21 @@ const makeStyles: MakeStyles = colors =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minWidth: 60,
-      borderRadius: 16,
-      padding: 6
+      height: 20,
+      minWidth: 40, // 幅は50が理想値
+      borderRadius: 10
     },
     titleText: {
-      color: colors.foregrounds.onTintPrimary, // これどうしよう...
-      fontSize: 20
+      color: colors.system.white,
+      fontSize: 12
     },
     areaText: {
-      color: colors.foregrounds.onTintPrimary, // これどうしよう...
-      fontSize: 16
+      color: colors.system.white,
+      fontSize: 9
     },
     countText: {
-      color: colors.foregrounds.onTintPrimary, // これどうしよう...
-      fontSize: 16
+      color: colors.system.white,
+      fontSize: 10
     },
     imageWrapper: {
       width: '100%',
