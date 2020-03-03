@@ -15,7 +15,6 @@ type Props = {
   onChangeText?: (text: string) => void
   onSubmitEditing?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void
   color?: string
-  borderColor?: string
   // disabled?: boolean
   fullWidth?: boolean
   width?: number
@@ -32,7 +31,6 @@ const CustomTextInput: React.FC<Props> = ({
   onChangeText,
   onSubmitEditing,
   color,
-  borderColor,
   // disabled = false,
   fullWidth = false,
   width = 250,
@@ -51,9 +49,8 @@ const CustomTextInput: React.FC<Props> = ({
         styles.defaultInputStyle,
         {
           width: fullWidth ? '100%' : width,
-          height: height,
-          borderColor: borderColor ?? colors.foregrounds.primary,
-          color: color ?? colors.foregrounds.primary
+          height,
+          color: color ?? colors.foregrounds.placeholder
         }
       ]}
       value={value}
@@ -70,8 +67,7 @@ const CustomTextInput: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   defaultInputStyle: {
-    borderBottomWidth: 1,
-    fontSize: 18
+    fontSize: 14
   }
 })
 
