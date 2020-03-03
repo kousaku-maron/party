@@ -5,9 +5,10 @@ import { useAuthState, useUIActions } from '../store/hooks'
 import * as UserRepository from '../repositories/user'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUserEditTools } from '../services/user'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
-import { Fab, Thumbnail, TextInput } from '../components/atoms'
+import { Fab, Thumbnail } from '../components/atoms'
+import { TextField } from '../components/moleculers'
 import { LoadingPage } from '../components/pages'
 import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../services/flashCard'
 
@@ -50,18 +51,12 @@ const UserEditScreen = () => {
         <Thumbnail uri={thumbnailURL} size={200} onPress={onChangeThumbnailURL} />
       </View>
 
-      <View>
-        <View style={styles.nameWrapper}>
-          <Text style={styles.titleText}>ネーム</Text>
-          <TextInput value={name} onChangeText={onChangeName}></TextInput>
-        </View>
+      <View style={styles.nameWrapper}>
+        <TextField label="ネーム" value={name} onChangeText={onChangeName} />
       </View>
 
-      <View>
-        <View style={styles.userIDWrapper}>
-          <Text style={styles.titleText}>ID</Text>
-          <TextInput value={userID} onChangeText={onChangeUserID}></TextInput>
-        </View>
+      <View style={styles.userIDWrapper}>
+        <TextField label="ID" value={userID} onChangeText={onChangeUserID} />
       </View>
     </View>
   )
