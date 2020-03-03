@@ -3,11 +3,11 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { useAuthState } from '../../store/hooks'
 import { useStyles, MakeStyles } from '../../services/design'
 import { formattedDateForMessageCreatedAt } from '../../services/formatedDate'
-import { Room, User, Message } from '../../entities'
+import { Room, User } from '../../entities'
 import { Thumbnail, ShadowBase } from '../atoms'
 
 type Props = {
-  room: Room & { users: User[]; newMessage?: Message } // TODO: Roomに"users", "newMessage"を保存させるようにする。
+  room: Room & { users: User[] } // TODO: Roomに"users"を保存させるようにする。
   height?: number
   width?: number
   fullWidth?: boolean
