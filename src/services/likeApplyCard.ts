@@ -15,11 +15,11 @@ export const useLikeApplyCard = () => {
     const applyCardID = applyCard.groupID
 
     try {
-      if (user.likedGroupIDs && user.likedGroupIDs.includes(applyCardID)) {
+      if (user.likedGroupAssetIDs && user.likedGroupAssetIDs.includes(applyCardID)) {
         showLikeApplyCardAlreadyLikedMessage()
         return
       }
-      if (user.matchGroupsIDs && user.matchGroupsIDs.includes(applyCardID)) {
+      if (user.matchGroupAssetIDs && user.matchGroupAssetIDs.includes(applyCardID)) {
         showLikeApplyCardAlreadyMatchedMessage()
         return
       }
