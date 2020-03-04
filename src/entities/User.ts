@@ -15,9 +15,9 @@ export type User = {
   friendUIDs?: string[]
   reportUIDs?: string[]
   reportedUIDs?: string[]
-  likeGroupIDs?: string[]
-  likedGroupIDs?: string[]
-  matchGroupsIDs?: string[]
+  likeGroupAssetIDs?: string[]
+  likedGroupAssetIDs?: string[]
+  matchGroupAssetIDs?: string[]
   myGroupAssetIDs?: string[]
 }
 
@@ -39,10 +39,10 @@ export const buildUser = (id: string, data: firebase.firestore.DocumentData) => 
     ...(data.friendUIDs && { friendUIDs: data.friendUIDs }),
     ...(data.reportUIDs && { reportUIDs: data.reportUIDs }),
     ...(data.reportedUIDs && { reportedUIDs: data.reportedUIDs }),
-    ...(data.likeGroupIDs && { likeGroupIDs: data.likeGroupIDs }),
-    ...(data.likedGroupIDs && { likedGroupIDs: data.likedGroupIDs }),
-    ...(data.matchGroupsIDs && { matchGroupsIDs: data.matchGroupsIDs }),
-    ...(data.myGroupAssetIDs && { myGroupAssetIDs: data.myGroupAssetIDs })
+    ...(data.likeGroupAssetIDs && { likeGroupAssetIDs: data.likeGroupAssetIDs }),
+    ...(data.likedGroupAssetIDs && { likedGroupAssetIDs: data.likedGroupAssetIDs }),
+    ...(data.matchGroupAssetIDs && { matchGroupAssetIDs: data.matchGroupAssetIDs }),
+    ...(data.myGroupAssetAssetIDs && { myGroupAssetAssetIDs: data.myGroupAssetAssetIDs })
   }
 
   return newUser
@@ -58,9 +58,9 @@ export type UpdateUser = Pick<User, 'uid' | 'name' | 'thumbnailURL'> & {
   friendUIDs?: string[]
   reportUIDs?: string[]
   reportedUIDs?: string[]
-  likeGroupIDs?: string[]
-  likedGroupIDs?: string[]
-  matchGroupsIDs?: string[]
+  likeGroupAssetIDs?: string[]
+  likedGroupAssetIDs?: string[]
+  matchGroupAssetIDs?: string[]
   myGroupAssetIDs?: string[]
 }
 export type CreateUser = Omit<User, 'id'>
