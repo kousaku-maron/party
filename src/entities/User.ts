@@ -18,6 +18,7 @@ export type User = {
   likeGroupIDs?: string[]
   likedGroupIDs?: string[]
   matchGroupsIDs?: string[]
+  myGroupAssetIDs?: string[]
 }
 
 export const buildUser = (id: string, data: firebase.firestore.DocumentData) => {
@@ -40,7 +41,8 @@ export const buildUser = (id: string, data: firebase.firestore.DocumentData) => 
     ...(data.reportedUIDs && { reportedUIDs: data.reportedUIDs }),
     ...(data.likeGroupIDs && { likeGroupIDs: data.likeGroupIDs }),
     ...(data.likedGroupIDs && { likedGroupIDs: data.likedGroupIDs }),
-    ...(data.matchGroupsIDs && { matchGroupsIDs: data.matchGroupsIDs })
+    ...(data.matchGroupsIDs && { matchGroupsIDs: data.matchGroupsIDs }),
+    ...(data.myGroupAssetIDs && { myGroupAssetIDs: data.myGroupAssetIDs })
   }
 
   return newUser
@@ -59,5 +61,6 @@ export type UpdateUser = Pick<User, 'uid' | 'name' | 'thumbnailURL'> & {
   likeGroupIDs?: string[]
   likedGroupIDs?: string[]
   matchGroupsIDs?: string[]
+  myGroupAssetIDs?: string[]
 }
 export type CreateUser = Omit<User, 'id'>
