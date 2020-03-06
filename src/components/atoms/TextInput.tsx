@@ -6,12 +6,13 @@ import {
   TextInputSubmitEditingEventData,
   StyleSheet
 } from 'react-native'
-import { useColors } from '../../services/design'
+import { useColors, useStyles, MakeStyles } from '../../services/design'
 
 type AutoCapitalizeOptions = 'none' | 'sentences' | 'words' | 'characters'
 
 type Props = {
   value?: string
+  placeholder?: string
   onChangeText?: (text: string) => void
   onSubmitEditing?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void
   color?: string
@@ -28,6 +29,7 @@ type Props = {
 
 const CustomTextInput: React.FC<Props> = ({
   value,
+  placeholder,
   onChangeText,
   onSubmitEditing,
   color,
@@ -42,6 +44,7 @@ const CustomTextInput: React.FC<Props> = ({
   multiline = false
 }) => {
   const colors = useColors()
+  const styles = useStyles(makeStyles)
 
   return (
     <TextInput
@@ -50,10 +53,13 @@ const CustomTextInput: React.FC<Props> = ({
         {
           width: fullWidth ? '100%' : width,
           height,
+          borderRadius: height / 2,
           color: color ?? colors.foregrounds.placeholder
         }
       ]}
       value={value}
+      placeholder={placeholder}
+      placeholderTextColor={colors.foregrounds.placeholder}
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}
       maxLength={maxLength}
@@ -65,10 +71,13 @@ const CustomTextInput: React.FC<Props> = ({
   )
 }
 
-const styles = StyleSheet.create({
-  defaultInputStyle: {
-    fontSize: 14
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    defaultInputStyle: {
+      fontSize: 14,
+      backgroundColor: colors.system.gray6,
+      padding: 10
+    }
+  })
 
 export default CustomTextInput
