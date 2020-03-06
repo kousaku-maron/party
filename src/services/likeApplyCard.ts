@@ -24,9 +24,7 @@ export const useLikeApplyCard = () => {
         return
       }
 
-      //MEMO: blockUser, applyUser, acceptUser, refuseUserではfunctionsに投げているのはidだが，
-      //オブジェクトを投げた方がfirebseからデータを引っ張ってくる工数は減るが，セキュリティの問題が出てくると言う部分要議論
-      await functions.httpsCallable('likeApplyCard')({ applyCardID })
+      await functions.httpsCallable('likeApplyCard')({ applyCard })
       showLikeApplyCardSunccessMessage()
     } catch (e) {
       console.warn(e)
