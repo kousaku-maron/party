@@ -81,21 +81,30 @@ const HomeNavigator = () => {
   )
 }
 
-const RoomNavigator = () => (
-  <Stack.Navigator initialRouteName="Main">
-    <Stack.Screen name="Main" component={RoomScreen} options={{ headerShown: false }} />
-    <Stack.Screen
-      name="Chat"
-      component={ChatScreen}
-      options={{ headerBackTitleVisible: false, headerTransparent: true }}
-    />
-    <Stack.Screen
-      name="User"
-      component={UserScreen}
-      options={{ headerBackTitleVisible: false, headerTransparent: true }}
-    />
-  </Stack.Navigator>
-)
+const RoomNavigator = () => {
+  const colors = useColors()
+
+  return (
+    <Stack.Navigator initialRouteName="Main">
+      <Stack.Screen name="Main" component={RoomScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="Chat"
+        component={ChatScreen}
+        options={{
+          headerBackTitleVisible: false,
+          headerTintColor: colors.foregrounds.primary,
+          headerTransparent: true,
+          headerTitle: null
+        }}
+      />
+      <Stack.Screen
+        name="User"
+        component={UserScreen}
+        options={{ headerBackTitleVisible: false, headerTransparent: true }}
+      />
+    </Stack.Navigator>
+  )
+}
 
 const UserNavigator = () => {
   const colors = useColors()
