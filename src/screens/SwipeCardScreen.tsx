@@ -10,6 +10,7 @@ import { SwipeCard } from '../components/organisms'
 import { ApplyCard } from '../entities'
 import { useStyles, MakeStyles, useColors } from '../services/design'
 import { useAppliedCardsByType } from '../services/applyCard'
+import { useLikeApplyCard } from '../services/likeApplyCard'
 
 const SwipeCardScreen = () => {
   const inset = useSafeArea()
@@ -38,9 +39,13 @@ const SwipeCardScreen = () => {
     return cards[slideIndex].party.name
   }, [cards, slideIndex])
 
-  const onPressGlass = useCallback(() => {
-    console.info('push glass button!')
-  }, [])
+  const { likeApplyCard } = useLikeApplyCard()
+  const onPressGlass = useCallback(
+    item => {
+      likeApplyCard(item)
+    },
+    [likeApplyCard]
+  )
 
   const renderItem = useCallback(
     ({ item }: { item: ApplyCard }) => {
@@ -50,7 +55,12 @@ const SwipeCardScreen = () => {
             <SwipeCard card={item} />
           </View>
           <View style={[styles.fabWrapper, styles.withBloom, { left: 320 / 2 - 40 }]}>
-            <Fab size={80} onPress={onPressGlass}>
+            <Fab
+              size={80}
+              onPress={() => {
+                onPressGlass(item)
+              }}
+            >
               <MaterialCommunityIcons name="glass-wine" size={56} color={colors.foregrounds.onTintPrimary} />
             </Fab>
           </View>

@@ -216,6 +216,38 @@ export const showReportUserFailurMessage = () => {
   })
 }
 
+export const showLikeApplyCardSunccessMessage = () => {
+  showMessage({
+    message: 'いいねしました',
+    type: 'success',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showLikeApplyCardAlreadyLikedMessage = () => {
+  showMessage({
+    message: 'このユーザーはすでにいいね済みです',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showLikeApplyCardAlreadyMatchedMessage = () => {
+  showMessage({
+    message: 'このユーザーはすでにマッチング済みです',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
+export const showLikeApplyCardFailurMessage = () => {
+  showMessage({
+    message: 'いいねに失敗しました',
+    type: 'danger',
+    titleStyle: styles.flashCardMessage
+  })
+}
+
 const styles = {
   flashCardMessage: {
     fontSize: 14

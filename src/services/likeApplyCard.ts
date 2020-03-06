@@ -1,0 +1,35 @@
+import { functions } from '../repositories/firebase'
+import { ApplyCard } from '../entities'
+import { useAuthState } from '../store/hooks'
+import {
+  showLikeApplyCardSunccessMessage,
+  showLikeApplyCardAlreadyLikedMessage,
+  showLikeApplyCardAlreadyMatchedMessage,
+  showLikeApplyCardFailurMessage
+} from './flashCard'
+
+export const useLikeApplyCard = () => {
+  const { user } = useAuthState()
+
+  const likeApplyCard = async (applyCard: ApplyCard) => {
+    const applyCardID = applyCard.groupID
+
+    try {
+      if (user.likedGroupAssetIDs && user.likedGroupAssetIDs.includes(applyCardID)) {
+        showLikeApplyCardAlreadyLikedMessage()
+        return
+      }
+      if (user.matchGroupAssetIDs && user.matchGroupAssetIDs.includes(applyCardID)) {
+        showLikeApplyCardAlreadyMatchedMessage()
+        return
+      }
+
+      await functions.httpsCallable('likeApplyCard')({ applyCard })
+      showLikeApplyCardSunccessMessage()
+    } catch (e) {
+      console.warn(e)
+      showLikeApplyCardFailurMessage()
+    }
+  }
+  return { likeApplyCard }
+}
