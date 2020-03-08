@@ -1,19 +1,10 @@
 import React, { useCallback, useMemo } from 'react'
-import { Platform } from 'react-native'
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
 import { useAuthState } from '../store/hooks'
 import { Party } from '../entities'
-import {
-  useStyles,
-  useColors,
-  MakeStyles,
-  isIPhoneX,
-  isIPhoneXAbove,
-  X_ABOVE_HEADER_NOTCH_HEIGHT,
-  ANDROID_STATUS_BAR_HEIGHT
-} from '../services/design'
+import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
 import { useAppliedParties } from '../services/party'
 import { useFriends } from '../services/friend'
@@ -51,13 +42,11 @@ const UserScreen = () => {
   const friends = useFriends(user)
   const appliedParties = useAppliedParties(user)
 
-  // TODO: ブロックしているユーザーかチェック
   const isBlocked = useMemo(() => {
     if (user && user.blockUIDs && user.blockUIDs.includes(uid)) return true
     return false
   }, [uid, user])
 
-  // TODO: フレンドかチェック
   const isFriend = useMemo(() => {
     if (user && user.friendUIDs && user.friendUIDs.includes(uid)) return true
     return false
@@ -80,7 +69,7 @@ const UserScreen = () => {
 
   const onPressUser = useCallback(
     (userID: string) => {
-      navigation.navigate('User', { userID: userID })
+      navigation.navigate('User', { userID })
     },
     [navigation]
   )
@@ -103,7 +92,7 @@ const UserScreen = () => {
             <View style={styles.profileWrapper}>
               <View style={styles.thumbnailWrapper}>
                 <ShadowBase>
-                  <Thumbnail uri={user.thumbnailURL} size={82} />
+                  <Thumbnail uri={user.thumbnailURL} size={80} />
                 </ShadowBase>
               </View>
 
@@ -189,7 +178,7 @@ const UserScreen = () => {
                                 <ShadowBase intensity={2}>
                                   <Thumbnail
                                     uri={friend.thumbnailURL}
-                                    size={fullWidth * 0.16}
+                                    size={60}
                                     onPress={() => {
                                       onPressUser(friend.uid)
                                     }}
@@ -223,12 +212,6 @@ const UserScreen = () => {
 const fullHeight = Dimensions.get('window').height
 const fullWidth = Dimensions.get('window').width
 
-const TOP_SPACE = Platform.select({
-  ios: isIPhoneX() || isIPhoneXAbove() ? X_ABOVE_HEADER_NOTCH_HEIGHT : 0,
-  android: ANDROID_STATUS_BAR_HEIGHT,
-  default: 0
-})
-
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
@@ -245,8 +228,7 @@ const makeStyles: MakeStyles = colors =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
       alignItems: 'center',
-      height: 34,
-      paddingTop: TOP_SPACE
+      height: 34
     },
     profileContainer: {
       display: 'flex',
@@ -330,10 +312,8 @@ const makeStyles: MakeStyles = colors =>
       fontSize: 20,
       color: colors.system.red
     },
-    //XDのフォントサイズをまんま入れると大きさが合わないため18->20にしている
-    //恐らくフォントがあってないから？
     contentsTitleText: {
-      fontSize: 20,
+      fontSize: 18,
       color: colors.foregrounds.primary
     },
     blockMessageText: {
