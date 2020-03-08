@@ -232,7 +232,7 @@ export const showLikeApplyCardAlreadyLikedMessage = () => {
   })
 }
 
-export const showLikeApplyCardAlreadyMatchedMessage = () => {
+export const showLikeApplyCardAlreadyMatchMessage = () => {
   showMessage({
     message: 'このユーザーはすでにマッチング済みです',
     type: 'danger',
