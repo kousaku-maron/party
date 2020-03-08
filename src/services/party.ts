@@ -2,11 +2,12 @@ import { useEffect, useState, useCallback } from 'react'
 import { InteractionManager } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import firebase, { functions } from '../repositories/firebase'
-import { Party, buildParty } from '../entities'
+import { User, Party, buildParty } from '../entities'
 import { useAuthState, useUIActions, useRoomActions } from '../store/hooks'
 import { getParty } from '../repositories/party'
 
 const db = firebase.firestore()
+const usersRef = db.collection('users')
 const partiesRef = db.collection('parties')
 
 export const useParties = () => {
@@ -105,4 +106,30 @@ export const entryDemoParty = async (partyID: string) => {
     console.warn(e)
     return { success: false, error: e }
   }
+}
+
+//MEMO: appliedParty.tsを作るかどうか...
+export const useAppliedParties = (user: User) => {
+  const [parties, setParties] = useState<Party[]>()
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      if (!user || !user.appliedPartyUIDs) return
+      const appliedPartiesRef = usersRef.doc(user.uid).collection('appliedParties')
+      const unsubscribe = appliedPartiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
+        const newParty: Party[] = snapShot.docs.map(doc => {
+          console.log(doc.data())
+
+          return buildParty(doc.id, doc.data())
+        })
+        setParties(newParty)
+      })
+
+      return () => {
+        unsubscribe()
+      }
+    })
+  }, [user])
+
+  return parties
 }

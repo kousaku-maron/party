@@ -1,6 +1,8 @@
-import { functions } from '../repositories/firebase'
+import { useEffect, useState } from 'react'
+import { InteractionManager } from 'react-native'
+import firebase, { functions } from '../repositories/firebase'
 import { useAuthState } from '../store/hooks'
-import { User } from '../entities/User'
+import { User, buildUser } from '../entities/User'
 import {
   showApplyFriendSunccessMessage,
   showApplyFriendFailurMessage,
@@ -11,6 +13,33 @@ import {
   showRefuseFriendSunccessMessage,
   showRefuseFriendFailurMessage
 } from './flashCard'
+
+const db = firebase.firestore()
+const usersRef = db.collection('users')
+
+export const useFriends = (user: User) => {
+  const [friends, setFriends] = useState<User[]>()
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      if (!user || !user.friendUIDs) return
+      const unsubscribe = usersRef
+        .doc(user.uid)
+        .collection('friends')
+        .onSnapshot(snapShot => {
+          const newFriend: User[] = snapShot.docs.map(doc => {
+            return buildUser(doc.id, doc.data())
+          })
+          setFriends(newFriend)
+        })
+
+      return () => {
+        unsubscribe()
+      }
+    })
+  }, [user])
+
+  return friends
+}
 
 export const useApplyFriend = () => {
   const { uid } = useAuthState()
