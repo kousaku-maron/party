@@ -3,11 +3,15 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
 import { useAuthState } from '../store/hooks'
+import { Party } from '../entities'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
+import { useAppliedParties } from '../services/party'
+import { useFriends } from '../services/friend'
 import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import { Feather, AntDesign } from '@expo/vector-icons'
 import { Thumbnail, Fab, DotsIcon, ShadowBase, BloomBase } from '../components/atoms'
+import { PartySecondaryCard } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 
@@ -34,17 +38,21 @@ const UserScreen = () => {
     return true
   }, [route.params, uid])
 
+  const user = useUser(targetUserID)
+  const friends = useFriends(user)
+  const appliedParties = useAppliedParties(user)
+
   // TODO: ブロックしているユーザーかチェック
   const isBlocked = useMemo(() => {
+    if (user && user.blockUIDs && user.blockUIDs.includes(uid)) return true
     return false
-  }, [])
+  }, [uid, user])
 
   // TODO: フレンドかチェック
   const isFriend = useMemo(() => {
+    if (user && user.friendUIDs && user.friendUIDs.includes(uid)) return true
     return false
-  }, [])
-
-  const user = useUser(targetUserID)
+  }, [uid, user])
 
   const goToEdit = useCallback(() => {
     navigation.navigate('UserEdit')
@@ -53,6 +61,13 @@ const UserScreen = () => {
   const goToSetting = useCallback(() => {
     navigation.navigate('Setting')
   }, [navigation])
+
+  const onPressParty = useCallback(
+    ({ type }: Party) => {
+      navigation.navigate('SwipeCard', { type })
+    },
+    [navigation]
+  )
 
   if (!user) {
     return <LoadingPage />
@@ -67,12 +82,12 @@ const UserScreen = () => {
           </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.scrollView}>
+        <ScrollView style={styles.userScrollView}>
           <View style={styles.profileContainer}>
             <View style={styles.profileWrapper}>
               <View style={styles.thumbnailWrapper}>
-                <ShadowBase intensity={2}>
-                  <Thumbnail uri={user.thumbnailURL} size={82} />
+                <ShadowBase>
+                  <Thumbnail uri={user.thumbnailURL} size={fullWidth * 0.21} />
                 </ShadowBase>
               </View>
 
@@ -80,13 +95,9 @@ const UserScreen = () => {
                 <Text style={styles.nameText}>{user.name}</Text>
               </View>
 
-              <View style={styles.idWrapper}>
-                <Text style={styles.idText}>@{user.userID}</Text>
-              </View>
-
               <View style={styles.introWrapper}>
                 <Text style={styles.introText}>
-                  自己紹介分、サンプル。私の趣味はボルダリングです！運動も飲みも好きなので、あそびましょー。
+                  自己紹介分、サンプル。私の趣味はボルダリングです！ 運動も飲みも好きなので、あそびましょー。
                 </Text>
               </View>
 
@@ -104,46 +115,82 @@ const UserScreen = () => {
             </View>
           </View>
 
-          <View style={styles.contentsContainer}>
-            {isMy && (
-              <View style={styles.fabWrapper}>
-                <BloomBase>
-                  <Fab size={64} onPress={goToEdit}>
-                    <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={36} />
-                  </Fab>
-                </BloomBase>
-              </View>
-            )}
+          <ShadowBase intensity={2}>
+            <View style={styles.contentsContainer}>
+              {isMy && (
+                <View style={styles.fabWrapper}>
+                  <BloomBase intensity={2}>
+                    <Fab size={64} onPress={goToEdit}>
+                      <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={36} />
+                    </Fab>
+                  </BloomBase>
+                </View>
+              )}
 
-            {!isMy && !isFriend && !isBlocked && (
-              <View style={styles.fabWrapper}>
-                <BloomBase>
-                  <Fab size={64}>
-                    <AntDesign name="adduser" color={colors.foregrounds.onTintPrimary} size={36} />
-                  </Fab>
-                </BloomBase>
-              </View>
-            )}
+              {!isMy && !isFriend && !isBlocked && (
+                <View style={styles.fabWrapper}>
+                  <BloomBase>
+                    <Fab size={64}>
+                      <AntDesign name="adduser" color={colors.foregrounds.onTintPrimary} size={36} />
+                    </Fab>
+                  </BloomBase>
+                </View>
+              )}
 
-            {!isBlocked && (
-              <View style={styles.cardsContainer}>
-                <Text style={styles.contentsTitleText}>参加中</Text>
-              </View>
-            )}
+              {!isBlocked && (
+                <View style={styles.cardsContainer}>
+                  <Text style={styles.contentsTitleText}>参加中</Text>
+                  <View style={styles.carouselBottomSpace} />
+                  <ScrollView horizontal={true} style={styles.allAppliedPartiesScrollView}>
+                    {appliedParties &&
+                      appliedParties.map(appliedParty => (
+                        <View key={appliedParty.id} style={styles.secondaryCardWrapper}>
+                          <ShadowBase intensity={2}>
+                            <PartySecondaryCard
+                              party={appliedParty}
+                              width={fullWidth * 0.38}
+                              height={fullWidth * 0.49}
+                              onPress={onPressParty}
+                            />
+                          </ShadowBase>
+                        </View>
+                      ))}
+                  </ScrollView>
+                </View>
+              )}
 
-            {!isBlocked && (
-              <View style={styles.friendsContainer}>
-                <Text style={styles.contentsTitleText}>ともだち</Text>
-              </View>
-            )}
+              {!isBlocked && (
+                <View style={styles.friendsContainer}>
+                  <Text style={styles.contentsTitleText}>ともだち</Text>
+                  <ScrollView horizontal={true} style={styles.allFriendsScrollView}>
+                    {friends &&
+                      friends.map(friend => {
+                        if (friend) {
+                          return (
+                            //MEMO: ShowBase入れると変になるから抜いているが良いのか？
+                            <View key={friend.id} style={styles.friendThumbnailWrapper}>
+                              <View style={styles.friendShowBaseWrapper}>
+                                <ShadowBase intensity={2}>
+                                  <Thumbnail uri={friend.thumbnailURL} size={fullWidth * 0.16} />
+                                </ShadowBase>
+                              </View>
+                              <Text style={styles.friendNameText}>{friend.name}</Text>
+                            </View>
+                          )
+                        }
+                      })}
+                  </ScrollView>
+                </View>
+              )}
 
-            {isBlocked && (
-              <View style={styles.blockMessageContainer}>
-                <Text style={styles.blockMessageText}>ブロックしたユーザーの</Text>
-                <Text style={styles.blockMessageText}>情報は見れません</Text>
-              </View>
-            )}
-          </View>
+              {isBlocked && (
+                <View style={styles.blockMessageContainer}>
+                  <Text style={styles.blockMessageText}>ブロックしたユーザーの</Text>
+                  <Text style={styles.blockMessageText}>情報は見れません</Text>
+                </View>
+              )}
+            </View>
+          </ShadowBase>
         </ScrollView>
       </View>
     </BottomTabLayout>
@@ -152,6 +199,7 @@ const UserScreen = () => {
 
 // const hairlineWidth = StyleSheet.hairlineWidth
 const fullHeight = Dimensions.get('window').height
+const fullWidth = Dimensions.get('window').width
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
@@ -163,23 +211,21 @@ const makeStyles: MakeStyles = colors =>
       position: 'relative',
       backgroundColor: colors.backgrounds.primary
     },
-    scrollView: {
-      width: '100%'
-    },
     header: {
       width: '100%',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
       alignItems: 'center',
-      height: 88
+      height: fullHeight * 0.13
     },
     profileContainer: {
       display: 'flex',
       justifyContent: 'flex-end',
       alignItems: 'center',
       width: '100%',
-      height: fullHeight * 0.7
+      height: fullHeight * 0.61,
+      paddingBottom: 42
     },
     contentsContainer: {
       position: 'relative',
@@ -187,11 +233,12 @@ const makeStyles: MakeStyles = colors =>
       width: '100%',
       minHeight: fullHeight * 0.3,
       backgroundColor: colors.backgrounds.secondary,
-      paddingVertical: 84,
-      paddingHorizontal: 32
+      paddingVertical: 56,
+      paddingHorizontal: 32,
+      borderRadius: 20
     },
     cardsContainer: {
-      paddingBottom: 48
+      paddingBottom: 32
     },
     friendContainer: {},
     blockMessageContainer: {
@@ -208,17 +255,20 @@ const makeStyles: MakeStyles = colors =>
       top: -32,
       right: 32
     },
+    userScrollView: {
+      width: '100%'
+    },
     thumbnailWrapper: {
-      paddingBottom: 12
+      paddingBottom: 18
     },
     nameWrapper: {
-      paddingBottom: 3
+      paddingBottom: 18
     },
     idWrapper: {
       paddingBottom: 24
     },
     introWrapper: {
-      width: '60%',
+      width: '51.2%',
       paddingBottom: 32
     },
     profileWrapper: {
@@ -230,7 +280,8 @@ const makeStyles: MakeStyles = colors =>
     blockTextWrapper: {},
     nameText: {
       fontSize: 18,
-      color: colors.foregrounds.primary
+      color: colors.foregrounds.primary,
+      fontWeight: 'bold'
     },
     idText: {
       fontSize: 12,
@@ -249,14 +300,56 @@ const makeStyles: MakeStyles = colors =>
       fontSize: 20,
       color: colors.system.red
     },
+    //XDのフォントサイズをまんま入れると大きさが合わないため18->20にしている
+    //恐らくフォントがあってないから？
     contentsTitleText: {
-      fontSize: 24,
-      color: colors.foregrounds.primary,
-      fontWeight: 'bold'
+      fontSize: 20,
+      color: colors.foregrounds.primary
     },
     blockMessageText: {
       fontSize: 20,
       color: colors.foregrounds.placeholder
+    },
+    friendsContainer: {
+      paddingTop: 18,
+      paddingBottom: 52
+    },
+    allFriendsScrollView: {
+      width: fullWidth,
+      flexDirection: 'row',
+      overflow: 'visible',
+      backgroundColor: colors.backgrounds.secondary
+    },
+    friendThumbnailWrapper: {
+      paddingTop: 24,
+      paddingRight: 18,
+      backgroundColor: colors.backgrounds.secondary
+    },
+    friendShowBaseWrapper: {
+      paddingBottom: 12
+    },
+    friendNameText: {
+      textAlign: 'center',
+      paddingBottom: 6,
+      paddingHorizontal: 6,
+      backgroundColor: colors.backgrounds.secondary,
+      color: colors.foregrounds.primary
+    },
+    secondaryTitleTextWrapper: {
+      width: '100%',
+      paddingBottom: 30
+    },
+    allAppliedPartiesScrollView: {
+      width: fullWidth,
+      flexDirection: 'row',
+      paddingBottom: 12,
+      overflow: 'visible',
+      backgroundColor: colors.backgrounds.secondary
+    },
+    secondaryCardWrapper: {
+      paddingTop: 30,
+      paddingRight: 20,
+      backgroundColor: colors.backgrounds.secondary
     }
   })
 
