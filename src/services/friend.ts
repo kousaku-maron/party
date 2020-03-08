@@ -21,7 +21,7 @@ export const useFriends = (user: User) => {
   const [friends, setFriends] = useState<User[]>()
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      if (!user) return
+      if (!user || !user.friendUIDs) return
       const unsubscribe = usersRef
         .doc(user.uid)
         .collection('friends')

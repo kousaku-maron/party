@@ -1,10 +1,19 @@
 import React, { useCallback, useMemo } from 'react'
+import { Platform } from 'react-native'
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
 import { useAuthState } from '../store/hooks'
 import { Party } from '../entities'
-import { useStyles, useColors, MakeStyles } from '../services/design'
+import {
+  useStyles,
+  useColors,
+  MakeStyles,
+  isIPhoneX,
+  isIPhoneXAbove,
+  X_ABOVE_HEADER_NOTCH_HEIGHT,
+  ANDROID_STATUS_BAR_HEIGHT
+} from '../services/design'
 import { useUser } from '../services/user'
 import { useAppliedParties } from '../services/party'
 import { useFriends } from '../services/friend'
@@ -69,6 +78,13 @@ const UserScreen = () => {
     [navigation]
   )
 
+  const onPressUser = useCallback(
+    (userID: string) => {
+      navigation.navigate('User', { userID: userID })
+    },
+    [navigation]
+  )
+
   if (!user) {
     return <LoadingPage />
   }
@@ -87,7 +103,7 @@ const UserScreen = () => {
             <View style={styles.profileWrapper}>
               <View style={styles.thumbnailWrapper}>
                 <ShadowBase>
-                  <Thumbnail uri={user.thumbnailURL} size={fullWidth * 0.21} />
+                  <Thumbnail uri={user.thumbnailURL} size={82} />
                 </ShadowBase>
               </View>
 
@@ -148,8 +164,8 @@ const UserScreen = () => {
                           <ShadowBase intensity={2}>
                             <PartySecondaryCard
                               party={appliedParty}
-                              width={fullWidth * 0.38}
-                              height={fullWidth * 0.49}
+                              width={fullWidth * 0.4}
+                              height={fullWidth * 0.55}
                               onPress={onPressParty}
                             />
                           </ShadowBase>
@@ -171,7 +187,13 @@ const UserScreen = () => {
                             <View key={friend.id} style={styles.friendThumbnailWrapper}>
                               <View style={styles.friendShowBaseWrapper}>
                                 <ShadowBase intensity={2}>
-                                  <Thumbnail uri={friend.thumbnailURL} size={fullWidth * 0.16} />
+                                  <Thumbnail
+                                    uri={friend.thumbnailURL}
+                                    size={fullWidth * 0.16}
+                                    onPress={() => {
+                                      onPressUser(friend.uid)
+                                    }}
+                                  />
                                 </ShadowBase>
                               </View>
                               <Text style={styles.friendNameText}>{friend.name}</Text>
@@ -201,6 +223,12 @@ const UserScreen = () => {
 const fullHeight = Dimensions.get('window').height
 const fullWidth = Dimensions.get('window').width
 
+const TOP_SPACE = Platform.select({
+  ios: isIPhoneX() || isIPhoneXAbove() ? X_ABOVE_HEADER_NOTCH_HEIGHT : 0,
+  android: ANDROID_STATUS_BAR_HEIGHT,
+  default: 0
+})
+
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
@@ -217,7 +245,8 @@ const makeStyles: MakeStyles = colors =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
       alignItems: 'center',
-      height: fullHeight * 0.13
+      height: 34,
+      paddingTop: TOP_SPACE
     },
     profileContainer: {
       display: 'flex',
@@ -235,7 +264,8 @@ const makeStyles: MakeStyles = colors =>
       backgroundColor: colors.backgrounds.secondary,
       paddingVertical: 56,
       paddingHorizontal: 32,
-      borderRadius: 20
+      borderTopRightRadius: 20,
+      borderTopLeftRadius: 20
     },
     cardsContainer: {
       paddingBottom: 32

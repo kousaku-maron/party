@@ -114,7 +114,7 @@ export const useAppliedParties = (user: User) => {
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      if (!user) return
+      if (!user || !user.appliedPartyUIDs) return
       const appliedPartiesRef = usersRef.doc(user.uid).collection('appliedParties')
       const unsubscribe = appliedPartiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
         const newParty: Party[] = snapShot.docs.map(doc => {
