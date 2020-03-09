@@ -123,7 +123,11 @@ const UserNavigator = () => {
       <Stack.Screen
         name="UserEdit"
         component={UserEditScreen}
-        options={{ headerBackTitleVisible: false, headerTransparent: true }}
+        options={{
+          headerBackTitleVisible: false,
+          headerTransparent: true,
+          headerTintColor: colors.foregrounds.onTintPrimary
+        }}
       />
       <Stack.Screen
         name="Setting"

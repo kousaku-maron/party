@@ -60,23 +60,23 @@ const UserEditScreen = () => {
         <ShadowBase intensity={2}>
           <View style={styles.contentsContainer}>
             <View style={styles.nameWrapper}>
-              <TextField label="ニックネーム" value={name} onChangeText={onChangeName} width={327} />
+              <TextField label="ニックネーム" value={name} onChangeText={onChangeName} fullWidth={true} />
             </View>
 
             <View style={styles.userIDWrapper}>
-              <TextField label="ID" value={userID} onChangeText={onChangeUserID} width={327} />
+              <TextField label="ID" value={userID} onChangeText={onChangeUserID} fullWidth={true} />
             </View>
 
             <View style={styles.introWrapper}>
               <TextField
                 label="intro"
                 multiline={true}
-                width={327}
                 value={'東京都で薬剤師として働いています！　気が合えば飲みに行きましょう！'}
+                fullWidth={true}
               />
             </View>
             <View style={styles.preferNumberWrapper}>
-              <SelectField label="希望人数" value="2〜3人で飲みたい" width={327} />
+              <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} />
             </View>
           </View>
         </ShadowBase>
@@ -131,22 +131,30 @@ const makeStyles: MakeStyles = colors =>
     nameWrapper: {
       display: 'flex',
       flexDirection: 'column',
-      paddingBottom: 24
+      paddingBottom: 24,
+      paddingHorizontal: 24,
+      width: '100%'
     },
     userIDWrapper: {
       display: 'flex',
       flexDirection: 'column',
-      paddingBottom: 24
+      paddingBottom: 24,
+      paddingHorizontal: 24,
+      width: '100%'
     },
     preferNumberWrapper: {
       display: 'flex',
       flexDirection: 'column',
-      paddingBottom: 24
+      paddingBottom: 24,
+      paddingHorizontal: 24,
+      width: '100%'
     },
     introWrapper: {
       display: 'flex',
       flexDirection: 'column',
-      paddingBottom: 24
+      paddingBottom: 24,
+      paddingHorizontal: 24,
+      width: '100%'
     },
     titleText: {
       fontSize: 16,
