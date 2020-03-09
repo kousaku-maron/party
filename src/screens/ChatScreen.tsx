@@ -1,22 +1,92 @@
 import React, { useCallback } from 'react'
-import { User } from 'react-native-gifted-chat'
-import { ChatroomPage } from '../components/pages'
+import { View, ScrollView, StyleSheet, Dimensions } from 'react-native'
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
+import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
+import { useAuthState } from '../store/hooks'
+import { MakeStyles, useStyles } from '../services/design'
+import { useMessages, useSendMessage } from '../services/chat'
+import { ShadowBase } from '../components/atoms'
+import { ChatBubble, ChatInput } from '../components/organisms'
+import { User } from '../entities'
 
 const ChatScreen = () => {
+  const { uid } = useAuthState()
   const navigation = useNavigation()
+  const inset = useSafeArea()
   const route = useRoute<RouteProp<RouteParams, 'Chat'>>()
   const roomID = route.params.roomID
+  const messages = useMessages(roomID)
+  const { onSend } = useSendMessage(roomID)
+  const styles = useStyles(makeStyles)
 
   const onPressAvatar = useCallback(
     (user: User) => {
-      navigation.navigate('User', { userID: user._id })
+      navigation.navigate('User', { userID: user.id })
     },
     [navigation]
   )
 
-  return <ChatroomPage roomID={roomID} onPressAvatar={onPressAvatar} />
+  return (
+    <View style={styles.container}>
+      {/* 33px => header height */}
+      <ScrollView style={[styles.scrollView, { paddingTop: 48 + 33 + inset.top }]}>
+        {messages.map(message => {
+          const isMy = message.user.uid === uid
+
+          return (
+            <View key={message.id} style={isMy ? styles.myBubbleContainer : styles.bubbleContainer}>
+              <ShadowBase>
+                <ChatBubble message={message} isMy={isMy} onPressAvatar={onPressAvatar} />
+              </ShadowBase>
+            </View>
+          )
+        })}
+      </ScrollView>
+
+      <View style={[styles.tabContainer, { paddingBottom: inset.bottom }]}>
+        <ShadowBase intensity={2}>
+          <ChatInput fullWidth={true} onSend={onSend} />
+        </ShadowBase>
+      </View>
+    </View>
+  )
 }
+
+const fullWidth = Dimensions.get('window').width
+
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    container: {
+      backgroundColor: colors.backgrounds.primary
+    },
+    scrollView: {
+      display: 'flex',
+      width: '100%',
+      height: '100%'
+    },
+    bubbleContainer: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      paddingLeft: 24,
+      paddingBottom: 20
+    },
+    myBubbleContainer: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      paddingRight: 24,
+      paddingBottom: 20
+    },
+    tabContainer: {
+      position: 'absolute',
+      bottom: 0,
+      width: fullWidth,
+      paddingHorizontal: 12
+    }
+  })
 
 export default ChatScreen
