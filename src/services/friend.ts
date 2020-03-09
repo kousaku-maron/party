@@ -14,20 +14,21 @@ import {
 
 export const useApplyFriend = () => {
   const { uid } = useAuthState()
-  const applyFriend = async (appliedFriendUser: User) => {
-    const appliedFriendUID = appliedFriendUser.uid
+  const applyFriend = async (applyFriendUser: User) => {
+    const applyFriendUID = applyFriendUser.uid
+
     try {
-      if (appliedFriendUser.appliedFriendUIDs && appliedFriendUser.appliedFriendUIDs.includes(uid)) {
+      if (applyFriendUser.appliedFriendUIDs && applyFriendUser.appliedFriendUIDs.includes(uid)) {
         showApplyFriendAlreadyappliedMessage()
         return
       }
 
-      if (appliedFriendUser.friendUIDs && appliedFriendUser.friendUIDs.includes(uid)) {
+      if (applyFriendUser.friendUIDs && applyFriendUser.friendUIDs.includes(uid)) {
         showAcceptFriendAlreadyacceptedMessage()
         return
       }
 
-      await functions.httpsCallable('applyFriend')({ appliedFriendUID })
+      await functions.httpsCallable('applyFriend')({ applyFriendUID })
       showApplyFriendSunccessMessage()
     } catch (e) {
       showApplyFriendFailurMessage()
@@ -39,14 +40,15 @@ export const useApplyFriend = () => {
 
 export const useAcceptFriend = () => {
   const { uid } = useAuthState()
-  const acceptFriend = async (friend: User) => {
-    const friendUID = friend.uid
+  const acceptFriend = async (acceptFriendUser: User) => {
+    const acceptFriendUID = acceptFriendUser.uid
+
     try {
-      if (friend.friendUIDs && friend.friendUIDs.includes(uid)) {
+      if (acceptFriendUser.friendUIDs && acceptFriendUser.friendUIDs.includes(uid)) {
         showAcceptFriendAlreadyacceptedMessage()
         return
       }
-      await functions.httpsCallable('acceptFriend')({ friendUID })
+      await functions.httpsCallable('acceptFriend')({ acceptFriendUID })
       showAcceptFriendSunccessMessage()
     } catch (e) {
       showAcceptFriendFailurMessage()
@@ -58,11 +60,11 @@ export const useAcceptFriend = () => {
 
 export const useRefuseFriend = () => {
   const { uid } = useAuthState()
-  const refuseFriend = async (refusedFriend: User) => {
-    const refusedFriendUID = refusedFriend.uid
+  const refuseFriend = async (refuseFriend: User) => {
+    const refuseFriendUID = refuseFriend.uid
     try {
-      if (refusedFriend.applyFriendUIDs && refusedFriend.applyFriendUIDs.includes(uid)) {
-        await functions.httpsCallable('refuseFriend')({ refusedFriendUID })
+      if (refuseFriend.applyFriendUIDs && refuseFriend.applyFriendUIDs.includes(uid)) {
+        await functions.httpsCallable('refuseFriend')({ refuseFriendUID })
         showRefuseFriendSunccessMessage()
       }
     } catch (e) {
