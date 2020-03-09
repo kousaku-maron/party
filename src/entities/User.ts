@@ -7,6 +7,7 @@ export type User = {
   userID: string
   name: string
   thumbnailURL?: string
+  introduction?: string
   gender?: string
   blockUIDs?: string[]
   blockedUIDs?: string[]
@@ -32,6 +33,7 @@ export const buildUser = (id: string, data: firebase.firestore.DocumentData) => 
     userID: data.userID,
     name: data.name,
     ...(data.thumbnailURL && { thumbnailURL: data.thumbnailURL }),
+    ...(data.introduction && { introduction: data.introduction }),
     ...(data.gender && { gender: data.gender }),
     ...(data.blockUIDs && { blockUIDs: data.blockUIDs }),
     ...(data.blockedUIDs && { blockedUIDs: data.blockedUIDs }),
@@ -50,7 +52,7 @@ export const buildUser = (id: string, data: firebase.firestore.DocumentData) => 
   return newUser
 }
 
-export type UpdateUser = Pick<User, 'uid' | 'name' | 'thumbnailURL'> & {
+export type UpdateUser = Pick<User, 'uid' | 'name' | 'thumbnailURL' | 'introduction'> & {
   gender?: string[]
   userID?: string
   blockUIDs?: string[]
