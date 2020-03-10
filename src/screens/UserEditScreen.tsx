@@ -44,15 +44,16 @@ const UserEditScreen = () => {
       <ScrollView style={styles.userScrollView} scrollIndicatorInsets={{ right: 1 }}>
         <View style={styles.profileContainer}>
           <View style={styles.profileWrapper}>
-            <View style={styles.thumbnailWrapper}>
-              <ShadowBase>
+            <ShadowBase>
+              <View style={styles.thumbnailWrapper}>
                 <Thumbnail uri={thumbnailURL} size={120} onPress={onChangeThumbnailURL} />
-              </ShadowBase>
-              <View style={styles.editFab}>
-                <Fab size={40} color={colors.tints.primary.main} onPress={updateUserState}>
-                  <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={26} />
-                </Fab>
               </View>
+            </ShadowBase>
+
+            <View style={styles.editFab}>
+              <Fab size={40} color={colors.tints.primary.main} onPress={updateUserState}>
+                <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={26} />
+              </Fab>
             </View>
           </View>
         </View>
@@ -115,8 +116,8 @@ const makeStyles: MakeStyles = colors =>
     },
     editFab: {
       position: 'relative',
-      left: 88,
-      top: -36
+      top: -40 * 2,
+      left: 40
     },
     profileWrapper: {
       display: 'flex',
