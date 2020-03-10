@@ -86,13 +86,12 @@ const UserEditScreen = () => {
 }
 
 const fullHeight = Dimensions.get('window').height
-const fullWidth = Dimensions.get('window').width
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
-      width: fullWidth,
-      height: fullHeight,
+      width: '100%',
+      height: '100%',
       backgroundColor: colors.backgrounds.primary
     },
     profileContainer: {
@@ -115,9 +114,9 @@ const makeStyles: MakeStyles = colors =>
       width: '100%'
     },
     editFab: {
-      position: 'absolute',
-      right: -10,
-      bottom: 34
+      position: 'relative',
+      left: 88,
+      top: -36
     },
     profileWrapper: {
       display: 'flex',

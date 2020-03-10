@@ -15,7 +15,7 @@ type Props = {
   height?: number
 }
 
-const SelectField = ({ label, value, onPress, disabled = true, width = 250, height = 50, fullWidth }: Props) => {
+const SelectField = ({ label, value, onPress, disabled = false, width = 250, height = 50, fullWidth }: Props) => {
   const styles = useStyles(makeStyles)
 
   return (
