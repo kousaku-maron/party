@@ -76,7 +76,7 @@ const UserEditScreen = () => {
               />
             </View>
             <View style={styles.preferNumberWrapper}>
-              <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} />
+              <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} disabled={true} />
             </View>
           </View>
         </ShadowBase>
