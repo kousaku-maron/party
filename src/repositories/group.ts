@@ -18,6 +18,20 @@ export const getGroup = async (partyID: string, groupID: string) => {
   }
 }
 
+export const getGroups = async (partyID: string) => {
+  try {
+    const snapShot = await partiesRef
+      .doc(partyID)
+      .collection('groups')
+      .get()
+
+    const groups = snapShot.docs.map(doc => buildGroup(doc.id, doc.data()))
+    return groups
+  } catch (e) {
+    console.warn(e)
+  }
+}
+
 export const updateGroup = async (partyID: string, groupID: string, group: UpdateGroup) => {
   try {
     const batch = db.batch()

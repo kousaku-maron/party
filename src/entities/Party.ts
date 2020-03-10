@@ -1,3 +1,5 @@
+import { User } from './User'
+
 export type Party = {
   id: string
   type: string
@@ -6,6 +8,8 @@ export type Party = {
   enabled: boolean
   date: Date
   entryUIDs?: string[]
+  tags?: string[]
+  users?: User[]
 }
 
 export const buildParty = (id: string, data: firebase.firestore.DocumentData) => {
@@ -13,10 +17,12 @@ export const buildParty = (id: string, data: firebase.firestore.DocumentData) =>
     id,
     type: data.type,
     name: data.name,
-    thumbnailURL: data.thumbnailURL,
+    ...(data.thumbnailURL && { thumbnailURL: data.thumbnailURL }),
     enabled: data.enabled,
     date: data.date.toDate(),
-    entryUIDs: data.entryUIDs
+    ...(data.entryUIDs && { entryUIDs: data.entryUIDs }),
+    ...(data.tags && { tags: data.tags }),
+    ...(data.users && { users: data.users })
   }
   return newParty
 }

@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import Carousel from 'react-native-snap-carousel'
 import { Party } from '../entities'
-import { useParties } from '../services/party'
+import { usePartiesByTags } from '../services/party'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
@@ -20,7 +20,9 @@ const HomeScreen = () => {
   const styles = useStyles(makeStyles)
   const { user, uid } = useAuthState()
 
-  const parties = useParties()
+  const homeParties = usePartiesByTags(['home'])
+  const popularParties = usePartiesByTags(['popular'])
+
   const genderModalTools = useModal()
   const isAcceptedModalTools = useModal()
 
@@ -51,16 +53,15 @@ const HomeScreen = () => {
   const renderItem = useCallback(
     ({ item }: { item: Party }) => {
       return (
-        // TODO: どうやってユーザーデータ取得するか考える。
         <ShadowBase intensity={2}>
-          <PartyPrimaryCard key={item.id} party={item} users={[]} onPress={onPressParty} />
+          <PartyPrimaryCard key={item.id} party={item} users={item.users ?? []} onPress={onPressParty} />
         </ShadowBase>
       )
     },
     [onPressParty]
   )
 
-  if (!parties) {
+  if (!homeParties || !popularParties) {
     return <LoadingPage />
   }
 
@@ -74,7 +75,7 @@ const HomeScreen = () => {
             <Text style={styles.parimaryTitleText}>人気</Text>
           </View>
           <Carousel
-            data={parties} // TODO: 人気パーティーのデータをどのようにして取得するかロジックを考える必要あり。
+            data={popularParties}
             renderItem={renderItem}
             itemWidth={320 + 30} // MEMO: add 30px margin
             activeSlideAlignment={'start'}
@@ -91,7 +92,7 @@ const HomeScreen = () => {
           </View>
 
           <View style={styles.allPartiesWrapper}>
-            {parties.map(party => (
+            {homeParties.map(party => (
               <View key={party.id} style={styles.secondaryCardWrapper}>
                 <ShadowBase>
                   <PartySecondaryCard

@@ -24,7 +24,7 @@ export const useReportUser = () => {
         comment
       }
 
-      await functions.httpsCallable('reportUser')({ report })
+      await functions.httpsCallable('createReport')({ report })
       showReportUserSunccessMessage()
     } catch (e) {
       showReportUserFailurMessage()
