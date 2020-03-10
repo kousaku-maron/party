@@ -116,7 +116,7 @@ const makeStyles: MakeStyles = colors =>
     },
     editFab: {
       position: 'relative',
-      top: -40 * 2,
+      top: -40 / 2,
       left: 40
     },
     profileWrapper: {
@@ -124,10 +124,7 @@ const makeStyles: MakeStyles = colors =>
       alignItems: 'center',
       paddingBottom: 32
     },
-    thumbnailWrapper: {
-      paddingTop: 24,
-      paddingBottom: 36
-    },
+    thumbnailWrapper: {},
     nameWrapper: {
       display: 'flex',
       flexDirection: 'column',
