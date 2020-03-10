@@ -14,14 +14,17 @@ import { BottomTabLayout } from '../components/templates'
 import { PartyPrimaryCard, PartySecondaryCard, GenderModal, Modal } from '../components/organisms'
 import { setGender } from '../services/user'
 
+const homeTags = ['home']
+const popularTags = ['popular']
+
 const HomeScreen = () => {
   const { top: insetTop, bottom: insetBottom } = useSafeArea()
   const navigation = useNavigation()
   const styles = useStyles(makeStyles)
   const { user, uid } = useAuthState()
 
-  const homeParties = usePartiesByTags(['home'])
-  const popularParties = usePartiesByTags(['popular'])
+  const homeParties = usePartiesByTags(homeTags)
+  const popularParties = usePartiesByTags(popularTags)
 
   const genderModalTools = useModal()
   const isAcceptedModalTools = useModal()
