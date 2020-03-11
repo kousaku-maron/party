@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
+import { Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { useStyles, MakeStyles } from '../../services/design'
 
 type Props = {
@@ -14,34 +14,27 @@ const PushNotificationListItem = ({ isExist, onAccept, onReject }: Props) => {
   if (isExist) {
     return (
       <TouchableOpacity style={styles.listItem} onPress={onReject}>
-        <Text style={styles.primaryText}>プッシュ通知を拒否</Text>
+        <Text style={styles.secondaryText}>プッシュ通知を拒否</Text>
       </TouchableOpacity>
     )
   }
 
   return (
     <TouchableOpacity style={styles.listItem} onPress={onAccept}>
-      <Text style={styles.primaryText}>プッシュ通知を許可</Text>
+      <Text style={styles.secondaryText}>プッシュ通知を許可</Text>
     </TouchableOpacity>
   )
 }
 
-const hairlineWidth = StyleSheet.hairlineWidth
-const width = Dimensions.get('window').width
-
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     listItem: {
+      paddingVertical: 10,
       display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width,
-      height: 50,
-      borderBottomColor: colors.foregrounds.separator,
-      borderBottomWidth: hairlineWidth
+      width: '100%'
     },
-    primaryText: {
-      color: colors.foregrounds.primary
+    secondaryText: {
+      color: colors.foregrounds.secondary
     }
   })
 
