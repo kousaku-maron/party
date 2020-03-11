@@ -48,12 +48,12 @@ const UserEditScreen = () => {
               <ShadowBase>
                 <Thumbnail uri={thumbnailURL} size={120} onPress={onChangeThumbnailURL} />
               </ShadowBase>
-            </View>
 
-            <View style={styles.editFab}>
-              <Fab size={40} color={colors.tints.primary.main} onPress={updateUserState}>
-                <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={26} />
-              </Fab>
+              <View style={styles.editFab}>
+                <Fab size={40} color={colors.tints.primary.main} onPress={updateUserState}>
+                  <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={26} />
+                </Fab>
+              </View>
             </View>
           </View>
         </View>
