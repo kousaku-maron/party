@@ -20,20 +20,27 @@ const UserEditScreen = () => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
-  const { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched } = useUserEditTools(
-    uid
-  )
+  const {
+    name,
+    userID,
+    introduction,
+    thumbnailURL,
+    onChangeName,
+    onChangeUserID,
+    onChangeThumbnailURL,
+    fetched
+  } = useUserEditTools(uid)
 
   const updateUserState = useCallback(async () => {
     openLoadingModal()
-    const updateUser: UpdateUser = { uid, name, thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
+    const updateUser: UpdateUser = { uid, name, ...(introduction && { introduction }), thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
     const { result } = await UserRepository.setUser(uid, updateUser)
     result ? showUserEditSuccessMessage() : showUserEditFailurMessage()
     closeLoadingModal()
     if (result) {
       navigation.goBack()
     }
-  }, [closeLoadingModal, name, navigation, openLoadingModal, thumbnailURL, uid, userID])
+  }, [closeLoadingModal, introduction, name, navigation, openLoadingModal, thumbnailURL, uid, userID])
 
   if (!fetched) {
     return <LoadingPage />
@@ -48,6 +55,7 @@ const UserEditScreen = () => {
               <ShadowBase>
                 <Thumbnail uri={thumbnailURL} size={120} onPress={onChangeThumbnailURL} />
               </ShadowBase>
+
               <View style={styles.editFab}>
                 <Fab size={40} color={colors.tints.primary.main} onPress={updateUserState}>
                   <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={26} />
@@ -76,7 +84,7 @@ const UserEditScreen = () => {
               />
             </View>
             <View style={styles.preferNumberWrapper}>
-              <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} />
+              <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} disabled={true} />
             </View>
           </View>
         </ShadowBase>
@@ -86,13 +94,12 @@ const UserEditScreen = () => {
 }
 
 const fullHeight = Dimensions.get('window').height
-const fullWidth = Dimensions.get('window').width
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
-      width: fullWidth,
-      height: fullHeight,
+      width: '100%',
+      height: '100%',
       backgroundColor: colors.backgrounds.primary
     },
     profileContainer: {
@@ -116,8 +123,8 @@ const makeStyles: MakeStyles = colors =>
     },
     editFab: {
       position: 'absolute',
-      right: -10,
-      bottom: 34
+      top: 40 * 2,
+      left: 40 * 2
     },
     profileWrapper: {
       display: 'flex',
@@ -125,8 +132,7 @@ const makeStyles: MakeStyles = colors =>
       paddingBottom: 32
     },
     thumbnailWrapper: {
-      paddingTop: 24,
-      paddingBottom: 36
+      position: 'relative'
     },
     nameWrapper: {
       display: 'flex',

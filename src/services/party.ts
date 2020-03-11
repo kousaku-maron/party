@@ -10,6 +10,33 @@ const db = firebase.firestore()
 const usersRef = db.collection('users')
 const partiesRef = db.collection('parties')
 
+export const usePartiesByTags = (tags: string[]) => {
+  const [parties, setParties] = useState<Party[]>([])
+  const auth = useAuthState()
+  const { user } = auth
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      if (!user) return
+      const unsubscribe = partiesRef
+        .where('enabled', '==', true)
+        .where('tags', 'array-contains-any', tags)
+        .onSnapshot(snapShot => {
+          const newParty: Party[] = snapShot.docs.map(doc => {
+            return buildParty(doc.id, doc.data())
+          })
+          setParties(newParty)
+        })
+
+      return () => {
+        unsubscribe()
+      }
+    })
+  }, [tags, user])
+
+  return parties
+}
+
 export const useParties = () => {
   const [parties, setParties] = useState<Party[]>()
   const auth = useAuthState()

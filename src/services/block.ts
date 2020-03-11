@@ -10,16 +10,16 @@ import {
 export const useBlockUser = () => {
   const { uid } = useAuthState()
 
-  const blockUser = async (blockedUser: User) => {
-    const blockedUID = blockedUser.uid
+  const blockUser = async (blockUser: User) => {
+    const blockUID = blockUser.uid
 
     try {
-      if (blockedUser.blockUIDs && blockedUser.blockUIDs.includes(uid)) {
+      if (blockUser.blockUIDs && blockUser.blockUIDs.includes(uid)) {
         showCreateBlockUserAlreadyBlockedMessage()
         return
       }
 
-      await functions.httpsCallable('blockUser')({ blockedUID })
+      await functions.httpsCallable('blockUser')({ blockUID })
       showCreateBlockUserSunccessMessage()
     } catch (e) {
       console.warn(e)

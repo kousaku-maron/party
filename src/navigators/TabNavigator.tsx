@@ -126,7 +126,7 @@ const UserNavigator = () => {
         options={{
           headerBackTitleVisible: false,
           headerTransparent: true,
-          headerTintColor: colors.foregrounds.onTintPrimary
+          headerTintColor: colors.foregrounds.primary
         }}
       />
       <Stack.Screen

@@ -1,14 +1,16 @@
 import React, { useCallback } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { useSafeArea } from 'react-native-safe-area-context'
 import { useAuthActions } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { isAvailableSignInWithApple } from '../services/authentication'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
-import { RoundedButton } from '../components/atoms'
+import { RoundedButton, ShadowBase } from '../components/atoms'
 
 const WelcomeScreen = () => {
   const navigation = useNavigation()
+  const inset = useSafeArea()
   const { signInApple, signInGoogle } = useAuthActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
@@ -34,30 +36,37 @@ const WelcomeScreen = () => {
   }, [navigation])
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={require('../../assets/images/welcome.jpg')}
+      style={[styles.container, { paddingTop: inset.top }]}
+    >
       <View style={styles.titleArea}>
-        <Text style={styles.titleText}>DEMO</Text>
+        <Text style={styles.titleText}>PARTY</Text>
       </View>
       <View style={styles.imageArea} />
       <View style={styles.actionArea}>
         {isAvailableSignInWithApple() && (
           <View style={styles.appleButtonWrapper}>
-            <RoundedButton color={colors.tints.primary.main} height={56} fullWidth={true} onPress={onSignInApple}>
-              <View style={styles.iconWrapper}>
-                <AntDesign name="apple1" size={32} color={colors.foregrounds.onTintPrimary} />
-              </View>
-              <Text style={styles.appleText}>AppleIDでログイン</Text>
-            </RoundedButton>
+            <ShadowBase>
+              <RoundedButton color={colors.foregrounds.onTintPrimary} width={240} height={50} onPress={onSignInApple}>
+                <View style={styles.iconWrapper}>
+                  <AntDesign name="apple1" size={20} color={colors.tints.primary.main} />
+                </View>
+                <Text style={styles.appleText}>AppleIDでログイン</Text>
+              </RoundedButton>
+            </ShadowBase>
           </View>
         )}
 
         <View style={styles.googleButtonWrapper}>
-          <RoundedButton color={colors.tints.primary.main} height={56} fullWidth={true} onPress={onSignInGoogle}>
-            <View style={styles.iconWrapper}>
-              <AntDesign name="google" size={32} color={colors.foregrounds.onTintPrimary} />
-            </View>
-            <Text style={styles.googleText}>Googleでログイン</Text>
-          </RoundedButton>
+          <ShadowBase>
+            <RoundedButton color={colors.foregrounds.onTintPrimary} width={240} height={50} onPress={onSignInGoogle}>
+              <View style={styles.iconWrapper}>
+                <AntDesign name="google" size={20} color={colors.tints.primary.main} />
+              </View>
+              <Text style={styles.googleText}>Googleでログイン</Text>
+            </RoundedButton>
+          </ShadowBase>
         </View>
 
         <Text style={styles.termText}>
@@ -71,7 +80,7 @@ const WelcomeScreen = () => {
           に同意して、サービスを利用して下さい。
         </Text>
       </View>
-    </View>
+    </ImageBackground>
   )
 }
 
@@ -88,7 +97,7 @@ const makeStyles: MakeStyles = colors =>
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      paddingTop: 96
+      paddingTop: 48
     },
     actionArea: {
       width: '80%',
@@ -105,11 +114,15 @@ const makeStyles: MakeStyles = colors =>
     },
     appleButtonWrapper: {
       width: '100%',
-      paddingBottom: 24
+      display: 'flex',
+      alignItems: 'center',
+      paddingBottom: 20
     },
     googleButtonWrapper: {
       width: '100%',
-      paddingBottom: 24
+      display: 'flex',
+      alignItems: 'center',
+      paddingBottom: 20
     },
     iconWrapper: {
       paddingRight: 12
@@ -118,29 +131,31 @@ const makeStyles: MakeStyles = colors =>
       width: 300
     },
     titleText: {
-      color: colors.tints.primary.main,
-      fontSize: 64
+      color: colors.foregrounds.onTintPrimary,
+      fontSize: 48
     },
     subText: {
-      color: colors.tints.primary.main,
+      color: colors.foregrounds.onTintPrimary,
       fontSize: 20,
       letterSpacing: 4
     },
     appleText: {
-      color: colors.foregrounds.onTintPrimary,
+      color: colors.tints.primary.main,
       fontSize: 18
     },
     googleText: {
-      color: colors.foregrounds.onTintPrimary,
+      color: colors.tints.primary.main,
       fontSize: 18
     },
     termText: {
-      color: colors.foregrounds.secondary,
-      fontSize: 12,
-      fontWeight: '300'
+      width: 240,
+      color: colors.foregrounds.onTintPrimary,
+      fontSize: 10,
+      fontWeight: '300',
+      textAlign: 'center'
     },
     linkText: {
-      fontSize: 12,
+      fontSize: 10,
       fontWeight: 'bold'
     }
   })
