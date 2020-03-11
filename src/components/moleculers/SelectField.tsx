@@ -9,17 +9,21 @@ type Props = {
   label?: string
   value?: string
   onPress?: () => void
-  // disabled?: boolean
+  disabled?: boolean
   fullWidth?: boolean
   width?: number
   height?: number
 }
 
-const SelectField = ({ label, value, onPress, width = 250, height = 50, fullWidth }: Props) => {
+const SelectField = ({ label, value, onPress, disabled = false, width = 250, height = 50, fullWidth }: Props) => {
   const styles = useStyles(makeStyles)
 
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.container, { width: fullWidth ? '100%' : width }]}>
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled}
+      style={[styles.container, { width: fullWidth ? '100%' : width }]}
+    >
       <View style={styles.head}>
         {label && (
           <View style={styles.labelTextWrapper}>

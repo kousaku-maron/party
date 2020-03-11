@@ -80,8 +80,8 @@ const UserScreen = () => {
 
   return (
     <BottomTabLayout>
-      <View style={styles.container}>
-        <View style={[styles.header, { paddingTop: inset.top }]}>
+      <View style={(styles.container, { paddingTop: inset.top })}>
+        <View style={[styles.header]}>
           <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
             <DotsIcon />
           </TouchableOpacity>
@@ -228,7 +228,7 @@ const makeStyles: MakeStyles = colors =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
       alignItems: 'center',
-      height: 34
+      height: 48
     },
     profileContainer: {
       display: 'flex',
