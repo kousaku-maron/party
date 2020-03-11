@@ -40,7 +40,6 @@ const UserEditScreen = () => {
     result ? showUserEditSuccessMessage() : showUserEditFailurMessage()
     closeLoadingModal()
     if (result) {
-      console.log('updateUser', updateUser)
       navigation.goBack()
     }
   }, [closeLoadingModal, introduction, name, navigation, openLoadingModal, thumbnailURL, uid, userID])
