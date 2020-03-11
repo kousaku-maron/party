@@ -33,7 +33,9 @@ const UserEditScreen = () => {
 
   const updateUserState = useCallback(async () => {
     openLoadingModal()
+
     const updateUser: UpdateUser = { uid, name, ...(introduction && { introduction }), thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
+
     const { result } = await UserRepository.setUser(uid, updateUser)
     result ? showUserEditSuccessMessage() : showUserEditFailurMessage()
     closeLoadingModal()

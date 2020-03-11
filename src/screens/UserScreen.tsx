@@ -80,6 +80,7 @@ const UserScreen = () => {
 
   return (
     <BottomTabLayout>
+      {/* 33px => header height */}
       <View style={(styles.container, { paddingTop: inset.top })}>
         <View style={[styles.header]}>
           <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
@@ -146,7 +147,11 @@ const UserScreen = () => {
                 <View style={styles.cardsContainer}>
                   <Text style={styles.contentsTitleText}>参加中</Text>
                   <View style={styles.carouselBottomSpace} />
-                  <ScrollView horizontal={true} style={styles.allAppliedPartiesScrollView}>
+                  <ScrollView
+                    horizontal={true}
+                    style={styles.allAppliedPartiesScrollView}
+                    showsHorizontalScrollIndicator={false}
+                  >
                     {appliedParties &&
                       appliedParties.map(appliedParty => (
                         <View key={appliedParty.id} style={styles.secondaryCardWrapper}>
@@ -167,7 +172,11 @@ const UserScreen = () => {
               {!isBlocked && (
                 <View style={styles.friendsContainer}>
                   <Text style={styles.contentsTitleText}>ともだち</Text>
-                  <ScrollView horizontal={true} style={styles.allFriendsScrollView}>
+                  <ScrollView
+                    horizontal={true}
+                    style={styles.allFriendsScrollView}
+                    showsHorizontalScrollIndicator={false}
+                  >
                     {friends &&
                       friends.map(friend => {
                         if (friend) {
@@ -228,7 +237,7 @@ const makeStyles: MakeStyles = colors =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
       alignItems: 'center',
-      height: 48
+      height: 34
     },
     profileContainer: {
       display: 'flex',
