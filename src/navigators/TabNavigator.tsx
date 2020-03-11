@@ -132,7 +132,12 @@ const UserNavigator = () => {
       <Stack.Screen
         name="Setting"
         component={SettingScreen}
-        options={{ headerTitle: '設定', headerBackTitleVisible: false, headerTintColor: colors.foregrounds.primary }}
+        options={{
+          headerTitle: '設定',
+          headerBackTitleVisible: false,
+          headerTransparent: true,
+          headerTintColor: colors.foregrounds.primary
+        }}
       />
       <Stack.Screen
         name="Terms"
