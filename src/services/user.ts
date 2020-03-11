@@ -94,6 +94,14 @@ export const useUserEditTools = (uid: string) => {
     setUserID(user.userID)
   }, [user])
 
+  const [introduction, setIntroduction] = useState<string>('')
+
+  useEffect(() => {
+    if (!user) return
+    if (!user.introduction) return
+    setIntroduction(user.introduction)
+  }, [user])
+
   const [thumbnailURL, setThumbnailURL] = useState<string>('')
 
   useEffect(() => {
@@ -107,6 +115,10 @@ export const useUserEditTools = (uid: string) => {
 
   const onChangeUserID = useCallback((text: string) => {
     setUserID(text)
+  }, [])
+
+  const onChangeIntroduction = useCallback((text: string) => {
+    setIntroduction(text)
   }, [])
 
   const onChangeThumbnailURL = useCallback(async () => {
@@ -159,7 +171,17 @@ export const useUserEditTools = (uid: string) => {
     setThumbnailURL(resizeResult.uri)
   }, [])
 
-  return { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched }
+  return {
+    name,
+    userID,
+    thumbnailURL,
+    introduction,
+    onChangeName,
+    onChangeUserID,
+    onChangeIntroduction,
+    onChangeThumbnailURL,
+    fetched
+  }
 }
 
 export const setGender = async (uid: string, gender: string) => {

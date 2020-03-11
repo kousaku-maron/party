@@ -20,20 +20,27 @@ const UserEditScreen = () => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
-  const { name, userID, thumbnailURL, onChangeName, onChangeUserID, onChangeThumbnailURL, fetched } = useUserEditTools(
-    uid
-  )
+  const {
+    name,
+    userID,
+    introduction,
+    thumbnailURL,
+    onChangeName,
+    onChangeUserID,
+    onChangeThumbnailURL,
+    fetched
+  } = useUserEditTools(uid)
 
   const updateUserState = useCallback(async () => {
     openLoadingModal()
-    const updateUser: UpdateUser = { uid, name, thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
+    const updateUser: UpdateUser = { uid, name, ...(introduction && { introduction }), thumbnailURL, userID } // TODO: userIDに変更なければ、引数に入れないようにする。
     const { result } = await UserRepository.setUser(uid, updateUser)
     result ? showUserEditSuccessMessage() : showUserEditFailurMessage()
     closeLoadingModal()
     if (result) {
       navigation.goBack()
     }
-  }, [closeLoadingModal, name, navigation, openLoadingModal, thumbnailURL, uid, userID])
+  }, [closeLoadingModal, introduction, name, navigation, openLoadingModal, thumbnailURL, uid, userID])
 
   if (!fetched) {
     return <LoadingPage />
