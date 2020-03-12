@@ -57,6 +57,7 @@ const UserEditScreen = () => {
         style={[styles.userScrollView, { paddingTop: inset.top }]}
         scrollIndicatorInsets={{ right: 1 }}
         stickyHeaderIndices={[1]}
+        showsVerticalScrollIndicator={false}
       >
         <View style={styles.headerTopSpacer} />
 
@@ -103,12 +104,13 @@ const UserEditScreen = () => {
 
               <View style={styles.introWrapper}>
                 <TextField
-                  label="intro"
+                  label="自己紹介"
                   multiline={true}
                   value={'東京都で薬剤師として働いています！　気が合えば飲みに行きましょう！'}
                   fullWidth={true}
                 />
               </View>
+
               <View style={styles.preferNumberWrapper}>
                 <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} disabled={true} />
               </View>
@@ -136,16 +138,17 @@ const makeStyles: MakeStyles = colors =>
       justifyContent: 'flex-end',
       alignItems: 'center',
       width: '100%',
-      paddingBottom: 42,
-      flex: 1
+      minHeight: 300,
+      paddingBottom: 42
     },
     contentsContainer: {
       alignItems: 'center',
       width: '100%',
+      height: '100%',
       backgroundColor: colors.backgrounds.secondary,
-      paddingVertical: 20,
-      borderTopRightRadius: 20,
-      borderTopLeftRadius: 20
+      paddingVertical: 50,
+      borderTopRightRadius: 40,
+      borderTopLeftRadius: 40
     },
     userScrollView: {
       width: '100%',
@@ -185,7 +188,6 @@ const makeStyles: MakeStyles = colors =>
     preferNumberWrapper: {
       display: 'flex',
       flexDirection: 'column',
-      paddingBottom: 24,
       paddingHorizontal: 24,
       width: '100%'
     },

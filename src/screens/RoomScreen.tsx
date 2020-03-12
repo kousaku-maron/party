@@ -25,7 +25,11 @@ const RoomScreen = () => {
   return (
     <BottomTabLayout>
       <View style={styles.container}>
-        <ScrollView style={[styles.scrollView, { paddingTop: inset.top }]} stickyHeaderIndices={[1]}>
+        <ScrollView
+          style={[styles.scrollView, { paddingTop: inset.top }]}
+          stickyHeaderIndices={[1]}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={styles.headerTopSpacer} />
 
           <View style={styles.headerContainer}>

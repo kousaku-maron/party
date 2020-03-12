@@ -48,11 +48,18 @@ const WelcomeScreen = () => {
         {isAvailableSignInWithApple() && (
           <View style={styles.appleButtonWrapper}>
             <ShadowBase>
-              <RoundedButton color={colors.foregrounds.onTintPrimary} width={240} height={50} onPress={onSignInApple}>
-                <View style={styles.iconWrapper}>
-                  <AntDesign name="apple1" size={20} color={colors.tints.primary.main} />
+              <RoundedButton
+                color={colors.foregrounds.onTintPrimary}
+                fullWidth={true}
+                height={60}
+                onPress={onSignInApple}
+              >
+                <View style={styles.buttonInner}>
+                  <View style={styles.iconWrapper}>
+                    <AntDesign name="apple1" size={20} color={colors.tints.primary.main} />
+                  </View>
+                  <Text style={styles.appleText}>AppleIDでログイン</Text>
                 </View>
-                <Text style={styles.appleText}>AppleIDでログイン</Text>
               </RoundedButton>
             </ShadowBase>
           </View>
@@ -60,11 +67,18 @@ const WelcomeScreen = () => {
 
         <View style={styles.googleButtonWrapper}>
           <ShadowBase>
-            <RoundedButton color={colors.foregrounds.onTintPrimary} width={240} height={50} onPress={onSignInGoogle}>
-              <View style={styles.iconWrapper}>
-                <AntDesign name="google" size={20} color={colors.tints.primary.main} />
+            <RoundedButton
+              color={colors.foregrounds.onTintPrimary}
+              fullWidth={true}
+              height={60}
+              onPress={onSignInGoogle}
+            >
+              <View style={styles.buttonInner}>
+                <View style={styles.iconWrapper}>
+                  <AntDesign name="google" size={20} color={colors.tints.primary.main} />
+                </View>
+                <Text style={styles.googleText}>Googleでログイン</Text>
               </View>
-              <Text style={styles.googleText}>Googleでログイン</Text>
             </RoundedButton>
           </ShadowBase>
         </View>
@@ -111,6 +125,12 @@ const makeStyles: MakeStyles = colors =>
       justifyContent: 'center',
       alignItems: 'center',
       paddingTop: 134
+    },
+    buttonInner: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     appleButtonWrapper: {
       width: '100%',

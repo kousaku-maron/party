@@ -27,6 +27,7 @@ type Props = {
   secureTextEntry?: boolean
   autoCapitalize?: AutoCapitalizeOptions
   multiline?: boolean
+  numberOfLines?: number
 }
 
 const TextField = ({ label, width = 250, fullWidth, ...others }: Props) => {
@@ -50,7 +51,9 @@ const makeStyles: MakeStyles = colors =>
       display: 'flex',
       flexDirection: 'column'
     },
-    labelTextWrapper: {},
+    labelTextWrapper: {
+      paddingBottom: 10
+    },
     labelText: {
       fontSize: 16,
       fontWeight: 'bold',

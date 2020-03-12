@@ -73,6 +73,7 @@ const HomeScreen = () => {
       <View style={styles.container}>
         <ScrollView
           contentContainerStyle={[styles.scrollView, { paddingTop: insetTop + 24, paddingBottom: insetBottom + 24 }]}
+          showsVerticalScrollIndicator={false}
         >
           <View style={styles.parimaryTitleTextWrapper}>
             <Text style={styles.parimaryTitleText}>人気</Text>
