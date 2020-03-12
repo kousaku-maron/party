@@ -27,7 +27,6 @@ type Props = {
   secureTextEntry?: boolean
   autoCapitalize?: AutoCapitalizeOptions
   multiline?: boolean
-  numberOfLines?: number
 }
 
 const TextField = ({ label, width = 250, fullWidth, ...others }: Props) => {
