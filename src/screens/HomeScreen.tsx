@@ -80,11 +80,11 @@ const HomeScreen = () => {
           <Carousel
             data={popularParties}
             renderItem={renderItem}
-            itemWidth={320 + 30} // MEMO: add 30px margin
+            itemWidth={320 + 20} // MEMO: add 30px margin
             activeSlideAlignment={'start'}
             sliderWidth={Dimensions.get('window').width}
             slideStyle={{ paddingLeft: 24 }}
-            inactiveSlideOpacity={0.4}
+            inactiveSlideOpacity={0.7}
           />
 
           {/* MEMO: カルーセル自体にcssを設定したくなかったので、別コンポーネントでレイアウト調整している */}

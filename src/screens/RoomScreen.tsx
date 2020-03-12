@@ -1,71 +1,51 @@
-import React, { useCallback, useState } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Platform } from 'react-native'
+import React, { useCallback } from 'react'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { isIPhoneX, isIPhoneXAbove, X_ABOVE_HEADER_NOTCH_HEIGHT, ANDROID_STATUS_BAR_HEIGHT } from '../services/design'
+import { useSafeArea } from 'react-native-safe-area-context'
 import { useStyles, MakeStyles } from '../services/design'
-import { ChatRoomListPage, SwipeCardPage } from '../components/pages'
+import { useRoomsWithUser } from '../services/room'
+import { ShadowBase } from '../components/atoms'
+import { RoomCard, Header } from '../components/organisms'
 import { BottomTabLayout } from '../components/templates'
-
-type Section = 'card' | 'chat'
+import { Room } from '../entities'
 
 const RoomScreen = () => {
   const navigation = useNavigation()
-  const [section, setSection] = useState<Section>('chat')
   const styles = useStyles(makeStyles)
+  const inset = useSafeArea()
+  const roomsWithUser = useRoomsWithUser() // TODO: roomに"users"を保存させるので、"useRooms"に変える。
 
-  const onPressRoom = useCallback(
-    (roomID: string) => {
-      navigation.navigate('Chat', { roomID })
+  const onPressCard = useCallback(
+    (room: Room) => {
+      navigation.navigate('Chat', { roomID: room.id })
     },
     [navigation]
   )
 
-  const onPressCardTab = useCallback(() => {
-    setSection('card')
-  }, [])
-
-  const onPressChatTab = useCallback(() => {
-    setSection('chat')
-  }, [])
-
   return (
     <BottomTabLayout>
       <View style={styles.container}>
-        <View style={styles.inner}>
-          {/* TODO: タブをコンポーネント化 */}
-          <View style={styles.tabs}>
-            <TouchableOpacity style={styles.tab} onPress={onPressCardTab}>
-              <Text style={section === 'card' ? styles.tabActiveLabel : styles.tabLabel}>カード</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.tab} onPress={onPressChatTab}>
-              <Text style={section === 'chat' ? styles.tabActiveLabel : styles.tabLabel}>メッセージ</Text>
-            </TouchableOpacity>
+        <ScrollView style={[styles.scrollView, { paddingTop: inset.top }]} stickyHeaderIndices={[1]}>
+          <View style={styles.headerTopSpacer} />
+
+          <View style={styles.headerContainer}>
+            <Header fullWidth={true} title="トークルーム" />
           </View>
 
-          {section === 'card' && <SwipeCardPage />}
-          {section === 'chat' && <ChatRoomListPage onPress={onPressRoom} />}
-        </View>
+          <View style={styles.headerBottomSpacer} />
+
+          {roomsWithUser.map(roomWithUser => (
+            <View key={roomWithUser.id} style={styles.cardWrapper}>
+              <ShadowBase>
+                <RoomCard room={roomWithUser} onPress={onPressCard} fullWidth={true} />
+              </ShadowBase>
+            </View>
+          ))}
+        </ScrollView>
       </View>
     </BottomTabLayout>
   )
 }
-
-RoomScreen.navigationOptions = () => ({ headerShown: false })
-
-const hairlineWidth = StyleSheet.hairlineWidth
-const fullWidth = Dimensions.get('window').width
-
-const TOP_SPACE = Platform.select({
-  ios: isIPhoneX() || isIPhoneXAbove() ? X_ABOVE_HEADER_NOTCH_HEIGHT : 0,
-  android: ANDROID_STATUS_BAR_HEIGHT,
-  default: 0
-})
-
-const APPBAR_HEIGHT = Platform.select({
-  ios: 44,
-  android: 56,
-  default: 64
-})
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
@@ -75,36 +55,23 @@ const makeStyles: MakeStyles = colors =>
       height: '100%',
       backgroundColor: colors.backgrounds.primary
     },
-    inner: {
-      paddingTop: APPBAR_HEIGHT + TOP_SPACE,
+    scrollView: {
       width: '100%',
-      height: '100%',
-      display: 'flex',
-      // justifyContent: 'center',
-      alignItems: 'center'
+      paddingHorizontal: 12
     },
-    tabs: {
-      position: 'absolute',
-      display: 'flex',
-      flexDirection: 'row',
-      paddingTop: TOP_SPACE,
-      width: fullWidth,
-      height: APPBAR_HEIGHT + TOP_SPACE,
-      backgroundColor: colors.backgrounds.secondary,
-      borderBottomColor: colors.foregrounds.separator,
-      borderBottomWidth: hairlineWidth,
-      zIndex: 1100
+    cardWrapper: {
+      width: '100%',
+      paddingBottom: 20
     },
-    tab: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
+    headerContainer: {
+      width: '100%',
+      paddingHorizontal: 24
     },
-    tabLabel: {
-      color: colors.foregrounds.primary
+    headerTopSpacer: {
+      paddingBottom: 48
     },
-    tabActiveLabel: {
-      color: colors.tints.primary.main
+    headerBottomSpacer: {
+      paddingBottom: 20
     }
   })
 

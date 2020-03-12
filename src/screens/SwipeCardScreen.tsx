@@ -6,7 +6,7 @@ import Carousel from 'react-native-snap-carousel'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { RouteParams } from '../navigators/RouteProps'
 import { Fab } from '../components/atoms'
-import { SwipeCard } from '../components/organisms'
+import { SwipeCard, Header } from '../components/organisms'
 import { ApplyCard } from '../entities'
 import { useStyles, MakeStyles, useColors } from '../services/design'
 import { useAppliedCardsByType } from '../services/applyCard'
@@ -87,22 +87,27 @@ const SwipeCardScreen = () => {
       source={{ uri: backgroundURL }}
       style={[styles.container, { paddingTop: inset.top }]}
     >
+      <View style={styles.headerContainer}>
+        <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
+      </View>
+
       <View style={styles.inner}>
         <View style={styles.titleTextWrapper}>
           <Text style={styles.titleText}>{title}</Text>
           <Text style={styles.areaText}>東京エリア</Text>
         </View>
 
-        <Carousel
-          data={cards}
-          renderItem={renderItem}
-          onSnapToItem={onSnapToItem}
-          itemWidth={320}
-          activeSlideAlignment={'center'}
-          sliderWidth={Dimensions.get('window').width}
-          slideStyle={{ marginTop: Dimensions.get('window').height * 0.3 }}
-          inactiveSlideOpacity={0.6}
-        />
+        <View style={[styles.swipeArea, { paddingBottom: inset.bottom + 48 }]}>
+          <Carousel
+            data={cards}
+            renderItem={renderItem}
+            onSnapToItem={onSnapToItem}
+            itemWidth={320}
+            activeSlideAlignment={'center'}
+            sliderWidth={Dimensions.get('window').width}
+            inactiveSlideOpacity={0.6}
+          />
+        </View>
       </View>
     </ImageBackground>
   )
@@ -115,9 +120,19 @@ const makeStyles: MakeStyles = colors =>
       width: '100%',
       height: '100%'
     },
-    inner: {},
+    headerContainer: {
+      width: '100%',
+      paddingHorizontal: 24
+    },
+    inner: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      height: '100%'
+    },
+    swipeArea: {},
     cardContainer: {
       position: 'relative',
+      paddingTop: 50, // thumbnailが見切れるため、50px余白をもたせている。
       paddingBottom: 50 // fabが見切れるため、50px余白をもたせている。
     },
     fabWrapper: {
@@ -136,26 +151,6 @@ const makeStyles: MakeStyles = colors =>
     areaText: {
       fontSize: 20,
       color: colors.foregrounds.onTintPrimary
-    },
-    withShadow: {
-      shadowColor: 'black', // どうしよう
-      shadowOffset: {
-        width: 2,
-        height: 2
-      },
-      shadowRadius: 4,
-      shadowOpacity: 0.1,
-      elevation: 4
-    },
-    withBloom: {
-      shadowColor: colors.tints.primary.main,
-      shadowOffset: {
-        width: 0,
-        height: 0
-      },
-      shadowRadius: 8,
-      shadowOpacity: 1,
-      elevation: 8
     }
   })
 

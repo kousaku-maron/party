@@ -6,6 +6,7 @@ import { useStyles, MakeStyles, useColors } from '../services/design'
 import { useSecure } from '../services/secure'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, View } from 'react-native'
 import { ShadowBase } from '../components/atoms'
+import { Header } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 
 const SettingScreen = () => {
@@ -43,8 +44,15 @@ const SettingScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* 33px => header height */}
-      <ScrollView style={(styles.scrollView, { paddingTop: 33 + 25 + inset.top })}>
+      <ScrollView style={(styles.scrollView, { paddingTop: inset.top })} stickyHeaderIndices={[1]}>
+        <View style={styles.headerTopSpacer} />
+
+        <View style={styles.headerContainer}>
+          <Header fullWidth={true} title="設定" />
+        </View>
+
+        <View style={styles.headerBottomSpacer} />
+
         <ShadowBase>
           <View style={styles.ruleCardWrapper}>
             <View style={styles.ruleCard}>
@@ -85,13 +93,24 @@ const makeStyles: MakeStyles = colors =>
       height: '100%',
       backgroundColor: colors.backgrounds.primary
     },
+    headerContainer: {
+      width: '100%',
+      paddingHorizontal: 24
+    },
+    headerBottomSpacer: {
+      paddingBottom: 20
+    },
+    headerTopSpacer: {
+      paddingBottom: 48
+    },
     scrollView: {
       width: '100%',
       paddingHorizontal: 24
     },
     ruleCardWrapper: {
       width: '100%',
-      paddingBottom: 20
+      paddingBottom: 20,
+      paddingHorizontal: 24
     },
     listItem: {
       paddingVertical: 10,

@@ -11,7 +11,7 @@ import { useFriends } from '../services/friend'
 import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import { Feather, AntDesign } from '@expo/vector-icons'
 import { Thumbnail, Fab, DotsIcon, ShadowBase, BloomBase } from '../components/atoms'
-import { PartySecondaryCard } from '../components/organisms'
+import { PartySecondaryCard, Header } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 
@@ -80,15 +80,22 @@ const UserScreen = () => {
 
   return (
     <BottomTabLayout>
-      {/* 33px => header height */}
       <View style={(styles.container, { paddingTop: inset.top })}>
-        <View style={[styles.header]}>
-          <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
-            <DotsIcon />
-          </TouchableOpacity>
-        </View>
+        <ScrollView style={styles.userScrollView} stickyHeaderIndices={[1]}>
+          <View style={styles.headerTopSpacer} />
 
-        <ScrollView style={styles.userScrollView}>
+          <View style={styles.headerContainer}>
+            <Header
+              fullWidth={true}
+              title="プロフィール"
+              renderRight={() => (
+                <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
+                  <DotsIcon />
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+
           <View style={styles.profileContainer}>
             <View style={styles.profileWrapper}>
               <View style={styles.thumbnailWrapper}>
@@ -231,13 +238,9 @@ const makeStyles: MakeStyles = colors =>
       position: 'relative',
       backgroundColor: colors.backgrounds.primary
     },
-    header: {
+    headerContainer: {
       width: '100%',
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      height: 34
+      paddingHorizontal: 24
     },
     profileContainer: {
       display: 'flex',
@@ -303,6 +306,9 @@ const makeStyles: MakeStyles = colors =>
       fontSize: 18,
       color: colors.foregrounds.primary,
       fontWeight: 'bold'
+    },
+    headerTopSpacer: {
+      paddingBottom: 48
     },
     idText: {
       fontSize: 12,
