@@ -18,10 +18,15 @@ export const useUser = (uid: string) => {
     InteractionManager.runAfterInteractions(() => {
       if (!uid) return
       const userRef = usersRef.doc(uid)
-      const unsubscribe = userRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
-        const user = buildUser(doc.id, doc.data())
-        setUser(user)
-      })
+      const unsubscribe = userRef.onSnapshot(
+        (doc: firebase.firestore.DocumentSnapshot) => {
+          const user = buildUser(doc.id, doc.data())
+          setUser(user)
+        },
+        error => {
+          console.warn(error)
+        }
+      )
       return () => {
         unsubscribe()
       }

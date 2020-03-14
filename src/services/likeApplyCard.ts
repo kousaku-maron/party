@@ -4,7 +4,7 @@ import { useAuthState } from '../store/hooks'
 import {
   showLikeApplyCardSunccessMessage,
   showLikeApplyCardAlreadyLikedMessage,
-  showLikeApplyCardAlreadyMatchedMessage,
+  showLikeApplyCardAlreadyMatchMessage,
   showLikeApplyCardFailurMessage
 } from './flashCard'
 
@@ -20,7 +20,7 @@ export const useLikeApplyCard = () => {
         return
       }
       if (user.matchGroupAssetIDs && user.matchGroupAssetIDs.includes(applyCardID)) {
-        showLikeApplyCardAlreadyMatchedMessage()
+        showLikeApplyCardAlreadyMatchMessage()
         return
       }
 

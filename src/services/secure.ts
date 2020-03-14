@@ -26,10 +26,15 @@ export const useSecure = (uid: string) => {
     InteractionManager.runAfterInteractions(() => {
       if (!uid) return
       const secureRef = getSecureRef(uid)
-      const unsubscribe = secureRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
-        const secure = buildSecure(doc.data())
-        setSecure(secure)
-      })
+      const unsubscribe = secureRef.onSnapshot(
+        (doc: firebase.firestore.DocumentSnapshot) => {
+          const secure = buildSecure(doc.data())
+          setSecure(secure)
+        },
+        error => {
+          console.info('catch useSecure error', error)
+        }
+      )
       return () => {
         unsubscribe()
       }
