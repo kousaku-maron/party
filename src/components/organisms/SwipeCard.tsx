@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useStackNavigation } from '../../services/route'
 import { Thumbnail } from '../atoms'
 import { useStyles, MakeStyles } from '../../services/design'
 import { ApplyCard } from '../../entities'
@@ -13,10 +13,10 @@ type Props = {
 
 const SwipeCard: React.FC<Props> = ({ card, width = 320, height = 280 }) => {
   const styles = useStyles(makeStyles)
-  const navigation = useNavigation()
+  const navigation = useStackNavigation()
 
   const onPressAvatar = useCallback(() => {
-    navigation.navigate('User', { userID: card.organizerUID })
+    navigation.push('User', { userID: card.organizerUID })
   }, [card.organizerUID, navigation])
 
   return (

@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native'
 import firebase, { functions } from '../repositories/firebase'
 import { User, Party, buildParty } from '../entities'
 import { useAuthState, useUIActions, useRoomActions } from '../store/hooks'
-import { getParty } from '../repositories/party'
 
 const db = firebase.firestore()
 const usersRef = db.collection('users')
@@ -21,12 +20,17 @@ export const usePartiesByTags = (tags: string[]) => {
       const unsubscribe = partiesRef
         .where('enabled', '==', true)
         .where('tags', 'array-contains-any', tags)
-        .onSnapshot(snapShot => {
-          const newParty: Party[] = snapShot.docs.map(doc => {
-            return buildParty(doc.id, doc.data())
-          })
-          setParties(newParty)
-        })
+        .onSnapshot(
+          snapShot => {
+            const newParty: Party[] = snapShot.docs.map(doc => {
+              return buildParty(doc.id, doc.data())
+            })
+            setParties(newParty)
+          },
+          error => {
+            console.info('catch usePartiesByTags error', error)
+          }
+        )
 
       return () => {
         unsubscribe()
@@ -45,12 +49,17 @@ export const useParties = () => {
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
       if (!user) return
-      const unsubscribe = partiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
-        const newParty: Party[] = snapShot.docs.map(doc => {
-          return buildParty(doc.id, doc.data())
-        })
-        setParties(newParty)
-      })
+      const unsubscribe = partiesRef.where('enabled', '==', true).onSnapshot(
+        snapShot => {
+          const newParty: Party[] = snapShot.docs.map(doc => {
+            return buildParty(doc.id, doc.data())
+          })
+          setParties(newParty)
+        },
+        error => {
+          console.info('catch useParties error', error)
+        }
+      )
 
       return () => {
         unsubscribe()
@@ -68,24 +77,19 @@ export const useParty = (partyID: string) => {
     InteractionManager.runAfterInteractions(() => {
       if (!partyID) return
       const partyRef = partiesRef.doc(partyID)
-      const unsubscribe = partyRef.onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
-        const party = buildParty(doc.id, doc.data())
-        setParty(party)
-      })
+      const unsubscribe = partyRef.onSnapshot(
+        (doc: firebase.firestore.DocumentSnapshot) => {
+          const party = buildParty(doc.id, doc.data())
+          setParty(party)
+        },
+        error => {
+          console.info('catch useParty error', error)
+        }
+      )
       return () => {
         unsubscribe()
       }
     })
-  }, [partyID])
-
-  useEffect(() => {
-    const asyncEffect = async () => {
-      if (!partyID) return
-      const party = await getParty(partyID)
-      setParty(party)
-    }
-    asyncEffect()
-    return
   }, [partyID])
 
   return party
@@ -143,14 +147,19 @@ export const useAppliedParties = (user: User) => {
     InteractionManager.runAfterInteractions(() => {
       if (!user || !user.appliedPartyUIDs) return
       const appliedPartiesRef = usersRef.doc(user.uid).collection('appliedParties')
-      const unsubscribe = appliedPartiesRef.where('enabled', '==', true).onSnapshot(snapShot => {
-        const newParty: Party[] = snapShot.docs.map(doc => {
-          console.log(doc.data())
+      const unsubscribe = appliedPartiesRef.where('enabled', '==', true).onSnapshot(
+        snapShot => {
+          const newParty: Party[] = snapShot.docs.map(doc => {
+            console.log(doc.data())
 
-          return buildParty(doc.id, doc.data())
-        })
-        setParties(newParty)
-      })
+            return buildParty(doc.id, doc.data())
+          })
+          setParties(newParty)
+        },
+        error => {
+          console.info('catch useAppliedParties error', error)
+        }
+      )
 
       return () => {
         unsubscribe()

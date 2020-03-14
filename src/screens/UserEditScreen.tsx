@@ -1,19 +1,23 @@
 import React, { useCallback } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { useSafeArea } from 'react-native-safe-area-context'
+import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { UpdateUser } from '../entities'
 import { useAuthState, useUIActions } from '../store/hooks'
 import * as UserRepository from '../repositories/user'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUserEditTools } from '../services/user'
-import { View, StyleSheet, Dimensions, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 import { Fab, Thumbnail, ShadowBase } from '../components/atoms'
 import { TextField, SelectField } from '../components/moleculers'
+import { Header } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../services/flashCard'
 
 const UserEditScreen = () => {
   const navigation = useNavigation()
+  const inset = useSafeArea()
   const { uid } = useAuthState()
   const { openLoadingModal, closeLoadingModal } = useUIActions()
 
@@ -27,8 +31,15 @@ const UserEditScreen = () => {
     thumbnailURL,
     onChangeName,
     onChangeUserID,
+    onChangeIntroduction,
     onChangeThumbnailURL,
-    fetched
+    onFocusUserID,
+    onFocusName,
+    onFocusIntroduction,
+    onFocusThumbnail,
+    onResetFocusInputName,
+    fetched,
+    focusInputName
   } = useUserEditTools(uid)
 
   const updateUserState = useCallback(async () => {
@@ -50,52 +61,93 @@ const UserEditScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.userScrollView} scrollIndicatorInsets={{ right: 1 }}>
-        <View style={styles.profileContainer}>
-          <View style={styles.profileWrapper}>
-            <View style={styles.thumbnailWrapper}>
-              <ShadowBase>
-                <Thumbnail uri={thumbnailURL} size={120} onPress={onChangeThumbnailURL} />
-              </ShadowBase>
+      <ScrollView
+        style={[styles.userScrollView, { paddingTop: inset.top }]}
+        scrollIndicatorInsets={{ right: 1 }}
+        stickyHeaderIndices={[1]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.headerTopSpacer} />
 
-              <View style={styles.editFab}>
-                <Fab size={40} color={colors.tints.primary.main} onPress={updateUserState}>
-                  <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={26} />
-                </Fab>
+        <View style={styles.headerContainer}>
+          <Header
+            fullWidth={true}
+            title="プロフィール編集"
+            renderRight={() => (
+              <TouchableOpacity onPress={updateUserState}>
+                <Text style={styles.saveText}>保存</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+
+        <View style={styles.headerBottomSpacer} />
+
+        <View style={styles.editArea}>
+          <View style={styles.profileContainer}>
+            <View style={styles.profileWrapper}>
+              <View style={styles.thumbnailWrapper}>
+                <ShadowBase>
+                  <Thumbnail uri={thumbnailURL} size={120} onPress={onChangeThumbnailURL} onFocus={onFocusThumbnail} />
+                </ShadowBase>
+
+                <View style={styles.editFab}>
+                  <Fab size={40} color={colors.tints.primary.main} onPress={onChangeThumbnailURL}>
+                    <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={26} />
+                  </Fab>
+                </View>
               </View>
             </View>
           </View>
+
+          <ShadowBase>
+            <View style={styles.contentsContainer}>
+              <View style={styles.nameWrapper}>
+                <TextField
+                  label="ニックネーム"
+                  value={name}
+                  onChangeText={onChangeName}
+                  onFocus={onFocusName}
+                  onSubmitEditing={onResetFocusInputName}
+                  fullWidth={true}
+                />
+              </View>
+
+              <View style={styles.userIDWrapper}>
+                <TextField
+                  label="ID"
+                  value={userID}
+                  onChangeText={onChangeUserID}
+                  onFocus={onFocusUserID}
+                  onSubmitEditing={onResetFocusInputName}
+                  fullWidth={true}
+                />
+              </View>
+
+              <View style={styles.introWrapper}>
+                <TextField
+                  label="自己紹介"
+                  multiline={true}
+                  value={introduction}
+                  onChangeText={onChangeIntroduction}
+                  onFocus={onFocusIntroduction}
+                  onSubmitEditing={onResetFocusInputName}
+                  fullWidth={true}
+                />
+              </View>
+
+              <View style={styles.preferNumberWrapper}>
+                <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} disabled={true} />
+              </View>
+            </View>
+          </ShadowBase>
         </View>
-
-        <ShadowBase intensity={2}>
-          <View style={styles.contentsContainer}>
-            <View style={styles.nameWrapper}>
-              <TextField label="ニックネーム" value={name} onChangeText={onChangeName} fullWidth={true} />
-            </View>
-
-            <View style={styles.userIDWrapper}>
-              <TextField label="ID" value={userID} onChangeText={onChangeUserID} fullWidth={true} />
-            </View>
-
-            <View style={styles.introWrapper}>
-              <TextField
-                label="intro"
-                multiline={true}
-                value={'東京都で薬剤師として働いています！　気が合えば飲みに行きましょう！'}
-                fullWidth={true}
-              />
-            </View>
-            <View style={styles.preferNumberWrapper}>
-              <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} disabled={true} />
-            </View>
-          </View>
-        </ShadowBase>
       </ScrollView>
+
+      {focusInputName && <KeyboardSpacer />}
     </View>
   )
 }
-
-const fullHeight = Dimensions.get('window').height
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
@@ -104,29 +156,39 @@ const makeStyles: MakeStyles = colors =>
       height: '100%',
       backgroundColor: colors.backgrounds.primary
     },
+    headerContainer: {
+      width: '100%',
+      paddingHorizontal: 24
+    },
     profileContainer: {
       display: 'flex',
       justifyContent: 'flex-end',
       alignItems: 'center',
       width: '100%',
-      height: fullHeight * 0.61,
+      minHeight: 300,
       paddingBottom: 42
     },
     contentsContainer: {
       alignItems: 'center',
       width: '100%',
+      height: '100%',
       backgroundColor: colors.backgrounds.secondary,
-      paddingVertical: 20,
-      borderTopRightRadius: 20,
-      borderTopLeftRadius: 20
+      paddingVertical: 50,
+      borderTopRightRadius: 40,
+      borderTopLeftRadius: 40
     },
     userScrollView: {
-      width: '100%'
+      width: '100%',
+      height: '100%'
     },
     editFab: {
       position: 'absolute',
       top: 40 * 2,
       left: 40 * 2
+    },
+    editArea: {
+      flexGrow: 1,
+      height: '100%'
     },
     profileWrapper: {
       display: 'flex',
@@ -153,7 +215,6 @@ const makeStyles: MakeStyles = colors =>
     preferNumberWrapper: {
       display: 'flex',
       flexDirection: 'column',
-      paddingBottom: 24,
       paddingHorizontal: 24,
       width: '100%'
     },
@@ -164,10 +225,15 @@ const makeStyles: MakeStyles = colors =>
       paddingHorizontal: 24,
       width: '100%'
     },
-    titleText: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: colors.foregrounds.primary
+    headerTopSpacer: {
+      paddingBottom: 48
+    },
+    headerBottomSpacer: {
+      paddingBottom: 48
+    },
+    saveText: {
+      color: colors.tints.primary.main,
+      fontSize: 16
     }
   })
 

@@ -4,7 +4,8 @@ import {
   KeyboardTypeOptions,
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
-  StyleSheet
+  StyleSheet,
+  TextInputFocusEventData
 } from 'react-native'
 import { useColors, useStyles, MakeStyles } from '../../services/design'
 
@@ -13,6 +14,7 @@ type AutoCapitalizeOptions = 'none' | 'sentences' | 'words' | 'characters'
 type Props = {
   value?: string
   placeholder?: string
+  onFocus?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void
   onChangeText?: (text: string) => void
   onSubmitEditing?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void
   color?: string
@@ -30,6 +32,7 @@ type Props = {
 const CustomTextInput: React.FC<Props> = ({
   value,
   placeholder,
+  onFocus,
   onChangeText,
   onSubmitEditing,
   color,
@@ -60,6 +63,7 @@ const CustomTextInput: React.FC<Props> = ({
       value={value}
       placeholder={placeholder}
       placeholderTextColor={colors.foregrounds.placeholder}
+      onFocus={onFocus}
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}
       maxLength={maxLength}

@@ -17,12 +17,17 @@ export const useRooms = () => {
     const unsubscribe = roomsRef
       .where('enabled', '==', true)
       .where('entryUIDs', 'array-contains', user.uid)
-      .onSnapshot(snapShot => {
-        const newRoom: Room[] = snapShot.docs.map(doc => {
-          return buildRoom(doc.id, doc.data())
-        })
-        setRooms(newRoom)
-      })
+      .onSnapshot(
+        snapShot => {
+          const newRoom: Room[] = snapShot.docs.map(doc => {
+            return buildRoom(doc.id, doc.data())
+          })
+          setRooms(newRoom)
+        },
+        error => {
+          console.info('catch useRooms error', error)
+        }
+      )
 
     return () => {
       unsubscribe()

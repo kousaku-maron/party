@@ -26,12 +26,17 @@ export const useFriends = (user: User) => {
       const unsubscribe = usersRef
         .doc(user.uid)
         .collection('friends')
-        .onSnapshot(snapShot => {
-          const newFriend: User[] = snapShot.docs.map(doc => {
-            return buildUser(doc.id, doc.data())
-          })
-          setFriends(newFriend)
-        })
+        .onSnapshot(
+          snapShot => {
+            const newFriend: User[] = snapShot.docs.map(doc => {
+              return buildUser(doc.id, doc.data())
+            })
+            setFriends(newFriend)
+          },
+          error => {
+            console.info('catch useFriends error', error)
+          }
+        )
 
       return () => {
         unsubscribe()
