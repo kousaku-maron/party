@@ -75,6 +75,7 @@ export const useUserEditTools = (uid: string) => {
   const MAX_THUMBNAIL_WIDTH = 1080
   const [user, setUser] = useState<User | null>(null)
   const [fetched, setFetched] = useState<boolean>(false)
+  const [focusInputName, setFocusInputName] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     const asyncEffect = async () => {
@@ -103,8 +104,9 @@ export const useUserEditTools = (uid: string) => {
 
   useEffect(() => {
     if (!user) return
-    if (!user.introduction) return
-    setIntroduction(user.introduction)
+    // if (!user.introduction) return
+    // setIntroduction(user.introduction)
+    setIntroduction('東京都で薬剤師として働いています！　気が合えば飲みに行きましょう！')
   }, [user])
 
   const [thumbnailURL, setThumbnailURL] = useState<string>('')
@@ -176,6 +178,26 @@ export const useUserEditTools = (uid: string) => {
     setThumbnailURL(resizeResult.uri)
   }, [])
 
+  const onFocusName = useCallback(() => {
+    setFocusInputName('name')
+  }, [])
+
+  const onFocusUserID = useCallback(() => {
+    setFocusInputName('userID')
+  }, [])
+
+  const onFocusIntroduction = useCallback(() => {
+    setFocusInputName('introduction')
+  }, [])
+
+  const onFocusThumbnail = useCallback(() => {
+    setFocusInputName('thumbnail')
+  }, [])
+
+  const onResetFocusInputName = useCallback(() => {
+    setFocusInputName(undefined)
+  }, [])
+
   return {
     name,
     userID,
@@ -185,6 +207,12 @@ export const useUserEditTools = (uid: string) => {
     onChangeUserID,
     onChangeIntroduction,
     onChangeThumbnailURL,
+    focusInputName,
+    onResetFocusInputName,
+    onFocusName,
+    onFocusUserID,
+    onFocusIntroduction,
+    onFocusThumbnail,
     fetched
   }
 }

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
+import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { UpdateUser } from '../entities'
 import { useAuthState, useUIActions } from '../store/hooks'
 import * as UserRepository from '../repositories/user'
@@ -30,8 +31,15 @@ const UserEditScreen = () => {
     thumbnailURL,
     onChangeName,
     onChangeUserID,
+    onChangeIntroduction,
     onChangeThumbnailURL,
-    fetched
+    onFocusUserID,
+    onFocusName,
+    onFocusIntroduction,
+    onFocusThumbnail,
+    onResetFocusInputName,
+    fetched,
+    focusInputName
   } = useUserEditTools(uid)
 
   const updateUserState = useCallback(async () => {
@@ -80,7 +88,7 @@ const UserEditScreen = () => {
             <View style={styles.profileWrapper}>
               <View style={styles.thumbnailWrapper}>
                 <ShadowBase>
-                  <Thumbnail uri={thumbnailURL} size={120} onPress={onChangeThumbnailURL} />
+                  <Thumbnail uri={thumbnailURL} size={120} onPress={onChangeThumbnailURL} onFocus={onFocusThumbnail} />
                 </ShadowBase>
 
                 <View style={styles.editFab}>
@@ -95,18 +103,35 @@ const UserEditScreen = () => {
           <ShadowBase>
             <View style={styles.contentsContainer}>
               <View style={styles.nameWrapper}>
-                <TextField label="ニックネーム" value={name} onChangeText={onChangeName} fullWidth={true} />
+                <TextField
+                  label="ニックネーム"
+                  value={name}
+                  onChangeText={onChangeName}
+                  onFocus={onFocusName}
+                  onSubmitEditing={onResetFocusInputName}
+                  fullWidth={true}
+                />
               </View>
 
               <View style={styles.userIDWrapper}>
-                <TextField label="ID" value={userID} onChangeText={onChangeUserID} fullWidth={true} />
+                <TextField
+                  label="ID"
+                  value={userID}
+                  onChangeText={onChangeUserID}
+                  onFocus={onFocusUserID}
+                  onSubmitEditing={onResetFocusInputName}
+                  fullWidth={true}
+                />
               </View>
 
               <View style={styles.introWrapper}>
                 <TextField
                   label="自己紹介"
                   multiline={true}
-                  value={'東京都で薬剤師として働いています！　気が合えば飲みに行きましょう！'}
+                  value={introduction}
+                  onChangeText={onChangeIntroduction}
+                  onFocus={onFocusIntroduction}
+                  onSubmitEditing={onResetFocusInputName}
                   fullWidth={true}
                 />
               </View>
@@ -118,6 +143,8 @@ const UserEditScreen = () => {
           </ShadowBase>
         </View>
       </ScrollView>
+
+      {focusInputName && <KeyboardSpacer />}
     </View>
   )
 }

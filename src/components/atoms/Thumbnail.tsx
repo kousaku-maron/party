@@ -1,5 +1,13 @@
 import React from 'react'
-import { View, TouchableOpacity, Image, GestureResponderEvent, StyleSheet } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  GestureResponderEvent,
+  StyleSheet,
+  NativeSyntheticEvent,
+  TargetedEvent
+} from 'react-native'
 import { useStyles, MakeStyles } from '../../services/design'
 
 type Props = {
@@ -7,11 +15,20 @@ type Props = {
   size?: number
   disabled?: boolean
   onPress?: (event: GestureResponderEvent) => void
+  onFocus?: (e: NativeSyntheticEvent<TargetedEvent>) => void
   borderColor?: string
   borderWidth?: number
 }
 
-const Thumbnail: React.FC<Props> = ({ uri, borderColor, borderWidth, disabled = false, size = 24, onPress }) => {
+const Thumbnail: React.FC<Props> = ({
+  uri,
+  borderColor,
+  borderWidth,
+  disabled = false,
+  size = 24,
+  onPress,
+  onFocus
+}) => {
   const styles = useStyles(makeStyles)
 
   if (!onPress) {
@@ -38,6 +55,7 @@ const Thumbnail: React.FC<Props> = ({ uri, borderColor, borderWidth, disabled = 
       style={[styles.container, { width: size, height: size, borderRadius: size / 2 }]}
       disabled={disabled}
       onPress={onPress}
+      onFocus={onFocus}
     >
       {uri && (
         <Image
