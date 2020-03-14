@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useStyles, MakeStyles } from '../services/design'
 import { useRoomsWithUser } from '../services/room'
@@ -10,14 +10,14 @@ import { BottomTabLayout } from '../components/templates'
 import { Room } from '../entities'
 
 const RoomScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useStackNavigation()
   const styles = useStyles(makeStyles)
   const inset = useSafeArea()
   const roomsWithUser = useRoomsWithUser() // TODO: roomに"users"を保存させるので、"useRooms"に変える。
 
   const onPressCard = useCallback(
     (room: Room) => {
-      navigation.navigate('Chat', { roomID: room.id })
+      navigation.push('Chat', { roomID: room.id })
     },
     [navigation]
   )

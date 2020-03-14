@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { View, ScrollView, StyleSheet, Dimensions } from 'react-native'
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
+import { useRoute, RouteProp } from '@react-navigation/native'
+import { useStackNavigation } from '../services/route'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
@@ -13,7 +14,7 @@ import { User } from '../entities'
 
 const ChatScreen = () => {
   const { uid } = useAuthState()
-  const navigation = useNavigation()
+  const navigation = useStackNavigation()
   const inset = useSafeArea()
   const route = useRoute<RouteProp<RouteParams, 'Chat'>>()
   const roomID = route.params.roomID
@@ -23,7 +24,7 @@ const ChatScreen = () => {
 
   const onPressAvatar = useCallback(
     (user: User) => {
-      navigation.navigate('User', { userID: user.id })
+      navigation.push('User', { userID: user.id })
     },
     [navigation]
   )

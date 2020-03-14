@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useAuthActions } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
@@ -9,7 +9,7 @@ import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton, ShadowBase } from '../components/atoms'
 
 const WelcomeScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useStackNavigation()
   const inset = useSafeArea()
   const { signInApple, signInGoogle } = useAuthActions()
   const styles = useStyles(makeStyles)
@@ -28,11 +28,11 @@ const WelcomeScreen = () => {
   }, [navigation, signInGoogle])
 
   const goToTerms = useCallback(() => {
-    navigation.navigate('Terms')
+    navigation.push('Terms')
   }, [navigation])
 
   const goToPrivacy = useCallback(() => {
-    navigation.navigate('Privacy')
+    navigation.push('Privacy')
   }, [navigation])
 
   return (

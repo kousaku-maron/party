@@ -5,7 +5,7 @@ import { useSafeArea } from 'react-native-safe-area-context'
 import Carousel from 'react-native-snap-carousel'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { RouteParams } from '../navigators/RouteProps'
-import { Fab } from '../components/atoms'
+import { Fab, ShadowBase, BloomBase } from '../components/atoms'
 import { SwipeCard, Header } from '../components/organisms'
 import { ApplyCard } from '../entities'
 import { useStyles, MakeStyles, useColors } from '../services/design'
@@ -51,30 +51,25 @@ const SwipeCardScreen = () => {
     ({ item }: { item: ApplyCard }) => {
       return (
         <View style={styles.cardContainer}>
-          <View style={styles.withShadow}>
+          <ShadowBase>
             <SwipeCard card={item} />
-          </View>
-          <View style={[styles.fabWrapper, styles.withBloom, { left: 320 / 2 - 40 }]}>
-            <Fab
-              size={80}
-              onPress={() => {
-                onPressGlass(item)
-              }}
-            >
-              <MaterialCommunityIcons name="glass-wine" size={56} color={colors.foregrounds.onTintPrimary} />
-            </Fab>
+          </ShadowBase>
+          <View style={[styles.fabWrapper, { left: 320 / 2 - 40 }]}>
+            <BloomBase>
+              <Fab
+                size={80}
+                onPress={() => {
+                  onPressGlass(item)
+                }}
+              >
+                <MaterialCommunityIcons name="glass-wine" size={56} color={colors.foregrounds.onTintPrimary} />
+              </Fab>
+            </BloomBase>
           </View>
         </View>
       )
     },
-    [
-      colors.foregrounds.onTintPrimary,
-      onPressGlass,
-      styles.cardContainer,
-      styles.fabWrapper,
-      styles.withBloom,
-      styles.withShadow
-    ]
+    [colors.foregrounds.onTintPrimary, onPressGlass, styles.cardContainer, styles.fabWrapper]
   )
 
   const onSnapToItem = useCallback((slideIndex: number) => {

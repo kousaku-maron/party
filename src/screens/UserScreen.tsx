@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
+import { useRoute, RouteProp } from '@react-navigation/native'
+import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
 import { useAuthState } from '../store/hooks'
@@ -16,7 +17,7 @@ import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 
 const UserScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useStackNavigation()
   const route = useRoute<RouteProp<RouteParams, 'User'>>()
   const { uid } = useAuthState()
 
@@ -53,23 +54,23 @@ const UserScreen = () => {
   }, [uid, user])
 
   const goToEdit = useCallback(() => {
-    navigation.navigate('UserEdit')
+    navigation.push('UserEdit')
   }, [navigation])
 
   const goToSetting = useCallback(() => {
-    navigation.navigate('Setting')
+    navigation.push('Setting')
   }, [navigation])
 
   const onPressParty = useCallback(
     ({ type }: Party) => {
-      navigation.navigate('SwipeCard', { type })
+      navigation.push('SwipeCard', { type })
     },
     [navigation]
   )
 
   const onPressUser = useCallback(
     (userID: string) => {
-      navigation.navigate('User', { userID })
+      navigation.push('User', { userID })
     },
     [navigation]
   )
@@ -88,11 +89,13 @@ const UserScreen = () => {
             <Header
               fullWidth={true}
               title="プロフィール"
-              renderRight={() => (
-                <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
-                  <DotsIcon />
-                </TouchableOpacity>
-              )}
+              renderRight={() =>
+                isMy && (
+                  <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
+                    <DotsIcon />
+                  </TouchableOpacity>
+                )
+              }
             />
           </View>
 

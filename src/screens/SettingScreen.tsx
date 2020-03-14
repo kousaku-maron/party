@@ -1,23 +1,23 @@
 import React, { useCallback } from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useAuthState, useAuthActions } from '../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../services/design'
-import { useSecure } from '../services/secure'
+// import { useSecure } from '../services/secure'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, View } from 'react-native'
 import { ShadowBase } from '../components/atoms'
 import { Header } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 
 const SettingScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useStackNavigation()
   const { user } = useAuthState()
   const { signOut } = useAuthActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
   const inset = useSafeArea()
 
-  const secure = useSecure(user.uid)
+  // const secure = useSecure(user.uid)
 
   // MEMO: logOutするとuserデータがなくなってしまうので、先に画面遷移させる。
   const onLogOut = useCallback(() => {
@@ -26,7 +26,7 @@ const SettingScreen = () => {
   }, [navigation, signOut])
 
   const goToTerms = useCallback(() => {
-    navigation.navigate('Terms')
+    navigation.push('Terms')
   }, [navigation])
 
   //TODO: 退会画面をいれる
@@ -35,10 +35,10 @@ const SettingScreen = () => {
   }, [])
 
   const goToPrivacy = useCallback(() => {
-    navigation.navigate('Privacy')
+    navigation.push('Privacy')
   }, [navigation])
 
-  if (!user || !secure) {
+  if (!user) {
     return <LoadingPage />
   }
 

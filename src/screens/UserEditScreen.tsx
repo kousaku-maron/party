@@ -84,7 +84,7 @@ const UserEditScreen = () => {
                 </ShadowBase>
 
                 <View style={styles.editFab}>
-                  <Fab size={40} color={colors.tints.primary.main} onPress={updateUserState}>
+                  <Fab size={40} color={colors.tints.primary.main} onPress={onChangeThumbnailURL}>
                     <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={26} />
                   </Fab>
                 </View>
