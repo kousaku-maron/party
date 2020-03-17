@@ -11,8 +11,7 @@ const PrivacyScreen = () => {
 
   return (
     <React.Fragment>
-      <View style={(styles.headerBackground, { paddingTop: inset.top })}>
-        <View style={styles.headerTopSpacer} />
+      <View style={(styles.headerBackground, { paddingTop: inset.top + 36 })}>
         <View style={styles.headerContainer}>
           <Header fullWidth={true} title="プライバシー・ポリシー" />
         </View>

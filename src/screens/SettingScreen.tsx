@@ -105,7 +105,7 @@ const makeStyles: MakeStyles = colors =>
       paddingBottom: 20
     },
     headerTopSpacer: {
-      paddingBottom: 48
+      paddingBottom: 36
     },
     scrollView: {
       width: '100%',
