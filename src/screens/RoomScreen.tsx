@@ -45,6 +45,9 @@ const RoomScreen = () => {
               </ShadowBase>
             </View>
           ))}
+
+          {/* MEMO: tab height 70px */}
+          <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
         </ScrollView>
       </View>
     </BottomTabLayout>
@@ -72,7 +75,7 @@ const makeStyles: MakeStyles = colors =>
       paddingHorizontal: 24
     },
     headerTopSpacer: {
-      paddingBottom: 48
+      paddingBottom: 36
     },
     headerBottomSpacer: {
       paddingBottom: 20
