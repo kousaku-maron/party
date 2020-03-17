@@ -45,6 +45,9 @@ const RoomScreen = () => {
               </ShadowBase>
             </View>
           ))}
+
+          {/* MEMO: tab height 70px */}
+          <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
         </ScrollView>
       </View>
     </BottomTabLayout>
