@@ -108,7 +108,7 @@ const makeStyles: MakeStyles = colors =>
       paddingHorizontal: 24
     },
     headerTopSpacer: {
-      paddingBottom: 48
+      paddingBottom: 36
     }
   })
 
