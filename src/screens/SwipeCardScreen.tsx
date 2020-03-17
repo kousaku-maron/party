@@ -80,7 +80,7 @@ const SwipeCardScreen = () => {
     <ImageBackground
       blurRadius={15}
       source={{ uri: backgroundURL }}
-      style={[styles.container, { paddingTop: inset.top }]}
+      style={[styles.container, { paddingTop: inset.top + 36 }]}
     >
       <View style={styles.headerContainer}>
         <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />

@@ -226,7 +226,7 @@ const makeStyles: MakeStyles = colors =>
       width: '100%'
     },
     headerTopSpacer: {
-      paddingBottom: 48
+      paddingBottom: 36
     },
     headerBottomSpacer: {
       paddingBottom: 48
