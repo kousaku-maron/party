@@ -34,7 +34,8 @@ const ChatScreen = () => {
       <ScrollView
         style={[styles.scrollView, { paddingTop: inset.top }]}
         stickyHeaderIndices={[1]}
-        showsVerticalScrollIndicator={false}
+        // メッセージは、スクロールできる長さが不確実なためインジゲーターを表示させることにしている。
+        // showsVerticalScrollIndicator={false}
       >
         <View style={styles.headerTopSpacer} />
 
@@ -53,6 +54,9 @@ const ChatScreen = () => {
             </View>
           )
         })}
+
+        {/* MEMO: tab height 70px */}
+        <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
       </ScrollView>
 
       <View style={[styles.tabContainer, { paddingBottom: inset.bottom }]}>

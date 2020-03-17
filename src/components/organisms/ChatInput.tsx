@@ -21,6 +21,7 @@ const ChatInput: React.FC<Props> = ({ width = 350, height = tabHeight, fullWidth
   const onSubmit = useCallback(() => {
     if (!onSend) return
     onSend(text)
+    setText('')
   }, [onSend, text])
 
   return (
