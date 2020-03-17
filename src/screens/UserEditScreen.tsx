@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
@@ -6,6 +6,7 @@ import { UpdateUser } from '../entities'
 import { useAuthState, useUIActions } from '../store/hooks'
 import * as UserRepository from '../repositories/user'
 import { useStyles, useColors, MakeStyles } from '../services/design'
+import { useKeyboardState } from '../services/ui'
 import { useUserEditTools } from '../services/user'
 import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native'
 import { Feather } from '@expo/vector-icons'
@@ -23,6 +24,14 @@ const UserEditScreen = () => {
 
   const styles = useStyles(makeStyles)
   const colors = useColors()
+
+  const { visible: keyboardVisible } = useKeyboardState({ useWillShow: true })
+  const scrollviewRef = useRef(null)
+  useEffect(() => {
+    if (keyboardVisible && scrollviewRef.current) {
+      scrollviewRef.current.scrollToEnd()
+    }
+  }, [keyboardVisible])
 
   const {
     name,
@@ -66,6 +75,7 @@ const UserEditScreen = () => {
         scrollIndicatorInsets={{ right: 1 }}
         stickyHeaderIndices={[1]}
         showsVerticalScrollIndicator={false}
+        ref={ref => (scrollviewRef.current = ref)}
       >
         <View style={styles.headerTopSpacer} />
 
@@ -102,49 +112,51 @@ const UserEditScreen = () => {
 
           <ShadowBase>
             <View style={styles.contentsContainer}>
-              <View style={styles.nameWrapper}>
-                <TextField
-                  label="ニックネーム"
-                  value={name}
-                  onChangeText={onChangeName}
-                  onFocus={onFocusName}
-                  onSubmitEditing={onResetFocusInputName}
-                  fullWidth={true}
-                />
-              </View>
+              <View style={{ width: '100%', paddingBottom: 48 }}>
+                <View style={styles.nameWrapper}>
+                  <TextField
+                    label="ニックネーム"
+                    value={name}
+                    onChangeText={onChangeName}
+                    onFocus={onFocusName}
+                    onSubmitEditing={onResetFocusInputName}
+                    fullWidth={true}
+                  />
+                </View>
 
-              <View style={styles.userIDWrapper}>
-                <TextField
-                  label="ID"
-                  value={userID}
-                  onChangeText={onChangeUserID}
-                  onFocus={onFocusUserID}
-                  onSubmitEditing={onResetFocusInputName}
-                  fullWidth={true}
-                />
-              </View>
+                <View style={styles.userIDWrapper}>
+                  <TextField
+                    label="ID"
+                    value={userID}
+                    onChangeText={onChangeUserID}
+                    onFocus={onFocusUserID}
+                    onSubmitEditing={onResetFocusInputName}
+                    fullWidth={true}
+                  />
+                </View>
 
-              <View style={styles.introWrapper}>
-                <TextField
-                  label="自己紹介"
-                  multiline={true}
-                  value={introduction}
-                  onChangeText={onChangeIntroduction}
-                  onFocus={onFocusIntroduction}
-                  onSubmitEditing={onResetFocusInputName}
-                  fullWidth={true}
-                />
-              </View>
+                <View style={styles.introWrapper}>
+                  <TextField
+                    label="自己紹介"
+                    multiline={true}
+                    value={introduction}
+                    onChangeText={onChangeIntroduction}
+                    onFocus={onFocusIntroduction}
+                    onSubmitEditing={onResetFocusInputName}
+                    fullWidth={true}
+                  />
+                </View>
 
-              <View style={styles.preferNumberWrapper}>
-                <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} disabled={true} />
+                <View style={styles.preferNumberWrapper}>
+                  <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} disabled={true} />
+                </View>
               </View>
             </View>
           </ShadowBase>
         </View>
-      </ScrollView>
 
-      {focusInputName && <KeyboardSpacer />}
+        {focusInputName && <KeyboardSpacer />}
+      </ScrollView>
     </View>
   )
 }
@@ -173,7 +185,7 @@ const makeStyles: MakeStyles = colors =>
       width: '100%',
       height: '100%',
       backgroundColor: colors.backgrounds.secondary,
-      paddingVertical: 50,
+      paddingTop: 50,
       borderTopRightRadius: 40,
       borderTopLeftRadius: 40
     },

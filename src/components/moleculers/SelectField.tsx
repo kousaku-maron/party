@@ -36,7 +36,7 @@ const SelectField = ({ label, value, onPress, disabled = false, width = 250, hei
       </View>
 
       <View style={[styles.tail, { height: 16 + height }]}>
-        <Ionicons name="ios-arrow-forward" size={14} />
+        <Ionicons name="ios-arrow-down" size={14} />
       </View>
     </TouchableOpacity>
   )

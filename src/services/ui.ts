@@ -1,5 +1,5 @@
-import { useRef, useMemo } from 'react'
-import { Animated, PanResponder, Dimensions } from 'react-native'
+import { useRef, useMemo, useState, useEffect, useCallback } from 'react'
+import { Animated, PanResponder, Dimensions, Keyboard } from 'react-native'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
@@ -70,4 +70,43 @@ export const useTinderSwipeAnimation = ({ onSwipeRight, onSwipeLeft }: TinderSwi
   )
 
   return { panHandlers: panResponder.panHandlers, targetStyle: rotateAndTranslate }
+}
+
+export const useKeyboardState = ({
+  useWillShow = false,
+  useWillHide = false
+}: {
+  useWillShow?: boolean
+  useWillHide?: boolean
+}) => {
+  const [visible, setVisible] = useState<boolean>(false)
+
+  const showEvent = useWillShow ? 'keyboardWillShow' : 'keyboardDidShow'
+  const hideEvent = useWillHide ? 'keyboardWillHide' : 'keyboardDidHide'
+
+  const onKeyboardShow = useCallback(() => {
+    setVisible(true)
+  }, [])
+
+  const onKeyboardHide = useCallback(() => {
+    setVisible(false)
+  }, [])
+
+  useEffect(() => {
+    Keyboard.addListener(showEvent, onKeyboardShow)
+
+    return () => {
+      Keyboard.removeListener(showEvent, onKeyboardShow)
+    }
+  }, [onKeyboardShow, showEvent])
+
+  useEffect(() => {
+    Keyboard.addListener(hideEvent, onKeyboardHide)
+
+    return () => {
+      Keyboard.removeListener(hideEvent, onKeyboardHide)
+    }
+  }, [hideEvent, onKeyboardHide])
+
+  return { visible }
 }
