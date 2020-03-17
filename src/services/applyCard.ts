@@ -29,12 +29,17 @@ export const useAppliedCards = () => {
     InteractionManager.runAfterInteractions(() => {
       if (!user) return
       const applyCardsRef = getApplyCardsRef(user.uid)
-      const unsubscribe = applyCardsRef.onSnapshot(snapShot => {
-        const newApplyCards: ApplyCard[] = snapShot.docs.map(doc => {
-          return buildApplyCard(doc.id, doc.data())
-        })
-        setCards(newApplyCards)
-      })
+      const unsubscribe = applyCardsRef.onSnapshot(
+        snapShot => {
+          const newApplyCards: ApplyCard[] = snapShot.docs.map(doc => {
+            return buildApplyCard(doc.id, doc.data())
+          })
+          setCards(newApplyCards)
+        },
+        error => {
+          console.info('catch useAppliedCards error', error)
+        }
+      )
 
       return () => {
         unsubscribe()
@@ -54,12 +59,17 @@ export const useAppliedCardsByType = (type: string) => {
     InteractionManager.runAfterInteractions(() => {
       if (!user) return
       const applyCardsRef = getApplyCardsRef(user.uid).where('type', '==', type)
-      const unsubscribe = applyCardsRef.onSnapshot(snapShot => {
-        const newApplyCards: ApplyCard[] = snapShot.docs.map(doc => {
-          return buildApplyCard(doc.id, doc.data())
-        })
-        setCards(newApplyCards)
-      })
+      const unsubscribe = applyCardsRef.onSnapshot(
+        snapShot => {
+          const newApplyCards: ApplyCard[] = snapShot.docs.map(doc => {
+            return buildApplyCard(doc.id, doc.data())
+          })
+          setCards(newApplyCards)
+        },
+        error => {
+          console.info('catch useAppliedCardsByType error', error)
+        }
+      )
 
       return () => {
         unsubscribe()

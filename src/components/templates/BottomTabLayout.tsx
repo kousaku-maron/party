@@ -6,7 +6,14 @@ import { useGoBackState } from '../../services/route'
 import { ShadowBase } from '../atoms'
 import { BottomTab } from '../organisms'
 
-const BottomTabLayout: React.FC<{}> = ({ children }) => {
+type Props = {
+  tintColor?: string
+  headerTitle?: string
+  renderHeaderTitle?: () => React.ReactElement
+  renderHeaderRight?: () => React.ReactElement
+}
+
+const BottomTabLayout: React.FC<Props> = ({ children }) => {
   const inset = useSafeArea()
   const styles = useStyles(makeStyles)
   const { enabled } = useGoBackState()
@@ -33,7 +40,7 @@ const makeStyles: MakeStyles = () =>
       position: 'absolute',
       bottom: 0,
       width: fullWidth,
-      paddingHorizontal: 12
+      paddingHorizontal: 24
     }
   })
 

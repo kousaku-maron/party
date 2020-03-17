@@ -26,23 +26,19 @@ const MatchingScreen = () => {
     return uid
   }, [route.params, uid])
 
-  //MEMO: 現状は固定
-  //   const partyID = useMemo(() => {
-  //     if (route.params?.partyID) {
-  //       return route.params.partyID
-  //     }
-  //     return uid
-  //   }, [route.params, uid])
-  const partyID = 'ifnY4xa1BmHlf0qdQR2Z'
+  const partyID = useMemo(() => {
+    if (route.params?.partyID) {
+      return route.params.partyID
+    }
+    return uid
+  }, [route.params, uid])
 
-  //MEMO: 現状は固定
-  //   const groupID = useMemo(() => {
-  //     if (route.params?.groupID) {
-  //       return route.params.groupID
-  //     }
-  //     return uid
-  //   }, [route.params, uid])
-  const groupID = 'HJgkR571hbcRAF7fD4A9'
+  const groupID = useMemo(() => {
+    if (route.params?.groupID) {
+      return route.params.groupID
+    }
+    return uid
+  }, [route.params, uid])
 
   const targetUser = useUser(targetUserID)
   const party = useParty(partyID)
@@ -68,16 +64,14 @@ const MatchingScreen = () => {
       style={[styles.container, { paddingTop: inset.top }]}
     >
       <View style={styles.partyDescriptionArea}>
-        <ShadowBase>
-          <View style={styles.partyDescriptionContainer}>
-            <View style={styles.partyTitleTextWrapper}>
-              <Text style={styles.partyTitleText}>大衆居酒屋で乾杯</Text>
-            </View>
-            <View style={styles.partyAreaTextWrapper}>
-              <Text style={styles.partyAreaText}>{party.name}エリア</Text>
-            </View>
+        <View style={styles.partyDescriptionContainer}>
+          <View style={styles.partyTitleTextWrapper}>
+            <Text style={styles.partyTitleText}>{party.name}</Text>
           </View>
-        </ShadowBase>
+          <View style={styles.partyAreaTextWrapper}>
+            <Text style={styles.partyAreaText}>東京エリア</Text>
+          </View>
+        </View>
 
         <View style={styles.matchingContainer}>
           <View style={styles.thumbnailWrapper}>
@@ -113,14 +107,12 @@ const MatchingScreen = () => {
         </View>
 
         <View style={styles.closeButtonWrapper}>
-          <ShadowBase>
-            <TouchableOpacity
-              style={{ width: 240, height: 50, alignItems: 'center', justifyContent: 'center' }}
-              onPress={onPressClose}
-            >
-              <Text style={styles.closeText}>とじる</Text>
-            </TouchableOpacity>
-          </ShadowBase>
+          <TouchableOpacity
+            style={{ width: 240, height: 50, alignItems: 'center', justifyContent: 'center' }}
+            onPress={onPressClose}
+          >
+            <Text style={styles.closeText}>とじる</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ImageBackground>

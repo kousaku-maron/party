@@ -20,13 +20,18 @@ export const useMembers = (partyID: string, groupID: string) => {
         .doc(groupID)
         .collection('members')
       if (!user) return
-      const unsubscribe = membersRef.onSnapshot(snapShot => {
-        const newMembers: User[] = snapShot.docs.map(doc => {
-          return buildUser(doc.id, doc.data())
-        })
+      const unsubscribe = membersRef.onSnapshot(
+        snapShot => {
+          const newMembers: User[] = snapShot.docs.map(doc => {
+            return buildUser(doc.id, doc.data())
+          })
 
-        setMembers(newMembers)
-      })
+          setMembers(newMembers)
+        },
+        error => {
+          console.info('catch useMembers error', error)
+        }
+      )
 
       return () => {
         unsubscribe()

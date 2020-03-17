@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet, ScrollView, View, Text, Dimensions } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import Carousel from 'react-native-snap-carousel'
 import { Party } from '../entities'
@@ -19,7 +19,7 @@ const popularTags = ['popular']
 
 const HomeScreen = () => {
   const { top: insetTop, bottom: insetBottom } = useSafeArea()
-  const navigation = useNavigation()
+  const navigation = useStackNavigation()
   const styles = useStyles(makeStyles)
   const { user, uid } = useAuthState()
 
@@ -31,7 +31,7 @@ const HomeScreen = () => {
 
   const onPressParty = useCallback(
     ({ type }: Party) => {
-      navigation.navigate('SwipeCard', { type })
+      navigation.push('SwipeCard', { type })
     },
     [navigation]
   )
@@ -73,6 +73,7 @@ const HomeScreen = () => {
       <View style={styles.container}>
         <ScrollView
           contentContainerStyle={[styles.scrollView, { paddingTop: insetTop + 24, paddingBottom: insetBottom + 24 }]}
+          showsVerticalScrollIndicator={false}
         >
           <View style={styles.parimaryTitleTextWrapper}>
             <Text style={styles.parimaryTitleText}>人気</Text>
@@ -80,11 +81,11 @@ const HomeScreen = () => {
           <Carousel
             data={popularParties}
             renderItem={renderItem}
-            itemWidth={320 + 30} // MEMO: add 30px margin
+            itemWidth={320 + 20} // MEMO: add 30px margin
             activeSlideAlignment={'start'}
             sliderWidth={Dimensions.get('window').width}
             slideStyle={{ paddingLeft: 24 }}
-            inactiveSlideOpacity={0.4}
+            inactiveSlideOpacity={0.7}
           />
 
           {/* MEMO: カルーセル自体にcssを設定したくなかったので、別コンポーネントでレイアウト調整している */}

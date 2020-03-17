@@ -1,22 +1,23 @@
 import React, { useCallback } from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useAuthState, useAuthActions } from '../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../services/design'
-import { useSecure } from '../services/secure'
+// import { useSecure } from '../services/secure'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, View } from 'react-native'
 import { ShadowBase } from '../components/atoms'
+import { Header } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 
 const SettingScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useStackNavigation()
   const { user } = useAuthState()
   const { signOut } = useAuthActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
   const inset = useSafeArea()
 
-  const secure = useSecure(user.uid)
+  // const secure = useSecure(user.uid)
 
   // MEMO: logOutするとuserデータがなくなってしまうので、先に画面遷移させる。
   const onLogOut = useCallback(() => {
@@ -25,7 +26,7 @@ const SettingScreen = () => {
   }, [navigation, signOut])
 
   const goToTerms = useCallback(() => {
-    navigation.navigate('Terms')
+    navigation.push('Terms')
   }, [navigation])
 
   //TODO: 退会画面をいれる
@@ -34,17 +35,28 @@ const SettingScreen = () => {
   }, [])
 
   const goToPrivacy = useCallback(() => {
-    navigation.navigate('Privacy')
+    navigation.push('Privacy')
   }, [navigation])
 
-  if (!user || !secure) {
+  if (!user) {
     return <LoadingPage />
   }
 
   return (
     <View style={styles.container}>
-      {/* 33px => header height */}
-      <ScrollView style={(styles.scrollView, { paddingTop: 33 + 25 + inset.top })}>
+      <ScrollView
+        style={(styles.scrollView, { paddingTop: inset.top })}
+        stickyHeaderIndices={[1]}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.headerTopSpacer} />
+
+        <View style={styles.headerContainer}>
+          <Header fullWidth={true} title="設定" />
+        </View>
+
+        <View style={styles.headerBottomSpacer} />
+
         <ShadowBase>
           <View style={styles.ruleCardWrapper}>
             <View style={styles.ruleCard}>
@@ -85,13 +97,24 @@ const makeStyles: MakeStyles = colors =>
       height: '100%',
       backgroundColor: colors.backgrounds.primary
     },
+    headerContainer: {
+      width: '100%',
+      paddingHorizontal: 24
+    },
+    headerBottomSpacer: {
+      paddingBottom: 20
+    },
+    headerTopSpacer: {
+      paddingBottom: 48
+    },
     scrollView: {
       width: '100%',
       paddingHorizontal: 24
     },
     ruleCardWrapper: {
       width: '100%',
-      paddingBottom: 20
+      paddingBottom: 20,
+      paddingHorizontal: 24
     },
     listItem: {
       paddingVertical: 10,

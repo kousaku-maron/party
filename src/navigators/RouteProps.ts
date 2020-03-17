@@ -19,4 +19,9 @@ export type RouteParams = {
   SwipeCard: {
     type: string
   }
+  Matching: {
+    userID: string
+    partyID: string
+    groupID: string
+  }
 }

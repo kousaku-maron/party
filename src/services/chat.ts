@@ -56,7 +56,7 @@ export const useMessages = (roomID: string) => {
           setMessages(messages)
         },
         error: (error: Error) => {
-          console.warn(error)
+          console.info('catch useMessages error', error)
         },
         complete: () => {
           // console.info('complete messages onSnaoshot.')

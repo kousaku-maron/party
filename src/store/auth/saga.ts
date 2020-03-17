@@ -4,7 +4,6 @@ import { buildUser } from '../../entities'
 import { authActions } from './actions'
 import { db } from '../../repositories/firebase'
 import firebase from '../../repositories/firebase'
-// import * as userRepository from '../../repositories/user'
 import { signInApple, signInGoogle, signInFacebook, signOut, signInAnonymously } from '../../services/authentication'
 
 const usersRef = db.collection('users')
@@ -28,7 +27,6 @@ function* checkAuthState() {
     if (user && !error) {
       yield put(authActions.setAuth(user.uid))
       yield fork(getMyUser, user.uid)
-      // yield put(authActions.getMyUserRequest(user.uid))
     } else {
       yield put(authActions.resetAuth())
     }

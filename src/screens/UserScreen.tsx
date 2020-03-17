@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'
+import { useRoute, RouteProp } from '@react-navigation/native'
+import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
 import { useAuthState } from '../store/hooks'
@@ -11,12 +12,12 @@ import { useFriends } from '../services/friend'
 import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import { Feather, AntDesign } from '@expo/vector-icons'
 import { Thumbnail, Fab, DotsIcon, ShadowBase, BloomBase } from '../components/atoms'
-import { PartySecondaryCard } from '../components/organisms'
+import { PartySecondaryCard, Header } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 
 const UserScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useStackNavigation()
   const route = useRoute<RouteProp<RouteParams, 'User'>>()
   const { uid } = useAuthState()
 
@@ -53,23 +54,23 @@ const UserScreen = () => {
   }, [uid, user])
 
   const goToEdit = useCallback(() => {
-    navigation.navigate('UserEdit')
+    navigation.push('UserEdit')
   }, [navigation])
 
   const goToSetting = useCallback(() => {
-    navigation.navigate('Setting')
+    navigation.push('Setting')
   }, [navigation])
 
   const onPressParty = useCallback(
     ({ type }: Party) => {
-      navigation.navigate('SwipeCard', { type })
+      navigation.push('SwipeCard', { type })
     },
     [navigation]
   )
 
   const onPressUser = useCallback(
     (userID: string) => {
-      navigation.navigate('User', { userID })
+      navigation.push('User', { userID })
     },
     [navigation]
   )
@@ -80,145 +81,151 @@ const UserScreen = () => {
 
   return (
     <BottomTabLayout>
-      {/* 33px => header height */}
       <View style={(styles.container, { paddingTop: inset.top })}>
-        <View style={[styles.header]}>
-          <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
-            <DotsIcon />
-          </TouchableOpacity>
-        </View>
+        <ScrollView style={styles.userScrollView} stickyHeaderIndices={[1]} showsVerticalScrollIndicator={false}>
+          <View style={styles.headerTopSpacer} />
 
-        <ScrollView style={styles.userScrollView}>
-          <View style={styles.profileContainer}>
-            <View style={styles.profileWrapper}>
-              <View style={styles.thumbnailWrapper}>
-                <ShadowBase>
-                  <Thumbnail uri={user.thumbnailURL} size={80} />
-                </ShadowBase>
-              </View>
-
-              <View style={styles.nameWrapper}>
-                <Text style={styles.nameText}>{user.name}</Text>
-              </View>
-
-              <View style={styles.introWrapper}>
-                <Text style={styles.introText}>
-                  自己紹介分、サンプル。私の趣味はボルダリングです！ 運動も飲みも好きなので、あそびましょー。
-                </Text>
-              </View>
-
-              {isFriend && !isBlocked && !isMy && (
-                <View style={styles.friendTextWrapper}>
-                  <Text style={styles.friendText}>ともだち</Text>
-                </View>
-              )}
-
-              {isBlocked && !isMy && (
-                <View style={styles.blockTextWrapper}>
-                  <Text style={styles.blockText}>ブロック中</Text>
-                </View>
-              )}
-            </View>
+          <View style={styles.headerContainer}>
+            <Header
+              fullWidth={true}
+              title="プロフィール"
+              renderRight={() =>
+                isMy && (
+                  <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
+                    <DotsIcon />
+                  </TouchableOpacity>
+                )
+              }
+            />
           </View>
 
-          <ShadowBase intensity={2}>
-            <View style={styles.contentsContainer}>
-              {isMy && (
-                <View style={styles.fabWrapper}>
-                  <BloomBase intensity={2}>
-                    <Fab size={64} onPress={goToEdit}>
-                      <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={36} />
-                    </Fab>
-                  </BloomBase>
-                </View>
-              )}
+          <View style={styles.headerBottomSpacer} />
 
-              {!isMy && !isFriend && !isBlocked && (
-                <View style={styles.fabWrapper}>
-                  <BloomBase>
-                    <Fab size={64}>
-                      <AntDesign name="adduser" color={colors.foregrounds.onTintPrimary} size={36} />
-                    </Fab>
-                  </BloomBase>
+          <View style={styles.profileArea}>
+            <View style={styles.profileContainer}>
+              <View style={styles.profileWrapper}>
+                <View style={styles.thumbnailWrapper}>
+                  <ShadowBase>
+                    <Thumbnail uri={user.thumbnailURL} size={80} />
+                  </ShadowBase>
                 </View>
-              )}
 
-              {!isBlocked && (
-                <View style={styles.cardsContainer}>
-                  <Text style={styles.contentsTitleText}>参加中</Text>
-                  <View style={styles.carouselBottomSpace} />
-                  <ScrollView
-                    horizontal={true}
-                    style={styles.allAppliedPartiesScrollView}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    {appliedParties &&
-                      appliedParties.map(appliedParty => (
-                        <View key={appliedParty.id} style={styles.secondaryCardWrapper}>
-                          <ShadowBase intensity={2}>
-                            <PartySecondaryCard
-                              party={appliedParty}
-                              width={fullWidth * 0.4}
-                              height={fullWidth * 0.55}
-                              onPress={onPressParty}
-                            />
-                          </ShadowBase>
-                        </View>
-                      ))}
-                  </ScrollView>
+                <View style={styles.nameWrapper}>
+                  <Text style={styles.nameText}>{user.name}</Text>
                 </View>
-              )}
 
-              {!isBlocked && (
-                <View style={styles.friendsContainer}>
-                  <Text style={styles.contentsTitleText}>ともだち</Text>
-                  <ScrollView
-                    horizontal={true}
-                    style={styles.allFriendsScrollView}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    {friends &&
-                      friends.map(friend => {
-                        if (friend) {
-                          return (
-                            //MEMO: ShowBase入れると変になるから抜いているが良いのか？
-                            <View key={friend.id} style={styles.friendThumbnailWrapper}>
-                              <View style={styles.friendShowBaseWrapper}>
-                                <ShadowBase intensity={2}>
-                                  <Thumbnail
-                                    uri={friend.thumbnailURL}
-                                    size={60}
-                                    onPress={() => {
-                                      onPressUser(friend.uid)
-                                    }}
-                                  />
-                                </ShadowBase>
-                              </View>
-                              <Text style={styles.friendNameText}>{friend.name}</Text>
-                            </View>
-                          )
-                        }
-                      })}
-                  </ScrollView>
+                <View style={styles.introWrapper}>
+                  <Text style={styles.introText}>
+                    自己紹介分、サンプル。私の趣味はボルダリングです！ 運動も飲みも好きなので、あそびましょー。
+                  </Text>
                 </View>
-              )}
 
-              {isBlocked && (
-                <View style={styles.blockMessageContainer}>
-                  <Text style={styles.blockMessageText}>ブロックしたユーザーの</Text>
-                  <Text style={styles.blockMessageText}>情報は見れません</Text>
-                </View>
-              )}
+                {isFriend && !isBlocked && !isMy && (
+                  <View style={styles.friendTextWrapper}>
+                    <Text style={styles.friendText}>ともだち</Text>
+                  </View>
+                )}
+
+                {isBlocked && !isMy && (
+                  <View style={styles.blockTextWrapper}>
+                    <Text style={styles.blockText}>ブロック中</Text>
+                  </View>
+                )}
+              </View>
             </View>
-          </ShadowBase>
+
+            <ShadowBase>
+              <View style={styles.contentsContainer}>
+                {isMy && (
+                  <View style={styles.fabWrapper}>
+                    <BloomBase>
+                      <Fab size={64} onPress={goToEdit}>
+                        <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={36} />
+                      </Fab>
+                    </BloomBase>
+                  </View>
+                )}
+
+                {!isMy && !isFriend && !isBlocked && (
+                  <View style={styles.fabWrapper}>
+                    <BloomBase>
+                      <Fab size={75}>
+                        <AntDesign name="adduser" color={colors.foregrounds.onTintPrimary} size={36} />
+                      </Fab>
+                    </BloomBase>
+                  </View>
+                )}
+
+                {!isBlocked && (
+                  <View style={styles.cardsContainer}>
+                    <Text style={styles.contentsTitleText}>参加中</Text>
+                    <View style={styles.carouselBottomSpace} />
+                    <ScrollView
+                      horizontal={true}
+                      style={styles.allAppliedPartiesScrollView}
+                      showsHorizontalScrollIndicator={false}
+                    >
+                      {appliedParties &&
+                        appliedParties.map(appliedParty => (
+                          <View key={appliedParty.id} style={styles.secondaryCardWrapper}>
+                            <ShadowBase intensity={2}>
+                              <PartySecondaryCard party={appliedParty} onPress={onPressParty} />
+                            </ShadowBase>
+                          </View>
+                        ))}
+                    </ScrollView>
+                  </View>
+                )}
+
+                {!isBlocked && (
+                  <View style={styles.friendsContainer}>
+                    <Text style={styles.contentsTitleText}>ともだち</Text>
+                    <ScrollView
+                      horizontal={true}
+                      style={styles.allFriendsScrollView}
+                      showsHorizontalScrollIndicator={false}
+                    >
+                      {friends &&
+                        friends.map(friend => {
+                          if (friend) {
+                            return (
+                              //MEMO: ShowBase入れると変になるから抜いているが良いのか？
+                              <View key={friend.id} style={styles.friendThumbnailWrapper}>
+                                <View style={styles.friendShowBaseWrapper}>
+                                  <ShadowBase intensity={2}>
+                                    <Thumbnail
+                                      uri={friend.thumbnailURL}
+                                      size={60}
+                                      onPress={() => {
+                                        onPressUser(friend.uid)
+                                      }}
+                                    />
+                                  </ShadowBase>
+                                </View>
+                                <Text style={styles.friendNameText}>{friend.name}</Text>
+                              </View>
+                            )
+                          }
+                        })}
+                    </ScrollView>
+                  </View>
+                )}
+
+                {isBlocked && (
+                  <View style={styles.blockMessageContainer}>
+                    <Text style={styles.blockMessageText}>ブロックしたユーザーの</Text>
+                    <Text style={styles.blockMessageText}>情報は見れません</Text>
+                  </View>
+                )}
+              </View>
+            </ShadowBase>
+          </View>
         </ScrollView>
       </View>
     </BottomTabLayout>
   )
 }
 
-// const hairlineWidth = StyleSheet.hairlineWidth
-const fullHeight = Dimensions.get('window').height
 const fullWidth = Dimensions.get('window').width
 
 const makeStyles: MakeStyles = colors =>
@@ -231,32 +238,28 @@ const makeStyles: MakeStyles = colors =>
       position: 'relative',
       backgroundColor: colors.backgrounds.primary
     },
-    header: {
+    headerContainer: {
       width: '100%',
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      height: 34
+      paddingHorizontal: 24
     },
     profileContainer: {
       display: 'flex',
       justifyContent: 'flex-end',
       alignItems: 'center',
       width: '100%',
-      height: fullHeight * 0.61,
+      minHeight: 400,
       paddingBottom: 42
     },
     contentsContainer: {
       position: 'relative',
       display: 'flex',
       width: '100%',
-      minHeight: fullHeight * 0.3,
+      height: '100%',
       backgroundColor: colors.backgrounds.secondary,
-      paddingVertical: 56,
-      paddingHorizontal: 32,
-      borderTopRightRadius: 20,
-      borderTopLeftRadius: 20
+      paddingVertical: 50,
+      paddingHorizontal: 24,
+      borderTopRightRadius: 40,
+      borderTopLeftRadius: 40
     },
     cardsContainer: {
       paddingBottom: 32
@@ -277,7 +280,12 @@ const makeStyles: MakeStyles = colors =>
       right: 32
     },
     userScrollView: {
-      width: '100%'
+      width: '100%',
+      height: '100%'
+    },
+    profileArea: {
+      flexGrow: 1,
+      height: '100%'
     },
     thumbnailWrapper: {
       paddingBottom: 18
@@ -303,6 +311,12 @@ const makeStyles: MakeStyles = colors =>
       fontSize: 18,
       color: colors.foregrounds.primary,
       fontWeight: 'bold'
+    },
+    headerTopSpacer: {
+      paddingBottom: 48
+    },
+    headerBottomSpacer: {
+      paddingBottom: 48
     },
     idText: {
       fontSize: 12,

@@ -26,13 +26,18 @@ export const useGroups = (partyID: string) => {
     InteractionManager.runAfterInteractions(() => {
       const groupsRef = partiesRef.doc(partyID).collection('groups')
       if (!user) return
-      const unsubscribe = groupsRef.where('enabled', '==', true).onSnapshot(snapShot => {
-        const newGroups: Group[] = snapShot.docs.map(doc => {
-          return buildGroup(doc.id, doc.data())
-        })
+      const unsubscribe = groupsRef.where('enabled', '==', true).onSnapshot(
+        snapShot => {
+          const newGroups: Group[] = snapShot.docs.map(doc => {
+            return buildGroup(doc.id, doc.data())
+          })
 
-        setGroups(newGroups)
-      })
+          setGroups(newGroups)
+        },
+        error => {
+          console.info('catch useGroups error', error)
+        }
+      )
 
       return () => {
         unsubscribe()
@@ -52,10 +57,15 @@ export const useGroup = (partyID: string, groupID: string) => {
     InteractionManager.runAfterInteractions(() => {
       const groupsRef = partiesRef.doc(partyID).collection('groups')
       if (!user) return
-      const unsubscribe = groupsRef.doc(groupID).onSnapshot((doc: firebase.firestore.DocumentSnapshot) => {
-        const newGroup = buildGroup(doc.id, doc.data())
-        setGroup(newGroup)
-      })
+      const unsubscribe = groupsRef.doc(groupID).onSnapshot(
+        (doc: firebase.firestore.DocumentSnapshot) => {
+          const newGroup = buildGroup(doc.id, doc.data())
+          setGroup(newGroup)
+        },
+        error => {
+          console.info('catch useGroup error', error)
+        }
+      )
       return () => {
         unsubscribe()
       }
@@ -76,11 +86,12 @@ export const useApplyGroup = () => {
         showEntryPartyAlreadyAppliedMessage()
         return
       }
-      const { organizerUID, organizer, thumbnailURL } = group
-      const pickedGroup = { organizerUID, organizer, thumbnailURL }
 
+      const { organizerUID, organizer, thumbnailURL } = group
       const _updateGroup: UpdateGroup = {
-        ...pickedGroup,
+        organizerUID,
+        organizer,
+        thumbnailURL,
         appliedUIDs: _.uniq([...group.appliedUIDs, uid])
       }
       try {

@@ -5,7 +5,8 @@ import {
   KeyboardTypeOptions,
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
-  StyleSheet
+  StyleSheet,
+  TextInputFocusEventData
 } from 'react-native'
 import { TextInput } from '../atoms'
 import { useStyles, MakeStyles } from '../../services/design'
@@ -15,6 +16,7 @@ type AutoCapitalizeOptions = 'none' | 'sentences' | 'words' | 'characters'
 type Props = {
   label?: string
   value?: string
+  onFocus?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void
   onChangeText?: (text: string) => void
   onSubmitEditing?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void
   color?: string
@@ -50,7 +52,9 @@ const makeStyles: MakeStyles = colors =>
       display: 'flex',
       flexDirection: 'column'
     },
-    labelTextWrapper: {},
+    labelTextWrapper: {
+      paddingBottom: 10
+    },
     labelText: {
       fontSize: 16,
       fontWeight: 'bold',

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useAuthActions } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
@@ -9,7 +9,7 @@ import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton, ShadowBase } from '../components/atoms'
 
 const WelcomeScreen = () => {
-  const navigation = useNavigation()
+  const navigation = useStackNavigation()
   const inset = useSafeArea()
   const { signInApple, signInGoogle } = useAuthActions()
   const styles = useStyles(makeStyles)
@@ -28,11 +28,11 @@ const WelcomeScreen = () => {
   }, [navigation, signInGoogle])
 
   const goToTerms = useCallback(() => {
-    navigation.navigate('Terms')
+    navigation.push('Terms')
   }, [navigation])
 
   const goToPrivacy = useCallback(() => {
-    navigation.navigate('Privacy')
+    navigation.push('Privacy')
   }, [navigation])
 
   return (
@@ -48,11 +48,18 @@ const WelcomeScreen = () => {
         {isAvailableSignInWithApple() && (
           <View style={styles.appleButtonWrapper}>
             <ShadowBase>
-              <RoundedButton color={colors.foregrounds.onTintPrimary} width={240} height={50} onPress={onSignInApple}>
-                <View style={styles.iconWrapper}>
-                  <AntDesign name="apple1" size={20} color={colors.tints.primary.main} />
+              <RoundedButton
+                color={colors.foregrounds.onTintPrimary}
+                fullWidth={true}
+                height={60}
+                onPress={onSignInApple}
+              >
+                <View style={styles.buttonInner}>
+                  <View style={styles.iconWrapper}>
+                    <AntDesign name="apple1" size={20} color={colors.tints.primary.main} />
+                  </View>
+                  <Text style={styles.appleText}>AppleIDでログイン</Text>
                 </View>
-                <Text style={styles.appleText}>AppleIDでログイン</Text>
               </RoundedButton>
             </ShadowBase>
           </View>
@@ -60,11 +67,18 @@ const WelcomeScreen = () => {
 
         <View style={styles.googleButtonWrapper}>
           <ShadowBase>
-            <RoundedButton color={colors.foregrounds.onTintPrimary} width={240} height={50} onPress={onSignInGoogle}>
-              <View style={styles.iconWrapper}>
-                <AntDesign name="google" size={20} color={colors.tints.primary.main} />
+            <RoundedButton
+              color={colors.foregrounds.onTintPrimary}
+              fullWidth={true}
+              height={60}
+              onPress={onSignInGoogle}
+            >
+              <View style={styles.buttonInner}>
+                <View style={styles.iconWrapper}>
+                  <AntDesign name="google" size={20} color={colors.tints.primary.main} />
+                </View>
+                <Text style={styles.googleText}>Googleでログイン</Text>
               </View>
-              <Text style={styles.googleText}>Googleでログイン</Text>
             </RoundedButton>
           </ShadowBase>
         </View>
@@ -111,6 +125,12 @@ const makeStyles: MakeStyles = colors =>
       justifyContent: 'center',
       alignItems: 'center',
       paddingTop: 134
+    },
+    buttonInner: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center'
     },
     appleButtonWrapper: {
       width: '100%',
