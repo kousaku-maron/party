@@ -8,8 +8,8 @@ import { Party } from '../entities'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
 import { useAppliedParties } from '../services/party'
-import { useFriends } from '../services/friend'
-import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
+import { useFriends, useApplyFriend } from '../services/friend'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { Feather, AntDesign } from '@expo/vector-icons'
 import { Thumbnail, Fab, DotsIcon, ShadowBase, BloomBase } from '../components/atoms'
 import { PartySecondaryCard, Header } from '../components/organisms'
@@ -42,15 +42,18 @@ const UserScreen = () => {
   const user = useUser(targetUserID)
   const friends = useFriends(user)
   const appliedParties = useAppliedParties(user)
+  const { applyFriend } = useApplyFriend()
 
   const isBlocked = useMemo(() => {
-    if (user && user.blockUIDs && user.blockUIDs.includes(uid)) return true
-    return false
+    return user && user.blockUIDs && user.blockUIDs.includes(uid)
   }, [uid, user])
 
   const isFriend = useMemo(() => {
-    if (user && user.friendUIDs && user.friendUIDs.includes(uid)) return true
-    return false
+    return user && user.friendUIDs && user.friendUIDs.includes(uid)
+  }, [uid, user])
+
+  const isAlreadyApplyFriend = useMemo(() => {
+    return user && user.appliedFriendUIDs && user.appliedFriendUIDs.includes(uid)
   }, [uid, user])
 
   const goToEdit = useCallback(() => {
@@ -74,6 +77,11 @@ const UserScreen = () => {
     },
     [navigation]
   )
+
+  const onPressAddUser = useCallback(() => {
+    if (!user) return
+    applyFriend(user)
+  }, [applyFriend, user])
 
   if (!user) {
     return <LoadingPage />
@@ -126,6 +134,12 @@ const UserScreen = () => {
                   </View>
                 )}
 
+                {isAlreadyApplyFriend && !isBlocked && !isMy && (
+                  <View style={styles.friendTextWrapper}>
+                    <Text style={styles.friendText}>ともだち申請中</Text>
+                  </View>
+                )}
+
                 {isBlocked && !isMy && (
                   <View style={styles.blockTextWrapper}>
                     <Text style={styles.blockText}>ブロック中</Text>
@@ -146,10 +160,10 @@ const UserScreen = () => {
                   </View>
                 )}
 
-                {!isMy && !isFriend && !isBlocked && (
+                {!isMy && !isFriend && !isBlocked && !isAlreadyApplyFriend && (
                   <View style={styles.fabWrapper}>
                     <BloomBase>
-                      <Fab size={75}>
+                      <Fab size={75} onPress={onPressAddUser}>
                         <AntDesign name="adduser" color={colors.foregrounds.onTintPrimary} size={36} />
                       </Fab>
                     </BloomBase>
@@ -158,17 +172,14 @@ const UserScreen = () => {
 
                 {!isBlocked && (
                   <View style={styles.cardsContainer}>
-                    <Text style={styles.contentsTitleText}>参加中</Text>
-                    <View style={styles.carouselBottomSpace} />
-                    <ScrollView
-                      horizontal={true}
-                      style={styles.allAppliedPartiesScrollView}
-                      showsHorizontalScrollIndicator={false}
-                    >
+                    <View style={styles.contentsTitleTextWrapper}>
+                      <Text style={styles.contentsTitleText}>参加中</Text>
+                    </View>
+                    <ScrollView horizontal={true} style={styles.rowScrollView} showsHorizontalScrollIndicator={false}>
                       {appliedParties &&
                         appliedParties.map(appliedParty => (
                           <View key={appliedParty.id} style={styles.secondaryCardWrapper}>
-                            <ShadowBase intensity={2}>
+                            <ShadowBase>
                               <PartySecondaryCard party={appliedParty} onPress={onPressParty} />
                             </ShadowBase>
                           </View>
@@ -179,20 +190,17 @@ const UserScreen = () => {
 
                 {!isBlocked && (
                   <View style={styles.friendsContainer}>
-                    <Text style={styles.contentsTitleText}>ともだち</Text>
-                    <ScrollView
-                      horizontal={true}
-                      style={styles.allFriendsScrollView}
-                      showsHorizontalScrollIndicator={false}
-                    >
+                    <View style={styles.contentsTitleTextWrapper}>
+                      <Text style={styles.contentsTitleText}>ともだち</Text>
+                    </View>
+                    <ScrollView horizontal={true} style={styles.rowScrollView} showsHorizontalScrollIndicator={false}>
                       {friends &&
                         friends.map(friend => {
                           if (friend) {
                             return (
-                              //MEMO: ShowBase入れると変になるから抜いているが良いのか？
-                              <View key={friend.id} style={styles.friendThumbnailWrapper}>
-                                <View style={styles.friendShowBaseWrapper}>
-                                  <ShadowBase intensity={2}>
+                              <View key={friend.id} style={styles.friendWrapper}>
+                                <View style={styles.friendThumbnailWrapper}>
+                                  <ShadowBase>
                                     <Thumbnail
                                       uri={friend.thumbnailURL}
                                       size={60}
@@ -226,8 +234,6 @@ const UserScreen = () => {
   )
 }
 
-const fullWidth = Dimensions.get('window').width
-
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
@@ -235,7 +241,6 @@ const makeStyles: MakeStyles = colors =>
       height: '100%',
       display: 'flex',
       alignItems: 'center',
-      position: 'relative',
       backgroundColor: colors.backgrounds.primary
     },
     headerContainer: {
@@ -252,22 +257,21 @@ const makeStyles: MakeStyles = colors =>
     },
     contentsContainer: {
       position: 'relative',
-      display: 'flex',
       width: '100%',
       height: '100%',
       backgroundColor: colors.backgrounds.secondary,
-      paddingVertical: 50,
+      paddingTop: 80,
+      paddingBottom: 40,
       paddingHorizontal: 24,
       borderTopRightRadius: 40,
       borderTopLeftRadius: 40
     },
     cardsContainer: {
-      paddingBottom: 32
+      paddingBottom: 50
     },
     friendContainer: {},
     blockMessageContainer: {
       display: 'flex',
-      justifyContent: 'center',
       alignItems: 'center'
     },
     dotsWrapper: {
@@ -290,6 +294,9 @@ const makeStyles: MakeStyles = colors =>
     thumbnailWrapper: {
       paddingBottom: 18
     },
+    friendThumbnailWrapper: {
+      paddingBottom: 10
+    },
     nameWrapper: {
       paddingBottom: 18
     },
@@ -307,13 +314,16 @@ const makeStyles: MakeStyles = colors =>
     },
     friendTextWrapper: {},
     blockTextWrapper: {},
+    contentsTitleTextWrapper: {
+      paddingBottom: 30
+    },
     nameText: {
       fontSize: 18,
       color: colors.foregrounds.primary,
       fontWeight: 'bold'
     },
     headerTopSpacer: {
-      paddingBottom: 48
+      paddingBottom: 36
     },
     headerBottomSpacer: {
       paddingBottom: 48
@@ -336,7 +346,8 @@ const makeStyles: MakeStyles = colors =>
       color: colors.system.red
     },
     contentsTitleText: {
-      fontSize: 18,
+      fontSize: 22,
+      fontWeight: 'bold',
       color: colors.foregrounds.primary
     },
     blockMessageText: {
@@ -347,16 +358,10 @@ const makeStyles: MakeStyles = colors =>
       paddingTop: 18,
       paddingBottom: 52
     },
-    allFriendsScrollView: {
-      width: fullWidth,
-      flexDirection: 'row',
-      overflow: 'visible',
-      backgroundColor: colors.backgrounds.secondary
-    },
-    friendThumbnailWrapper: {
-      paddingTop: 24,
-      paddingRight: 18,
-      backgroundColor: colors.backgrounds.secondary
+    friendWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      paddingRight: 20
     },
     friendShowBaseWrapper: {
       paddingBottom: 12
@@ -365,24 +370,19 @@ const makeStyles: MakeStyles = colors =>
       textAlign: 'center',
       paddingBottom: 6,
       paddingHorizontal: 6,
-      backgroundColor: colors.backgrounds.secondary,
       color: colors.foregrounds.primary
     },
     secondaryTitleTextWrapper: {
       width: '100%',
       paddingBottom: 30
     },
-    allAppliedPartiesScrollView: {
-      width: fullWidth,
+    rowScrollView: {
+      width: '100%',
       flexDirection: 'row',
-      paddingBottom: 12,
-      overflow: 'visible',
-      backgroundColor: colors.backgrounds.secondary
+      overflow: 'visible'
     },
     secondaryCardWrapper: {
-      paddingTop: 30,
-      paddingRight: 20,
-      backgroundColor: colors.backgrounds.secondary
+      paddingRight: 20
     }
   })
 
