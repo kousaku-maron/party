@@ -20,23 +20,35 @@ const MatchingScreen = () => {
   const colors = useColors()
 
   const targetUserID = useMemo(() => {
-    if (route.params?.userID) {
+    if (!route.params) return
+
+    if (route.params.userID) {
       return route.params.userID
     }
+
+    console.info('no targetUserID')
     return
   }, [route.params])
 
   const partyID = useMemo(() => {
-    if (route.params?.partyID) {
+    if (!route.params) return
+
+    if (route.params.partyID) {
       return route.params.partyID
     }
+
+    console.info('no partyID')
     return
   }, [route.params])
 
   const groupID = useMemo(() => {
-    if (route.params?.groupID) {
+    if (!route.params) return
+
+    if (route.params.groupID) {
       return route.params.groupID
     }
+
+    console.info('no groupID')
     return
   }, [route.params])
 
@@ -138,13 +150,7 @@ const makeStyles: MakeStyles = colors =>
       alignItems: 'center',
       paddingBottom: 74
     },
-    glassWrapper: {
-      width: 105,
-      height: 100,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'red '
-    },
+    glassWrapper: {},
     actionArea: {
       width: '100%',
       justifyContent: 'center'
