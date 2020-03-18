@@ -14,7 +14,7 @@ import { LoadingPage } from '../components/pages'
 const MatchingScreen = () => {
   const inset = useSafeArea()
   const route = useRoute<RouteProp<RouteParams, 'Matching'>>()
-  const { uid, user } = useAuthState()
+  const { user } = useAuthState()
 
   const styles = useStyles(makeStyles)
   const colors = useColors()
@@ -23,22 +23,22 @@ const MatchingScreen = () => {
     if (route.params?.userID) {
       return route.params.userID
     }
-    return uid
-  }, [route.params, uid])
+    return
+  }, [route.params])
 
   const partyID = useMemo(() => {
     if (route.params?.partyID) {
       return route.params.partyID
     }
-    return uid
-  }, [route.params, uid])
+    return
+  }, [route.params])
 
   const groupID = useMemo(() => {
     if (route.params?.groupID) {
       return route.params.groupID
     }
-    return uid
-  }, [route.params, uid])
+    return
+  }, [route.params])
 
   const targetUser = useUser(targetUserID)
   const party = useParty(partyID)
@@ -151,13 +151,13 @@ const makeStyles: MakeStyles = colors =>
     },
     helloButtonWrapper: {
       color: colors.foregrounds.onTintPrimary,
-      paddingVertical: 9,
+      paddingBottom: 18,
       justifyContent: 'center',
       alignItems: 'center'
     },
     closeButtonWrapper: {
       color: colors.foregrounds.onTintPrimary,
-      paddingVertical: 9,
+      paddingBottom: 18,
       justifyContent: 'center',
       alignItems: 'center'
     },
@@ -179,7 +179,8 @@ const makeStyles: MakeStyles = colors =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      paddingBottom: 31
     },
     actionText: {
       color: colors.foregrounds.onTintPrimary,
@@ -198,13 +199,13 @@ const makeStyles: MakeStyles = colors =>
       width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingVertical: 6
+      paddingBottom: 12
     },
     partyAreaTextWrapper: {
       width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingVertical: 6
+      paddingBottom: 12
     }
   })
 
