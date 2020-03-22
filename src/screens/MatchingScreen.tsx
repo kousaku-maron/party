@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native'
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
@@ -19,15 +19,12 @@ const MatchingScreen = () => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
-  const [isUnexpecedError, setIsUnexpecedError] = useState<boolean>(false)
-
   const targetUserID = useMemo(() => {
     if (!route.params) return
 
     if (route.params.userID) {
       return route.params.userID
     }
-    setIsUnexpecedError(true)
     return
   }, [route.params])
 
@@ -37,7 +34,6 @@ const MatchingScreen = () => {
     if (route.params.partyID) {
       return route.params.partyID
     }
-    setIsUnexpecedError(true)
     return
   }, [route.params])
 
@@ -47,9 +43,12 @@ const MatchingScreen = () => {
     if (route.params.groupID) {
       return route.params.groupID
     }
-    setIsUnexpecedError(true)
     return
   }, [route.params])
+
+  const isUnexpecedError = useMemo(() => {
+    return !targetUserID || !partyID || !groupID
+  }, [targetUserID, partyID, groupID])
 
   const targetUser = useUser(targetUserID)
   const party = useParty(partyID)
