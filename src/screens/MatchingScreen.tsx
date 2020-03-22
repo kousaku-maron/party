@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native'
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
@@ -9,7 +9,7 @@ import { useUser } from '../services/user'
 import { useParty } from '../services/party'
 import { useGroup } from '../services/groups'
 import { Thumbnail, Fab, ShadowBase, RoundedButton } from '../components/atoms'
-import { LoadingPage } from '../components/pages'
+import { LoadingPage, UnexpectedErrorPage } from '../components/pages'
 
 const MatchingScreen = () => {
   const inset = useSafeArea()
@@ -19,14 +19,15 @@ const MatchingScreen = () => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
+  const [isUnexpecedError, setIsUnexpecedError] = useState<boolean>(false)
+
   const targetUserID = useMemo(() => {
     if (!route.params) return
 
     if (route.params.userID) {
       return route.params.userID
     }
-
-    console.info('no targetUserID')
+    setIsUnexpecedError(true)
     return
   }, [route.params])
 
@@ -36,8 +37,7 @@ const MatchingScreen = () => {
     if (route.params.partyID) {
       return route.params.partyID
     }
-
-    console.info('no partyID')
+    setIsUnexpecedError(true)
     return
   }, [route.params])
 
@@ -47,8 +47,7 @@ const MatchingScreen = () => {
     if (route.params.groupID) {
       return route.params.groupID
     }
-
-    console.info('no groupID')
+    setIsUnexpecedError(true)
     return
   }, [route.params])
 
@@ -63,6 +62,10 @@ const MatchingScreen = () => {
   const onPressClose = useCallback(() => {
     console.log('Close')
   }, [])
+
+  if (isUnexpecedError) {
+    return <UnexpectedErrorPage />
+  }
 
   //MEMO: ThumnailURLないとき
   if (!targetUser || !group || !party || !party.thumbnailURL) {
