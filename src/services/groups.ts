@@ -48,6 +48,33 @@ export const useGroups = (partyID: string) => {
   return groups
 }
 
+export const useGroup = (partyID: string, groupID: string) => {
+  const [group, setGroup] = useState<Group>()
+  const auth = useAuthState()
+  const { user } = auth
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      const groupsRef = partiesRef.doc(partyID).collection('groups')
+      if (!user) return
+      const unsubscribe = groupsRef.doc(groupID).onSnapshot(
+        (doc: firebase.firestore.DocumentSnapshot) => {
+          const newGroup = buildGroup(doc.id, doc.data())
+          setGroup(newGroup)
+        },
+        error => {
+          console.info('catch useGroup error', error)
+        }
+      )
+      return () => {
+        unsubscribe()
+      }
+    })
+  }, [groupID, partyID, user])
+
+  return group
+}
+
 export const useApplyGroup = () => {
   const { uid } = useAuthState()
 
