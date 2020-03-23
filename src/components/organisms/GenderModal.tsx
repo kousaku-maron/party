@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Modal from './Modal'
+import Modal from '../moleculers/Modal'
 import { Picker, StyleSheet, View } from 'react-native'
 import { useStyles, MakeStyles } from '../../services/design'
 
