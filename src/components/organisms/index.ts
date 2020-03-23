@@ -1,6 +1,5 @@
 export { default as LoadingModal } from './LoadingModal'
 export { default as UploadCertificateModal } from './UploadCertificateModal'
-export { default as Modal } from './Modal'
 export { default as UserListItem } from './UserListItem'
 export { default as RoomListItem } from './RoomListItem'
 export { default as PushNotificationListItem } from './PushNotificationListItem'
