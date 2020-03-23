@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Modal from './Modal'
-import { Picker, StyleSheet } from 'react-native'
+import { Picker, StyleSheet, View } from 'react-native'
+import { useStyles, MakeStyles } from '../../services/design'
 
 type Props = {
   isVisible: boolean
@@ -13,6 +14,8 @@ type Props = {
 }
 
 const GenderModal: React.FC<Props> = props => {
+  const styles = useStyles(makeStyles)
+
   const [genderVal, setGenderVal] = useState<string>()
   return (
     <Modal
@@ -24,42 +27,36 @@ const GenderModal: React.FC<Props> = props => {
       }}
       onNegative={props.onNegative}
     >
-      <Picker
-        style={[styles.picker]}
-        itemStyle={styles.pickerItem}
-        selectedValue={genderVal}
-        onValueChange={itemValue => {
-          setGenderVal(itemValue)
-        }}
-      >
-        <Picker.Item label="女性" value={'female'} />
-        <Picker.Item label="男性" value={'male'} />
-      </Picker>
+      <View style={styles.pickerWrapper}>
+        <Picker
+          style={[styles.picker]}
+          itemStyle={styles.pickerItem}
+          selectedValue={genderVal}
+          onValueChange={itemValue => {
+            setGenderVal(itemValue)
+          }}
+        >
+          <Picker.Item label="女性" value={'female'} />
+          <Picker.Item label="男性" value={'male'} />
+        </Picker>
+      </View>
     </Modal>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: 'white'
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10
-  },
-  picker: {
-    width: 200,
-    backgroundColor: '#FFF'
-  },
-  pickerItem: {
-    color: 'blue'
-  }
-})
+const makeStyles: MakeStyles = colors =>
+  StyleSheet.create({
+    pickerWrapper: {
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    picker: {
+      width: 200
+    },
+    pickerItem: {
+      color: colors.system.blue
+    }
+  })
 
 export default GenderModal

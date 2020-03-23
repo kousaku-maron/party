@@ -3,7 +3,7 @@ import { User } from '../../entities'
 import { View, ScrollView, TouchableOpacity, Animated, StyleSheet } from 'react-native'
 import { useSearchUsers } from '../../services/user'
 import { useStyles, MakeStyles } from '../../services/design'
-import { TextBox } from '../atoms'
+import { TextInput } from '../atoms'
 import { UserListItem } from '../organisms'
 import { FullScreenModal } from '../templates'
 
@@ -75,12 +75,11 @@ const SearchUserPage = (props: Props) => {
       <View style={styles.container}>
         <View style={styles.headWrapper}>
           <View style={styles.searchBox}>
-            <TextBox
+            <TextInput
               placeholder={'友達のIDを検索'}
               value={value}
               onChangeText={onChangeText}
               onSubmitEditing={onSubmitEditing}
-              onEndEditing={searchButtonTools.hidden}
               onFocus={searchButtonTools.show}
               fullWidth={true}
             />

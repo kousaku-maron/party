@@ -12,17 +12,19 @@ type Props = {
   positive?: string
   onNegative: () => void
   onPositive: () => void
+  children?: JSX.Element
 }
 
-const CustomModal = ({
+const CustomModal: React.FC<Props> = ({
   isVisible,
   title,
   desc,
   positive = 'OK',
   negative = 'キャンセル',
   onPositive,
-  onNegative
-}: Props) => {
+  onNegative,
+  children
+}) => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
@@ -43,7 +45,7 @@ const CustomModal = ({
               </View>
             )}
           </View>
-
+          {children}
           <View style={styles.actionArea}>
             <View>
               <RoundedButton width={150} height={45} outlined={true} color={colors.system.gray} onPress={onNegative}>
