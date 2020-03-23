@@ -44,7 +44,8 @@ const CustomModal: React.FC<Props> = ({
               </View>
             )}
           </View>
-          {children && <View style={styles.childrenWrapper}>{children}</View>}
+
+          <View style={styles.childrenWrapper}>{children}</View>
 
           <View style={styles.actionArea}>
             <View>
@@ -74,7 +75,7 @@ const makeStyles: MakeStyles = colors =>
       padding: 20
     },
     contentsArea: {
-      flex: 1,
+      flexGrow: 1,
       justifyContent: 'center',
       alignItems: 'center'
     },
