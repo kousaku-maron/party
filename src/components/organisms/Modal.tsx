@@ -44,19 +44,18 @@ const CustomModal: React.FC<Props> = ({
               </View>
             )}
           </View>
+          {children && <View style={styles.childrenWrapper}>{children}</View>}
+
           <View style={styles.actionArea}>
-            {children}
-            <View style={styles.ButtonContainer}>
-              <View>
-                <RoundedButton width={150} height={45} outlined={true} color={colors.system.gray} onPress={onNegative}>
-                  <Text style={styles.negativeButtonText}>{negative}</Text>
-                </RoundedButton>
-              </View>
-              <View>
-                <RoundedButton width={150} height={45} onPress={onPositive}>
-                  <Text style={styles.positiveButtonText}>{positive}</Text>
-                </RoundedButton>
-              </View>
+            <View>
+              <RoundedButton width={150} height={45} outlined={true} color={colors.system.gray} onPress={onNegative}>
+                <Text style={styles.negativeButtonText}>{negative}</Text>
+              </RoundedButton>
+            </View>
+            <View>
+              <RoundedButton width={150} height={45} onPress={onPositive}>
+                <Text style={styles.positiveButtonText}>{positive}</Text>
+              </RoundedButton>
             </View>
           </View>
         </View>
@@ -79,11 +78,13 @@ const makeStyles: MakeStyles = colors =>
       justifyContent: 'center',
       alignItems: 'center'
     },
-    actionArea: {},
-    ButtonContainer: {
+    actionArea: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between'
+    },
+    childrenWrapper: {
+      width: '100%'
     },
     titleTextWrapper: {
       paddingBottom: 16

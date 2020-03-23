@@ -52,7 +52,7 @@ const makeStyles: MakeStyles = colors =>
       alignItems: 'center'
     },
     picker: {
-      width: 200
+      width: '100%'
     },
     pickerItem: {
       color: colors.system.blue
