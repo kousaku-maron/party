@@ -9,9 +9,10 @@ import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
 import { ShadowBase } from '../components/atoms'
+import { Modal } from '../components/moleculers'
 import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
-import { PartyPrimaryCard, PartySecondaryCard, GenderModal, Modal } from '../components/organisms'
+import { PartyPrimaryCard, PartySecondaryCard, GenderModal } from '../components/organisms'
 import { setGender } from '../services/user'
 
 const homeTags = ['home']
