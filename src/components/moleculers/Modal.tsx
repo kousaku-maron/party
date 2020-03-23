@@ -14,15 +14,16 @@ type Props = {
   onPositive: () => void
 }
 
-const CustomModal = ({
+const CustomModal: React.FC<Props> = ({
   isVisible,
   title,
   desc,
   positive = 'OK',
   negative = 'キャンセル',
   onPositive,
-  onNegative
-}: Props) => {
+  onNegative,
+  children
+}) => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
@@ -43,6 +44,8 @@ const CustomModal = ({
               </View>
             )}
           </View>
+
+          <View style={styles.childrenWrapper}>{children}</View>
 
           <View style={styles.actionArea}>
             <View>
@@ -72,7 +75,7 @@ const makeStyles: MakeStyles = colors =>
       padding: 20
     },
     contentsArea: {
-      flex: 1,
+      flexGrow: 1,
       justifyContent: 'center',
       alignItems: 'center'
     },
@@ -80,6 +83,9 @@ const makeStyles: MakeStyles = colors =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between'
+    },
+    childrenWrapper: {
+      width: '100%'
     },
     titleTextWrapper: {
       paddingBottom: 16
