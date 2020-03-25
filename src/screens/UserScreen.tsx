@@ -10,11 +10,11 @@ import { useUser } from '../services/user'
 import { useAppliedParties } from '../services/party'
 import { useFriends, useApplyFriend } from '../services/friend'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import { Feather, AntDesign } from '@expo/vector-icons'
 import { Thumbnail, Fab, DotsIcon, ShadowBase, BloomBase } from '../components/atoms'
 import { PartySecondaryCard, Header } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
+import { Icons } from '../@assets/vector-icons'
 
 const UserScreen = () => {
   const navigation = useStackNavigation()
@@ -154,7 +154,7 @@ const UserScreen = () => {
                   <View style={styles.fabWrapper}>
                     <BloomBase>
                       <Fab size={64} onPress={goToEdit}>
-                        <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={36} />
+                        <Icons name="edit" color={colors.foregrounds.onTintPrimary} size={36} />
                       </Fab>
                     </BloomBase>
                   </View>
@@ -164,7 +164,7 @@ const UserScreen = () => {
                   <View style={styles.fabWrapper}>
                     <BloomBase>
                       <Fab size={75} onPress={onPressAddUser}>
-                        <AntDesign name="adduser" color={colors.foregrounds.onTintPrimary} size={36} />
+                        <Icons name="user-plus" color={colors.foregrounds.onTintPrimary} size={36} />
                       </Fab>
                     </BloomBase>
                   </View>

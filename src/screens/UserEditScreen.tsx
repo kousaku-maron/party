@@ -9,12 +9,12 @@ import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useKeyboardState } from '../services/ui'
 import { useUserEditTools } from '../services/user'
 import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native'
-import { Feather } from '@expo/vector-icons'
 import { Fab, Thumbnail, ShadowBase } from '../components/atoms'
 import { TextField, SelectField } from '../components/moleculers'
 import { Header } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../services/flashCard'
+import { Icons } from '../@assets/vector-icons'
 
 const UserEditScreen = () => {
   const navigation = useNavigation()
@@ -103,7 +103,7 @@ const UserEditScreen = () => {
 
                 <View style={styles.editFab}>
                   <Fab size={40} color={colors.tints.primary.main} onPress={onChangeThumbnailURL}>
-                    <Feather name="edit-3" color={colors.foregrounds.onTintPrimary} size={26} />
+                    <Icons name="edit" color={colors.foregrounds.onTintPrimary} size={26} />
                   </Fab>
                 </View>
               </View>
