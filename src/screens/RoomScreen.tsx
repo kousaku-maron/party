@@ -1,17 +1,19 @@
 import React, { useCallback } from 'react'
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
-import { useStyles, MakeStyles } from '../services/design'
+import { useColors, useStyles, MakeStyles } from '../services/design'
 import { useRoomsWithUser } from '../services/room'
 import { ShadowBase } from '../components/atoms'
 import { RoomCard, Header } from '../components/organisms'
 import { BottomTabLayout } from '../components/templates'
 import { Room } from '../entities'
+import { Icons } from '../@assets/vector-icons'
 
 const RoomScreen = () => {
   const navigation = useStackNavigation()
   const styles = useStyles(makeStyles)
+  const colors = useColors()
   const inset = useSafeArea()
   const roomsWithUser = useRoomsWithUser() // TODO: roomに"users"を保存させるので、"useRooms"に変える。
 
@@ -33,7 +35,15 @@ const RoomScreen = () => {
           <View style={styles.headerTopSpacer} />
 
           <View style={styles.headerContainer}>
-            <Header fullWidth={true} title="トークルーム" />
+            <Header
+              fullWidth={true}
+              title="トークルーム"
+              renderRight={() => (
+                <TouchableOpacity style={styles.chatPlusIconWrapper}>
+                  <Icons name="chat-plus" color={colors.foregrounds.primary} size={24} />
+                </TouchableOpacity>
+              )}
+            />
           </View>
 
           <View style={styles.headerBottomSpacer} />
@@ -66,6 +76,7 @@ const makeStyles: MakeStyles = colors =>
       width: '100%',
       paddingHorizontal: 12
     },
+    chatPlusIconWrapper: {},
     cardWrapper: {
       width: '100%',
       paddingBottom: 20

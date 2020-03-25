@@ -2,7 +2,8 @@ import React, { useState, useCallback } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { MakeStyles, useStyles, useColors } from '../../services/design'
 import { TextInput, Fab, ShadowBase } from '../atoms'
-import { FontAwesome } from '@expo/vector-icons'
+// import { FontAwesome } from '@expo/vector-icons'
+import { Icons } from '../../@assets/vector-icons'
 
 type Props = {
   width?: number
@@ -40,7 +41,7 @@ const ChatInput: React.FC<Props> = ({ width = 350, height = tabHeight, fullWidth
       </View>
       <ShadowBase>
         <Fab onPress={onSubmit}>
-          <FontAwesome name="send" size={25} color={colors.foregrounds.onTintPrimary} />
+          <Icons name="send-fill" size={25} color={colors.foregrounds.onTintPrimary} />
         </Fab>
       </ShadowBase>
     </View>

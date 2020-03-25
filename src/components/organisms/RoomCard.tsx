@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { useAuthState } from '../../store/hooks'
-import { useStyles, MakeStyles } from '../../services/design'
+import { useColors, useStyles, MakeStyles } from '../../services/design'
 import { formattedDateForMessageCreatedAt } from '../../services/formatedDate'
 import { Room, User } from '../../entities'
 import { Thumbnail, ShadowBase } from '../atoms'
+import { Icons } from '../../@assets/vector-icons'
 
 type Props = {
   room: Room & { users: User[] } // TODO: Roomに"users"を保存させるようにする。
@@ -24,6 +25,7 @@ const RoomCard: React.FC<Props> = ({
   onPress
 }) => {
   const styles = useStyles(makeStyles)
+  const colors = useColors()
   const { uid } = useAuthState()
 
   // MEMO: 自分以外のユーザーデータ取得
@@ -60,7 +62,12 @@ const RoomCard: React.FC<Props> = ({
       </View>
       <View style={styles.tail}>
         {room.newMessage && (
-          <Text style={styles.dateText}>{formattedDateForMessageCreatedAt(room.newMessage.createdAt)}</Text>
+          <>
+            <View style={styles.timeIconWrapper}>
+              <Icons name="time" color={colors.foregrounds.secondary} size={15} />
+            </View>
+            <Text style={styles.dateText}>{formattedDateForMessageCreatedAt(room.newMessage.createdAt)}</Text>
+          </>
         )}
       </View>
     </TouchableOpacity>
@@ -103,6 +110,9 @@ const makeStyles: MakeStyles = colors =>
       justifyContent: 'space-between',
       height: 55,
       paddingVertical: 8
+    },
+    timeIconWrapper: {
+      paddingRight: 6
     },
     nameText: {
       color: colors.foregrounds.primary,
