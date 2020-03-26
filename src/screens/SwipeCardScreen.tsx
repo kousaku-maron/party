@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Dimensions, ImageBackground } from 'react-nativ
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import Carousel from 'react-native-snap-carousel'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { RouteParams } from '../navigators/RouteProps'
 import { Fab, ShadowBase, BloomBase } from '../components/atoms'
 import { SwipeCard, Header } from '../components/organisms'
@@ -11,6 +10,7 @@ import { ApplyCard } from '../entities'
 import { useStyles, MakeStyles, useColors } from '../services/design'
 import { useAppliedCardsByType } from '../services/applyCard'
 import { useLikeApplyCard } from '../services/likeApplyCard'
+import { Icons } from './../@assets/vector-icons'
 
 const SwipeCardScreen = () => {
   const inset = useSafeArea()
@@ -62,7 +62,7 @@ const SwipeCardScreen = () => {
                   onPressGlass(item)
                 }}
               >
-                <MaterialCommunityIcons name="glass-wine" size={56} color={colors.foregrounds.onTintPrimary} />
+                <Icons name="glass-fill" size={56} color={colors.foregrounds.onTintPrimary} />
               </Fab>
             </BloomBase>
           </View>
