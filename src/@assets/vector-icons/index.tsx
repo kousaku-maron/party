@@ -3,6 +3,8 @@ import { ChatIcon } from './chat'
 import { ChatPlusIcon } from './chat-plus'
 import { CheckIcon } from './check'
 import { EditIcon } from './edit'
+import { GlassIcon } from './glass'
+import { GlassFillIcon } from './glass-fill'
 import { HomeIcon } from './home'
 import { PlusIcon } from './plus'
 import { SendIcon } from './send'
@@ -35,6 +37,14 @@ export const Icons = ({ name, size = 24, color = 'black' }: VectorIconsProps) =>
 
     case 'edit': {
       return <EditIcon size={size} color={color} />
+    }
+
+    case 'glass': {
+      return <GlassIcon size={size} color={color} />
+    }
+
+    case 'glass-fill': {
+      return <GlassFillIcon size={size} color={color} />
     }
 
     case 'home': {

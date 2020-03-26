@@ -8,8 +8,9 @@ import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
 import { useParty } from '../services/party'
 import { useGroup } from '../services/groups'
-import { Thumbnail, Fab, ShadowBase, RoundedButton } from '../components/atoms'
+import { Thumbnail, ShadowBase, RoundedButton } from '../components/atoms'
 import { LoadingPage, UnexpectedErrorPage } from '../components/pages'
+import { Icons } from '../@assets/vector-icons'
 
 const MatchingScreen = () => {
   const inset = useSafeArea()
@@ -96,7 +97,7 @@ const MatchingScreen = () => {
 
           {/* ここに，乾杯のアイコンを入れる*/}
           <View style={styles.glassWrapper}>
-            <Fab size={64} />
+            <Icons name="glass-fill" color={colors.foregrounds.onTintPrimary} size={64} />
           </View>
 
           <View style={styles.thumbnailWrapper}>
