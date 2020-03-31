@@ -1,5 +1,5 @@
-import React, { useCallback, useState, useMemo } from 'react'
-import { View, Text, StyleSheet, Dimensions, ImageBackground } from 'react-native'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
+import { View, Text, StyleSheet, Dimensions, ImageBackground, ActivityIndicator } from 'react-native'
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import Carousel from 'react-native-snap-carousel'
@@ -7,8 +7,9 @@ import { RouteParams } from '../navigators/RouteProps'
 import { Fab, ShadowBase, BloomBase } from '../components/atoms'
 import { SwipeCard, Header } from '../components/organisms'
 import { ApplyCard } from '../entities'
+import { useAuthState } from '../store/hooks'
+import { getAppliedCardsByType } from '../repositories/appliedCard'
 import { useStyles, MakeStyles, useColors } from '../services/design'
-import { useAppliedCardsByType } from '../services/applyCard'
 import { useLikeApplyCard } from '../services/likeApplyCard'
 import { Icons } from './../@assets/vector-icons'
 
@@ -16,10 +17,30 @@ const SwipeCardScreen = () => {
   const inset = useSafeArea()
   const styles = useStyles(makeStyles)
   const colors = useColors()
+  const { uid } = useAuthState()
   const route = useRoute<RouteProp<RouteParams, 'SwipeCard'>>()
   const type = route.params.type as string
 
-  const cards = useAppliedCardsByType(type)
+  const [cards, setCards] = useState<ApplyCard[]>([])
+  const [isFetched, setIsFetched] = useState<boolean>(false)
+  const [isError, setIsError] = useState<boolean>(false)
+  useEffect(() => {
+    const asyncTask = async () => {
+      const cards = await getAppliedCardsByType(uid, type)
+
+      if (!cards) {
+        setIsError(true)
+      }
+
+      if (cards) {
+        setCards(cards)
+      }
+
+      setIsFetched(true)
+    }
+
+    asyncTask()
+  }, [type, uid])
 
   const [slideIndex, setSlideIndex] = useState<number>(0)
 
@@ -41,14 +62,15 @@ const SwipeCardScreen = () => {
 
   const { likeApplyCard } = useLikeApplyCard()
   const onPressGlass = useCallback(
-    item => {
-      likeApplyCard(item)
+    async (item: ApplyCard, index: number) => {
+      setCards(prev => [...prev.slice(0, index), ...prev.slice(index + 1, prev.length)]) // 押したカードを除外する。
+      await likeApplyCard(item)
     },
     [likeApplyCard]
   )
 
   const renderItem = useCallback(
-    ({ item }: { item: ApplyCard }) => {
+    ({ item, index }: { item: ApplyCard; index: number }) => {
       return (
         <View style={styles.cardContainer}>
           <ShadowBase>
@@ -59,7 +81,7 @@ const SwipeCardScreen = () => {
               <Fab
                 size={80}
                 onPress={() => {
-                  onPressGlass(item)
+                  onPressGlass(item, index)
                 }}
               >
                 <Icons name="glass-fill" size={56} color={colors.foregrounds.onTintPrimary} />
@@ -75,6 +97,22 @@ const SwipeCardScreen = () => {
   const onSnapToItem = useCallback((slideIndex: number) => {
     setSlideIndex(slideIndex)
   }, [])
+
+  if (isError) {
+    return (
+      <View style={styles.messageContainer}>
+        <Text style={styles.messageText}>カード情報の取得に失敗しました。</Text>
+      </View>
+    )
+  }
+
+  if (!isFetched) {
+    return (
+      <View style={styles.messageContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
 
   return (
     <ImageBackground
@@ -115,6 +153,14 @@ const makeStyles: MakeStyles = colors =>
       width: '100%',
       height: '100%'
     },
+    messageContainer: {
+      backgroundColor: colors.backgrounds.primary,
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
     headerContainer: {
       width: '100%',
       paddingHorizontal: 24
@@ -146,6 +192,10 @@ const makeStyles: MakeStyles = colors =>
     areaText: {
       fontSize: 20,
       color: colors.foregrounds.onTintPrimary
+    },
+    messageText: {
+      fontSize: 20,
+      color: colors.foregrounds.primary
     }
   })
 
