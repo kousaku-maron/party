@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import firebase from '../repositories/firebase'
-import { buildRoom, Room, User } from '../entities'
+import { buildRoom, Room, User, notFoundUser } from '../entities'
 import { useAuthState } from '../store/hooks'
 import { getUser } from '../repositories/user'
 
@@ -52,6 +52,10 @@ export const useRoomsWithUser = () => {
 
         const childTask = room.entryUIDs.map(async uid => {
           const user = await getUser(uid)
+          if (!user) {
+            return notFoundUser
+          }
+
           return user
         })
 
