@@ -69,3 +69,13 @@ export type UpdateUser = Pick<User, 'uid' | 'name' | 'thumbnailURL' | 'introduct
   appliedPartyUIDs?: string[]
 }
 export type CreateUser = Omit<User, 'id'>
+
+export const notFoundUser = {
+  id: 'usernotfound404',
+  enabled: true,
+  isAccepted: true,
+  isAnonymous: true,
+  uid: 'usernotfound404',
+  userID: 'usernotfound404',
+  name: 'ユーザーが見つかりません'
+}
