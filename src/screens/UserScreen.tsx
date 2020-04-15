@@ -10,7 +10,7 @@ import { useUser } from '../services/user'
 import { useAppliedParties } from '../services/party'
 import { useFriends, useApplyFriend } from '../services/friend'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import { Thumbnail, Fab, DotsIcon, ShadowBase, BloomBase } from '../components/atoms'
+import { Thumbnail, Fab, DotsIcon, ShadowBase } from '../components/atoms'
 import { PartySecondaryCard, Header } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
@@ -80,8 +80,13 @@ const UserScreen = () => {
 
   const onPressAddUser = useCallback(() => {
     if (!user) return
-    applyFriend(user)
-  }, [applyFriend, user])
+    if (isMy) {
+      console.info('go to ApplyFriendScreen')
+    }
+    if (!isMy) {
+      applyFriend(user)
+    }
+  }, [applyFriend, isMy, user])
 
   if (!user) {
     return <LoadingPage />
@@ -122,9 +127,17 @@ const UserScreen = () => {
                   <Text style={styles.nameText}>{user.name}</Text>
                 </View>
 
-                <View style={styles.introWrapper}>
-                  <Text style={styles.introText}>{user.introduction}</Text>
-                </View>
+                {user.introduction && (
+                  <View style={styles.introWrapper}>
+                    <Text style={styles.introText}>{user.introduction}</Text>
+                  </View>
+                )}
+
+                {isMy && (
+                  <TouchableOpacity style={styles.editIconWrapper} onPress={goToEdit}>
+                    <Icons name="edit" color={colors.foregrounds.primary} size={18} />
+                  </TouchableOpacity>
+                )}
 
                 {isFriend && !isBlocked && !isMy && (
                   <View style={styles.friendTextWrapper}>
@@ -148,23 +161,13 @@ const UserScreen = () => {
 
             <ShadowBase>
               <View style={styles.contentsContainer}>
-                {isMy && (
+                {(isMy || (!isFriend && !isBlocked && !isAlreadyApplyFriend)) && (
                   <View style={styles.fabWrapper}>
-                    <BloomBase>
-                      <Fab size={64} onPress={goToEdit}>
-                        <Icons name="edit" color={colors.foregrounds.onTintPrimary} size={36} />
+                    <ShadowBase>
+                      <Fab size={75} color={colors.backgrounds.secondary} onPress={onPressAddUser}>
+                        <Icons name="user-plus" color={colors.foregrounds.primary} size={36} />
                       </Fab>
-                    </BloomBase>
-                  </View>
-                )}
-
-                {!isMy && !isFriend && !isBlocked && !isAlreadyApplyFriend && (
-                  <View style={styles.fabWrapper}>
-                    <BloomBase>
-                      <Fab size={75} onPress={onPressAddUser}>
-                        <Icons name="user-plus" color={colors.foregrounds.onTintPrimary} size={36} />
-                      </Fab>
-                    </BloomBase>
+                    </ShadowBase>
                   </View>
                 )}
 
@@ -173,16 +176,24 @@ const UserScreen = () => {
                     <View style={styles.contentsTitleTextWrapper}>
                       <Text style={styles.contentsTitleText}>参加中</Text>
                     </View>
-                    <ScrollView horizontal={true} style={styles.rowScrollView} showsHorizontalScrollIndicator={false}>
-                      {appliedParties &&
-                        appliedParties.map(appliedParty => (
+
+                    {(!appliedParties || appliedParties.length === 0) && (
+                      <View style={styles.emptyMessageTextWrapper}>
+                        <Text style={styles.emptyMessageText}>参加中のイベントがありません</Text>
+                      </View>
+                    )}
+
+                    {appliedParties && appliedParties.length > 0 && (
+                      <ScrollView horizontal={true} style={styles.rowScrollView} showsHorizontalScrollIndicator={false}>
+                        {appliedParties.map(appliedParty => (
                           <View key={appliedParty.id} style={styles.secondaryCardWrapper}>
                             <ShadowBase>
                               <PartySecondaryCard party={appliedParty} onPress={onPressParty} />
                             </ShadowBase>
                           </View>
                         ))}
-                    </ScrollView>
+                      </ScrollView>
+                    )}
                   </View>
                 )}
 
@@ -191,29 +202,33 @@ const UserScreen = () => {
                     <View style={styles.contentsTitleTextWrapper}>
                       <Text style={styles.contentsTitleText}>ともだち</Text>
                     </View>
-                    <ScrollView horizontal={true} style={styles.rowScrollView} showsHorizontalScrollIndicator={false}>
-                      {friends &&
-                        friends.map(friend => {
-                          if (friend) {
-                            return (
-                              <View key={friend.id} style={styles.friendWrapper}>
-                                <View style={styles.friendThumbnailWrapper}>
-                                  <ShadowBase>
-                                    <Thumbnail
-                                      uri={friend.thumbnailURL}
-                                      size={60}
-                                      onPress={() => {
-                                        onPressUser(friend.uid)
-                                      }}
-                                    />
-                                  </ShadowBase>
-                                </View>
-                                <Text style={styles.friendNameText}>{friend.name}</Text>
-                              </View>
-                            )
-                          }
-                        })}
-                    </ScrollView>
+
+                    {(!friends || friends.length === 0) && (
+                      <View style={styles.emptyMessageTextWrapper}>
+                        <Text style={styles.emptyMessageText}>ともだちがまだいません</Text>
+                      </View>
+                    )}
+
+                    {friends && friends.length > 0 && (
+                      <ScrollView horizontal={true} style={styles.rowScrollView} showsHorizontalScrollIndicator={false}>
+                        {friends.map(friend => (
+                          <View key={friend.id} style={styles.friendWrapper}>
+                            <View style={styles.friendThumbnailWrapper}>
+                              <ShadowBase>
+                                <Thumbnail
+                                  uri={friend.thumbnailURL}
+                                  size={60}
+                                  onPress={() => {
+                                    onPressUser(friend.uid)
+                                  }}
+                                />
+                              </ShadowBase>
+                            </View>
+                            <Text style={styles.friendNameText}>{friend.name}</Text>
+                          </View>
+                        ))}
+                      </ScrollView>
+                    )}
                   </View>
                 )}
 
@@ -259,7 +274,7 @@ const makeStyles: MakeStyles = colors =>
       height: '100%',
       backgroundColor: colors.backgrounds.secondary,
       paddingTop: 80,
-      paddingBottom: 40,
+      paddingBottom: 120,
       paddingHorizontal: 24,
       borderTopRightRadius: 40,
       borderTopLeftRadius: 40
@@ -310,7 +325,13 @@ const makeStyles: MakeStyles = colors =>
       alignItems: 'center',
       paddingBottom: 32
     },
+    editIconWrapper: {},
     friendTextWrapper: {},
+    emptyMessageTextWrapper: {
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center'
+    },
     blockTextWrapper: {},
     contentsTitleTextWrapper: {
       paddingBottom: 30
@@ -345,8 +366,12 @@ const makeStyles: MakeStyles = colors =>
     },
     contentsTitleText: {
       fontSize: 22,
-      fontWeight: 'bold',
+      // fontWeight: 'bold',
       color: colors.foregrounds.primary
+    },
+    emptyMessageText: {
+      fontSize: 16,
+      color: colors.foregrounds.secondary
     },
     blockMessageText: {
       fontSize: 20,
