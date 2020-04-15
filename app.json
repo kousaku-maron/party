@@ -8,7 +8,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "0.0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -23,10 +23,17 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.party.Party",
+      "bundleIdentifier": "com.party.Partyopu",
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
-      "usesAppleSignIn": true
+      "usesAppleSignIn": true,
+      "config": {
+        "usesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.party.Partyopu",
+      "versionCode": 1
     },
     "entryPoint": "node_modules/expo/AppEntry.js"
   },
