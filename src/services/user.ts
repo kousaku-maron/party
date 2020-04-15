@@ -104,9 +104,8 @@ export const useUserEditTools = (uid: string) => {
 
   useEffect(() => {
     if (!user) return
-    // if (!user.introduction) return
-    // setIntroduction(user.introduction)
-    setIntroduction('東京都で薬剤師として働いています！　気が合えば飲みに行きましょう！')
+    if (!user.introduction) return
+    setIntroduction(user.introduction)
   }, [user])
 
   const [thumbnailURL, setThumbnailURL] = useState<string>('')
