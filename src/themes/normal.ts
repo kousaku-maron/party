@@ -47,8 +47,8 @@ export const dark = {
   },
   backgrounds: {
     primary: '#434343',
-    secondary: '##333333',
-    tertiary: '##212121'
+    secondary: '#333333',
+    tertiary: '#212121'
   },
   system: {
     blue: '#0a84ff',
