@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
   TextInput,
   KeyboardTypeOptions,
@@ -27,6 +27,7 @@ type Props = {
   secureTextEntry?: boolean
   autoCapitalize?: AutoCapitalizeOptions
   multiline?: boolean
+  numberOfLines?: number
 }
 
 const CustomTextInput: React.FC<Props> = ({
@@ -44,10 +45,15 @@ const CustomTextInput: React.FC<Props> = ({
   keyboardType = 'default',
   secureTextEntry = false,
   autoCapitalize = 'none',
-  multiline = false
+  multiline = false,
+  numberOfLines
 }) => {
   const colors = useColors()
   const styles = useStyles(makeStyles)
+
+  const isMultipleLine = useMemo(() => {
+    return multiline && numberOfLines && numberOfLines > 1
+  }, [multiline, numberOfLines])
 
   return (
     <TextInput
@@ -56,8 +62,10 @@ const CustomTextInput: React.FC<Props> = ({
         {
           width: fullWidth ? '100%' : width,
           height,
-          borderRadius: height / 2,
-          color: color ?? colors.foregrounds.placeholder
+          borderRadius: isMultipleLine ? 25 : height / 2,
+          color: color ?? colors.foregrounds.placeholder,
+          paddingTop: isMultipleLine ? 14 : 0,
+          paddingBottom: isMultipleLine ? 14 : 0
         }
       ]}
       value={value}
@@ -71,6 +79,7 @@ const CustomTextInput: React.FC<Props> = ({
       secureTextEntry={secureTextEntry}
       autoCapitalize={autoCapitalize}
       multiline={multiline}
+      numberOfLines={numberOfLines}
     />
   )
 }
@@ -80,7 +89,7 @@ const makeStyles: MakeStyles = colors =>
     defaultInputStyle: {
       fontSize: 14,
       backgroundColor: colors.system.gray6,
-      padding: 10
+      paddingHorizontal: 10
     }
   })
 

@@ -10,7 +10,7 @@ import { useKeyboardState } from '../services/ui'
 import { useUserEditTools } from '../services/user'
 import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native'
 import { Fab, Thumbnail, ShadowBase } from '../components/atoms'
-import { TextField, SelectField } from '../components/moleculers'
+import { TextField } from '../components/moleculers'
 import { Header } from '../components/organisms'
 import { LoadingPage } from '../components/pages'
 import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../services/flashCard'
@@ -25,11 +25,15 @@ const UserEditScreen = () => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
+  // MEMO: キーボードが出現した場合、自動で最後までスクロールさせてアニメーションさせている。
+  // 設定する項目が増え1画面で収まらないようになれば、スクロール量を計算して、自動スクロールさせるように修正しないといけない。
   const { visible: keyboardVisible } = useKeyboardState({ useWillShow: true })
   const scrollviewRef = useRef(null)
   useEffect(() => {
     if (keyboardVisible && scrollviewRef.current) {
-      scrollviewRef.current.scrollToEnd()
+      setTimeout(() => {
+        scrollviewRef.current.scrollToEnd()
+      }, 100)
     }
   }, [keyboardVisible])
 
@@ -47,8 +51,7 @@ const UserEditScreen = () => {
     onFocusIntroduction,
     onFocusThumbnail,
     onResetFocusInputName,
-    fetched,
-    focusInputName
+    fetched
   } = useUserEditTools(uid)
 
   const updateUserState = useCallback(async () => {
@@ -138,25 +141,23 @@ const UserEditScreen = () => {
                 <View style={styles.introWrapper}>
                   <TextField
                     label="自己紹介"
+                    height={100}
                     multiline={true}
+                    numberOfLines={4}
                     value={introduction}
                     onChangeText={onChangeIntroduction}
                     onFocus={onFocusIntroduction}
-                    onSubmitEditing={onResetFocusInputName}
+                    // onSubmitEditing={onResetFocusInputName}
                     fullWidth={true}
                   />
-                </View>
-
-                <View style={styles.preferNumberWrapper}>
-                  <SelectField label="希望人数" value="2〜3人で飲みたい" fullWidth={true} disabled={true} />
                 </View>
               </View>
             </View>
           </ShadowBase>
         </View>
-
-        {focusInputName && <KeyboardSpacer />}
       </ScrollView>
+
+      <KeyboardSpacer />
     </View>
   )
 }

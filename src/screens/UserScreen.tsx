@@ -123,9 +123,7 @@ const UserScreen = () => {
                 </View>
 
                 <View style={styles.introWrapper}>
-                  <Text style={styles.introText}>
-                    自己紹介分、サンプル。私の趣味はボルダリングです！ 運動も飲みも好きなので、あそびましょー。
-                  </Text>
+                  <Text style={styles.introText}>{user.introduction}</Text>
                 </View>
 
                 {isFriend && !isBlocked && !isMy && (
