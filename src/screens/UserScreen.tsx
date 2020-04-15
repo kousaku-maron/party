@@ -94,7 +94,7 @@ const UserScreen = () => {
 
   return (
     <BottomTabLayout>
-      <View style={(styles.container, { paddingTop: inset.top })}>
+      <View style={[styles.container, { paddingTop: inset.top }]}>
         <ScrollView style={styles.userScrollView} stickyHeaderIndices={[1]} showsVerticalScrollIndicator={false}>
           <View style={styles.headerTopSpacer} />
 
