@@ -49,6 +49,7 @@ const RoomCard: React.FC<Props> = ({
             </View>
           ))}
         </View>
+
         {room.newMessage && (
           <View style={styles.messageWrapper}>
             <View>
@@ -56,6 +57,14 @@ const RoomCard: React.FC<Props> = ({
             </View>
             <View>
               <Text style={styles.messageText}>{room.newMessage.text}</Text>
+            </View>
+          </View>
+        )}
+
+        {!room.newMessage && (
+          <View style={styles.messageWrapper}>
+            <View style={styles.emptyMessageWrapper}>
+              <Text style={styles.emptyMessageText}>あいさつしてみよう！</Text>
             </View>
           </View>
         )}
@@ -111,6 +120,11 @@ const makeStyles: MakeStyles = colors =>
       height: 55,
       paddingVertical: 8
     },
+    emptyMessageWrapper: {
+      display: 'flex',
+      height: '100%',
+      justifyContent: 'center'
+    },
     timeIconWrapper: {
       paddingRight: 6
     },
@@ -121,6 +135,10 @@ const makeStyles: MakeStyles = colors =>
     messageText: {
       color: colors.foregrounds.secondary,
       fontSize: 12
+    },
+    emptyMessageText: {
+      color: colors.foregrounds.secondary,
+      fontSize: 14
     },
     dateText: {
       color: colors.foregrounds.secondary,

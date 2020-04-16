@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { View, ScrollView, StyleSheet, Dimensions } from 'react-native'
+import { View, ScrollView, StyleSheet, Dimensions, Text } from 'react-native'
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { useStackNavigation } from '../services/route'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
@@ -43,6 +43,12 @@ const ChatScreen = () => {
           <Header />
         </View>
 
+        {messages.length === 0 && (
+          <View style={styles.emptyMessageContainer}>
+            <Text style={styles.emptyMessageText}>あいさつしてみよう！</Text>
+          </View>
+        )}
+
         {messages.map(message => {
           const isMy = message.user.uid === uid
 
@@ -85,6 +91,12 @@ const makeStyles: MakeStyles = colors =>
       width: '100%',
       paddingHorizontal: 24
     },
+    emptyMessageContainer: {
+      width: '100%',
+      height: 400,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
     bubbleContainer: {
       width: '100%',
       display: 'flex',
@@ -109,6 +121,10 @@ const makeStyles: MakeStyles = colors =>
     },
     headerTopSpacer: {
       paddingBottom: 36
+    },
+    emptyMessageText: {
+      fontSize: 16,
+      color: colors.foregrounds.secondary
     }
   })
 
