@@ -105,7 +105,7 @@ const UserScreen = () => {
               renderRight={() =>
                 isMy && (
                   <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
-                    <DotsIcon />
+                    <DotsIcon tintColor={colors.foregrounds.primary} />
                   </TouchableOpacity>
                 )
               }
@@ -164,7 +164,7 @@ const UserScreen = () => {
                 {(isMy || (!isFriend && !isBlocked && !isAlreadyApplyFriend)) && (
                   <View style={styles.fabWrapper}>
                     <ShadowBase>
-                      <Fab size={75} color={colors.backgrounds.secondary} onPress={onPressAddUser}>
+                      <Fab size={75} color={colors.backgrounds.tertiary} onPress={onPressAddUser}>
                         <Icons name="user-plus" color={colors.foregrounds.primary} size={36} />
                       </Fab>
                     </ShadowBase>

@@ -36,7 +36,7 @@ export const dark = {
     primary: '#ffffff',
     secondary: '#f8f8f8',
     tertiary: '#f8f8f8', // 未定
-    placeholder: '#838383',
+    placeholder: '#f2f2f7',
     separator: '#d5d5d5',
     onTintPrimary: '#ffffff',
     onTintSecondary: '#ffffff',
@@ -46,21 +46,21 @@ export const dark = {
     onTintSenary: '#ffffff'
   },
   backgrounds: {
-    primary: '#434343',
+    primary: '#222222',
     secondary: '#333333',
-    tertiary: '#212121'
+    tertiary: '#404040'
   },
   system: {
     blue: '#0a84ff',
     red: '#ff6753',
     white: '#ffffff',
     black: '#000000',
-    gray: '#8e8e93',
-    gray2: '#aeaeb2',
-    gray3: '#c7c7cc',
-    gray4: '#d1d1d6',
-    gray5: '#e5e5ea',
-    gray6: '#f2f2f7'
+    gray: '#f2f2f7',
+    gray2: '#e5e5ea',
+    gray3: '#d1d1d6',
+    gray4: '#c7c7cc',
+    gray5: '#aeaeb2',
+    gray6: '#8e8e93'
   }
 }
 
