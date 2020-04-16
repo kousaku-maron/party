@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text } from 'react-native'
 import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useColors, useStyles, MakeStyles } from '../services/design'
@@ -48,16 +48,26 @@ const RoomScreen = () => {
 
           <View style={styles.headerBottomSpacer} />
 
-          {roomsWithUser.map(roomWithUser => (
-            <View key={roomWithUser.id} style={styles.cardWrapper}>
-              <ShadowBase>
-                <RoomCard room={roomWithUser} onPress={onPressCard} fullWidth={true} />
-              </ShadowBase>
+          {roomsWithUser.length === 0 && (
+            <View style={styles.emptyMessageContainer}>
+              <Text style={styles.emptyMessageText}>ルームがまだありません</Text>
             </View>
-          ))}
+          )}
 
-          {/* MEMO: tab height 70px */}
-          <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
+          {roomsWithUser.length > 0 && (
+            <React.Fragment>
+              {roomsWithUser.map(roomWithUser => (
+                <View key={roomWithUser.id} style={styles.cardWrapper}>
+                  <ShadowBase>
+                    <RoomCard room={roomWithUser} onPress={onPressCard} fullWidth={true} />
+                  </ShadowBase>
+                </View>
+              ))}
+
+              {/* MEMO: tab height 70px */}
+              <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
+            </React.Fragment>
+          )}
         </ScrollView>
       </View>
     </BottomTabLayout>
@@ -76,6 +86,12 @@ const makeStyles: MakeStyles = colors =>
       width: '100%',
       paddingHorizontal: 12
     },
+    emptyMessageContainer: {
+      width: '100%',
+      height: 400,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
     chatPlusIconWrapper: {},
     cardWrapper: {
       width: '100%',
@@ -90,6 +106,10 @@ const makeStyles: MakeStyles = colors =>
     },
     headerBottomSpacer: {
       paddingBottom: 20
+    },
+    emptyMessageText: {
+      fontSize: 16,
+      color: colors.foregrounds.secondary
     }
   })
 
