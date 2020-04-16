@@ -100,16 +100,39 @@ const SwipeCardScreen = () => {
 
   if (isError) {
     return (
-      <View style={styles.messageContainer}>
-        <Text style={styles.messageText}>カード情報の取得に失敗しました。</Text>
+      <View style={[styles.container, { paddingTop: inset.top + 36 }]}>
+        <View style={styles.headerContainer}>
+          <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
+        </View>
+        <View style={styles.messageContainer}>
+          <Text style={styles.messageText}>カードの取得に失敗しました</Text>
+        </View>
       </View>
     )
   }
 
   if (!isFetched) {
     return (
-      <View style={styles.messageContainer}>
-        <ActivityIndicator size="large" />
+      <View style={[styles.container, { paddingTop: inset.top + 36 }]}>
+        <View style={styles.headerContainer}>
+          <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
+        </View>
+        <View style={styles.messageContainer}>
+          <ActivityIndicator size="large" />
+        </View>
+      </View>
+    )
+  }
+
+  if (isFetched && cards.length === 0) {
+    return (
+      <View style={[styles.container, { paddingTop: inset.top + 36 }]}>
+        <View style={styles.headerContainer}>
+          <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
+        </View>
+        <View style={styles.messageContainer}>
+          <Text style={styles.messageText}>カードがありません</Text>
+        </View>
       </View>
     )
   }
@@ -156,7 +179,7 @@ const makeStyles: MakeStyles = colors =>
     messageContainer: {
       backgroundColor: colors.backgrounds.primary,
       width: '100%',
-      height: '100%',
+      height: 400,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center'
@@ -194,7 +217,7 @@ const makeStyles: MakeStyles = colors =>
       color: colors.foregrounds.onTintPrimary
     },
     messageText: {
-      fontSize: 20,
+      fontSize: 16,
       color: colors.foregrounds.primary
     }
   })
