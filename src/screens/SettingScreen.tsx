@@ -3,7 +3,7 @@ import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useAuthState, useAuthActions } from '../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../services/design'
-// import { useSecure } from '../services/secure'
+import { usePushNotifications } from '../services/secure'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, View } from 'react-native'
 import { ShadowBase } from '../components/atoms'
 import { Header } from '../components/organisms'
@@ -18,6 +18,8 @@ const SettingScreen = () => {
   const inset = useSafeArea()
 
   // const secure = useSecure(user.uid)
+
+  const { deviceToken, onAccept, onReject } = usePushNotifications(user.uid)
 
   // MEMO: logOutするとuserデータがなくなってしまうので、先に画面遷移させる。
   const onLogOut = useCallback(() => {
@@ -75,6 +77,18 @@ const SettingScreen = () => {
           <View style={styles.ruleCardWrapper}>
             <View style={styles.ruleCard}>
               <Text style={styles.primaryText}>アカウント</Text>
+
+              {deviceToken && (
+                <TouchableOpacity style={styles.listItem} onPress={onReject}>
+                  <Text style={styles.secondaryText}>通知しない</Text>
+                </TouchableOpacity>
+              )}
+
+              {!deviceToken && (
+                <TouchableOpacity style={styles.listItem} onPress={onAccept}>
+                  <Text style={styles.secondaryText}>通知を許可する</Text>
+                </TouchableOpacity>
+              )}
 
               <TouchableOpacity style={styles.listItem} onPress={goToWithdraw}>
                 <Text style={styles.secondaryText}>退会する</Text>

@@ -3,7 +3,7 @@ import { InteractionManager } from 'react-native'
 import { db } from '../repositories/firebase'
 import { setCertificateImage } from '../repositories/certificate'
 import { updateSecure, getSecure } from '../repositories/secure'
-// import { Notifications } from 'expo'
+import Notifications from 'expo-notifications'
 import * as ImagePicker from 'expo-image-picker'
 import * as Permissions from 'expo-permissions'
 import Constants from 'expo-constants'
@@ -107,8 +107,7 @@ export const usePushNotifications = (uid: string) => {
       return null
     }
 
-    // const token = await Notifications.getExpoPushTokenAsync()
-    const token = 'temp'
+    const token = await Notifications.getExpoPushTokenAsync()
     return token
   }, [])
 
@@ -119,8 +118,8 @@ export const usePushNotifications = (uid: string) => {
         const response = await Permissions.getAsync(Permissions.NOTIFICATIONS)
         if (response.status !== 'granted') return
 
-        // const token = await Notifications.getExpoPushTokenAsync()
-        const token = 'temp'
+        const pushNotification = await Notifications.getExpoPushTokenAsync()
+        const token = pushNotification.data
         if (!token) return
 
         setDeviceToken(token)
@@ -138,7 +137,8 @@ export const usePushNotifications = (uid: string) => {
 
     let updateToken = deviceToken
     if (!updateToken) {
-      const token = await getTokenWithAsk()
+      const pushNotification = await getTokenWithAsk()
+      const token = pushNotification.data
       if (!token) return
       updateToken = token
     }
