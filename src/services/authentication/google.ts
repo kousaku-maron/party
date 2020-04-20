@@ -9,15 +9,23 @@ type Result = {
   error?: any
 }
 
-const config: AppAuth.OAuthProps = {
-  issuer: 'https://accounts.google.com',
-  scopes: ['openid', 'profile'],
-  clientId: Platform.OS === 'ios' ? process.env.GOOGLE_CLIENT_ID_FOR_IOS : process.env.GOOGLE_CLIENT_ID_FOR_ANDROID
+const getConfig = () => {
+  const config: AppAuth.OAuthProps = {
+    issuer: 'https://accounts.google.com',
+    scopes: ['openid', 'profile'],
+    clientId: Platform.OS === 'ios' ? process.env.GOOGLE_CLIENT_ID_FOR_IOS : process.env.GOOGLE_CLIENT_ID_FOR_ANDROID
+  }
+
+  if (process.env.GOOGLE_REDIRECT_URL) {
+    config.redirectUrl = process.env.GOOGLE_REDIRECT_URL
+  }
+
+  return config
 }
 
 export const signInGoogle = async (): Promise<Result> => {
   try {
-    const authState = await AppAuth.authAsync(config)
+    const authState = await AppAuth.authAsync(getConfig())
     console.info(authState.idToken)
 
     if (!authState.idToken) {

@@ -11,6 +11,8 @@ PODS:
     - UMCore
   - EXAppleAuthentication (2.1.0):
     - UMCore
+  - EXApplication (2.1.1):
+    - UMCore
   - EXBlur (8.1.0):
     - UMCore
   - EXConstants (9.0.0):
@@ -51,6 +53,9 @@ PODS:
     - UMCore
     - UMPermissionsInterface
     - UMTaskManagerInterface
+  - EXNotifications (0.1.1):
+    - UMCore
+    - UMPermissionsInterface
   - EXPermissions (8.1.0):
     - UMCore
     - UMPermissionsInterface
@@ -324,6 +329,7 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXAppAuth (from `../node_modules/expo-app-auth/ios`)
   - EXAppleAuthentication (from `../node_modules/expo-apple-authentication/ios`)
+  - EXApplication (from `../node_modules/expo-application/ios`)
   - EXBlur (from `../node_modules/expo-blur/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXCrypto (from `../node_modules/expo-crypto/ios`)
@@ -337,6 +343,7 @@ DEPENDENCIES:
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - EXLocation (from `../node_modules/expo-location/ios`)
+  - EXNotifications (from `../node_modules/expo-notifications/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
@@ -403,6 +410,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-app-auth/ios"
   EXAppleAuthentication:
     :path: "../node_modules/expo-apple-authentication/ios"
+  EXApplication:
+    :path: "../node_modules/expo-application/ios"
   EXBlur:
     :path: "../node_modules/expo-blur/ios"
   EXConstants:
@@ -429,6 +438,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-linear-gradient/ios"
   EXLocation:
     :path: "../node_modules/expo-location/ios"
+  EXNotifications:
+    :path: "../node_modules/expo-notifications/ios"
   EXPermissions:
     :path: "../node_modules/expo-permissions/ios"
   EXSQLite:
@@ -532,6 +543,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   EXAppAuth: 26cc5ad605079dab36f6209322cf21f528c44328
   EXAppleAuthentication: 77b56f8fd953a5471630775320d4942983017a40
+  EXApplication: 7cf81de6fafccff42f5d1caa5c24a159db6b9437
   EXBlur: aa14d84bff6e9c2232fbcaf54ad809eee1cc41dc
   EXConstants: 5304709b1bea70a4828f48ba4c7fc3ec3b2d9b17
   EXCrypto: c4ade2e300874e9175dbf0015734f411fe165d50
@@ -545,6 +557,7 @@ SPEC CHECKSUMS:
   EXKeepAwake: d045bc2cf1ad5a04f0323cc7c894b95b414042e0
   EXLinearGradient: 97d8095d1e4ad96f7893e010e564796ed8aeea42
   EXLocation: bbd487fd96a18a3ad9725389bbb94c4a5f78edf3
+  EXNotifications: 4eb1836866d7527130667ff1b948030a7f73a5ab
   EXPermissions: 24b97f734ce9172d245a5be38ad9ccfcb6135964
   EXSQLite: 877ad6c8eb169353a2f94d5ad26510ffadd46a1f
   EXWebBrowser: 4118b18d151fd03c935bd9de4cd312d2b33ec2c5
