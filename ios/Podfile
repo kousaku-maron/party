@@ -1,5 +1,6 @@
 platform :ios, '10.0'
 
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 require_relative '../node_modules/react-native-unimodules/cocoapods'
 
 target 'partyclient' do
@@ -52,5 +53,8 @@ target 'partyclient' do
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
+  # The community version of use_unimodules (used for react-native-firebase)
+  use_native_modules!
 
 end
