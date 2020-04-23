@@ -22,8 +22,11 @@ export const usePushNotifications = (uid: string) => {
       return null
     }
 
-    const token = await Notifications.getExpoPushTokenAsync()
-    return token
+    const pushNotification = await Notifications.getExpoPushTokenAsync({
+      experienceId: process.env.EXPO_EXPERIENCE_ID
+    })
+
+    return pushNotification.data
   }, [])
 
   // MEMO: effect内では、Permissionの許可申請を行わない。
@@ -33,7 +36,9 @@ export const usePushNotifications = (uid: string) => {
         const response = await Permissions.getAsync(Permissions.NOTIFICATIONS)
         if (response.status !== 'granted') return
 
-        const pushNotification = await Notifications.getExpoPushTokenAsync()
+        const pushNotification = await Notifications.getExpoPushTokenAsync({
+          experienceId: process.env.EXPO_EXPERIENCE_ID
+        })
         const token = pushNotification.data
         if (!token) return
 
@@ -52,8 +57,7 @@ export const usePushNotifications = (uid: string) => {
 
     let updateToken = deviceToken
     if (!updateToken) {
-      const pushNotification = await getTokenWithAsk()
-      const token = pushNotification.data
+      const token = await getTokenWithAsk()
       if (!token) return
       updateToken = token
     }
