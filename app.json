@@ -27,13 +27,15 @@
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
       "usesAppleSignIn": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
       "config": {
         "usesNonExemptEncryption": false
       }
     },
     "android": {
       "package": "com.party.Partyopu",
-      "versionCode": 1
+      "versionCode": 1,
+      "googleServicesFile": "./google-services.json"
     },
     "entryPoint": "node_modules/expo/AppEntry.js"
   },
