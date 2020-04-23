@@ -1,5 +1,8 @@
 apply plugin: "com.android.application"
 
+// NOTE: Register firebase library manually
+apply plugin: 'com.google.gms.google-services'
+
 import com.android.build.OutputFile
 
 /**
@@ -155,6 +158,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.google.firebase:firebase-messaging:20.0.0" // Cloud Messaging
+    implementation "me.leolin:ShortcutBadger:1.1.21@aar" // 通知のバッジ利用
     addUnimodulesDependencies()
 
     if (enableHermes) {

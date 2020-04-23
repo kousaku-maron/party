@@ -4,7 +4,6 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
@@ -17,6 +16,9 @@
 @implementation AppDelegate
 
 @synthesize window = _window;
+
+// NOTE: Register firebase library manually
+@import Firebase;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -32,7 +34,7 @@
   [self.window makeKeyAndVisible];
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
-
+  [FIRApp configure];　// FirebaseSDKを初期化
   return YES;
 }
 
