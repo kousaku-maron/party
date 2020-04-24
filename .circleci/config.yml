@@ -33,6 +33,12 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "yarn.lock" }}-{{ checksum "package.json" }}
+      - run:
+          name: Create google-services.json
+          command: $GOOGLE_SERVICES_JSON_BASE64 | base64 --decode --ignore-garbage > ./google-services.json
+      - run:
+          name: Create GoogleService-Info.plist
+          command: $GOOGLE_SERVICE_INFO_PLIST_BASE64 | base64 --decode --ignore-garbage > ./GoogleService-Info.plist
       - run: 
           name: Install expo-cli globally
           command: yarn global add expo-cli
