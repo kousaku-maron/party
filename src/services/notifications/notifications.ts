@@ -1,115 +1,95 @@
 import { useState, useCallback, useEffect } from 'react'
-import { AsyncStorage } from 'react-native'
 import messaging from '@react-native-firebase/messaging'
 import Constants from 'expo-constants'
 import _ from 'lodash'
 import { Secure } from '../../entities'
+import { setPermission, getPermission } from '../../repositories/permission'
 import { updateSecure, getSecure } from '../../repositories/secure'
+import { useAuthState } from '../../store/auth'
 
-const isEnabledNotificationsCharKey = 'isEnabledNotificationsChar'
+export const askNotificationsPermission = async (uid: string) => {
+  const settings = await messaging().requestPermission()
+  if (settings !== 1) {
+    return await removeToken(uid)
+  }
 
-// TODO: レポジトリ層にした方がいいかもしれない。
-const useIsEnabledNotifications = () => {
-  const [isEnabledNotifications, setIsEnabledNotifications] = useState<boolean | null>(null)
-
-  useEffect(() => {
-    const asyncTask = async () => {
-      const isEnabledNotificationsChar = await AsyncStorage.getItem(isEnabledNotificationsCharKey)
-      if (isEnabledNotificationsChar === '0') {
-        setIsEnabledNotifications(false)
-        return
-      }
-      if (isEnabledNotificationsChar === '1') {
-        setIsEnabledNotifications(true)
-        return
-      }
-
-      setIsEnabledNotifications(false) // 初期値
-    }
-
-    asyncTask()
-  }, [])
-
-  const onEnabled = useCallback(async () => {
-    await AsyncStorage.setItem(isEnabledNotificationsCharKey, '1')
-    setIsEnabledNotifications(true)
-  }, [])
-
-  const onDisabled = useCallback(async () => {
-    await AsyncStorage.setItem(isEnabledNotificationsCharKey, '0')
-    setIsEnabledNotifications(false)
-  }, [])
-
-  return { isEnabledNotifications, onEnabled, onDisabled }
+  return await storeToken(uid)
 }
 
-export const usePushNotifications = (uid: string) => {
-  const { isEnabledNotifications, onEnabled, onDisabled } = useIsEnabledNotifications()
-  const [deviceToken, setDeviceToken] = useState<string | null>(null)
+const storeToken = async (uid: string) => {
+  if (!Constants.isDevice) {
+    return alert('エミュレーターでは、プッシュ通知のトークン制御を禁止しています。')
+  }
 
-  const getTokenWithAsk = useCallback(async () => {
-    const status = await messaging().hasPermission()
+  const status = await messaging().hasPermission()
+  if (status !== 1) {
+    const settings = await messaging().requestPermission()
+    if (settings !== 1) return
+  }
 
-    if (status !== 1) {
-      const settings = await messaging().requestPermission()
-      if (settings !== 1) return
+  const token = await messaging().getToken()
+
+  const currentSecure = await getSecure(uid)
+  const secure: Secure = {
+    pushTokens: !_.isEmpty(currentSecure.pushTokens) ? _.uniq([...currentSecure.pushTokens, token]) : [token]
+  }
+
+  const { result } = await updateSecure(uid, secure)
+  if (!result) return
+
+  await setPermission({ notifications: { isAlreadyInitialAsked: true, isEnabledNotifications: true } })
+}
+
+const removeToken = async (uid: string) => {
+  if (!Constants.isDevice) {
+    return alert('エミュレーターでは、プッシュ通知のトークン制御を禁止しています。')
+  }
+
+  const status = await messaging().hasPermission()
+  if (status !== 1) return
+
+  const token = await messaging().getToken()
+
+  const currentSecure = await getSecure(uid)
+  const secure: Secure = {
+    pushTokens: !_.isEmpty(currentSecure.pushTokens) ? _.pull(currentSecure.pushTokens, token) : []
+  }
+
+  const { result } = await updateSecure(uid, secure)
+  if (!result) return
+
+  await setPermission({ notifications: { isAlreadyInitialAsked: true, isEnabledNotifications: false } })
+}
+
+export const useNotificationsSetting = () => {
+  const { uid } = useAuthState()
+  const [enabled, setEnabled] = useState<boolean | null>(null)
+
+  const onUpdateEnabledState = useCallback(async () => {
+    try {
+      const {
+        notifications: { isEnabledNotifications }
+      } = await getPermission()
+
+      setEnabled(isEnabledNotifications)
+    } catch (e) {
+      setEnabled(null)
     }
-
-    const token = await messaging().getToken()
-    return token
   }, [])
 
   useEffect(() => {
-    const getToken = async () => {
-      try {
-        const status = await messaging().hasPermission()
-        if (status !== 1) return
-
-        const token = await messaging().getToken()
-        setDeviceToken(token)
-      } catch (e) {
-        console.warn(e)
-      }
-    }
-    getToken()
-  }, [])
+    onUpdateEnabledState()
+  }, [onUpdateEnabledState])
 
   const onAccept = useCallback(async () => {
-    if (!Constants.isDevice) {
-      return alert('エミュレーターでは、プッシュ通知を許可できません。')
-    }
-
-    const token = await getTokenWithAsk()
-    if (!token) return
-
-    const currentSecure = await getSecure(uid)
-    const secure: Secure = {
-      pushTokens: !_.isEmpty(currentSecure.pushTokens) ? _.uniq([...currentSecure.pushTokens, token]) : [token]
-    }
-    const { result } = await updateSecure(uid, secure)
-    await onEnabled()
-
-    return { result }
-  }, [getTokenWithAsk, onEnabled, uid])
+    await storeToken(uid)
+    await onUpdateEnabledState()
+  }, [onUpdateEnabledState, uid])
 
   const onReject = useCallback(async () => {
-    if (!Constants.isDevice) {
-      return alert('エミュレーターでは、プッシュ通知を許可できません。')
-    }
+    await removeToken(uid)
+    await onUpdateEnabledState()
+  }, [onUpdateEnabledState, uid])
 
-    if (!deviceToken) return
-
-    const currentSecure = await getSecure(uid)
-    const secure: Secure = {
-      pushTokens: !_.isEmpty(currentSecure.pushTokens) ? _.pull(currentSecure.pushTokens, deviceToken) : []
-    }
-    const { result } = await updateSecure(uid, secure)
-
-    await messaging().deleteToken()
-    await onDisabled()
-
-    return { result }
-  }, [deviceToken, onDisabled, uid])
-
-  return { onAccept, onReject, isEnabledNotifications }
+  return { enabled, onAccept, onReject }
 }

@@ -3,7 +3,7 @@ import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useAuthState, useAuthActions } from '../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../services/design'
-import { usePushNotifications } from '../services/secure'
+import { useNotificationsSetting } from '../services/notifications/notifications'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, View } from 'react-native'
 import { ShadowBase } from '../components/atoms'
 import { Header } from '../components/organisms'
@@ -19,7 +19,7 @@ const SettingScreen = () => {
 
   // const secure = useSecure(user.uid)
 
-  const { deviceToken, onAccept, onReject } = usePushNotifications(user.uid)
+  const { enabled, onAccept, onReject } = useNotificationsSetting()
 
   // MEMO: logOutするとuserデータがなくなってしまうので、先に画面遷移させる。
   const onLogOut = useCallback(() => {
@@ -78,15 +78,15 @@ const SettingScreen = () => {
             <View style={styles.ruleCard}>
               <Text style={styles.primaryText}>アカウント</Text>
 
-              {deviceToken && (
+              {enabled && (
                 <TouchableOpacity style={styles.listItem} onPress={onReject}>
                   <Text style={styles.secondaryText}>通知しない</Text>
                 </TouchableOpacity>
               )}
 
-              {!deviceToken && (
+              {!enabled && (
                 <TouchableOpacity style={styles.listItem} onPress={onAccept}>
-                  <Text style={styles.secondaryText}>通知を許可する</Text>
+                  <Text style={styles.secondaryText}>通知する</Text>
                 </TouchableOpacity>
               )}
 
