@@ -24,6 +24,8 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.6",
+    "@react-native-firebase/app": "^6.7.1",
+    "@react-native-firebase/messaging": "^6.7.1",
     "@react-navigation/bottom-tabs": "^5.0.5",
     "@react-navigation/native": "^5.0.5",
     "@react-navigation/stack": "^5.0.5",
@@ -35,7 +37,6 @@
     "expo-facebook": "~8.1.0",
     "expo-image-manipulator": "~8.1.0",
     "expo-image-picker": "~8.1.0",
-    "expo-notifications": "^0.1.1",
     "expo-permissions": "~8.1.0",
     "firebase": "7.9.0",
     "moment": "^2.24.0",

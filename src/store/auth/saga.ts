@@ -1,10 +1,12 @@
 import { take, put, call, fork } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
-import { buildUser } from '../../entities'
+import { buildUser, Permission } from '../../entities'
 import { authActions } from './actions'
 import { db } from '../../repositories/firebase'
 import firebase from '../../repositories/firebase'
+import { getPermission } from '../../repositories/permission'
 import { signInApple, signInGoogle, signInFacebook, signOut, signInAnonymously } from '../../services/authentication'
+import { askNotificationsPermission } from '../../services/notifications/notifications'
 
 const usersRef = db.collection('users')
 
@@ -27,6 +29,7 @@ function* checkAuthState() {
     if (user && !error) {
       yield put(authActions.setAuth(user.uid))
       yield fork(getMyUser, user.uid)
+      yield fork(askNotificationsPermissionProcess, user.uid)
     } else {
       yield put(authActions.resetAuth())
     }
@@ -157,6 +160,22 @@ function* signOutProcess() {
 //     }
 //   }
 // }
+
+function* askNotificationsPermissionProcess(uid: string) {
+  try {
+    const {
+      notifications: { isAlreadyInitialAsked }
+    }: Permission = yield call(getPermission)
+
+    console.info(isAlreadyInitialAsked)
+
+    if (isAlreadyInitialAsked) return
+
+    askNotificationsPermission(uid)
+  } catch (e) {
+    console.warn(e)
+  }
+}
 
 const saga = [
   checkAuthState(),
