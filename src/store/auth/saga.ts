@@ -163,7 +163,6 @@ function* signOutProcess() {
 
 function* askNotificationsPermissionProcess(uid: string) {
   try {
-    console.info('ya')
     const {
       notifications: { isAlreadyInitialAsked }
     }: Permission = yield call(getPermission)
