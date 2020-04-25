@@ -10,7 +10,7 @@ export const storeToken = async (_uid: string) => {
   console.info('skip store token process.')
 }
 
-export const useNotificationsSetting = (_uid: string) => {
+export const useNotificationsSetting = () => {
   const onAccept = useCallback(() => {
     return alert('Expoアプリでは、プッシュ通知機能を操作できません。')
   }, [])
