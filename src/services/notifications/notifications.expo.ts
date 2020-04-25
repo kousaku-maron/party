@@ -1,7 +1,13 @@
 import { useCallback } from 'react'
 
-export const askNotificationsPermission = async (_uid: string) => {
+export const askNotificationsPermission = async () => {
   console.info('skip ask notifications permission process.')
+
+  return { result: false }
+}
+
+export const storeToken = async (_uid: string) => {
+  console.info('skip store token process.')
 }
 
 export const useNotificationsSetting = (_uid: string) => {
