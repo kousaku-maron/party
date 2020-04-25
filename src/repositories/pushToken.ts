@@ -8,6 +8,11 @@ export const getPushTokens = async (uid: string) => {
 
   try {
     const snapShot = await pushTokensRef.get()
+
+    if (snapShot.empty) {
+      return []
+    }
+
     const pushTokens = snapShot.docs.map(doc => buildPushToken(doc.id, doc.data()))
     return pushTokens
   } catch (e) {
