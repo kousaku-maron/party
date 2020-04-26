@@ -6,7 +6,7 @@ import { db } from '../../repositories/firebase'
 import firebase from '../../repositories/firebase'
 import { getPermission } from '../../repositories/permission'
 import { signInApple, signInGoogle, signInFacebook, signOut, signInAnonymously } from '../../services/authentication'
-import { askNotificationsPermission } from '../../services/notifications/notifications'
+import { askNotificationsPermission, storeToken } from '../../services/notifications/notifications'
 
 const usersRef = db.collection('users')
 
@@ -164,14 +164,19 @@ function* signOutProcess() {
 function* askNotificationsPermissionProcess(uid: string) {
   try {
     const {
-      notifications: { isAlreadyInitialAsked }
+      notifications: { isAlreadyInitialAsked, isEnabledNotifications }
     }: Permission = yield call(getPermission)
 
-    console.info(isAlreadyInitialAsked)
+    if (!isAlreadyInitialAsked) {
+      const { result }: { result: boolean } = yield call(askNotificationsPermission)
+      if (result) {
+        yield call(storeToken, uid)
+      }
+    }
 
-    if (isAlreadyInitialAsked) return
-
-    askNotificationsPermission(uid)
+    if (isEnabledNotifications) {
+      yield call(storeToken, uid)
+    }
   } catch (e) {
     console.warn(e)
   }

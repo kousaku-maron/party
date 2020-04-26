@@ -1,40 +1,34 @@
 import { useState, useCallback, useEffect } from 'react'
 import messaging from '@react-native-firebase/messaging'
 import Constants from 'expo-constants'
-import _ from 'lodash'
-import { Secure } from '../../entities'
 import { setPermission, getPermission } from '../../repositories/permission'
-import { updateSecure, getSecure } from '../../repositories/secure'
+import { getPushTokens, createPushToken, deletePushToken } from '../../repositories/pushToken'
 import { useAuthState } from '../../store/auth'
 
-export const askNotificationsPermission = async (uid: string) => {
+export const askNotificationsPermission = async () => {
   const settings = await messaging().requestPermission()
-  if (settings !== 1) {
-    return await removeToken(uid)
+
+  if (settings === 1) {
+    return { result: true }
   }
 
-  return await storeToken(uid)
+  return { result: false }
 }
 
-const storeToken = async (uid: string) => {
+export const storeToken = async (uid: string) => {
   if (!Constants.isDevice) {
     return alert('エミュレーターでは、プッシュ通知のトークン制御を禁止しています。')
   }
 
   const status = await messaging().hasPermission()
-  if (status !== 1) {
-    const settings = await messaging().requestPermission()
-    if (settings !== 1) return
-  }
+  if (status !== 1) return
 
   const token = await messaging().getToken()
+  const pushTokens = await getPushTokens(uid)
+  const tokens = pushTokens.map(pushToken => pushToken.token)
+  if (tokens.includes(token)) return
 
-  const currentSecure = await getSecure(uid)
-  const secure: Secure = {
-    pushTokens: !_.isEmpty(currentSecure.pushTokens) ? _.uniq([...currentSecure.pushTokens, token]) : [token]
-  }
-
-  const { result } = await updateSecure(uid, secure)
+  const { result } = await createPushToken(uid, { token })
   if (!result) return
 
   await setPermission({ notifications: { isAlreadyInitialAsked: true, isEnabledNotifications: true } })
@@ -49,13 +43,11 @@ const removeToken = async (uid: string) => {
   if (status !== 1) return
 
   const token = await messaging().getToken()
+  const pushTokens = await getPushTokens(uid)
+  const targetPushToken = pushTokens.find(pushToken => pushToken.token === token)
+  if (!targetPushToken) return
 
-  const currentSecure = await getSecure(uid)
-  const secure: Secure = {
-    pushTokens: !_.isEmpty(currentSecure.pushTokens) ? _.pull(currentSecure.pushTokens, token) : []
-  }
-
-  const { result } = await updateSecure(uid, secure)
+  const { result } = await deletePushToken(uid, targetPushToken.id)
   if (!result) return
 
   await setPermission({ notifications: { isAlreadyInitialAsked: true, isEnabledNotifications: false } })

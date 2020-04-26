@@ -1,10 +1,16 @@
 import { useCallback } from 'react'
 
-export const askNotificationsPermission = async (_uid: string) => {
+export const askNotificationsPermission = async () => {
   console.info('skip ask notifications permission process.')
+
+  return { result: false }
 }
 
-export const useNotificationsSetting = (_uid: string) => {
+export const storeToken = async (_uid: string) => {
+  console.info('skip store token process.')
+}
+
+export const useNotificationsSetting = () => {
   const onAccept = useCallback(() => {
     return alert('Expoアプリでは、プッシュ通知機能を操作できません。')
   }, [])
