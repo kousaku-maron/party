@@ -1,14 +1,11 @@
 import { take, put, call, fork } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
-import { buildUser, Permission } from '../../entities'
+import { Permission } from '../../entities'
 import { authActions } from './actions'
-import { db } from '../../repositories/firebase'
 import firebase from '../../repositories/firebase'
 import { getPermission, setPermission } from '../../repositories/permission'
 import { signInApple, signInGoogle, signInFacebook, signOut, signInAnonymously } from '../../services/authentication'
 import { askNotificationsPermission, storeToken, removeToken } from '../../services/notifications/notifications'
-
-const usersRef = db.collection('users')
 
 const authChannel = () => {
   const channel = eventChannel(emit => {
@@ -28,42 +25,10 @@ function* checkAuthState() {
 
     if (user && !error) {
       yield put(authActions.setAuth(user.uid))
-      yield fork(getMyUser, user.uid)
       yield fork(askNotificationsPermissionProcess, user.uid)
       yield fork(updateNotificationsTokenProcess, user.uid)
     } else {
       yield put(authActions.resetAuth())
-    }
-  }
-}
-
-const userChannel = (uid: string) => {
-  const channel = eventChannel(emit => {
-    const userRef = usersRef.doc(uid)
-    const unsubscribe = userRef.onSnapshot(
-      (doc: firebase.firestore.DocumentSnapshot) => {
-        if (!doc.exists) return null
-        const user = buildUser(doc.id, doc.data())
-        emit({ user })
-      },
-      (error: Error) => {
-        emit({ error })
-      }
-    )
-    return unsubscribe
-  })
-  return channel
-}
-
-function* getMyUser(uid: string) {
-  const channel = yield call(userChannel, uid)
-  while (true) {
-    const { user, error } = yield take(channel)
-
-    if (user && !error) {
-      yield put(authActions.getMyUserSuccess(user))
-    } else {
-      yield put(authActions.getMyUserFailure())
     }
   }
 }

@@ -18,9 +18,7 @@ export const authActions = {
   signOut: actionCreator<Fetch>('SIGNOUT'),
   setAuth: actionCreator<string>('SET_AUTH'),
   resetAuth: actionCreator<void>('RESET_AUTH'),
-  getMyUserRequest: actionCreator<string>('GET_MY_USER_REQUEST'),
-  getMyUserSuccess: actionCreator<User>('GET_MY_USER_SUCCESS'),
-  getMyUserFailure: actionCreator<void>('GET_MY_USER_FAILURE')
+  setUser: actionCreator<User>('SET_USER')
 }
 
 export const useAuthActions = () => {
@@ -61,11 +59,19 @@ export const useAuthActions = () => {
     [dispatch]
   )
 
+  const setUser = useCallback(
+    (user: User) => {
+      dispatch(authActions.setUser(user))
+    },
+    [dispatch]
+  )
+
   return {
     signInApple,
     signInGoogle,
     signInFacebook,
     signInAnonymously,
-    signOut
+    signOut,
+    setUser
   }
 }

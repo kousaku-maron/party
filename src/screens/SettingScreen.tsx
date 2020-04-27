@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react'
 import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
-import { useAuthState, useAuthActions } from '../store/hooks'
+import { useAuthState, useAuthActions, useUIActions } from '../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../services/design'
-import { useNotificationsSetting } from '../services/notifications/notifications'
+import { useNotificationsSetting, removeToken } from '../services/notifications/notifications'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, View } from 'react-native'
 import { ShadowBase } from '../components/atoms'
 import { Header } from '../components/organisms'
@@ -11,21 +11,25 @@ import { LoadingPage } from '../components/pages'
 
 const SettingScreen = () => {
   const navigation = useStackNavigation()
-  const { user } = useAuthState()
+  const { user, uid } = useAuthState()
+  const { setTabState } = useUIActions()
   const { signOut } = useAuthActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
   const inset = useSafeArea()
-
-  // const secure = useSecure(user.uid)
-
   const { enabled, onAccept, onReject } = useNotificationsSetting()
 
-  // MEMO: logOutするとuserデータがなくなってしまうので、先に画面遷移させる。
-  const onLogOut = useCallback(() => {
+  const onLogOut = useCallback(async () => {
+    await removeToken(uid)
+
+    // MEMO: ルーティングのリセットを行っている。
+    navigation.popToTop()
+    navigation.navigate('HomeSection')
     navigation.navigate('Welcome')
+    setTabState('home')
+
     signOut({})
-  }, [navigation, signOut])
+  }, [navigation, setTabState, signOut, uid])
 
   const goToTerms = useCallback(() => {
     navigation.push('Terms')
