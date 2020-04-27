@@ -4,7 +4,6 @@ import { Permission } from '../../entities'
 import { authActions } from './actions'
 import firebase from '../../repositories/firebase'
 import { getPermission, setPermission } from '../../repositories/permission'
-import { signInApple, signInGoogle, signInFacebook, signOut, signInAnonymously } from '../../services/authentication'
 import { askNotificationsPermission, storeToken, removeToken } from '../../services/notifications/notifications'
 
 const authChannel = () => {
@@ -29,87 +28,6 @@ function* checkAuthState() {
       yield fork(updateNotificationsTokenProcess, user.uid)
     } else {
       yield put(authActions.resetAuth())
-    }
-  }
-}
-
-function* signInAppleProcess() {
-  while (true) {
-    const { payload } = yield take(authActions.signInApple)
-    const { onSuccess, onFailure } = payload
-    const { success, cancelled, error } = yield call(signInApple)
-
-    if (success && !cancelled && !error) {
-      if (onSuccess) onSuccess()
-    }
-
-    if (!success && !cancelled && error) {
-      if (onFailure) onFailure()
-    }
-  }
-}
-
-function* signInGoogleProcess() {
-  while (true) {
-    const { payload } = yield take(authActions.signInGoogle)
-    const { onSuccess, onFailure } = payload
-    const { success, cancelled, error } = yield call(signInGoogle)
-
-    if (success && !cancelled && !error) {
-      if (onSuccess) onSuccess()
-    }
-
-    if (!success && !cancelled && error) {
-      if (onFailure) onFailure()
-    }
-  }
-}
-
-function* signInFacebookProcess() {
-  while (true) {
-    const { payload } = yield take(authActions.signInFacebook)
-    const { onSuccess, onFailure } = payload
-    const { success, cancelled, error } = yield call(signInFacebook)
-
-    if (success && !cancelled && !error) {
-      if (onSuccess) onSuccess()
-    }
-
-    if (!success && !cancelled && error) {
-      if (onFailure) onFailure()
-    }
-  }
-}
-
-function* signInAnonymouslyProcess() {
-  while (true) {
-    const { payload } = yield take(authActions.signInAnonymously)
-    const { onSuccess, onFailure } = payload
-    const { success, cancelled, error } = yield call(signInAnonymously)
-
-    if (success && !cancelled && !error) {
-      if (onSuccess) onSuccess()
-    }
-
-    if (!success && !cancelled && error) {
-      if (onFailure) onFailure()
-    }
-  }
-}
-
-function* signOutProcess() {
-  while (true) {
-    const { payload } = yield take(authActions.signOut)
-    const { onSuccess, onFailure } = payload
-    const { success, error } = yield call(signOut)
-
-    if (success && !error) {
-      yield put(authActions.resetAuth())
-      if (onSuccess) onSuccess()
-    }
-
-    if (!success && error) {
-      if (onFailure) onFailure()
     }
   }
 }
@@ -155,13 +73,6 @@ function* updateNotificationsTokenProcess(uid: string) {
   }
 }
 
-const saga = [
-  checkAuthState(),
-  signInAppleProcess(),
-  signInGoogleProcess(),
-  signInFacebookProcess(),
-  signInAnonymouslyProcess(),
-  signOutProcess()
-]
+const saga = [checkAuthState()]
 
 export default saga

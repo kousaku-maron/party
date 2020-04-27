@@ -1,9 +1,8 @@
 import React, { useCallback } from 'react'
-import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
-import { useAuthActions } from '../store/hooks'
+import { useStackNavigation } from '../services/route'
+import { signInApple, signInGoogle, isAvailableSignInWithApple } from '../services/authentication'
 import { useStyles, useColors, MakeStyles } from '../services/design'
-import { isAvailableSignInWithApple } from '../services/authentication'
 import { View, Text, StyleSheet, ImageBackground } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { RoundedButton, ShadowBase } from '../components/atoms'
@@ -11,21 +10,30 @@ import { RoundedButton, ShadowBase } from '../components/atoms'
 const WelcomeScreen = () => {
   const navigation = useStackNavigation()
   const inset = useSafeArea()
-  const { signInApple, signInGoogle } = useAuthActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
-  const onSignInApple = useCallback(() => {
-    signInApple({
-      onSuccess: () => navigation.navigate('App')
-    })
-  }, [navigation, signInApple])
+  const onSignInApple = useCallback(async () => {
+    const { success, cancelled, error } = await signInApple()
+    if (error) {
+      return alert('Apple認証に失敗しました。iOS13以上でないと、Apple認証は利用できません。')
+    }
 
-  const onSignInGoogle = useCallback(() => {
-    signInGoogle({
-      onSuccess: () => navigation.navigate('App')
-    })
-  }, [navigation, signInGoogle])
+    if (success && !cancelled) {
+      navigation.navigate('App')
+    }
+  }, [navigation])
+
+  const onSignInGoogle = useCallback(async () => {
+    const { success, cancelled, error } = await signInGoogle()
+    if (error) {
+      return alert('Google認証に失敗しました。')
+    }
+
+    if (success && !cancelled) {
+      navigation.navigate('App')
+    }
+  }, [navigation])
 
   const goToTerms = useCallback(() => {
     navigation.push('Terms')

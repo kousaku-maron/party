@@ -1,11 +1,9 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { InteractionManager } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import firebase, { functions } from '../repositories/firebase'
+import { db } from '../repositories/firebase'
 import { User, Party, buildParty } from '../entities'
-import { useAuthState, useUIActions, useRoomActions } from '../store/hooks'
+import { useAuthState } from '../store/hooks'
 
-const db = firebase.firestore()
 const usersRef = db.collection('users')
 const partiesRef = db.collection('parties')
 
@@ -93,50 +91,6 @@ export const useParty = (partyID: string) => {
   }, [partyID])
 
   return party
-}
-
-export const useEntryDemoRoom = () => {
-  const { user } = useAuthState()
-  const { openLoadingModal, closeLoadingModal } = useUIActions()
-  const { entryDemoRoom } = useRoomActions()
-  const navigation = useNavigation()
-
-  const onPressEntryDemoRoom = useCallback(
-    (party: Party) => {
-      if (!user || !user.gender) return
-
-      if (!party.entryUIDs?.includes(user.uid)) {
-        openLoadingModal()
-
-        const onSuccess = () => {
-          closeLoadingModal()
-          navigation.navigate('Chat', { roomID: party.id })
-        }
-
-        const onFailure = () => {
-          closeLoadingModal()
-        }
-
-        entryDemoRoom({ roomID: party.id, onSuccess, onFailure })
-        return
-      }
-
-      navigation.navigate('Chat', { roomID: party.id })
-    },
-    [closeLoadingModal, entryDemoRoom, navigation, openLoadingModal, user]
-  )
-
-  return { onPressEntryDemoRoom }
-}
-
-export const entryDemoParty = async (partyID: string) => {
-  try {
-    await functions.httpsCallable('entryParty')({ partyID })
-    return { success: true }
-  } catch (e) {
-    console.warn(e)
-    return { success: false, error: e }
-  }
 }
 
 //MEMO: appliedParty.tsを作るかどうか...

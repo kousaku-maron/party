@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react'
 import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
-import { useAuthState, useAuthActions, useUIActions } from '../store/hooks'
+import { useAuthState, useUIActions } from '../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../services/design'
+import { signOut } from '../services/authentication'
 import { useNotificationsSetting, removeToken } from '../services/notifications/notifications'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, View } from 'react-native'
 import { ShadowBase } from '../components/atoms'
@@ -13,7 +14,6 @@ const SettingScreen = () => {
   const navigation = useStackNavigation()
   const { user, uid } = useAuthState()
   const { setTabState } = useUIActions()
-  const { signOut } = useAuthActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
   const inset = useSafeArea()
@@ -21,15 +21,20 @@ const SettingScreen = () => {
 
   const onLogOut = useCallback(async () => {
     await removeToken(uid)
+    const { success, error } = await signOut()
 
-    // MEMO: ルーティングのリセットを行っている。
-    navigation.popToTop()
-    navigation.navigate('HomeSection')
-    navigation.navigate('Welcome')
-    setTabState('home')
+    if (!success && error) {
+      return alert('ログアウトに失敗しました。')
+    }
 
-    signOut({})
-  }, [navigation, setTabState, signOut, uid])
+    if (success) {
+      // MEMO: ルーティングのリセットを行っている。
+      navigation.popToTop()
+      navigation.navigate('HomeSection')
+      navigation.navigate('Welcome')
+      setTabState('home')
+    }
+  }, [navigation, setTabState, uid])
 
   const goToTerms = useCallback(() => {
     navigation.push('Terms')
