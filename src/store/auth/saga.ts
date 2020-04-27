@@ -4,9 +4,9 @@ import { buildUser, Permission } from '../../entities'
 import { authActions } from './actions'
 import { db } from '../../repositories/firebase'
 import firebase from '../../repositories/firebase'
-import { getPermission } from '../../repositories/permission'
+import { getPermission, setPermission } from '../../repositories/permission'
 import { signInApple, signInGoogle, signInFacebook, signOut, signInAnonymously } from '../../services/authentication'
-import { askNotificationsPermission, storeToken } from '../../services/notifications/notifications'
+import { askNotificationsPermission, storeToken, removeToken } from '../../services/notifications/notifications'
 
 const usersRef = db.collection('users')
 
@@ -30,6 +30,7 @@ function* checkAuthState() {
       yield put(authActions.setAuth(user.uid))
       yield fork(getMyUser, user.uid)
       yield fork(askNotificationsPermissionProcess, user.uid)
+      yield fork(updateNotificationsTokenProcess, user.uid)
     } else {
       yield put(authActions.resetAuth())
     }
@@ -148,23 +149,10 @@ function* signOutProcess() {
   }
 }
 
-// function* fetchMyUser() {
-//   while (true) {
-//     const { payload } = yield take(authActions.getMyUserRequest)
-
-//     try {
-//       const user = yield call(userRepository.getUser, payload)
-//       yield put(authActions.getMyUserSuccess(user))
-//     } catch (e) {
-//       yield put(authActions.getMyUserFailure())
-//     }
-//   }
-// }
-
 function* askNotificationsPermissionProcess(uid: string) {
   try {
     const {
-      notifications: { isAlreadyInitialAsked, isEnabledNotifications }
+      notifications: { isAlreadyInitialAsked }
     }: Permission = yield call(getPermission)
 
     if (!isAlreadyInitialAsked) {
@@ -172,10 +160,30 @@ function* askNotificationsPermissionProcess(uid: string) {
       if (result) {
         yield call(storeToken, uid)
       }
+
+      if (!result) {
+        yield call(setPermission, {
+          notifications: { isAlreadyInitialAsked: true, isEnabledNotifications: false }
+        })
+      }
+    }
+  } catch (e) {
+    console.warn(e)
+  }
+}
+
+function* updateNotificationsTokenProcess(uid: string) {
+  try {
+    const {
+      notifications: { isAlreadyInitialAsked, isEnabledNotifications }
+    }: Permission = yield call(getPermission)
+
+    if (isAlreadyInitialAsked && isEnabledNotifications) {
+      yield call(storeToken, uid)
     }
 
-    if (isEnabledNotifications) {
-      yield call(storeToken, uid)
+    if (isAlreadyInitialAsked && !isEnabledNotifications) {
+      yield call(removeToken, uid)
     }
   } catch (e) {
     console.warn(e)
