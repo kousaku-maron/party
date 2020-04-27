@@ -1,14 +1,12 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { enableScreens } from 'react-native-screens'
-import { Provider } from 'react-redux'
 import { AppearanceProvider } from 'react-native-appearance'
-import configureStore from './src/store/configureStore'
+import StoreProvider from './src/store/StoreProvider'
+import AuthRequiredEffectProvider from './src/store/AuthRequiredEffectProvider'
 import AppNavigator from './src/navigators/AppNavigator'
 import FlashMessage from 'react-native-flash-message'
 import { LoadingModal } from './src/components/organisms'
-
-const store = configureStore()
 
 const App = (): JSX.Element => {
   enableScreens()
@@ -16,11 +14,13 @@ const App = (): JSX.Element => {
   return (
     <NavigationContainer>
       <AppearanceProvider>
-        <Provider store={store}>
-          <AppNavigator />
-          <FlashMessage position="top" />
-          <LoadingModal />
-        </Provider>
+        <StoreProvider>
+          <AuthRequiredEffectProvider>
+            <AppNavigator />
+            <FlashMessage position="top" />
+            <LoadingModal />
+          </AuthRequiredEffectProvider>
+        </StoreProvider>
       </AppearanceProvider>
     </NavigationContainer>
   )
