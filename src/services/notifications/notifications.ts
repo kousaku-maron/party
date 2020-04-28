@@ -5,6 +5,11 @@ import { setPermission, getPermission } from '../../repositories/permission'
 import { getPushTokens, createPushToken, deletePushToken } from '../../repositories/pushToken'
 import { useAuthState } from '../../store/auth'
 
+/**
+ * Appに通知権限をリクエストします。
+ *
+ * デバイストークンの保存、削除の処理は行われません。
+ */
 export const askNotificationsPermission = async () => {
   const settings = await messaging().requestPermission()
 
@@ -15,6 +20,11 @@ export const askNotificationsPermission = async () => {
   return { result: false }
 }
 
+/**
+ * ログインユーザーと紐付けてデバイストークンを保存します。
+ *
+ * Appに通知権限がなければ、処理はスキップされます。
+ */
 export const storeToken = async (uid: string) => {
   if (!Constants.isDevice) {
     return alert('エミュレーターでは、プッシュ通知のトークン制御を禁止しています。')
@@ -34,7 +44,12 @@ export const storeToken = async (uid: string) => {
   await setPermission({ notifications: { isAlreadyInitialAsked: true, isEnabledNotifications: true } })
 }
 
-const removeToken = async (uid: string) => {
+/**
+ * ログインユーザーと紐付いたデバイストークンを削除します。
+ *
+ * Appに通知権限がなければ、処理はスキップされます。
+ */
+export const removeToken = async (uid: string) => {
   if (!Constants.isDevice) {
     return alert('エミュレーターでは、プッシュ通知のトークン制御を禁止しています。')
   }

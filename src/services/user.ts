@@ -24,7 +24,7 @@ export const useUser = (uid: string) => {
           setUser(user)
         },
         error => {
-          console.warn(error)
+          console.info('catch useUser error', error)
         }
       )
       return () => {

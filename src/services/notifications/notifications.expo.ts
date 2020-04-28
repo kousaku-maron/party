@@ -10,6 +10,10 @@ export const storeToken = async (_uid: string) => {
   console.info('skip store token process.')
 }
 
+export const removeToken = async (_uid: string) => {
+  console.info('skip remove token process.')
+}
+
 export const useNotificationsSetting = () => {
   const onAccept = useCallback(() => {
     return alert('Expoアプリでは、プッシュ通知機能を操作できません。')
