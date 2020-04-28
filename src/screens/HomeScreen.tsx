@@ -14,6 +14,7 @@ import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 import { PartyPrimaryCard, PartySecondaryCard, GenderModal } from '../components/organisms'
 import { setGender } from '../services/user'
+// import { Indicator } from '../@assets/lottie'
 
 const homeTags = ['home']
 const popularTags = ['popular']
