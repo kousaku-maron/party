@@ -5,7 +5,7 @@ import { buildMessage, Message, CreateMessage, systemUser } from '../entities'
 import { setMessage } from '../repositories/message'
 import { showQuickRepliedSuccessMessage } from '../services/flashCard'
 import { IMessage, Reply } from 'react-native-gifted-chat'
-import { useAuthState } from '../store/auth'
+import { useAuthState } from '../store/hooks'
 import _ from 'lodash'
 
 const db = firebase.firestore()

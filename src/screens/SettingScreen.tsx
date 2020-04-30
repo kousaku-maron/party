@@ -4,7 +4,7 @@ import { useSafeArea } from 'react-native-safe-area-context'
 import { useAuthState, useUIActions } from '../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../services/design'
 import { signOut } from '../services/authentication'
-import { useNotificationsSetting, removeToken } from '../services/notifications/notifications'
+import notifications from '../services/notifications'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, View } from 'react-native'
 import { ShadowBase } from '../components/atoms'
 import { Header } from '../components/organisms'
@@ -17,10 +17,10 @@ const SettingScreen = () => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
   const inset = useSafeArea()
-  const { enabled, onAccept, onReject } = useNotificationsSetting()
+  const { enabled, onAccept, onReject } = notifications.useNotificationsSetting()
 
   const onLogOut = useCallback(async () => {
-    await removeToken(uid)
+    await notifications.removeToken(uid)
     const { success, error } = await signOut()
 
     if (!success && error) {

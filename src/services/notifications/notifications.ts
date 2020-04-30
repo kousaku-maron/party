@@ -3,7 +3,7 @@ import messaging from '@react-native-firebase/messaging'
 import Constants from 'expo-constants'
 import { setPermission, getPermission } from '../../repositories/permission'
 import { getPushTokens, createPushToken, deletePushToken } from '../../repositories/pushToken'
-import { useAuthState } from '../../store/auth'
+import { useAuthState } from '../../store/hooks'
 
 /**
  * Appに通知権限をリクエストします。

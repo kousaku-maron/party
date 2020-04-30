@@ -4,7 +4,7 @@ import { Permission } from '../../entities'
 import { authActions } from './actions'
 import firebase from '../../repositories/firebase'
 import { getPermission, setPermission } from '../../repositories/permission'
-import { askNotificationsPermission, storeToken, removeToken } from '../../services/notifications/notifications'
+import notifications from '../../services/notifications'
 
 const authChannel = () => {
   const channel = eventChannel(emit => {
@@ -39,9 +39,9 @@ function* askNotificationsPermissionProcess(uid: string) {
     }: Permission = yield call(getPermission)
 
     if (!isAlreadyInitialAsked) {
-      const { result }: { result: boolean } = yield call(askNotificationsPermission)
+      const { result }: { result: boolean } = yield call(notifications.askNotificationsPermission)
       if (result) {
-        yield call(storeToken, uid)
+        yield call(notifications.storeToken, uid)
       }
 
       if (!result) {
@@ -62,11 +62,11 @@ function* updateNotificationsTokenProcess(uid: string) {
     }: Permission = yield call(getPermission)
 
     if (isAlreadyInitialAsked && isEnabledNotifications) {
-      yield call(storeToken, uid)
+      yield call(notifications.storeToken, uid)
     }
 
     if (isAlreadyInitialAsked && !isEnabledNotifications) {
-      yield call(removeToken, uid)
+      yield call(notifications.removeToken, uid)
     }
   } catch (e) {
     console.warn(e)
