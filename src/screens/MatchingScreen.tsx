@@ -51,7 +51,7 @@ const MatchingScreen = () => {
     return !targetUserID || !partyID || !groupID
   }, [targetUserID, partyID, groupID])
 
-  const targetUser = useUser(targetUserID)
+  const { user: targetUser } = useUser(targetUserID)
   const party = useParty(partyID)
   const group = useGroup(partyID, groupID)
 

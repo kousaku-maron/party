@@ -15,7 +15,7 @@ const RoomScreen = () => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
   const inset = useSafeArea()
-  const roomsWithUser = useRoomsWithUser() // TODO: roomに"users"を保存させるので、"useRooms"に変える。
+  const { fetching, roomsWithUser } = useRoomsWithUser() // TODO: roomに"users"を保存させるので、"useRooms"に変える。
 
   const onPressCard = useCallback(
     (room: Room) => {
@@ -25,7 +25,7 @@ const RoomScreen = () => {
   )
 
   return (
-    <BottomTabLayout>
+    <BottomTabLayout fetching={fetching}>
       <View style={styles.container}>
         <ScrollView
           style={[styles.scrollView, { paddingTop: inset.top }]}
@@ -48,7 +48,7 @@ const RoomScreen = () => {
 
           <View style={styles.headerBottomSpacer} />
 
-          {roomsWithUser.length === 0 && (
+          {!fetching && roomsWithUser.length === 0 && (
             <View style={styles.emptyMessageContainer}>
               <Text style={styles.emptyMessageText}>ルームがまだありません</Text>
             </View>

@@ -12,7 +12,6 @@ import { useFriends, useApplyFriend } from '../services/friend'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { Thumbnail, Fab, DotsIcon, ShadowBase } from '../components/atoms'
 import { PartySecondaryCard, Header } from '../components/organisms'
-import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 import { Icons } from '../@assets/vector-icons'
 
@@ -39,7 +38,7 @@ const UserScreen = () => {
     return true
   }, [route.params, uid])
 
-  const user = useUser(targetUserID)
+  const { fetching, user } = useUser(targetUserID)
   const friends = useFriends(user)
   const appliedParties = useAppliedParties(user)
   const { applyFriend } = useApplyFriend()
@@ -88,12 +87,8 @@ const UserScreen = () => {
     }
   }, [applyFriend, isMy, user])
 
-  if (!user) {
-    return <LoadingPage />
-  }
-
   return (
-    <BottomTabLayout>
+    <BottomTabLayout fetching={fetching}>
       <View style={[styles.container, { paddingTop: inset.top }]}>
         <ScrollView style={styles.userScrollView} stickyHeaderIndices={[1]} showsVerticalScrollIndicator={false}>
           <View style={styles.headerTopSpacer} />
@@ -116,52 +111,54 @@ const UserScreen = () => {
 
           <View style={styles.profileArea}>
             <View style={styles.profileContainer}>
-              <View style={styles.profileWrapper}>
-                <View style={styles.thumbnailWrapper}>
-                  <ShadowBase>
-                    <Thumbnail uri={user.thumbnailURL} size={80} />
-                  </ShadowBase>
+              {!fetching && user && (
+                <View style={styles.profileWrapper}>
+                  <View style={styles.thumbnailWrapper}>
+                    <ShadowBase>
+                      <Thumbnail uri={user.thumbnailURL} size={80} />
+                    </ShadowBase>
+                  </View>
+
+                  <View style={styles.nameWrapper}>
+                    <Text style={styles.nameText}>{user.name}</Text>
+                  </View>
+
+                  {user.introduction && (
+                    <View style={styles.introWrapper}>
+                      <Text style={styles.introText}>{user.introduction}</Text>
+                    </View>
+                  )}
+
+                  {isMy && (
+                    <TouchableOpacity style={styles.editIconWrapper} onPress={goToEdit}>
+                      <Icons name="edit" color={colors.foregrounds.primary} size={18} />
+                    </TouchableOpacity>
+                  )}
+
+                  {isFriend && !isBlocked && !isMy && (
+                    <View style={styles.friendTextWrapper}>
+                      <Text style={styles.friendText}>ともだち</Text>
+                    </View>
+                  )}
+
+                  {isAlreadyApplyFriend && !isBlocked && !isMy && (
+                    <View style={styles.friendTextWrapper}>
+                      <Text style={styles.friendText}>ともだち申請中</Text>
+                    </View>
+                  )}
+
+                  {isBlocked && !isMy && (
+                    <View style={styles.blockTextWrapper}>
+                      <Text style={styles.blockText}>ブロック中</Text>
+                    </View>
+                  )}
                 </View>
-
-                <View style={styles.nameWrapper}>
-                  <Text style={styles.nameText}>{user.name}</Text>
-                </View>
-
-                {user.introduction && (
-                  <View style={styles.introWrapper}>
-                    <Text style={styles.introText}>{user.introduction}</Text>
-                  </View>
-                )}
-
-                {isMy && (
-                  <TouchableOpacity style={styles.editIconWrapper} onPress={goToEdit}>
-                    <Icons name="edit" color={colors.foregrounds.primary} size={18} />
-                  </TouchableOpacity>
-                )}
-
-                {isFriend && !isBlocked && !isMy && (
-                  <View style={styles.friendTextWrapper}>
-                    <Text style={styles.friendText}>ともだち</Text>
-                  </View>
-                )}
-
-                {isAlreadyApplyFriend && !isBlocked && !isMy && (
-                  <View style={styles.friendTextWrapper}>
-                    <Text style={styles.friendText}>ともだち申請中</Text>
-                  </View>
-                )}
-
-                {isBlocked && !isMy && (
-                  <View style={styles.blockTextWrapper}>
-                    <Text style={styles.blockText}>ブロック中</Text>
-                  </View>
-                )}
-              </View>
+              )}
             </View>
 
             <ShadowBase>
               <View style={styles.contentsContainer}>
-                {(isMy || (!isFriend && !isBlocked && !isAlreadyApplyFriend)) && (
+                {!fetching && (isMy || (!isFriend && !isBlocked && !isAlreadyApplyFriend)) && (
                   <View style={styles.fabWrapper}>
                     <ShadowBase>
                       <Fab size={75} color={colors.backgrounds.tertiary} onPress={onPressAddUser}>

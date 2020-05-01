@@ -8,6 +8,7 @@ const usersRef = db.collection('users')
 const partiesRef = db.collection('parties')
 
 export const usePartiesByTags = (tags: string[]) => {
+  const [fetching, setFetching] = useState<boolean>(true)
   const [parties, setParties] = useState<Party[]>([])
   const auth = useAuthState()
   const { user } = auth
@@ -24,6 +25,7 @@ export const usePartiesByTags = (tags: string[]) => {
               return buildParty(doc.id, doc.data())
             })
             setParties(newParty)
+            setFetching(false)
           },
           error => {
             console.info('catch usePartiesByTags error', error)
@@ -36,7 +38,7 @@ export const usePartiesByTags = (tags: string[]) => {
     })
   }, [tags, user])
 
-  return parties
+  return { fetching, parties }
 }
 
 export const useParties = () => {

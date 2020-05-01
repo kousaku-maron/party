@@ -8,6 +8,7 @@ import { RouteParams } from '../navigators/RouteProps'
 import { useAuthState } from '../store/hooks'
 import { MakeStyles, useStyles } from '../services/design'
 import { useMessages, useSendMessage } from '../services/chat'
+import { BottomTabLayout } from '../components/templates'
 import { ShadowBase } from '../components/atoms'
 import { ChatBubble, ChatInput, Header } from '../components/organisms'
 import { User } from '../entities'
@@ -18,7 +19,7 @@ const ChatScreen = () => {
   const inset = useSafeArea()
   const route = useRoute<RouteProp<RouteParams, 'Chat'>>()
   const roomID = route.params.roomID
-  const messages = useMessages(roomID)
+  const { fetching, messages } = useMessages(roomID)
   const { onSend } = useSendMessage(roomID)
   const styles = useStyles(makeStyles)
 
@@ -30,48 +31,50 @@ const ChatScreen = () => {
   )
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={[styles.scrollView, { paddingTop: inset.top }]}
-        stickyHeaderIndices={[1]}
-        // メッセージは、スクロールできる長さが不確実なためインジゲーターを表示させることにしている。
-        // showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.headerTopSpacer} />
+    <BottomTabLayout fetching={fetching}>
+      <View style={styles.container}>
+        <ScrollView
+          style={[styles.scrollView, { paddingTop: inset.top }]}
+          stickyHeaderIndices={[1]}
+          // メッセージは、スクロールできる長さが不確実なためインジゲーターを表示させることにしている。
+          // showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.headerTopSpacer} />
 
-        <View style={styles.headerContainer}>
-          <Header />
-        </View>
-
-        {messages.length === 0 && (
-          <View style={styles.emptyMessageContainer}>
-            <Text style={styles.emptyMessageText}>あいさつしてみよう！</Text>
+          <View style={styles.headerContainer}>
+            <Header />
           </View>
-        )}
 
-        {messages.map(message => {
-          const isMy = message.user.uid === uid
-
-          return (
-            <View key={message.id} style={isMy ? styles.myBubbleContainer : styles.bubbleContainer}>
-              <ShadowBase>
-                <ChatBubble message={message} isMy={isMy} onPressAvatar={onPressAvatar} />
-              </ShadowBase>
+          {!fetching && messages.length === 0 && (
+            <View style={styles.emptyMessageContainer}>
+              <Text style={styles.emptyMessageText}>あいさつしてみよう！</Text>
             </View>
-          )
-        })}
+          )}
 
-        {/* MEMO: tab height 70px */}
-        <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
-      </ScrollView>
+          {messages.map(message => {
+            const isMy = message.user.uid === uid
 
-      <View style={[styles.tabContainer, { paddingBottom: inset.bottom }]}>
-        <ShadowBase intensity={2}>
-          <ChatInput fullWidth={true} onSend={onSend} />
-        </ShadowBase>
-        <KeyboardSpacer />
+            return (
+              <View key={message.id} style={isMy ? styles.myBubbleContainer : styles.bubbleContainer}>
+                <ShadowBase>
+                  <ChatBubble message={message} isMy={isMy} onPressAvatar={onPressAvatar} />
+                </ShadowBase>
+              </View>
+            )
+          })}
+
+          {/* MEMO: tab height 70px */}
+          <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
+        </ScrollView>
+
+        <View style={[styles.tabContainer, { paddingBottom: inset.bottom }]}>
+          <ShadowBase intensity={2}>
+            <ChatInput fullWidth={true} onSend={onSend} />
+          </ShadowBase>
+          <KeyboardSpacer />
+        </View>
       </View>
-    </View>
+    </BottomTabLayout>
   )
 }
 
