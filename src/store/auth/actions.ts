@@ -1,5 +1,3 @@
-import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 import actionCreateFactory from 'typescript-fsa'
 import { User } from '../../entities'
 
@@ -8,18 +6,8 @@ const actionCreator = actionCreateFactory()
 export const authActions = {
   setAuth: actionCreator<string>('SET_AUTH'),
   resetAuth: actionCreator<void>('RESET_AUTH'),
-  setUser: actionCreator<User>('SET_USER')
-}
-
-export const useAuthActions = () => {
-  const dispatch = useDispatch()
-
-  const setUser = useCallback(
-    (user: User) => {
-      dispatch(authActions.setUser(user))
-    },
-    [dispatch]
-  )
-
-  return { setUser }
+  setUser: actionCreator<User>('SET_USER'),
+  resetUser: actionCreator<void>('RESET_USER'),
+  startUserSession: actionCreator<string>('START_USER_SESSION'),
+  stopUserSession: actionCreator<void>('STOP_USER_SESSION')
 }

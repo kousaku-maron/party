@@ -20,11 +20,14 @@ export const authReducer = reducerWithInitialState(initialState)
   .case(authActions.setAuth, (state, uid) => {
     return { ...state, uid, checked: true }
   })
-  .case(authActions.resetAuth, () => {
-    return { ...initialState, checked: true }
+  .case(authActions.resetAuth, state => {
+    return { ...state, uid: null, checked: true }
   })
   .case(authActions.setUser, (state, user) => {
     return { ...state, user }
+  })
+  .case(authActions.resetUser, state => {
+    return { ...state, user: null }
   })
 
 export const useAuthState = () => {
