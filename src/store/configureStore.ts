@@ -1,7 +1,7 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { authReducer, Auth } from './auth'
-import { uiReducer, UI } from './ui'
+import { authReducer, Auth } from './auth/reducer'
+import { uiReducer, UI } from './ui/reducer'
 import rootSaga from './configureSaga'
 
 const sagaMiddleware = createSagaMiddleware()

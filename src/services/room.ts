@@ -40,6 +40,7 @@ export const useRooms = () => {
 export const useRoomsWithUser = () => {
   const [roomsWithUser, setRoomWithUser] = useState<(Room & { users: User[] })[]>([])
   const rooms = useRooms()
+  const [fetching, setFetching] = useState<boolean>(true)
 
   useEffect(() => {
     if (!rooms) return
@@ -67,10 +68,11 @@ export const useRoomsWithUser = () => {
       const newRoomsWithUser = await Promise.all(task)
 
       setRoomWithUser(newRoomsWithUser)
+      setFetching(false)
     }
 
     asyncTask()
   }, [rooms])
 
-  return roomsWithUser
+  return { fetching, roomsWithUser }
 }

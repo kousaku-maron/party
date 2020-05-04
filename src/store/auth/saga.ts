@@ -1,11 +1,14 @@
-import { take, put, call, fork } from 'redux-saga/effects'
+import { take, put, call, fork, cancel, cancelled } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
-import { Permission } from '../../entities'
+import { Permission, User, buildUser } from '../../entities'
 import { authActions } from './actions'
 import firebase from '../../repositories/firebase'
+import { db } from '../../repositories/firebase'
 import { getPermission, setPermission } from '../../repositories/permission'
-import { askNotificationsPermission, storeToken, removeToken } from '../../services/notifications/notifications'
+import notifications from '../../services/notifications'
 
+// auth state
+// ----------------------------------------
 const authChannel = () => {
   const channel = eventChannel(emit => {
     const unsubscribe = firebase.auth().onAuthStateChanged(
@@ -17,31 +20,47 @@ const authChannel = () => {
   return channel
 }
 
-function* checkAuthState() {
+function* watchAuthChannel() {
   const channel = yield call(authChannel)
   while (true) {
     const { user, error } = yield take(channel)
 
     if (user && !error) {
-      yield put(authActions.setAuth(user.uid))
-      yield fork(askNotificationsPermissionProcess, user.uid)
-      yield fork(updateNotificationsTokenProcess, user.uid)
-    } else {
-      yield put(authActions.resetAuth())
+      yield fork(handleCatchAuthState, user)
+    }
+
+    if (!user || error) {
+      yield fork(handleNotCatchAuthState)
     }
   }
 }
 
-function* askNotificationsPermissionProcess(uid: string) {
+function* handleCatchAuthState(user: firebase.User) {
+  try {
+    yield put(authActions.setAuth(user.uid))
+    yield put(authActions.startUserSession(user.uid))
+    yield call(askNotificationsPermissionTask, user.uid)
+    yield call(updateNotificationsTokenTask, user.uid)
+  } catch (e) {
+    console.warn(e)
+  }
+}
+
+function* handleNotCatchAuthState() {
+  yield put(authActions.resetAuth())
+  yield put(authActions.stopUserSession())
+}
+
+function* askNotificationsPermissionTask(uid: string) {
   try {
     const {
       notifications: { isAlreadyInitialAsked }
     }: Permission = yield call(getPermission)
 
     if (!isAlreadyInitialAsked) {
-      const { result }: { result: boolean } = yield call(askNotificationsPermission)
+      const { result }: { result: boolean } = yield call(notifications.askNotificationsPermission)
       if (result) {
-        yield call(storeToken, uid)
+        yield call(notifications.storeToken, uid)
       }
 
       if (!result) {
@@ -55,24 +74,86 @@ function* askNotificationsPermissionProcess(uid: string) {
   }
 }
 
-function* updateNotificationsTokenProcess(uid: string) {
+function* updateNotificationsTokenTask(uid: string) {
   try {
     const {
       notifications: { isAlreadyInitialAsked, isEnabledNotifications }
     }: Permission = yield call(getPermission)
 
     if (isAlreadyInitialAsked && isEnabledNotifications) {
-      yield call(storeToken, uid)
+      yield call(notifications.storeToken, uid)
     }
 
     if (isAlreadyInitialAsked && !isEnabledNotifications) {
-      yield call(removeToken, uid)
+      yield call(notifications.removeToken, uid)
     }
   } catch (e) {
     console.warn(e)
   }
 }
 
-const saga = [checkAuthState()]
+// user state
+// ----------------------------------------
+function* userSessionFlow() {
+  while (true) {
+    const { payload: uid } = yield take(authActions.startUserSession)
+    const task = yield fork(watchUserSessionChannel, uid)
+    yield take(authActions.stopUserSession)
+    yield cancel(task)
+  }
+}
+
+const userSessionChannel = (uid: string) => {
+  const channel = eventChannel(emit => {
+    const userRef = db.collection('users').doc(uid)
+    const unsubscribe = userRef.onSnapshot(
+      (doc: firebase.firestore.DocumentSnapshot) => {
+        if (!doc.exists) {
+          emit({ error: 'not found user documents' })
+          return
+        }
+
+        const user = buildUser(doc.id, doc.data())
+        emit({ user })
+      },
+      (error: Error) => {
+        emit({ error })
+      }
+    )
+    return unsubscribe
+  })
+  return channel
+}
+
+function* watchUserSessionChannel(uid: string) {
+  const channel = yield call(userSessionChannel, uid)
+  try {
+    while (true) {
+      const { user, error } = yield take(channel)
+
+      if (user && !error) {
+        yield fork(handleCatchUserState, user)
+      }
+
+      if (!user || error) {
+        yield fork(handleNotCatchUserState)
+      }
+    }
+  } finally {
+    if (yield cancelled()) {
+      channel.close()
+    }
+  }
+}
+
+function* handleCatchUserState(user: User) {
+  yield put(authActions.setUser(user))
+}
+
+function* handleNotCatchUserState() {
+  yield put(authActions.resetUser())
+}
+
+const saga = [watchAuthChannel(), userSessionFlow()]
 
 export default saga

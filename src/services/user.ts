@@ -12,6 +12,7 @@ import { buildUser, User, updateDocument } from '../entities'
 const usersRef = db.collection('users')
 
 export const useUser = (uid: string) => {
+  const [fetching, setFetching] = useState<boolean>(true)
   const [user, setUser] = useState<User>(null)
 
   useEffect(() => {
@@ -22,6 +23,7 @@ export const useUser = (uid: string) => {
         (doc: firebase.firestore.DocumentSnapshot) => {
           const user = buildUser(doc.id, doc.data())
           setUser(user)
+          setFetching(false)
         },
         error => {
           console.info('catch useUser error', error)
@@ -33,7 +35,7 @@ export const useUser = (uid: string) => {
     })
   }, [uid])
 
-  return user
+  return { fetching, user }
 }
 
 type SearchUsersOption = {

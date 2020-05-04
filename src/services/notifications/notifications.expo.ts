@@ -6,11 +6,11 @@ export const askNotificationsPermission = async () => {
   return { result: false }
 }
 
-export const storeToken = async (_uid: string) => {
+export const storeToken = (_uid: string) => {
   console.info('skip store token process.')
 }
 
-export const removeToken = async (_uid: string) => {
+export const removeToken = (_uid: string) => {
   console.info('skip remove token process.')
 }
 

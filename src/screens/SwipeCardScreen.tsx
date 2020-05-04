@@ -1,9 +1,10 @@
 import React, { useCallback, useState, useMemo, useEffect } from 'react'
-import { View, Text, StyleSheet, Dimensions, ImageBackground, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, ImageBackground } from 'react-native'
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import Carousel from 'react-native-snap-carousel'
 import { RouteParams } from '../navigators/RouteProps'
+import { BottomTabLayout } from '../components/templates'
 import { Fab, ShadowBase, BloomBase } from '../components/atoms'
 import { SwipeCard, Header } from '../components/organisms'
 import { ApplyCard } from '../entities'
@@ -22,7 +23,7 @@ const SwipeCardScreen = () => {
   const type = route.params.type as string
 
   const [cards, setCards] = useState<ApplyCard[]>([])
-  const [isFetched, setIsFetched] = useState<boolean>(false)
+  const [fetching, setFetching] = useState<boolean>(true)
   const [isError, setIsError] = useState<boolean>(false)
   useEffect(() => {
     const asyncTask = async () => {
@@ -36,7 +37,7 @@ const SwipeCardScreen = () => {
         setCards(cards)
       }
 
-      setIsFetched(true)
+      setFetching(false)
     }
 
     asyncTask()
@@ -98,74 +99,61 @@ const SwipeCardScreen = () => {
     setSlideIndex(slideIndex)
   }, [])
 
-  if (isError) {
-    return (
-      <View style={[styles.container, { paddingTop: inset.top + 36 }]}>
-        <View style={styles.headerContainer}>
-          <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
-        </View>
-        <View style={styles.messageContainer}>
-          <Text style={styles.messageText}>カードの取得に失敗しました</Text>
-        </View>
-      </View>
-    )
-  }
-
-  if (!isFetched) {
-    return (
-      <View style={[styles.container, { paddingTop: inset.top + 36 }]}>
-        <View style={styles.headerContainer}>
-          <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
-        </View>
-        <View style={styles.messageContainer}>
-          <ActivityIndicator size="large" />
-        </View>
-      </View>
-    )
-  }
-
-  if (isFetched && cards.length === 0) {
-    return (
-      <View style={[styles.container, { paddingTop: inset.top + 36 }]}>
-        <View style={styles.headerContainer}>
-          <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
-        </View>
-        <View style={styles.messageContainer}>
-          <Text style={styles.messageText}>カードがありません</Text>
-        </View>
-      </View>
-    )
-  }
-
   return (
-    <ImageBackground
-      blurRadius={15}
-      source={{ uri: backgroundURL }}
-      style={[styles.container, { paddingTop: inset.top + 36 }]}
-    >
-      <View style={styles.headerContainer}>
-        <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
-      </View>
-
-      <View style={styles.inner}>
-        <View style={styles.titleTextWrapper}>
-          <Text style={styles.titleText}>{title}</Text>
-          <Text style={styles.areaText}>東京エリア</Text>
+    <BottomTabLayout fetching={fetching}>
+      {!fetching && isError && (
+        <View style={[styles.container, { paddingTop: inset.top + 36 }]}>
+          <View style={styles.headerContainer}>
+            <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
+          </View>
+          <View style={styles.messageContainer}>
+            <Text style={styles.messageText}>カードの取得に失敗しました</Text>
+          </View>
         </View>
+      )}
 
-        <View style={[styles.swipeArea, { paddingBottom: inset.bottom + 48 }]}>
-          <Carousel
-            data={cards}
-            renderItem={renderItem}
-            onSnapToItem={onSnapToItem}
-            itemWidth={320}
-            activeSlideAlignment={'center'}
-            sliderWidth={Dimensions.get('window').width}
-            inactiveSlideOpacity={0.6}
-          />
+      {!fetching && !isError && cards.length === 0 && (
+        <View style={[styles.container, { paddingTop: inset.top + 36 }]}>
+          <View style={styles.headerContainer}>
+            <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
+          </View>
+          <View style={styles.messageContainer}>
+            <Text style={styles.messageText}>カードがありません</Text>
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      )}
+
+      {!fetching && !isError && cards.length > 0 && (
+        <ImageBackground
+          blurRadius={15}
+          source={{ uri: backgroundURL }}
+          style={[styles.container, { paddingTop: inset.top + 36 }]}
+        >
+          <View style={styles.headerContainer}>
+            <Header fullWidth={true} tintColor={colors.foregrounds.onTintPrimary} />
+          </View>
+
+          <View style={styles.inner}>
+            <View style={styles.titleTextWrapper}>
+              <Text style={styles.titleText}>{title}</Text>
+              <Text style={styles.areaText}>東京エリア</Text>
+            </View>
+
+            <View style={[styles.swipeArea, { paddingBottom: inset.bottom + 48 }]}>
+              <Carousel
+                data={cards}
+                renderItem={renderItem}
+                onSnapToItem={onSnapToItem}
+                itemWidth={320}
+                activeSlideAlignment={'center'}
+                sliderWidth={Dimensions.get('window').width}
+                inactiveSlideOpacity={0.6}
+              />
+            </View>
+          </View>
+        </ImageBackground>
+      )}
+    </BottomTabLayout>
   )
 }
 

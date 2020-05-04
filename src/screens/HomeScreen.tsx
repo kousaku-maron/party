@@ -10,7 +10,6 @@ import { useStyles, MakeStyles } from '../services/design'
 import { useAuthState } from '../store/hooks'
 import { ShadowBase } from '../components/atoms'
 import { Modal } from '../components/moleculers'
-import { LoadingPage } from '../components/pages'
 import { BottomTabLayout } from '../components/templates'
 import { PartyPrimaryCard, PartySecondaryCard, GenderModal } from '../components/organisms'
 import { setGender } from '../services/user'
@@ -24,8 +23,8 @@ const HomeScreen = () => {
   const styles = useStyles(makeStyles)
   const { user, uid } = useAuthState()
 
-  const homeParties = usePartiesByTags(homeTags)
-  const popularParties = usePartiesByTags(popularTags)
+  const { fetching: fetchingHome, parties: homeParties } = usePartiesByTags(homeTags)
+  const { fetching: fetchingPopular, parties: popularParties } = usePartiesByTags(popularTags)
 
   const genderModalTools = useModal()
   const isAcceptedModalTools = useModal()
@@ -65,19 +64,15 @@ const HomeScreen = () => {
     [onPressParty]
   )
 
-  if (!homeParties || !popularParties) {
-    return <LoadingPage />
-  }
-
   return (
-    <BottomTabLayout>
+    <BottomTabLayout fetching={fetchingHome || fetchingPopular}>
       <View style={styles.container}>
         <ScrollView
           contentContainerStyle={[styles.scrollView, { paddingTop: insetTop + 24, paddingBottom: insetBottom + 24 }]}
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.parimaryTitleTextWrapper}>
-            <Text style={styles.parimaryTitleText}>人気</Text>
+            {!fetchingPopular && <Text style={styles.parimaryTitleText}>人気</Text>}
           </View>
           <Carousel
             data={popularParties}
@@ -93,7 +88,7 @@ const HomeScreen = () => {
           <View style={styles.carouselBottomSpace} />
 
           <View style={styles.secondaryTitleTextWrapper}>
-            <Text style={styles.secondaryTitleText}>すべて</Text>
+            {!fetchingHome && <Text style={styles.secondaryTitleText}>すべて</Text>}
           </View>
 
           <View style={styles.allPartiesWrapper}>
@@ -139,7 +134,17 @@ const HomeScreen = () => {
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
-      backgroundColor: colors.backgrounds.primary
+      backgroundColor: colors.backgrounds.primary,
+      width: '100%',
+      height: '100%'
+    },
+    indicatorContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: colors.backgrounds.primary,
+      width: '100%',
+      height: '100%'
     },
     scrollView: {
       display: 'flex',
