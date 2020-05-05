@@ -5,9 +5,9 @@
   "scripts": {
     "start": "react-native start",
     "dev": "expo start",
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "web": "expo start --web",
+    "rn:android": "react-native run-android",
+    "rn:ios": "react-native run-ios",
+    "build:ios:beta": "fastlane ios beta",
     "lint": "yarn eslint './src/**/*.{ts,tsx}'",
     "lint:fix": "yarn eslint './src/**/*.{ts,tsx}' --fix",
     "postinstall": "jetify"
