@@ -115,7 +115,14 @@ const UserScreen = () => {
                 <View style={styles.profileWrapper}>
                   <View style={styles.thumbnailWrapper}>
                     <ShadowBase>
-                      <Thumbnail uri={user.thumbnailURL} size={80} />
+                      <Thumbnail
+                        uri={user.thumbnailURL}
+                        size={80}
+                        onPress={() => {
+                          if (!isMy) return
+                          goToEdit()
+                        }}
+                      />
                     </ShadowBase>
                   </View>
 
