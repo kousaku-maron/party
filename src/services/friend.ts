@@ -60,6 +60,52 @@ export const useFriends = (uid: string) => {
   return { fetching, friends: friendsFromDomain }
 }
 
+export const useAppliedFriendUsers = (uid: string) => {
+  const domainUser = useDomainUserState()
+  const { setUsers: setDomainUsers } = useDomainUserActions()
+  const [fetching, setFetching] = useState<boolean>(true)
+  const [appliedFriendUsers, setAppliedFriendUsers] = useState<User[]>([])
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      if (!uid) return
+
+      const unsubscribe = usersRef
+        .doc(uid)
+        .collection('appliedFriendUsers')
+        .onSnapshot(
+          snapShot => {
+            const newUsers: User[] = snapShot.docs.map(doc => {
+              return buildUser(doc.id, doc.data())
+            })
+            setDomainUsers(newUsers)
+            setAppliedFriendUsers(newUsers)
+            setFetching(false)
+          },
+          error => {
+            console.info('catch useAppliedFriendUsers error', error)
+          }
+        )
+
+      return () => {
+        unsubscribe()
+      }
+    })
+  }, [setDomainUsers, uid])
+
+  const usersFromDomain = useMemo(() => {
+    return appliedFriendUsers.map(user => {
+      if (domainUser[user.id]) {
+        return domainUser[user.id]
+      }
+
+      return user
+    })
+  }, [appliedFriendUsers, domainUser])
+
+  return { fetching, users: usersFromDomain }
+}
+
 export const useApplyFriend = () => {
   const { uid } = useAppAuthState()
   const { addFetchingApplyFriendship, removeFetchingApplyFriendship } = useAppUserActions()

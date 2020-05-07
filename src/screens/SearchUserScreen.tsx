@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useCallback, useState, useRef, useMemo } from 'react'
 import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native'
 import Animated, { Value, SpringUtils, interpolate } from 'react-native-reanimated'
 import { withSpringTransition } from 'react-native-redash'
@@ -8,16 +8,18 @@ import { useAppAuthState } from '../store/hooks'
 import { useStackNavigation } from '../services/route'
 import { useStyles, MakeStyles } from '../services/design'
 import { useSearchUsers } from '../services/user'
+import { useAppliedFriendUsers } from '../services/friend'
 import { ShadowBase, TextInput } from '../components/atoms'
 import { Header, UserCard } from '../components/organisms'
 import { NormalLayout } from '../components/templates'
 
 const SearchUserScreen = () => {
-  const { user } = useAppAuthState()
+  const { user, uid } = useAppAuthState()
   const navigation = useStackNavigation()
   const styles = useStyles(makeStyles)
   const inset = useSafeArea()
-  const { fetching, users, search } = useSearchUsers({ ignoreUserIDs: [user.userID] })
+  const { fetching: fetchingAppliedFriendUsers, users: appliedFriendUsers } = useAppliedFriendUsers(uid)
+  const { fetching: fetchingSearch, users: searchUsers, search } = useSearchUsers({ ignoreUserIDs: [user.userID] })
   const [value, setValue] = useState<string>('')
 
   const onChangeText = useCallback((text: string) => {
@@ -34,6 +36,18 @@ const SearchUserScreen = () => {
     },
     [navigation]
   )
+
+  const isShowEmptyMessage = useMemo(() => {
+    return !fetchingSearch && !fetchingAppliedFriendUsers && searchUsers.length === 0 && appliedFriendUsers.length === 0
+  }, [appliedFriendUsers.length, fetchingAppliedFriendUsers, fetchingSearch, searchUsers.length])
+
+  const isShowSearchUsers = useMemo(() => {
+    return searchUsers.length > 0
+  }, [searchUsers.length])
+
+  const isShowAppliedFriendUsers = useMemo(() => {
+    return searchUsers.length === 0 && appliedFriendUsers.length > 0
+  }, [appliedFriendUsers.length, searchUsers.length])
 
   const isShowBtn = useRef(new Value<number>(0))
   const isShowBtnAnimation = useRef(
@@ -59,10 +73,11 @@ const SearchUserScreen = () => {
   }, [])
 
   return (
-    <NormalLayout fetching={fetching}>
+    <NormalLayout fetching={fetchingAppliedFriendUsers || fetchingSearch}>
       <View style={styles.container}>
         <ScrollView
-          style={[styles.scrollView, { paddingTop: inset.top }]}
+          style={styles.scrollView}
+          contentInset={{ top: inset.top }}
           stickyHeaderIndices={[1, 3]}
           showsVerticalScrollIndicator={false}
         >
@@ -89,7 +104,9 @@ const SearchUserScreen = () => {
 
               <Animated.View style={{ width: btnW, paddingLeft: btnPdL }}>
                 <TouchableOpacity onPress={onSubmitEditing}>
-                  <Text numberOfLines={1}>検索</Text>
+                  <Text style={styles.searchBtnText} numberOfLines={1}>
+                    検索
+                  </Text>
                 </TouchableOpacity>
               </Animated.View>
             </View>
@@ -97,9 +114,34 @@ const SearchUserScreen = () => {
 
           <View style={styles.searchBoxBottomSpacer} />
 
-          {users.length > 0 && (
+          {isShowEmptyMessage && (
+            <View style={styles.emptyMessageContainer}>
+              <Text style={styles.emptyMessageText}>ともだちを探そう！</Text>
+            </View>
+          )}
+
+          {isShowAppliedFriendUsers && (
             <React.Fragment>
-              {users.map(user => (
+              <View style={styles.titleTextWrapper}>
+                <Text style={styles.titleText}>リクエストがきています</Text>
+              </View>
+
+              {appliedFriendUsers.map(user => (
+                <View key={user.id} style={styles.cardWrapper}>
+                  <ShadowBase>
+                    <UserCard user={user} onPress={onPressCard} fullWidth={true} />
+                  </ShadowBase>
+                </View>
+              ))}
+
+              {/* MEMO: tab height 70px */}
+              <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
+            </React.Fragment>
+          )}
+
+          {isShowSearchUsers && (
+            <React.Fragment>
+              {searchUsers.map(user => (
                 <View key={user.id} style={styles.cardWrapper}>
                   <ShadowBase>
                     <UserCard user={user} onPress={onPressCard} fullWidth={true} />
@@ -134,6 +176,13 @@ const makeStyles: MakeStyles = colors =>
       paddingHorizontal: 12,
       paddingVertical: 6
     },
+    emptyMessageContainer: {
+      width: '100%',
+      height: 400,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
     scrollView: {
       width: '100%',
       paddingHorizontal: 12
@@ -158,37 +207,23 @@ const makeStyles: MakeStyles = colors =>
     searchBoxBottomSpacer: {
       paddingBottom: 20
     },
-    card: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      flexDirection: 'row',
+    titleTextWrapper: {
       width: '100%',
-      // height: 75,
-      padding: 12,
-      backgroundColor: colors.backgrounds.secondary,
-      borderRadius: 10
+      paddingVertical: 24
     },
-    cardHead: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-    cardTail: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center'
-    },
-    thumbnailWrapper: {
-      paddingRight: 12
-    },
-    nameText: {
+    emptyMessageText: {
       fontSize: 16,
       color: colors.foregrounds.primary
     },
-    idText: {
-      fontSize: 12,
-      color: colors.foregrounds.secondary
+    titleText: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: colors.foregrounds.primary,
+      paddingLeft: 24
+    },
+    searchBtnText: {
+      fontSize: 16,
+      color: colors.foregrounds.primary
     }
   })
 
