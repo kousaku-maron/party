@@ -1,8 +1,8 @@
 import React, { useMemo, useCallback } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { User } from '../../entities'
-import { useAppAuthState } from '../../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../../services/design'
+import { useUserRelationship } from '../../services/user'
 import { useApplyFriend, useAcceptFriend } from '../../services/friend'
 import { ShadowBase, Thumbnail, Fab } from '../atoms'
 import { Icons } from '../../@assets/vector-icons'
@@ -20,25 +20,9 @@ const UserCard = ({ user, width = 300, height = 80, fullWidth = false, disabled 
   const styles = useStyles(makeStyles)
   const colors = useColors()
 
-  const { uid } = useAppAuthState()
+  const { isBlocked, isFriend, isApply, isApplied } = useUserRelationship(user.uid)
   const { onAcceptFriend } = useAcceptFriend()
   const { onApplyFriend } = useApplyFriend()
-
-  const isBlocked = useMemo(() => {
-    return user && user.blockUIDs && user.blockUIDs.includes(uid)
-  }, [uid, user])
-
-  const isFriend = useMemo(() => {
-    return user && user.friendUIDs && user.friendUIDs.includes(uid)
-  }, [uid, user])
-
-  const isApply = useMemo(() => {
-    return user && user.appliedFriendUIDs && user.appliedFriendUIDs.includes(uid)
-  }, [uid, user])
-
-  const isApplied = useMemo(() => {
-    return user && user.applyFriendUIDs && user.applyFriendUIDs.includes(uid)
-  }, [uid, user])
 
   const isShowUserPlusIcon = useMemo(() => {
     return !isBlocked && !isFriend && !isApply

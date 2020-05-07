@@ -5,20 +5,17 @@ import { User } from '../../../entities'
 
 const actionCreator = actionCreateFactory()
 
-// type UserNodeProps = {
-//   fromUID: string
-//   toUID: string
-// }
+type UserNodeProps = {
+  fromUID: string
+  toUID: string
+}
 
 export const domainUserActions = {
   setUser: actionCreator<User>('SET_USER'),
-  setUsers: actionCreator<User[]>('SET_USERS')
-  // applyFriend: actionCreator<UserNodeProps>('APPLY_FRIEND'),
-  // cancelApplyFriend: actionCreator<UserNodeProps>('CANCEL_APPLY_FRIEND'),
-  // acceptFriend: actionCreator<UserNodeProps>('ACCEPT_FRIEND'),
-  // cancelAcceptFriend: actionCreator<UserNodeProps>('CANCEL_ACCEPT_FRIEND'),
-  // refuseFriend: actionCreator<UserNodeProps>('REFUSE_FRIEND'),
-  // cancelRefuseFriend: actionCreator<UserNodeProps>('CANCEL_REFUSE_FRIEND')
+  setUsers: actionCreator<User[]>('SET_USERS'),
+  applyFriendship: actionCreator<UserNodeProps>('APPLY_FRIENDSHIP'),
+  acceptFriendship: actionCreator<UserNodeProps>('ACCEPT_FRIENDSHIP'),
+  refuseFriendship: actionCreator<UserNodeProps>('REFUSE_FRIENDSHIP')
 }
 
 export const useDomainUserActions = () => {
@@ -38,50 +35,32 @@ export const useDomainUserActions = () => {
     [dispatch]
   )
 
-  // const applyFriend = useCallback(
-  //   (node: UserNodeProps) => {
-  //     dispatch(domainUserActions.applyFriend(node))
-  //   },
-  //   [dispatch]
-  // )
+  const applyFriendship = useCallback(
+    (node: UserNodeProps) => {
+      dispatch(domainUserActions.applyFriendship(node))
+    },
+    [dispatch]
+  )
 
-  // const cancelApplyFriend = useCallback(
-  //   (node: UserNodeProps) => {
-  //     dispatch(domainUserActions.cancelApplyFriend(node))
-  //   },
-  //   [dispatch]
-  // )
+  const acceptFriendship = useCallback(
+    (node: UserNodeProps) => {
+      dispatch(domainUserActions.acceptFriendship(node))
+    },
+    [dispatch]
+  )
 
-  // const acceptFriend = useCallback(
-  //   (node: UserNodeProps) => {
-  //     dispatch(domainUserActions.acceptFriend(node))
-  //   },
-  //   [dispatch]
-  // )
-
-  // const cancelAcceptFriend = useCallback(
-  //   (node: UserNodeProps) => {
-  //     dispatch(domainUserActions.cancelAcceptFriend(node))
-  //   },
-  //   [dispatch]
-  // )
-
-  // const refuseFriend = useCallback(
-  //   (node: UserNodeProps) => {
-  //     dispatch(userRecordActions.refuseFriend(node))
-  //   },
-  //   [dispatch]
-  // )
-
-  // const cancelRefuseFriend = useCallback(
-  //   (node: UserNodeProps) => {
-  //     dispatch(userRecordActions.cancelRefuseFriend(node))
-  //   },
-  //   [dispatch]
-  // )
+  const refuseFriendship = useCallback(
+    (node: UserNodeProps) => {
+      dispatch(domainUserActions.refuseFriendship(node))
+    },
+    [dispatch]
+  )
 
   return {
     setUser,
-    setUsers
+    setUsers,
+    applyFriendship,
+    acceptFriendship,
+    refuseFriendship
   }
 }

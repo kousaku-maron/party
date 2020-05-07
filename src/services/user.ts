@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useMemo } from 'react'
-import { useDomainUserState, useDomainUserActions } from '../store/hooks'
+import { useDomainUserState, useDomainUserActions, useAppAuthState, useAppUserState } from '../store/hooks'
 import { getSize } from '../services/image'
 import { db } from '../repositories/firebase'
 import { getUser } from '../repositories/user'
@@ -39,7 +39,7 @@ export const useUser = (uid: string) => {
     })
   }, [setDomainUser, uid])
 
-  const userFromRecord = useMemo(() => {
+  const userFromDomain = useMemo(() => {
     if (user && domainUser[user.id]) {
       return domainUser[user.id]
     }
@@ -47,7 +47,51 @@ export const useUser = (uid: string) => {
     return user
   }, [domainUser, user])
 
-  return { fetching, user: userFromRecord }
+  return { fetching, user: userFromDomain }
+}
+
+export const useUserRelationship = (toUID: string) => {
+  const { uid } = useAppAuthState()
+  const domainUser = useDomainUserState()
+  const { fetchingApplyFriendship, fetchingAcceptFriendship, fetchingRefuseFriendship } = useAppUserState()
+
+  const user = useMemo(() => {
+    return domainUser[toUID]
+  }, [domainUser, toUID])
+
+  const isBlocked = useMemo(() => {
+    return user && user.blockUIDs && user.blockUIDs.includes(uid)
+  }, [uid, user])
+
+  const isFriend = useMemo(() => {
+    const isFriendCache = fetchingAcceptFriendship.some(node => node.toUID === toUID)
+    if (isFriendCache) {
+      return true
+    }
+
+    return user && user.friendUIDs && user.friendUIDs.includes(uid)
+  }, [fetchingAcceptFriendship, toUID, uid, user])
+
+  const isApply = useMemo(() => {
+    const isApplyCache = fetchingApplyFriendship.some(node => node.toUID === toUID)
+
+    if (isApplyCache) {
+      return true
+    }
+
+    return user && user.appliedFriendUIDs && user.appliedFriendUIDs.includes(uid)
+  }, [fetchingApplyFriendship, toUID, uid, user])
+
+  const isApplied = useMemo(() => {
+    const isAppliedCache = fetchingRefuseFriendship.some(node => node.toUID === toUID)
+    if (isAppliedCache) {
+      return false
+    }
+
+    return user && user.applyFriendUIDs && user.applyFriendUIDs.includes(uid)
+  }, [fetchingRefuseFriendship, toUID, uid, user])
+
+  return { isBlocked, isFriend, isApply, isApplied }
 }
 
 type SearchUsersOption = {
@@ -89,7 +133,7 @@ export const useSearchUsers = (options?: SearchUsersOption) => {
     [options, setDomainUsers]
   )
 
-  const usersFromRecord = useMemo(() => {
+  const usersFromDomain = useMemo(() => {
     return users.map(user => {
       if (domainUser[user.id]) {
         return domainUser[user.id]
@@ -99,7 +143,7 @@ export const useSearchUsers = (options?: SearchUsersOption) => {
     })
   }, [domainUser, users])
 
-  return { fetching, users: usersFromRecord, search }
+  return { fetching, users: usersFromDomain, search }
 }
 
 export const useUserEditTools = (uid: string) => {

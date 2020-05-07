@@ -1,6 +1,7 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { appAuthReducer, AppAuth } from './app/auth/reducer'
+import { appUserReducer, AppUser } from './app/user/reducer'
 import { uiReducer, UI } from './ui/reducer'
 import { domainUserReducer, DomainUser } from './domain/user/reducer'
 import rootSaga from './configureSaga'
@@ -20,6 +21,7 @@ type DomainState = {
 
 type AppState = {
   auth: AppAuth
+  user: AppUser
 }
 
 export type StoreState = {
@@ -29,7 +31,7 @@ export type StoreState = {
 }
 
 const domainReducers = combineReducers<DomainState>({ user: domainUserReducer })
-const appReducers = combineReducers<AppState>({ auth: appAuthReducer })
+const appReducers = combineReducers<AppState>({ auth: appAuthReducer, user: appUserReducer })
 
 const reducers = combineReducers<StoreState>({
   domain: domainReducers,

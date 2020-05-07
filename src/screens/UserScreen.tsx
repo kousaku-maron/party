@@ -6,7 +6,7 @@ import { RouteParams } from '../navigators/RouteProps'
 import { useAppAuthState } from '../store/hooks'
 import { Party } from '../entities'
 import { useStyles, useColors, MakeStyles } from '../services/design'
-import { useUser } from '../services/user'
+import { useUser, useUserRelationship } from '../services/user'
 import { useAppliedParties } from '../services/party'
 import { useFriends, useApplyFriend, useAcceptFriend } from '../services/friend'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
@@ -24,7 +24,7 @@ const UserScreen = () => {
   const colors = useColors()
   const inset = useSafeArea()
 
-  const targetUserID = useMemo(() => {
+  const targetUID = useMemo(() => {
     if (route.params?.userID) {
       return route.params.userID
     }
@@ -38,27 +38,12 @@ const UserScreen = () => {
     return true
   }, [route.params, uid])
 
-  const { fetching, user } = useUser(targetUserID)
-  const friends = useFriends(user)
+  const { fetching, user } = useUser(targetUID)
+  const { friends } = useFriends(targetUID)
+  const { isBlocked, isFriend, isApply, isApplied } = useUserRelationship(targetUID)
   const appliedParties = useAppliedParties(user)
   const { onApplyFriend } = useApplyFriend()
   const { onAcceptFriend } = useAcceptFriend()
-
-  const isBlocked = useMemo(() => {
-    return user && user.blockUIDs && user.blockUIDs.includes(uid)
-  }, [uid, user])
-
-  const isFriend = useMemo(() => {
-    return user && user.friendUIDs && user.friendUIDs.includes(uid)
-  }, [uid, user])
-
-  const isApply = useMemo(() => {
-    return user && user.appliedFriendUIDs && user.appliedFriendUIDs.includes(uid)
-  }, [uid, user])
-
-  const isApplied = useMemo(() => {
-    return user && user.applyFriendUIDs && user.applyFriendUIDs.includes(uid)
-  }, [uid, user])
 
   const isShowUserPlusIcon = useMemo(() => {
     return (!isBlocked && !isFriend && !isApply) || isMy
