@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useDomainUserState, useDomainUserActions } from '../store/hooks'
 import { getSize } from '../services/image'
 import { db } from '../repositories/firebase'
 import { getUser } from '../repositories/user'
@@ -12,6 +13,8 @@ import { buildUser, User, updateDocument } from '../entities'
 const usersRef = db.collection('users')
 
 export const useUser = (uid: string) => {
+  const domainUser = useDomainUserState()
+  const { setUser: setDomainUser } = useDomainUserActions()
   const [fetching, setFetching] = useState<boolean>(true)
   const [user, setUser] = useState<User>(null)
 
@@ -22,6 +25,7 @@ export const useUser = (uid: string) => {
       const unsubscribe = userRef.onSnapshot(
         (doc: firebase.firestore.DocumentSnapshot) => {
           const user = buildUser(doc.id, doc.data())
+          setDomainUser(user)
           setUser(user)
           setFetching(false)
         },
@@ -33,9 +37,17 @@ export const useUser = (uid: string) => {
         unsubscribe()
       }
     })
-  }, [uid])
+  }, [setDomainUser, uid])
 
-  return { fetching, user }
+  const userFromRecord = useMemo(() => {
+    if (user && domainUser[user.id]) {
+      return domainUser[user.id]
+    }
+
+    return user
+  }, [domainUser, user])
+
+  return { fetching, user: userFromRecord }
 }
 
 type SearchUsersOption = {
@@ -43,10 +55,15 @@ type SearchUsersOption = {
 }
 
 export const useSearchUsers = (options?: SearchUsersOption) => {
+  const domainUser = useDomainUserState()
+  const { setUsers: setDomainUsers } = useDomainUserActions()
+  const [fetching, setFetching] = useState<boolean>(false)
   const [users, setUsers] = useState<User[]>([])
 
   const search = useCallback(
     async (text: string) => {
+      setFetching(true)
+
       const snapshot = await usersRef
         .orderBy('userID')
         .startAt(text)
@@ -65,12 +82,24 @@ export const useSearchUsers = (options?: SearchUsersOption) => {
           return true
         })
 
+      setDomainUsers(users)
       setUsers(users)
+      setFetching(false)
     },
-    [options]
+    [options, setDomainUsers]
   )
 
-  return { users, search }
+  const usersFromRecord = useMemo(() => {
+    return users.map(user => {
+      if (domainUser[user.id]) {
+        return domainUser[user.id]
+      }
+
+      return user
+    })
+  }, [domainUser, users])
+
+  return { fetching, users: usersFromRecord, search }
 }
 
 export const useUserEditTools = (uid: string) => {

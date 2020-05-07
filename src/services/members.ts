@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { InteractionManager } from 'react-native'
 import firebase from '../repositories/firebase'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import { User, buildUser } from '../entities/User'
 
 const db = firebase.firestore()
@@ -9,7 +9,7 @@ const partiesRef = db.collection('parties')
 
 export const useMembers = (partyID: string, groupID: string) => {
   const [members, setMembers] = useState<User[]>()
-  const auth = useAuthState()
+  const auth = useAppAuthState()
   const { user } = auth
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { InteractionManager } from 'react-native'
 import firebase from '../repositories/firebase'
 import { ApplyCard, buildApplyCard, CreateRoom } from '../entities'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import { useTinderSwipeAnimation } from '../services/ui'
 import { deleteAppliedCard } from '../repositories/appliedCard'
 import { createRoom } from '../repositories/room'
@@ -22,7 +22,7 @@ const getApplyCardsRef = (uid: string) => {
 
 export const useAppliedCards = () => {
   const [cards, setCards] = useState<ApplyCard[]>()
-  const auth = useAuthState()
+  const auth = useAppAuthState()
   const { user } = auth
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export const useAppliedCards = () => {
 
 export const useAppliedCardsByType = (type: string) => {
   const [cards, setCards] = useState<ApplyCard[]>([])
-  const auth = useAuthState()
+  const auth = useAppAuthState()
   const { user } = auth
 
   useEffect(() => {

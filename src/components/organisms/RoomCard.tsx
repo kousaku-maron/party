@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
-import { useAuthState } from '../../store/hooks'
+import { useAppAuthState } from '../../store/hooks'
 import { useColors, useStyles, MakeStyles } from '../../services/design'
 import { formattedDateForMessageCreatedAt } from '../../services/formatedDate'
 import { Room, User } from '../../entities'
@@ -26,7 +26,7 @@ const RoomCard: React.FC<Props> = ({
 }) => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
-  const { uid } = useAuthState()
+  const { uid } = useAppAuthState()
 
   // MEMO: 自分以外のユーザーデータ取得
   const filteredUsers = useMemo(() => {

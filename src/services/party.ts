@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { InteractionManager } from 'react-native'
 import { db } from '../repositories/firebase'
 import { User, Party, buildParty } from '../entities'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 
 const usersRef = db.collection('users')
 const partiesRef = db.collection('parties')
@@ -10,7 +10,7 @@ const partiesRef = db.collection('parties')
 export const usePartiesByTags = (tags: string[]) => {
   const [fetching, setFetching] = useState<boolean>(true)
   const [parties, setParties] = useState<Party[]>([])
-  const auth = useAuthState()
+  const auth = useAppAuthState()
   const { user } = auth
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export const usePartiesByTags = (tags: string[]) => {
 
 export const useParties = () => {
   const [parties, setParties] = useState<Party[]>()
-  const auth = useAuthState()
+  const auth = useAppAuthState()
   const { user } = auth
 
   useEffect(() => {

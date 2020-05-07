@@ -7,7 +7,7 @@ import { Party } from '../entities'
 import { usePartiesByTags } from '../services/party'
 import { useModal } from '../services/modal'
 import { useStyles, MakeStyles } from '../services/design'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import { ShadowBase } from '../components/atoms'
 import { Modal } from '../components/moleculers'
 import { BottomTabLayout } from '../components/templates'
@@ -21,7 +21,7 @@ const HomeScreen = () => {
   const { top: insetTop, bottom: insetBottom } = useSafeArea()
   const navigation = useStackNavigation()
   const styles = useStyles(makeStyles)
-  const { user, uid } = useAuthState()
+  const { user, uid } = useAppAuthState()
 
   const { fetching: fetchingHome, parties: homeParties } = usePartiesByTags(homeTags)
   const { fetching: fetchingPopular, parties: popularParties } = usePartiesByTags(popularTags)

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import firebase from '../repositories/firebase'
 import { buildRoom, Room, User, notFoundUser } from '../entities'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import { getUser } from '../repositories/user'
 
 const db = firebase.firestore()
@@ -9,7 +9,7 @@ const roomsRef = db.collection('rooms')
 
 export const useRooms = () => {
   const [rooms, setRooms] = useState<Room[]>()
-  const auth = useAuthState()
+  const auth = useAppAuthState()
   const { user } = auth
 
   useEffect(() => {

@@ -1,20 +1,17 @@
 import { useEffect, useState } from 'react'
 import { InteractionManager } from 'react-native'
-import firebase, { functions } from '../repositories/firebase'
-import { useAuthState } from '../store/hooks'
+// import { useAppAuthState } from '../store/hooks'
+import { db, functions } from '../repositories/firebase'
 import { User, buildUser } from '../entities/User'
 import {
-  showApplyFriendSunccessMessage,
-  showApplyFriendFailurMessage,
-  showApplyFriendAlreadyappliedMessage,
-  showAcceptFriendSunccessMessage,
-  showAcceptFriendFailurMessage,
-  showAcceptFriendAlreadyacceptedMessage,
-  showRefuseFriendSunccessMessage,
-  showRefuseFriendFailurMessage
+  showApplyFriendRequestMessage,
+  showApplyFriendFailureMessage,
+  showAcceptFriendRequestMessage,
+  showAcceptFriendFailureMessage,
+  showRefuseFriendRequestMessage,
+  showRefuseFriendFailureMessage
 } from './flashCard'
 
-const db = firebase.firestore()
 const usersRef = db.collection('users')
 
 export const useFriends = (user: User) => {
@@ -48,64 +45,46 @@ export const useFriends = (user: User) => {
 }
 
 export const useApplyFriend = () => {
-  const { uid } = useAuthState()
-  const applyFriend = async (applyFriendUser: User) => {
-    const applyFriendUID = applyFriendUser.uid
+  // const { uid } = useAppAuthState()
 
+  const onApplyFriend = async (user: User) => {
     try {
-      if (applyFriendUser.appliedFriendUIDs && applyFriendUser.appliedFriendUIDs.includes(uid)) {
-        showApplyFriendAlreadyappliedMessage()
-        return
-      }
-
-      if (applyFriendUser.friendUIDs && applyFriendUser.friendUIDs.includes(uid)) {
-        showAcceptFriendAlreadyacceptedMessage()
-        return
-      }
-
-      await functions.httpsCallable('applyFriend')({ applyFriendUID })
-      showApplyFriendSunccessMessage()
+      showApplyFriendRequestMessage()
+      await functions.httpsCallable('applyFriend')({ applyFriendUID: user.uid })
     } catch (e) {
-      showApplyFriendFailurMessage()
+      showApplyFriendFailureMessage()
       console.warn(e)
     }
   }
-  return { applyFriend }
+  return { onApplyFriend }
 }
 
 export const useAcceptFriend = () => {
-  const { uid } = useAuthState()
-  const acceptFriend = async (acceptFriendUser: User) => {
-    const acceptFriendUID = acceptFriendUser.uid
+  // const { uid } = useAppAuthState()
 
+  const onAcceptFriend = async (user: User) => {
     try {
-      if (acceptFriendUser.friendUIDs && acceptFriendUser.friendUIDs.includes(uid)) {
-        showAcceptFriendAlreadyacceptedMessage()
-        return
-      }
-      await functions.httpsCallable('acceptFriend')({ acceptFriendUID })
-      showAcceptFriendSunccessMessage()
+      showAcceptFriendRequestMessage()
+      await functions.httpsCallable('acceptFriend')({ acceptFriendUID: user.uid })
     } catch (e) {
-      showAcceptFriendFailurMessage()
+      showAcceptFriendFailureMessage()
       console.warn(e)
     }
   }
-  return { acceptFriend }
+  return { onAcceptFriend }
 }
 
 export const useRefuseFriend = () => {
-  const { uid } = useAuthState()
-  const refuseFriend = async (refuseFriend: User) => {
-    const refuseFriendUID = refuseFriend.uid
+  // const { uid } = useAppAuthState()
+
+  const onRefuseFriend = async (user: User) => {
     try {
-      if (refuseFriend.applyFriendUIDs && refuseFriend.applyFriendUIDs.includes(uid)) {
-        await functions.httpsCallable('refuseFriend')({ refuseFriendUID })
-        showRefuseFriendSunccessMessage()
-      }
+      showRefuseFriendRequestMessage()
+      await functions.httpsCallable('refuseFriend')({ refuseFriendUID: user.uid })
     } catch (e) {
-      showRefuseFriendFailurMessage()
+      showRefuseFriendFailureMessage()
       console.warn(e)
     }
   }
-  return { refuseFriend }
+  return { onRefuseFriend }
 }

@@ -3,19 +3,19 @@ import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react
 import { useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser } from '../services/user'
 import { useParty } from '../services/party'
 import { useGroup } from '../services/groups'
 import { Thumbnail, ShadowBase, RoundedButton } from '../components/atoms'
-import { LoadingPage, UnexpectedErrorPage } from '../components/pages'
 import { Icons } from '../@assets/vector-icons'
+import { NormalLayout } from '../components/templates'
 
 const MatchingScreen = () => {
   const inset = useSafeArea()
   const route = useRoute<RouteProp<RouteParams, 'Matching'>>()
-  const { user } = useAuthState()
+  const { user } = useAppAuthState()
 
   const styles = useStyles(makeStyles)
   const colors = useColors()
@@ -47,10 +47,6 @@ const MatchingScreen = () => {
     return
   }, [route.params])
 
-  const isUnexpecedError = useMemo(() => {
-    return !targetUserID || !partyID || !groupID
-  }, [targetUserID, partyID, groupID])
-
   const { user: targetUser } = useUser(targetUserID)
   const party = useParty(partyID)
   const group = useGroup(partyID, groupID)
@@ -63,74 +59,77 @@ const MatchingScreen = () => {
     console.log('Close')
   }, [])
 
-  if (isUnexpecedError) {
-    return <UnexpectedErrorPage />
-  }
+  const fetching = useMemo(() => {
+    return !targetUser || !group || !party || !party.thumbnailURL
+  }, [group, party, targetUser])
 
-  //MEMO: ThumnailURLないとき
-  if (!targetUser || !group || !party || !party.thumbnailURL) {
-    return <LoadingPage />
-  }
+  const isUnexpecedError = useMemo(() => {
+    return !targetUserID || !partyID || !groupID
+  }, [targetUserID, partyID, groupID])
 
   return (
-    <ImageBackground
-      source={{ uri: party.thumbnailURL }}
-      blurRadius={10}
-      style={[styles.container, { paddingTop: inset.top }]}
-    >
-      <View style={styles.partyDescriptionArea}>
-        <View style={styles.partyDescriptionContainer}>
-          <View style={styles.partyTitleTextWrapper}>
-            <Text style={styles.partyTitleText}>{party.name}</Text>
+    <NormalLayout fetching={fetching}>
+      {!fetching && !isUnexpecedError && (
+        <ImageBackground
+          source={{ uri: party.thumbnailURL }}
+          blurRadius={10}
+          style={[styles.container, { paddingTop: inset.top }]}
+        >
+          <View style={styles.partyDescriptionArea}>
+            <View style={styles.partyDescriptionContainer}>
+              <View style={styles.partyTitleTextWrapper}>
+                <Text style={styles.partyTitleText}>{party.name}</Text>
+              </View>
+              <View style={styles.partyAreaTextWrapper}>
+                <Text style={styles.partyAreaText}>東京エリア</Text>
+              </View>
+            </View>
+
+            <View style={styles.matchingContainer}>
+              <View style={styles.thumbnailWrapper}>
+                <ShadowBase>
+                  <Thumbnail uri={user.thumbnailURL} size={100} />
+                </ShadowBase>
+              </View>
+
+              {/* ここに，乾杯のアイコンを入れる*/}
+              <View style={styles.glassWrapper}>
+                <Icons name="glass-fill" color={colors.foregrounds.onTintPrimary} size={64} />
+              </View>
+
+              <View style={styles.thumbnailWrapper}>
+                <ShadowBase>
+                  <Thumbnail uri={targetUser.thumbnailURL} size={100} />
+                </ShadowBase>
+              </View>
+            </View>
+
+            <View style={styles.actionTextWrapper}>
+              <Text style={styles.actionText}>ともだちが見つかりました！</Text>
+            </View>
           </View>
-          <View style={styles.partyAreaTextWrapper}>
-            <Text style={styles.partyAreaText}>東京エリア</Text>
+
+          <View style={styles.actionArea}>
+            <View style={styles.helloButtonWrapper}>
+              <ShadowBase>
+                <RoundedButton color={colors.tints.primary.main} width={240} height={50} onPress={onPressHello}>
+                  <Text style={styles.helloText}>あいさつする</Text>
+                </RoundedButton>
+              </ShadowBase>
+            </View>
+
+            <View style={styles.closeButtonWrapper}>
+              <TouchableOpacity
+                style={{ width: 240, height: 50, alignItems: 'center', justifyContent: 'center' }}
+                onPress={onPressClose}
+              >
+                <Text style={styles.closeText}>とじる</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-
-        <View style={styles.matchingContainer}>
-          <View style={styles.thumbnailWrapper}>
-            <ShadowBase>
-              <Thumbnail uri={user.thumbnailURL} size={100} />
-            </ShadowBase>
-          </View>
-
-          {/* ここに，乾杯のアイコンを入れる*/}
-          <View style={styles.glassWrapper}>
-            <Icons name="glass-fill" color={colors.foregrounds.onTintPrimary} size={64} />
-          </View>
-
-          <View style={styles.thumbnailWrapper}>
-            <ShadowBase>
-              <Thumbnail uri={targetUser.thumbnailURL} size={100} />
-            </ShadowBase>
-          </View>
-        </View>
-
-        <View style={styles.actionTextWrapper}>
-          <Text style={styles.actionText}>ともだちが見つかりました！</Text>
-        </View>
-      </View>
-
-      <View style={styles.actionArea}>
-        <View style={styles.helloButtonWrapper}>
-          <ShadowBase>
-            <RoundedButton color={colors.tints.primary.main} width={240} height={50} onPress={onPressHello}>
-              <Text style={styles.helloText}>あいさつする</Text>
-            </RoundedButton>
-          </ShadowBase>
-        </View>
-
-        <View style={styles.closeButtonWrapper}>
-          <TouchableOpacity
-            style={{ width: 240, height: 50, alignItems: 'center', justifyContent: 'center' }}
-            onPress={onPressClose}
-          >
-            <Text style={styles.closeText}>とじる</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </ImageBackground>
+        </ImageBackground>
+      )}
+    </NormalLayout>
   )
 }
 

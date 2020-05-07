@@ -1,6 +1,6 @@
 import { functions } from '../repositories/firebase'
 import { User, Report } from '../entities'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import {
   showReportUserSunccessMessage,
   showReportUserFailurMessage,
@@ -8,7 +8,7 @@ import {
 } from './flashCard'
 
 export const useReportUser = () => {
-  const { uid } = useAuthState()
+  const { uid } = useAppAuthState()
 
   const reportUser = async (reportedUser: User, comment: string) => {
     const reportedUID = reportedUser.id

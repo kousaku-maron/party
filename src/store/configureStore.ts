@@ -1,7 +1,8 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { authReducer, Auth } from './auth/reducer'
+import { appAuthReducer, AppAuth } from './app/auth/reducer'
 import { uiReducer, UI } from './ui/reducer'
+import { domainUserReducer, DomainUser } from './domain/user/reducer'
 import rootSaga from './configureSaga'
 
 const sagaMiddleware = createSagaMiddleware()
@@ -13,12 +14,28 @@ if (process.env.NODE_ENV !== 'production') {
   // middlewares.push(logger)
 }
 
-export type AppState = {
-  auth: Auth
+type DomainState = {
+  user: DomainUser
+}
+
+type AppState = {
+  auth: AppAuth
+}
+
+export type StoreState = {
+  domain: DomainState
+  app: AppState
   ui: UI
 }
 
-const reducers = combineReducers<AppState>({ auth: authReducer, ui: uiReducer })
+const domainReducers = combineReducers<DomainState>({ user: domainUserReducer })
+const appReducers = combineReducers<AppState>({ auth: appAuthReducer })
+
+const reducers = combineReducers<StoreState>({
+  domain: domainReducers,
+  app: appReducers,
+  ui: uiReducer
+})
 
 const configureStore = () => {
   const store = createStore(reducers, {}, applyMiddleware(...middlewares))
