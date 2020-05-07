@@ -5,16 +5,16 @@ import { useStackNavigation } from '../services/route'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import { MakeStyles, useStyles } from '../services/design'
 import { useMessages, useSendMessage } from '../services/chat'
-import { BottomTabLayout } from '../components/templates'
+import { NormalLayout } from '../components/templates'
 import { ShadowBase } from '../components/atoms'
 import { ChatBubble, ChatInput, Header } from '../components/organisms'
 import { User } from '../entities'
 
 const ChatScreen = () => {
-  const { uid } = useAuthState()
+  const { uid } = useAppAuthState()
   const navigation = useStackNavigation()
   const inset = useSafeArea()
   const route = useRoute<RouteProp<RouteParams, 'Chat'>>()
@@ -31,7 +31,7 @@ const ChatScreen = () => {
   )
 
   return (
-    <BottomTabLayout fetching={fetching}>
+    <NormalLayout fetching={fetching}>
       <View style={styles.container}>
         <ScrollView
           style={[styles.scrollView, { paddingTop: inset.top }]}
@@ -74,7 +74,7 @@ const ChatScreen = () => {
           <KeyboardSpacer />
         </View>
       </View>
-    </BottomTabLayout>
+    </NormalLayout>
   )
 }
 

@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { InteractionManager } from 'react-native'
 import { User, CreateUser, Group, buildGroup, UpdateGroup, CreateGroup } from '../entities'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import firebase from '../repositories/firebase'
 import { updateGroup, createGroup } from '../repositories/group'
 import { createMembers } from '../repositories/member'
@@ -19,7 +19,7 @@ const partiesRef = db.collection('parties')
 
 export const useGroups = (partyID: string) => {
   const [groups, setGroups] = useState<Group[]>()
-  const auth = useAuthState()
+  const auth = useAppAuthState()
   const { user } = auth
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export const useGroups = (partyID: string) => {
 
 export const useGroup = (partyID: string, groupID: string) => {
   const [group, setGroup] = useState<Group>()
-  const auth = useAuthState()
+  const auth = useAppAuthState()
   const { user } = auth
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export const useGroup = (partyID: string, groupID: string) => {
 }
 
 export const useApplyGroup = () => {
-  const { uid } = useAuthState()
+  const { uid } = useAppAuthState()
 
   const onPressApplyGroup = useCallback(
     async (partyID: string, groupID: string, group: Group) => {

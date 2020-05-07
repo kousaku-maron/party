@@ -1,249 +1,14 @@
 import { showMessage } from 'react-native-flash-message'
 
-export const showUserEditSuccessMessage = () => {
-  showMessage({
-    message: 'ユーザー情報を更新しました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
+type Props = {
+  message: string
+  type?: 'success' | 'danger'
 }
 
-export const showUserEditFailurMessage = () => {
+const showMessageBase = ({ message, type = 'success' }: Props) => {
   showMessage({
-    message: 'ユーザー情報の更新に失敗しました',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showEntryPartyApplySunccessMessage = () => {
-  showMessage({
-    message: 'パーティーに参加申請しました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showEntryPartyApplyFailurMessage = () => {
-  showMessage({
-    message: 'パーティーの参加申請に失敗しました',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showEntryPartyAlreadyAppliedMessage = () => {
-  showMessage({
-    message: '既にパーティーの参加を申請しています',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showEntryPartyAcceptedSuccessMessage = () => {
-  showMessage({
-    message: 'パーティー参加を承諾しました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showEntryPartyAcceptedFailurMessage = () => {
-  showMessage({
-    message: 'パーティー参加の承諾に失敗しました',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showEntryPartyRejectSuccessMessage = () => {
-  showMessage({
-    message: 'パーティー参加を拒否しました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showEntryPartyRejectFailurMessage = () => {
-  showMessage({
-    message: 'パーティー参加の拒否に失敗しました',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showQuickRepliedSuccessMessage = () => {
-  showMessage({
-    message: '回答を送信しました。',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showCreatePartyGroupSunccessMessage = () => {
-  showMessage({
-    message: 'パーティーを作成しました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showCreatePartyGroupFailurMessage = () => {
-  showMessage({
-    message: 'パーティーの作成に失敗しました',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showCreatePartyGroupAlreadyCreatedMessage = () => {
-  showMessage({
-    message: 'パーティーはすでに作成済みです',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showCreateBlockUserSunccessMessage = () => {
-  showMessage({
-    message: 'ユーザーをブロックしました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showCreateBlockUserFailurMessage = () => {
-  showMessage({
-    message: 'ユーザーのブロックに失敗しました',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showCreateBlockUserAlreadyBlockedMessage = () => {
-  showMessage({
-    message: 'このユーザーはすでにブロック済みです',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showApplyFriendSunccessMessage = () => {
-  showMessage({
-    message: '友達申請しました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showApplyFriendFailurMessage = () => {
-  showMessage({
-    message: '友達申請しましたに失敗しました',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showApplyFriendAlreadyappliedMessage = () => {
-  showMessage({
-    message: 'このユーザーはすでに友達申請済みです',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showAcceptFriendSunccessMessage = () => {
-  showMessage({
-    message: '友達申請を承認しました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showAcceptFriendFailurMessage = () => {
-  showMessage({
-    message: '友達申請承認に失敗しました',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showAcceptFriendAlreadyacceptedMessage = () => {
-  showMessage({
-    message: 'このユーザーはすでに友達です',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showRefuseFriendSunccessMessage = () => {
-  showMessage({
-    message: '友達申請を拒否しました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showRefuseFriendFailurMessage = () => {
-  showMessage({
-    message: '友達申請拒否に失敗しました',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showReportUserSunccessMessage = () => {
-  showMessage({
-    message: 'ユーザーを通報しました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showReportUserAlreadyacceptedMessage = () => {
-  showMessage({
-    message: 'このユーザーはすでに通報済みです',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showReportUserFailurMessage = () => {
-  showMessage({
-    message: 'ユーザーの通報に失敗しました',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showLikeApplyCardSunccessMessage = () => {
-  showMessage({
-    message: 'いいねしました',
-    type: 'success',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showLikeApplyCardAlreadyLikedMessage = () => {
-  showMessage({
-    message: 'このユーザーはすでにいいね済みです',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showLikeApplyCardAlreadyMatchMessage = () => {
-  showMessage({
-    message: 'このユーザーはすでにマッチング済みです',
-    type: 'danger',
-    titleStyle: styles.flashCardMessage
-  })
-}
-
-export const showLikeApplyCardFailurMessage = () => {
-  showMessage({
-    message: 'いいねに失敗しました',
-    type: 'danger',
+    message,
+    type,
     titleStyle: styles.flashCardMessage
   })
 }
@@ -252,4 +17,120 @@ const styles = {
   flashCardMessage: {
     fontSize: 14
   }
+}
+
+export const showUserEditSuccessMessage = () => {
+  showMessageBase({ message: 'ユーザー情報を更新しました' })
+}
+
+export const showUserEditFailurMessage = () => {
+  showMessageBase({ message: 'ユーザー情報の更新に失敗しました', type: 'danger' })
+}
+
+export const showEntryPartyApplySunccessMessage = () => {
+  showMessageBase({ message: 'パーティーに参加申請しました' })
+}
+
+export const showEntryPartyApplyFailurMessage = () => {
+  showMessageBase({ message: 'パーティーの参加申請に失敗しました', type: 'danger' })
+}
+
+export const showEntryPartyAlreadyAppliedMessage = () => {
+  showMessageBase({ message: '既にパーティーの参加を申請しています', type: 'danger' })
+}
+
+export const showEntryPartyAcceptedSuccessMessage = () => {
+  showMessageBase({ message: 'パーティー参加を承諾しました' })
+}
+
+export const showEntryPartyAcceptedFailurMessage = () => {
+  showMessageBase({ message: 'パーティー参加の承諾に失敗しました', type: 'danger' })
+}
+
+export const showEntryPartyRejectSuccessMessage = () => {
+  showMessageBase({ message: 'パーティー参加を拒否しました' })
+}
+
+export const showEntryPartyRejectFailurMessage = () => {
+  showMessage({ message: 'パーティー参加の拒否に失敗しました', type: 'danger' })
+}
+
+export const showQuickRepliedSuccessMessage = () => {
+  showMessage({ message: '回答を送信しました。' })
+}
+
+export const showCreatePartyGroupSunccessMessage = () => {
+  showMessage({ message: 'パーティーを作成しました' })
+}
+
+export const showCreatePartyGroupFailurMessage = () => {
+  showMessageBase({ message: 'パーティーの作成に失敗しました', type: 'danger' })
+}
+
+export const showCreatePartyGroupAlreadyCreatedMessage = () => {
+  showMessageBase({ message: 'パーティーはすでに作成済みです', type: 'danger' })
+}
+
+export const showCreateBlockUserSunccessMessage = () => {
+  showMessageBase({ message: 'ユーザーをブロックしました' })
+}
+
+export const showCreateBlockUserFailurMessage = () => {
+  showMessage({ message: 'ユーザーのブロックに失敗しました', type: 'danger' })
+}
+
+export const showCreateBlockUserAlreadyBlockedMessage = () => {
+  showMessage({ message: 'このユーザーはすでにブロック済みです', type: 'danger' })
+}
+
+export const showApplyFriendRequestMessage = () => {
+  showMessage({ message: 'ともだち申請しました' })
+}
+
+export const showApplyFriendFailureMessage = () => {
+  showMessage({ message: 'ともだち申請できませんでした', type: 'danger' })
+}
+
+export const showAcceptFriendRequestMessage = () => {
+  showMessage({ message: 'ともだちになりました' })
+}
+
+export const showAcceptFriendFailureMessage = () => {
+  showMessage({ message: 'ともだち申請を許可できませんでした', type: 'danger' })
+}
+
+export const showRefuseFriendRequestMessage = () => {
+  showMessage({ message: 'ともだち申請を断りました', type: 'success' })
+}
+
+export const showRefuseFriendFailureMessage = () => {
+  showMessage({ message: 'ともだち申請の拒否できませんでした', type: 'danger' })
+}
+
+export const showReportUserSunccessMessage = () => {
+  showMessage({ message: 'ユーザーを通報しました' })
+}
+
+export const showReportUserAlreadyacceptedMessage = () => {
+  showMessage({ message: 'このユーザーはすでに通報済みです', type: 'danger' })
+}
+
+export const showReportUserFailurMessage = () => {
+  showMessage({ message: 'ユーザーの通報に失敗しました', type: 'danger' })
+}
+
+export const showLikeApplyCardSunccessMessage = () => {
+  showMessage({ message: 'いいねしました' })
+}
+
+export const showLikeApplyCardAlreadyLikedMessage = () => {
+  showMessage({ message: 'このユーザーはすでにいいね済みです', type: 'danger' })
+}
+
+export const showLikeApplyCardAlreadyMatchMessage = () => {
+  showMessage({ message: 'このユーザーはすでにマッチング済みです', type: 'danger' })
+}
+
+export const showLikeApplyCardFailurMessage = () => {
+  showMessage({ message: 'いいねに失敗しました', type: 'danger' })
 }

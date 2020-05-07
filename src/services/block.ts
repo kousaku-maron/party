@@ -1,6 +1,6 @@
 import { functions } from '../repositories/firebase'
 import { User } from '../entities/User'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import {
   showCreateBlockUserSunccessMessage,
   showCreateBlockUserFailurMessage,
@@ -8,7 +8,7 @@ import {
 } from '../services/flashCard'
 
 export const useBlockUser = () => {
-  const { uid } = useAuthState()
+  const { uid } = useAppAuthState()
 
   const blockUser = async (blockUser: User) => {
     const blockUID = blockUser.uid

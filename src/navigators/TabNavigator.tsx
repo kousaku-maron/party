@@ -10,7 +10,8 @@ import {
   TermsScreen,
   PrivacyScreen,
   ChatScreen,
-  RoomScreen
+  RoomScreen,
+  SearchUserScreen
 } from '../screens'
 
 const Stack = createStackNavigator()
@@ -22,6 +23,7 @@ const HomeNavigator = () => (
     <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
     <Stack.Screen name="User" component={UserScreen} options={{ headerShown: false }} />
     <Stack.Screen name="UserEdit" component={UserEditScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="SearchUser" component={SearchUserScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Setting" component={SettingScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Terms" component={TermsScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: false }} />
@@ -35,6 +37,7 @@ const RoomNavigator = () => (
     <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
     <Stack.Screen name="User" component={UserScreen} options={{ headerShown: false }} />
     <Stack.Screen name="UserEdit" component={UserEditScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="SearchUser" component={SearchUserScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Setting" component={SettingScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Terms" component={TermsScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: false }} />
@@ -48,6 +51,7 @@ const UserNavigator = () => (
     <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
     <Stack.Screen name="User" component={UserScreen} options={{ headerShown: false }} />
     <Stack.Screen name="UserEdit" component={UserEditScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="SearchUser" component={SearchUserScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Setting" component={SettingScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Terms" component={TermsScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Privacy" component={PrivacyScreen} options={{ headerShown: false }} />

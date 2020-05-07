@@ -3,7 +3,7 @@ import messaging from '@react-native-firebase/messaging'
 import Constants from 'expo-constants'
 import { setPermission, getPermission } from '../../repositories/permission'
 import { getPushTokens, createPushToken, deletePushToken } from '../../repositories/pushToken'
-import { useAuthState } from '../../store/hooks'
+import { useAppAuthState } from '../../store/hooks'
 
 /**
  * Appに通知権限をリクエストします。
@@ -69,7 +69,7 @@ export const removeToken = async (uid: string) => {
 }
 
 export const useNotificationsSetting = () => {
-  const { uid } = useAuthState()
+  const { uid } = useAppAuthState()
   const [enabled, setEnabled] = useState<boolean | null>(null)
 
   const onUpdateEnabledState = useCallback(async () => {

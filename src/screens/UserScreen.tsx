@@ -3,12 +3,12 @@ import { useRoute, RouteProp } from '@react-navigation/native'
 import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { RouteParams } from '../navigators/RouteProps'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import { Party } from '../entities'
 import { useStyles, useColors, MakeStyles } from '../services/design'
-import { useUser } from '../services/user'
+import { useUser, useUserRelationship } from '../services/user'
 import { useAppliedParties } from '../services/party'
-import { useFriends, useApplyFriend } from '../services/friend'
+import { useFriends, useApplyFriend, useAcceptFriend } from '../services/friend'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { Thumbnail, Fab, DotsIcon, ShadowBase } from '../components/atoms'
 import { PartySecondaryCard, Header } from '../components/organisms'
@@ -18,13 +18,13 @@ import { Icons } from '../@assets/vector-icons'
 const UserScreen = () => {
   const navigation = useStackNavigation()
   const route = useRoute<RouteProp<RouteParams, 'User'>>()
-  const { uid } = useAuthState()
+  const { uid } = useAppAuthState()
 
   const styles = useStyles(makeStyles)
   const colors = useColors()
   const inset = useSafeArea()
 
-  const targetUserID = useMemo(() => {
+  const targetUID = useMemo(() => {
     if (route.params?.userID) {
       return route.params.userID
     }
@@ -38,22 +38,16 @@ const UserScreen = () => {
     return true
   }, [route.params, uid])
 
-  const { fetching, user } = useUser(targetUserID)
-  const friends = useFriends(user)
+  const { fetching, user } = useUser(targetUID)
+  const { friends } = useFriends(targetUID)
+  const { isBlocked, isFriend, isApply, isApplied } = useUserRelationship(targetUID)
   const appliedParties = useAppliedParties(user)
-  const { applyFriend } = useApplyFriend()
+  const { onApplyFriend } = useApplyFriend()
+  const { onAcceptFriend } = useAcceptFriend()
 
-  const isBlocked = useMemo(() => {
-    return user && user.blockUIDs && user.blockUIDs.includes(uid)
-  }, [uid, user])
-
-  const isFriend = useMemo(() => {
-    return user && user.friendUIDs && user.friendUIDs.includes(uid)
-  }, [uid, user])
-
-  const isAlreadyApplyFriend = useMemo(() => {
-    return user && user.appliedFriendUIDs && user.appliedFriendUIDs.includes(uid)
-  }, [uid, user])
+  const isShowUserPlusIcon = useMemo(() => {
+    return (!isBlocked && !isFriend && !isApply) || isMy
+  }, [isApply, isBlocked, isFriend, isMy])
 
   const goToEdit = useCallback(() => {
     navigation.push('UserEdit')
@@ -77,15 +71,20 @@ const UserScreen = () => {
     [navigation]
   )
 
-  const onPressAddUser = useCallback(() => {
+  const onPressUserPlus = useCallback(() => {
     if (!user) return
     if (isMy) {
-      console.info('go to ApplyFriendScreen')
+      navigation.push('SearchUser')
+      return
     }
-    if (!isMy) {
-      applyFriend(user)
+
+    if (isApplied) {
+      onAcceptFriend(user)
+      return
     }
-  }, [applyFriend, isMy, user])
+
+    onApplyFriend(user)
+  }, [isApplied, isMy, navigation, onAcceptFriend, onApplyFriend, user])
 
   return (
     <BottomTabLayout fetching={fetching}>
@@ -148,7 +147,7 @@ const UserScreen = () => {
                     </View>
                   )}
 
-                  {isAlreadyApplyFriend && !isBlocked && !isMy && (
+                  {isApply && !isBlocked && !isMy && (
                     <View style={styles.friendTextWrapper}>
                       <Text style={styles.friendText}>ともだち申請中</Text>
                     </View>
@@ -165,10 +164,10 @@ const UserScreen = () => {
 
             <ShadowBase>
               <View style={styles.contentsContainer}>
-                {!fetching && (isMy || (!isFriend && !isBlocked && !isAlreadyApplyFriend)) && (
+                {!fetching && isShowUserPlusIcon && (
                   <View style={styles.fabWrapper}>
                     <ShadowBase>
-                      <Fab size={75} color={colors.backgrounds.tertiary} onPress={onPressAddUser}>
+                      <Fab size={75} color={colors.backgrounds.tertiary} onPress={onPressUserPlus}>
                         <Icons name="user-plus" color={colors.foregrounds.primary} size={36} />
                       </Fab>
                     </ShadowBase>

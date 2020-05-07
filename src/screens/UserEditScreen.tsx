@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { UpdateUser } from '../entities'
-import { useAuthState, useUIActions } from '../store/hooks'
+import { useAppAuthState, useUIActions } from '../store/hooks'
 import * as UserRepository from '../repositories/user'
 import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useKeyboardState } from '../services/ui'
@@ -12,14 +12,14 @@ import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-nati
 import { Fab, Thumbnail, ShadowBase } from '../components/atoms'
 import { TextField } from '../components/moleculers'
 import { Header } from '../components/organisms'
-import { LoadingPage } from '../components/pages'
+import { NormalLayout } from '../components/templates'
 import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../services/flashCard'
 import { Icons } from '../@assets/vector-icons'
 
 const UserEditScreen = () => {
   const navigation = useNavigation()
   const inset = useSafeArea()
-  const { uid } = useAuthState()
+  const { uid } = useAppAuthState()
   const { openLoadingModal, closeLoadingModal } = useUIActions()
 
   const styles = useStyles(makeStyles)
@@ -67,47 +67,50 @@ const UserEditScreen = () => {
     }
   }, [closeLoadingModal, introduction, name, navigation, openLoadingModal, thumbnailURL, uid, userID])
 
-  if (!fetched) {
-    return <LoadingPage />
-  }
-
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={[styles.userScrollView, { paddingTop: inset.top }]}
-        scrollIndicatorInsets={{ right: 1 }}
-        stickyHeaderIndices={[1]}
-        showsVerticalScrollIndicator={false}
-        ref={ref => (scrollviewRef.current = ref)}
-      >
-        <View style={styles.headerTopSpacer} />
+    <NormalLayout fetching={!fetched}>
+      <View style={styles.container}>
+        <ScrollView
+          style={[styles.userScrollView, { paddingTop: inset.top }]}
+          scrollIndicatorInsets={{ right: 1 }}
+          stickyHeaderIndices={[1]}
+          showsVerticalScrollIndicator={false}
+          ref={ref => (scrollviewRef.current = ref)}
+        >
+          <View style={styles.headerTopSpacer} />
 
-        <View style={styles.headerContainer}>
-          <Header
-            fullWidth={true}
-            title="プロフィール編集"
-            renderRight={() => (
-              <TouchableOpacity onPress={updateUserState}>
-                <Text style={styles.saveText}>保存</Text>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
+          <View style={styles.headerContainer}>
+            <Header
+              fullWidth={true}
+              title="プロフィール編集"
+              renderRight={() => (
+                <TouchableOpacity onPress={updateUserState}>
+                  <Text style={styles.saveText}>保存</Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
 
-        <View style={styles.headerBottomSpacer} />
+          <View style={styles.headerBottomSpacer} />
 
-        <View style={styles.editArea}>
-          <View style={styles.profileContainer}>
-            <View style={styles.profileWrapper}>
-              <View style={styles.thumbnailWrapper}>
-                <ShadowBase>
-                  <Thumbnail uri={thumbnailURL} size={120} onPress={onChangeThumbnailURL} onFocus={onFocusThumbnail} />
-                </ShadowBase>
+          <View style={styles.editArea}>
+            <View style={styles.profileContainer}>
+              <View style={styles.profileWrapper}>
+                <View style={styles.thumbnailWrapper}>
+                  <ShadowBase>
+                    <Thumbnail
+                      uri={thumbnailURL}
+                      size={120}
+                      onPress={onChangeThumbnailURL}
+                      onFocus={onFocusThumbnail}
+                    />
+                  </ShadowBase>
 
-                <View style={styles.editFab}>
-                  <Fab size={40} color={colors.tints.primary.main} onPress={onChangeThumbnailURL}>
-                    <Icons name="edit" color={colors.foregrounds.onTintPrimary} size={26} />
-                  </Fab>
+                  <View style={styles.editFab}>
+                    <Fab size={40} color={colors.tints.primary.main} onPress={onChangeThumbnailURL}>
+                      <Icons name="edit" color={colors.foregrounds.onTintPrimary} size={26} />
+                    </Fab>
+                  </View>
                 </View>
               </View>
             </View>
@@ -154,11 +157,11 @@ const UserEditScreen = () => {
               </View>
             </View>
           </ShadowBase>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
 
       <KeyboardSpacer />
-    </View>
+    </NormalLayout>
   )
 }
 

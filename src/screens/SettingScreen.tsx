@@ -1,18 +1,18 @@
 import React, { useCallback } from 'react'
 import { useStackNavigation } from '../services/route'
 import { useSafeArea } from 'react-native-safe-area-context'
-import { useAuthState, useUIActions } from '../store/hooks'
+import { useAppAuthState, useUIActions } from '../store/hooks'
 import { useStyles, MakeStyles, useColors } from '../services/design'
 import { signOut } from '../services/authentication'
 import notifications from '../services/notifications'
 import { TouchableOpacity, ScrollView, Text, StyleSheet, View } from 'react-native'
 import { ShadowBase } from '../components/atoms'
 import { Header } from '../components/organisms'
-import { LoadingPage } from '../components/pages'
+import { NormalLayout } from '../components/templates'
 
 const SettingScreen = () => {
   const navigation = useStackNavigation()
-  const { user, uid } = useAuthState()
+  const { user, uid } = useAppAuthState()
   const { setTabState } = useUIActions()
   const styles = useStyles(makeStyles)
   const colors = useColors()
@@ -49,67 +49,65 @@ const SettingScreen = () => {
     navigation.push('Privacy')
   }, [navigation])
 
-  if (!user) {
-    return <LoadingPage />
-  }
-
   return (
-    <View style={styles.container}>
-      <ScrollView
-        style={(styles.scrollView, { paddingTop: inset.top })}
-        stickyHeaderIndices={[1]}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.headerTopSpacer} />
+    <NormalLayout fetching={!user}>
+      <View style={styles.container}>
+        <ScrollView
+          style={(styles.scrollView, { paddingTop: inset.top })}
+          stickyHeaderIndices={[1]}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.headerTopSpacer} />
 
-        <View style={styles.headerContainer}>
-          <Header fullWidth={true} title="設定" />
-        </View>
-
-        <View style={styles.headerBottomSpacer} />
-
-        <ShadowBase>
-          <View style={styles.ruleCardWrapper}>
-            <View style={styles.ruleCard}>
-              <Text style={styles.primaryText}>規約</Text>
-              <TouchableOpacity style={styles.listItem} onPress={goToTerms}>
-                <Text style={styles.secondaryText}>利用規約</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.listItem} onPress={goToPrivacy}>
-                <Text style={styles.secondaryText}>プライバシーポリシー</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.headerContainer}>
+            <Header fullWidth={true} title="設定" />
           </View>
-        </ShadowBase>
 
-        <ShadowBase>
-          <View style={styles.ruleCardWrapper}>
-            <View style={styles.ruleCard}>
-              <Text style={styles.primaryText}>アカウント</Text>
+          <View style={styles.headerBottomSpacer} />
 
-              {enabled && (
-                <TouchableOpacity style={styles.listItem} onPress={onReject}>
-                  <Text style={styles.secondaryText}>通知しない</Text>
+          <ShadowBase>
+            <View style={styles.ruleCardWrapper}>
+              <View style={styles.ruleCard}>
+                <Text style={styles.primaryText}>規約</Text>
+                <TouchableOpacity style={styles.listItem} onPress={goToTerms}>
+                  <Text style={styles.secondaryText}>利用規約</Text>
                 </TouchableOpacity>
-              )}
-
-              {!enabled && (
-                <TouchableOpacity style={styles.listItem} onPress={onAccept}>
-                  <Text style={styles.secondaryText}>通知する</Text>
+                <TouchableOpacity style={styles.listItem} onPress={goToPrivacy}>
+                  <Text style={styles.secondaryText}>プライバシーポリシー</Text>
                 </TouchableOpacity>
-              )}
-
-              <TouchableOpacity style={styles.listItem} onPress={goToWithdraw}>
-                <Text style={styles.secondaryText}>退会する</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.listItem} onPress={onLogOut}>
-                <Text style={(styles.secondaryText, { color: colors.system.blue })}>ログアウト</Text>
-              </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </ShadowBase>
-      </ScrollView>
-    </View>
+          </ShadowBase>
+
+          <ShadowBase>
+            <View style={styles.ruleCardWrapper}>
+              <View style={styles.ruleCard}>
+                <Text style={styles.primaryText}>アカウント</Text>
+
+                {enabled && (
+                  <TouchableOpacity style={styles.listItem} onPress={onReject}>
+                    <Text style={styles.secondaryText}>通知しない</Text>
+                  </TouchableOpacity>
+                )}
+
+                {!enabled && (
+                  <TouchableOpacity style={styles.listItem} onPress={onAccept}>
+                    <Text style={styles.secondaryText}>通知する</Text>
+                  </TouchableOpacity>
+                )}
+
+                <TouchableOpacity style={styles.listItem} onPress={goToWithdraw}>
+                  <Text style={styles.secondaryText}>退会する</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.listItem} onPress={onLogOut}>
+                  <Text style={(styles.secondaryText, { color: colors.system.blue })}>ログアウト</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ShadowBase>
+        </ScrollView>
+      </View>
+    </NormalLayout>
   )
 }
 
