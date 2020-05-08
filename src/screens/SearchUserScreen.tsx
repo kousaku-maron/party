@@ -203,7 +203,8 @@ const makeStyles: MakeStyles = colors =>
       flex: 1
     },
     scrollView: {
-      paddingHorizontal: 12
+      paddingHorizontal: 12,
+      backgroundColor: colors.backgrounds.primary
     },
     emptyMessageContainer: {
       width: '100%',
