@@ -53,17 +53,21 @@ const SearchUserScreen = () => {
 
   const scrollY = useRef(new Value<number>(0))
 
-  const headerY = interpolate(scrollY.current, {
-    inputRange: [0, HEADER_HEIGHT],
-    outputRange: [0, -HEADER_HEIGHT],
-    extrapolate: Extrapolate.CLAMP
-  })
+  const headerY = useRef(
+    interpolate(scrollY.current, {
+      inputRange: [0, HEADER_HEIGHT],
+      outputRange: [0, -HEADER_HEIGHT],
+      extrapolate: Extrapolate.CLAMP
+    })
+  )
 
-  const opacity = interpolate(scrollY.current, {
-    inputRange: [0, HEADER_HEIGHT],
-    outputRange: [1, 0],
-    extrapolate: Extrapolate.CLAMP
-  })
+  const opacity = useRef(
+    interpolate(scrollY.current, {
+      inputRange: [0, HEADER_HEIGHT],
+      outputRange: [1, 0],
+      extrapolate: Extrapolate.CLAMP
+    })
+  )
 
   const isShowBtn = useRef(new Value<number>(0))
   const isShowBtnAnimation = useRef(
@@ -74,22 +78,28 @@ const SearchUserScreen = () => {
     })
   )
 
-  const btnW = interpolate(isShowBtnAnimation.current, {
-    inputRange: [0, 1],
-    outputRange: [0, 70]
-  })
+  const btnW = useRef(
+    interpolate(isShowBtnAnimation.current, {
+      inputRange: [0, 1],
+      outputRange: [0, 70]
+    })
+  )
 
-  const btnPdL = interpolate(isShowBtnAnimation.current, {
-    inputRange: [0, 1],
-    outputRange: [0, 12]
-  })
+  const btnPdL = useRef(
+    interpolate(isShowBtnAnimation.current, {
+      inputRange: [0, 1],
+      outputRange: [0, 12]
+    })
+  )
 
   return (
     <NormalLayout fetching={fetchingAppliedFriendUsers || fetchingSearch}>
-      <Animated.View style={[styles.headerContainer, { transform: [{ translateY: (headerY as unknown) as number }] }]}>
+      <Animated.View
+        style={[styles.headerContainer, { transform: [{ translateY: (headerY.current as unknown) as number }] }]}
+      >
         <ShadowBase>
           <View style={[styles.headerInner, { paddingTop: inset.top }]}>
-            <Animated.View style={[styles.headerWrapper, { opacity }]}>
+            <Animated.View style={[styles.headerWrapper, { opacity: opacity.current }]}>
               <Header fullWidth={true} title="ともだちを探す" />
             </Animated.View>
             <View style={styles.searchBoxWrapper}>
@@ -104,7 +114,7 @@ const SearchUserScreen = () => {
                 />
               </View>
 
-              <Animated.View style={{ width: btnW, paddingLeft: btnPdL }}>
+              <Animated.View style={{ width: btnW.current, paddingLeft: btnPdL.current }}>
                 <TouchableOpacity onPress={onCancel}>
                   <Text style={styles.cancelBtnText} numberOfLines={1}>
                     キャンセル
@@ -186,7 +196,7 @@ const makeStyles: MakeStyles = colors =>
       elevation: 1000
     },
     headerInner: {
-      paddingHorizontal: 12,
+      paddingHorizontal: 24,
       backgroundColor: colors.backgrounds.tertiary
     },
     headerWrapper: {
@@ -203,7 +213,8 @@ const makeStyles: MakeStyles = colors =>
       flex: 1
     },
     scrollView: {
-      paddingHorizontal: 12
+      paddingHorizontal: 12,
+      backgroundColor: colors.backgrounds.primary
     },
     emptyMessageContainer: {
       width: '100%',

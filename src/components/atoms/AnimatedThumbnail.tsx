@@ -1,18 +1,18 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import {
   View,
   TouchableOpacity,
-  Image,
   GestureResponderEvent,
   StyleSheet,
   NativeSyntheticEvent,
   TargetedEvent
 } from 'react-native'
+import Animated, { multiply } from 'react-native-reanimated'
 import { useStyles, MakeStyles } from '../../services/design'
 
 type Props = {
   uri?: string
-  size?: number
+  size?: Animated.Node<number>
   disabled?: boolean
   onPress?: (event: GestureResponderEvent) => void
   onFocus?: (e: NativeSyntheticEvent<TargetedEvent>) => void
@@ -20,7 +20,7 @@ type Props = {
   borderWidth?: number
 }
 
-const Thumbnail: React.FC<Props> = ({
+const AnimatedThumbnail: React.FC<Props> = ({
   uri,
   borderColor,
   borderWidth,
@@ -31,19 +31,21 @@ const Thumbnail: React.FC<Props> = ({
 }) => {
   const styles = useStyles(makeStyles)
 
+  const halfSize = useRef(multiply(size, 1 / 2))
+
   if (!onPress) {
     return (
       <View style={styles.container}>
         {uri && (
-          <Image
+          <Animated.Image
             source={{ uri }}
-            style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+            style={{ width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }}
           />
         )}
         {!uri && (
-          <Image
+          <Animated.Image
             source={require('../../../assets/images/no_user.png')}
-            style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+            style={{ width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }}
           />
         )}
       </View>
@@ -53,15 +55,15 @@ const Thumbnail: React.FC<Props> = ({
   return (
     <TouchableOpacity style={styles.container} disabled={disabled} onPress={onPress} onFocus={onFocus}>
       {uri && (
-        <Image
+        <Animated.Image
           source={{ uri }}
-          style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+          style={{ width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }}
         />
       )}
       {!uri && (
-        <Image
+        <Animated.Image
           source={require('../../../assets/images/no_user.png')}
-          style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+          style={{ width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }}
         />
       )}
     </TouchableOpacity>
@@ -77,4 +79,4 @@ const makeStyles: MakeStyles = () =>
     }
   })
 
-export default Thumbnail
+export default AnimatedThumbnail
