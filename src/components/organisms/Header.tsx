@@ -11,6 +11,7 @@ type Props = {
   height?: number
   fullWidth?: boolean
   renderTitle?: () => React.ReactElement
+  renderLeft?: () => React.ReactElement
   renderRight?: () => React.ReactElement
 }
 
@@ -23,6 +24,7 @@ const Header: React.FC<Props> = ({
   height = headerHeight,
   fullWidth = false,
   renderTitle,
+  renderLeft,
   renderRight
 }) => {
   const styles = useStyles(makeStyles)
@@ -59,7 +61,7 @@ const Header: React.FC<Props> = ({
         }
       ]}
     >
-      {enabled && (
+      {!renderLeft && enabled && (
         <View style={styles.leftWrapper}>
           <TouchableOpacity onPress={goBack}>
             <AntDesign name="arrowleft" size={24} color={tintColor ?? colors.foregrounds.primary} />
@@ -67,7 +69,9 @@ const Header: React.FC<Props> = ({
         </View>
       )}
 
-      {!enabled && <View style={styles.leftWrapper} />}
+      {!renderLeft && !enabled && <View style={styles.leftWrapper} />}
+
+      {renderLeft && <View style={styles.leftWrapper}>{renderLeft()}</View>}
 
       {onRenderTitle()}
 

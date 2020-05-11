@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useCallback, useState, useRef, useMemo } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import Animated, { Value, SpringUtils, interpolate, Extrapolate } from 'react-native-reanimated'
 import { withSpringTransition } from 'react-native-redash'
@@ -6,15 +6,60 @@ import { useSafeArea } from 'react-native-safe-area-context'
 import { User } from '../entities'
 import { useAppAuthState } from '../store/hooks'
 import { useStackNavigation } from '../services/route'
-import { useStyles, MakeStyles } from '../services/design'
-import { useSearchUsers } from '../services/user'
-import { useAppliedFriendUsers } from '../services/friend'
-import { ShadowBase, TextInput } from '../components/atoms'
+import { useStyles, MakeStyles, useColors } from '../services/design'
+import { useSearchUsers, useUserRelationship } from '../services/user'
+import { useAppliedFriendUsers, useApplyFriend, useAcceptFriend } from '../services/friend'
+import { ShadowBase, TextInput, Fab } from '../components/atoms'
 import { Header, UserCard } from '../components/organisms'
 import { NormalLayout } from '../components/templates'
+import { Icons } from '../@assets/vector-icons'
 
 const HEADER_HEIGHT = 50 + 6 // height + paddingBottom
 const SEARCH_HEIGHT = 50 + 12 // height + paddingBottom
+
+type ListItemProps = {
+  user: User
+  onPress: (user: User) => void
+}
+
+const UserListItem = ({ user, onPress }: ListItemProps) => {
+  const colors = useColors()
+  const { isBlocked, isFriend, isApply, isApplied } = useUserRelationship(user.uid)
+  const { onApplyFriend } = useApplyFriend()
+  const { onAcceptFriend } = useAcceptFriend()
+
+  const isShowUserPlusIcon = useMemo(() => {
+    return !isBlocked && !isFriend && !isApply
+  }, [isApply, isBlocked, isFriend])
+
+  const onPressUserPlus = useCallback(() => {
+    if (isApplied) {
+      onAcceptFriend(user)
+      return
+    }
+
+    onApplyFriend(user)
+  }, [isApplied, onAcceptFriend, onApplyFriend, user])
+
+  return (
+    <UserCard
+      user={user}
+      onPress={onPress}
+      fullWidth={true}
+      renderRight={() => {
+        if (isShowUserPlusIcon) {
+          return (
+            <ShadowBase>
+              <Fab color={colors.backgrounds.tertiary} onPress={onPressUserPlus}>
+                <Icons name="user-plus" color={colors.foregrounds.primary} size={24} />
+              </Fab>
+            </ShadowBase>
+          )
+        }
+      }}
+    />
+  )
+}
 
 const SearchUserScreen = () => {
   const { user, uid } = useAppAuthState()
@@ -151,7 +196,7 @@ const SearchUserScreen = () => {
             {appliedFriendUsers.map(user => (
               <View key={user.id} style={styles.cardWrapper}>
                 <ShadowBase>
-                  <UserCard user={user} onPress={onPressCard} fullWidth={true} />
+                  <UserListItem user={user} onPress={onPressCard} />
                 </ShadowBase>
               </View>
             ))}
@@ -166,7 +211,7 @@ const SearchUserScreen = () => {
             {searchUsers.map(user => (
               <View key={user.id} style={styles.cardWrapper}>
                 <ShadowBase>
-                  <UserCard user={user} onPress={onPressCard} fullWidth={true} />
+                  <UserListItem user={user} onPress={onPressCard} />
                 </ShadowBase>
               </View>
             ))}

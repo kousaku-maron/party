@@ -175,14 +175,7 @@ const UserScreen = () => {
               <React.Fragment>
                 <View style={styles.thumbnailWrapper}>
                   <ShadowBase>
-                    <AnimatedThumbnail
-                      uri={user.thumbnailURL}
-                      size={thumbnailSize.current}
-                      onPress={() => {
-                        if (!isMy) return
-                        goToEdit()
-                      }}
-                    />
+                    <AnimatedThumbnail uri={user.thumbnailURL} size={thumbnailSize.current} />
                   </ShadowBase>
                 </View>
 

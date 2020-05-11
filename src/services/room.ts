@@ -1,14 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import firebase from '../repositories/firebase'
-import { buildRoom, Room, User, notFoundUser } from '../entities'
+import { buildRoom, Room, User } from '../entities'
 import { useAppAuthState } from '../store/hooks'
-import { getUser } from '../repositories/user'
+import { createRoom } from '../repositories/room'
+import { showCreateRoomFailureMessage } from './flashCard'
+import { uniq, uniqBy, pullAllBy } from 'lodash'
 
 const db = firebase.firestore()
 const roomsRef = db.collection('rooms')
 
 export const useRooms = () => {
-  const [rooms, setRooms] = useState<Room[]>()
+  const [fetching, setFetching] = useState<boolean>(true)
+  const [rooms, setRooms] = useState<Room[]>([])
   const auth = useAppAuthState()
   const { user } = auth
 
@@ -23,6 +26,7 @@ export const useRooms = () => {
             return buildRoom(doc.id, doc.data())
           })
           setRooms(newRoom)
+          setFetching(false)
         },
         error => {
           console.info('catch useRooms error', error)
@@ -34,45 +38,53 @@ export const useRooms = () => {
     }
   }, [user])
 
-  return rooms
+  return { fetching, rooms }
 }
 
-export const useRoomsWithUser = () => {
-  const [roomsWithUser, setRoomWithUser] = useState<(Room & { users: User[] })[]>([])
-  const rooms = useRooms()
-  const [fetching, setFetching] = useState<boolean>(true)
+export const useCreateRoomTools = () => {
+  const [users, setUsers] = useState<User[]>([])
+  const { user } = useAppAuthState()
 
-  useEffect(() => {
-    if (!rooms) return
+  const onAppendUser = useCallback((user: User) => {
+    setUsers(prev => uniqBy([...prev, user], 'uid'))
+  }, [])
 
-    const asyncTask = async () => {
-      const task = rooms.map(async room => {
-        if (!room.entryUIDs) {
-          return { ...room, users: [] }
-        }
+  const onRemoveUser = useCallback((user: User) => {
+    setUsers(prev => [...pullAllBy(prev, [user], 'uid')])
+  }, [])
 
-        const childTask = room.entryUIDs.map(async uid => {
-          const user = await getUser(uid)
-          if (!user) {
-            return notFoundUser
-          }
+  const onSwitchUser = useCallback(
+    (user: User) => {
+      if (users.find(_user => _user.uid === user.uid)) {
+        console.info('remove')
+        onRemoveUser(user)
+        return
+      }
 
-          return user
-        })
+      console.info('append')
+      onAppendUser(user)
+    },
+    [onAppendUser, onRemoveUser, users]
+  )
 
-        const users = await Promise.all(childTask)
+  const onCreateRoom = useCallback(async () => {
+    try {
+      if (users.length === 0) {
+        throw 'requires at least 1 users.'
+      }
 
-        return { ...room, users }
+      await createRoom({
+        enabled: true,
+        roomHash: 'tempRoomHash',
+        entryUIDs: uniq([...users.map(user => user.uid), user.uid]),
+        users: uniqBy([...users, user], 'uid')
       })
-
-      const newRoomsWithUser = await Promise.all(task)
-
-      setRoomWithUser(newRoomsWithUser)
-      setFetching(false)
+      setUsers([])
+    } catch (e) {
+      showCreateRoomFailureMessage()
+      console.warn(e)
     }
+  }, [user, users])
 
-    asyncTask()
-  }, [rooms])
-
-  return { fetching, roomsWithUser }
+  return { selectedUsers: users, onSwitchUser, onCreateRoom }
 }
