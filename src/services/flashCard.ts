@@ -134,3 +134,7 @@ export const showLikeApplyCardAlreadyMatchMessage = () => {
 export const showLikeApplyCardFailurMessage = () => {
   showMessage({ message: 'いいねに失敗しました', type: 'danger' })
 }
+
+export const showCreateRoomFailureMessage = () => {
+  showMessage({ message: 'ルーム作成に失敗しました', type: 'danger' })
+}

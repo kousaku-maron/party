@@ -1,11 +1,8 @@
-import React, { useMemo, useCallback } from 'react'
+import React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { User } from '../../entities'
-import { useStyles, MakeStyles, useColors } from '../../services/design'
-import { useUserRelationship } from '../../services/user'
-import { useApplyFriend, useAcceptFriend } from '../../services/friend'
-import { ShadowBase, Thumbnail, Fab } from '../atoms'
-import { Icons } from '../../@assets/vector-icons'
+import { useStyles, MakeStyles } from '../../services/design'
+import { Thumbnail } from '../atoms'
 
 type Props = {
   user: User
@@ -14,28 +11,19 @@ type Props = {
   fullWidth?: boolean
   disabled?: boolean
   onPress?: (user: User) => void
+  renderRight?: () => React.ReactElement
 }
 
-const UserCard = ({ user, width = 300, height = 80, fullWidth = false, disabled = false, onPress }: Props) => {
+const UserCard = ({
+  user,
+  width = 300,
+  height = 80,
+  fullWidth = false,
+  disabled = false,
+  onPress,
+  renderRight
+}: Props) => {
   const styles = useStyles(makeStyles)
-  const colors = useColors()
-
-  const { isBlocked, isFriend, isApply, isApplied } = useUserRelationship(user.uid)
-  const { onAcceptFriend } = useAcceptFriend()
-  const { onApplyFriend } = useApplyFriend()
-
-  const isShowUserPlusIcon = useMemo(() => {
-    return !isBlocked && !isFriend && !isApply
-  }, [isApply, isBlocked, isFriend])
-
-  const onPressUserPlus = useCallback(() => {
-    if (isApplied) {
-      onAcceptFriend(user)
-      return
-    }
-
-    onApplyFriend(user)
-  }, [isApplied, onAcceptFriend, onApplyFriend, user])
 
   return (
     <TouchableOpacity
@@ -52,15 +40,7 @@ const UserCard = ({ user, width = 300, height = 80, fullWidth = false, disabled 
           <Text style={styles.idText}>@{user.userID}</Text>
         </View>
       </View>
-      <View style={styles.cardTail}>
-        {isShowUserPlusIcon && (
-          <ShadowBase>
-            <Fab color={colors.backgrounds.tertiary} onPress={onPressUserPlus}>
-              <Icons name="user-plus" color={colors.foregrounds.primary} size={24} />
-            </Fab>
-          </ShadowBase>
-        )}
-      </View>
+      {renderRight && <View style={styles.cardTail}>{renderRight()}</View>}
     </TouchableOpacity>
   )
 }
