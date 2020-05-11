@@ -69,12 +69,17 @@ export const useCreateRoomTools = () => {
 
   const onCreateRoom = useCallback(async () => {
     try {
+      if (users.length === 0) {
+        throw 'requires at least 1 users.'
+      }
+
       await createRoom({
         enabled: true,
         roomHash: 'tempRoomHash',
         entryUIDs: uniq([...users.map(user => user.uid), user.uid]),
         users: uniqBy([...users, user], 'uid')
       })
+      setUsers([])
     } catch (e) {
       showCreateRoomFailureMessage()
       console.warn(e)

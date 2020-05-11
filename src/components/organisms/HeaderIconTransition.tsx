@@ -9,22 +9,28 @@ type Props = {
 
 const animIn: CustomAnimation = {
   from: {
-    opacity: 0
+    opacity: 0,
+    scaleX: 0.5,
+    scaleY: 0.5
   },
   to: {
-    opacity: 1
+    opacity: 1,
+    scaleX: 1,
+    scaleY: 1
   },
   easing: 'ease-out'
 }
 
 const animOut: CustomAnimation = {
   from: {
-    translateY: 0,
-    opacity: 1
+    opacity: 1,
+    scaleX: 1,
+    scaleY: 1
   },
   to: {
-    translateY: -40,
-    opacity: 0
+    opacity: 0,
+    scaleX: 0.5,
+    scaleY: 0.5
   },
   easing: 'ease-out'
 }

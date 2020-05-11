@@ -12,6 +12,7 @@ import { RoomCard, UserCard, Header, ListItemTransition, HeaderIconTransition } 
 import { BottomTabLayout } from '../components/templates'
 import { Room, User } from '../entities'
 import { Icons } from '../@assets/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 
 const HEADER_HEIGHT = 50 + 6 // height + paddingBottom
 
@@ -75,9 +76,13 @@ const RoomScreen = () => {
   }, [])
 
   const onCreateAndSwitchRoom = useCallback(async () => {
+    if (selectedUsers.length === 0) {
+      return alert('ユーザーを選択してください。')
+    }
+
     onCreateRoom()
     onSwitchRooms()
-  }, [onCreateRoom, onSwitchRooms])
+  }, [onCreateRoom, onSwitchRooms, selectedUsers.length])
 
   const scrollY = useRef(new Value<number>(0))
 
@@ -97,14 +102,28 @@ const RoomScreen = () => {
             <Header
               fullWidth={true}
               title="トークルーム"
+              renderLeft={() => {
+                // -------------------------------------------------
+                // Create Room Header Icon
+                // -------------------------------------------------
+                if (isActiveCreateRoom) {
+                  return (
+                    <HeaderIconTransition isShow={isShowCreateRoom}>
+                      <TouchableOpacity onPress={onSwitchRooms}>
+                        <AntDesign name="arrowleft" color={colors.foregrounds.primary} size={24} />
+                      </TouchableOpacity>
+                    </HeaderIconTransition>
+                  )
+                }
+              }}
               renderRight={() => {
                 // -------------------------------------------------
                 // Room List Header Icon
                 // -------------------------------------------------
-                if (isShowRooms) {
+                if (isActiveRooms) {
                   return (
-                    <HeaderIconTransition isShow={isActiveRooms}>
-                      <TouchableOpacity style={styles.chatPlusIconWrapper} onPress={onSwitchCreateRoom}>
+                    <HeaderIconTransition isShow={isShowRooms}>
+                      <TouchableOpacity onPress={onSwitchCreateRoom}>
                         <Icons name="chat-plus" color={colors.foregrounds.primary} size={24} />
                       </TouchableOpacity>
                     </HeaderIconTransition>
@@ -114,10 +133,10 @@ const RoomScreen = () => {
                 // -------------------------------------------------
                 // Create Room Header Icon
                 // -------------------------------------------------
-                if (isShowCreateRoom) {
+                if (isActiveCreateRoom) {
                   return (
-                    <HeaderIconTransition isShow={isActiveCreateRoom}>
-                      <TouchableOpacity style={styles.chatPlusIconWrapper} onPress={onCreateAndSwitchRoom}>
+                    <HeaderIconTransition isShow={isShowCreateRoom}>
+                      <TouchableOpacity onPress={onCreateAndSwitchRoom}>
                         <Text style={styles.createText}>作成</Text>
                       </TouchableOpacity>
                     </HeaderIconTransition>
@@ -252,7 +271,6 @@ const makeStyles: MakeStyles = colors =>
       justifyContent: 'center',
       alignItems: 'center'
     },
-    chatPlusIconWrapper: {},
     cardWrapper: {
       width: '100%',
       paddingBottom: 20,
