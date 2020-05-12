@@ -9,12 +9,12 @@ import { useStackNavigation } from '../services/route'
 import { useStyles, MakeStyles, useColors } from '../services/design'
 import { useSearchUsers, useUserRelationship } from '../services/user'
 import { useAppliedFriendUsers, useApplyFriend, useAcceptFriend } from '../services/friend'
-import { ShadowBase, TextInput, Fab } from '../components/atoms'
+import { ShadowBase, TextInput, Fab, BlurView } from '../components/atoms'
 import { Header, UserCard } from '../components/organisms'
 import { NormalLayout } from '../components/templates'
 import { Icons } from '../@assets/vector-icons'
 
-const HEADER_HEIGHT = 50 + 6 // height + paddingBottom
+const HEADER_HEIGHT = 50 + 24 + 6 // height + paddingTop + paddingBottom
 const SEARCH_HEIGHT = 50 + 12 // height + paddingBottom
 
 type ListItemProps = {
@@ -143,7 +143,7 @@ const SearchUserScreen = () => {
         style={[styles.headerContainer, { transform: [{ translateY: (headerY.current as unknown) as number }] }]}
       >
         <ShadowBase>
-          <View style={[styles.headerInner, { paddingTop: inset.top }]}>
+          <BlurView style={[styles.headerInner, { paddingTop: 24 + inset.top }]}>
             <Animated.View style={[styles.headerWrapper, { opacity: opacity.current }]}>
               <Header fullWidth={true} title="ともだちを探す" />
             </Animated.View>
@@ -167,7 +167,7 @@ const SearchUserScreen = () => {
                 </TouchableOpacity>
               </Animated.View>
             </View>
-          </View>
+          </BlurView>
         </ShadowBase>
       </Animated.View>
 
@@ -241,8 +241,7 @@ const makeStyles: MakeStyles = colors =>
       elevation: 1000
     },
     headerInner: {
-      paddingHorizontal: 24,
-      backgroundColor: colors.backgrounds.tertiary
+      paddingHorizontal: 24
     },
     headerWrapper: {
       paddingBottom: 6

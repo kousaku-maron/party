@@ -37,13 +37,13 @@ const Thumbnail: React.FC<Props> = ({
         {uri && (
           <Image
             source={{ uri }}
-            style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+            style={[styles.img, { width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }]}
           />
         )}
         {!uri && (
           <Image
             source={require('../../../assets/images/no_user.png')}
-            style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+            style={[styles.img, { width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }]}
           />
         )}
       </View>
@@ -55,25 +55,28 @@ const Thumbnail: React.FC<Props> = ({
       {uri && (
         <Image
           source={{ uri }}
-          style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+          style={[styles.img, { width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }]}
         />
       )}
       {!uri && (
         <Image
           source={require('../../../assets/images/no_user.png')}
-          style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+          style={[styles.img, { width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }]}
         />
       )}
     </TouchableOpacity>
   )
 }
 
-const makeStyles: MakeStyles = () =>
+const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center'
+    },
+    img: {
+      backgroundColor: colors.system.gray
     }
   })
 

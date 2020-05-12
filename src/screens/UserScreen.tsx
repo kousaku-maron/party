@@ -11,10 +11,11 @@ import { useUser, useUserRelationship } from '../services/user'
 import { useAppliedParties } from '../services/party'
 import { useFriends, useApplyFriend, useAcceptFriend } from '../services/friend'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import { Thumbnail, AnimatedThumbnail, Fab, DotsIcon, ShadowBase } from '../components/atoms'
+import { Thumbnail, AnimatedThumbnail, Fab, ShadowBase, BlurView } from '../components/atoms'
 import { PartySecondaryCard, Header } from '../components/organisms'
 import { BottomTabLayout } from '../components/templates'
 import { Icons } from '../@assets/vector-icons'
+import { Entypo } from '@expo/vector-icons'
 
 const PROFILE_HEIGHT = 480
 
@@ -99,14 +100,6 @@ const UserScreen = () => {
     })
   )
 
-  const hbOpacity = useRef(
-    interpolate(scrollY.current, {
-      inputRange: [185, 235],
-      outputRange: [0, 1],
-      extrapolate: Extrapolate.CLAMP
-    })
-  )
-
   const thumbnailSize = useRef(
     interpolate(scrollY.current, {
       inputRange: [120, 170],
@@ -142,7 +135,7 @@ const UserScreen = () => {
   return (
     <BottomTabLayout fetching={fetching}>
       <View style={styles.container}>
-        <View style={[styles.headerContainer, { paddingTop: inset.top }]}>
+        <View style={[styles.headerContainer, { paddingTop: 24 + inset.top }]}>
           <View style={styles.headerInner}>
             <Header
               fullWidth={true}
@@ -150,7 +143,7 @@ const UserScreen = () => {
               renderRight={() =>
                 isMy && (
                   <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
-                    <DotsIcon tintColor={colors.foregrounds.primary} />
+                    <Entypo name="dots-two-vertical" size={28} color={colors.foregrounds.primary} />
                   </TouchableOpacity>
                 )
               }
@@ -158,7 +151,7 @@ const UserScreen = () => {
           </View>
         </View>
 
-        <Animated.View style={[styles.headerBackground, { paddingTop: inset.top, opacity: hbOpacity.current }]} />
+        <BlurView style={[styles.headerBackground, { paddingTop: 24 + inset.top }]} />
 
         <Animated.ScrollView
           style={styles.userScrollView}
@@ -327,11 +320,10 @@ const makeStyles: MakeStyles = colors =>
       zIndex: 999,
       elevation: 999,
       paddingBottom: 6,
-      height: 100,
-      backgroundColor: colors.backgrounds.tertiary
+      height: 124
     },
     headerInner: {
-      paddingHorizontal: 24
+      paddingHorizontal: 36
     },
     headerTitleContainer: {
       height: '100%',

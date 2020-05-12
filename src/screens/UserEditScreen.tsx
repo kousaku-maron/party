@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import Animated, { Value, Extrapolate, interpolate } from 'react-native-reanimated'
+import Animated, { Value } from 'react-native-reanimated'
 import { useSafeArea } from 'react-native-safe-area-context'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { UpdateUser } from '../entities'
@@ -10,7 +10,7 @@ import { useStyles, useColors, MakeStyles } from '../services/design'
 // import { useKeyboardState } from '../services/ui'
 import { useUserEditTools } from '../services/user'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
-import { Fab, Thumbnail, ShadowBase } from '../components/atoms'
+import { Fab, Thumbnail, ShadowBase, BlurView } from '../components/atoms'
 import { TextField } from '../components/moleculers'
 import { Header } from '../components/organisms'
 import { NormalLayout } from '../components/templates'
@@ -42,14 +42,6 @@ const UserEditScreen = () => {
 
   const scrollY = useRef(new Value<number>(0))
 
-  const hbOpacity = useRef(
-    interpolate(scrollY.current, {
-      inputRange: [185, 235],
-      outputRange: [0, 1],
-      extrapolate: Extrapolate.CLAMP
-    })
-  )
-
   const {
     name,
     userID,
@@ -78,7 +70,7 @@ const UserEditScreen = () => {
   return (
     <NormalLayout fetching={fetching}>
       <View style={styles.container}>
-        <View style={[styles.headerContainer, { paddingTop: inset.top }]}>
+        <View style={[styles.headerContainer, { paddingTop: 24 + inset.top }]}>
           <View style={styles.headerInner}>
             <Header
               fullWidth={true}
@@ -92,7 +84,7 @@ const UserEditScreen = () => {
           </View>
         </View>
 
-        <Animated.View style={[styles.headerBackground, { paddingTop: inset.top, opacity: hbOpacity.current }]} />
+        <BlurView style={[styles.headerBackground, { paddingTop: 24 + inset.top }]} />
 
         <Animated.ScrollView
           style={styles.scrollView}
@@ -174,11 +166,10 @@ const makeStyles: MakeStyles = colors =>
       zIndex: 999,
       elevation: 999,
       paddingBottom: 6,
-      height: 100,
-      backgroundColor: colors.backgrounds.tertiary
+      height: 124
     },
     headerInner: {
-      paddingHorizontal: 24
+      paddingHorizontal: 36
     },
     scrollView: {},
     grow: {
@@ -224,7 +215,7 @@ const makeStyles: MakeStyles = colors =>
     },
     saveText: {
       color: colors.tints.primary.main,
-      fontSize: 16
+      fontSize: 18
     }
   })
 

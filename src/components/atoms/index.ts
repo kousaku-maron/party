@@ -1,3 +1,4 @@
+export { default as BlurView } from './BlurView'
 export { default as ShadowBase } from './ShadowBase'
 export { default as BloomBase } from './BloomBase'
 export { default as RoundedButton } from './RoundedButton'

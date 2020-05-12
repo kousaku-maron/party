@@ -64,7 +64,7 @@ const Header: React.FC<Props> = ({
       {!renderLeft && enabled && (
         <View style={styles.leftWrapper}>
           <TouchableOpacity onPress={goBack}>
-            <AntDesign name="arrowleft" size={24} color={tintColor ?? colors.foregrounds.primary} />
+            <AntDesign name="arrowleft" size={28} color={tintColor ?? colors.foregrounds.primary} />
           </TouchableOpacity>
         </View>
       )}
