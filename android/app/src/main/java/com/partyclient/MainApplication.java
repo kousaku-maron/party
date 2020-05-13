@@ -25,7 +25,11 @@ import org.unimodules.core.interfaces.SingletonModule;
 import expo.modules.constants.ConstantsPackage;
 import expo.modules.permissions.PermissionsPackage;
 import expo.modules.filesystem.FileSystemPackage;
+import com.airbnb.android.react.lottie.LottiePackage;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
+import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,14 +49,18 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNCWebViewPackage(),
-            new SvgPackage(),
-            new SafeAreaContextPackage(),
-            new RNCAppearancePackage(),
-            new RNCMaskedViewPackage(),
+          new RNCWebViewPackage(),
+          new SvgPackage(),
+          new SafeAreaContextPackage(),
+          new RNCAppearancePackage(),
+          new RNCMaskedViewPackage(),
           new ReanimatedPackage(),
           new RNGestureHandlerPackage(),
           new RNScreensPackage(),
+          new RNGoogleSigninPackage(),
+          new LottiePackage(),
+          new ReactNativeFirebaseAppPackage(),
+          new ReactNativeFirebaseMessagingPackage(),
           new ModuleRegistryAdapter(mModuleRegistryProvider)
       );
     }

@@ -33,7 +33,7 @@
       }
     },
     "android": {
-      "package": "com.party.Partyopu",
+      "package": "com.partyclient",
       "versionCode": 1,
       "googleServicesFile": "./google-services.json"
     },
