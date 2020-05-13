@@ -47,6 +47,12 @@ module.exports = {
         android: null,
         ios: null
       }
+    },
+    '@react-native-community/blur': {
+      platforms: {
+        android: null,
+        ios: null
+      }
     }
   }
 }

@@ -7,7 +7,7 @@ type Props = {
 }
 
 const ListItemTransition: React.FC<Props> = ({ children, isShow, onAnimationEnd }) => {
-  const animationName = useMemo(() => (isShow ? 'bounceInUp' : 'fadeOutDown'), [isShow])
+  const animationName = useMemo(() => (isShow ? 'slideInUp' : 'fadeOutDown'), [isShow])
   const duration = useMemo(() => (isShow ? 800 : 200), [isShow])
 
   return (

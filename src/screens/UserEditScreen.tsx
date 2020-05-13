@@ -10,7 +10,7 @@ import { useStyles, useColors, MakeStyles } from '../services/design'
 // import { useKeyboardState } from '../services/ui'
 import { useUserEditTools } from '../services/user'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
-import { Fab, Thumbnail, ShadowBase } from '../components/atoms'
+import { Fab, Thumbnail, ShadowBase, BlurView } from '../components/atoms'
 import { TextField } from '../components/moleculers'
 import { Header } from '../components/organisms'
 import { NormalLayout } from '../components/templates'
@@ -18,6 +18,8 @@ import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../servic
 import { Icons } from '../@assets/vector-icons'
 
 const PROFILE_HEIGHT = 480
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
 const UserEditScreen = () => {
   const navigation = useNavigation()
@@ -78,7 +80,7 @@ const UserEditScreen = () => {
   return (
     <NormalLayout fetching={fetching}>
       <View style={styles.container}>
-        <View style={[styles.headerContainer, { paddingTop: inset.top }]}>
+        <View style={[styles.headerContainer, { paddingTop: 24 + inset.top }]}>
           <View style={styles.headerInner}>
             <Header
               fullWidth={true}
@@ -92,7 +94,9 @@ const UserEditScreen = () => {
           </View>
         </View>
 
-        <Animated.View style={[styles.headerBackground, { paddingTop: inset.top, opacity: hbOpacity.current }]} />
+        <AnimatedBlurView
+          style={[styles.headerBackground, { paddingTop: 24 + inset.top, opacity: hbOpacity.current }]}
+        />
 
         <Animated.ScrollView
           style={styles.scrollView}
@@ -174,11 +178,10 @@ const makeStyles: MakeStyles = colors =>
       zIndex: 999,
       elevation: 999,
       paddingBottom: 6,
-      height: 100,
-      backgroundColor: colors.backgrounds.tertiary
+      height: 124
     },
     headerInner: {
-      paddingHorizontal: 24
+      paddingHorizontal: 36
     },
     scrollView: {},
     grow: {
@@ -224,7 +227,7 @@ const makeStyles: MakeStyles = colors =>
     },
     saveText: {
       color: colors.tints.primary.main,
-      fontSize: 16
+      fontSize: 18
     }
   })
 

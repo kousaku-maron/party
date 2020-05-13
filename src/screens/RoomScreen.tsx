@@ -7,14 +7,16 @@ import { useStackNavigation } from '../services/route'
 import { useColors, useStyles, MakeStyles } from '../services/design'
 import { useRooms, useCreateRoomTools } from '../services/room'
 import { useFriends } from '../services/friend'
-import { ShadowBase, Fab } from '../components/atoms'
+import { ShadowBase, Fab, BlurView } from '../components/atoms'
 import { RoomCard, UserCard, Header, ListItemTransition, HeaderIconTransition } from '../components/organisms'
 import { BottomTabLayout } from '../components/templates'
 import { Room, User } from '../entities'
 import { Icons } from '../@assets/vector-icons'
 import { AntDesign } from '@expo/vector-icons'
 
-const HEADER_HEIGHT = 50 + 6 // height + paddingBottom
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
+
+const HEADER_HEIGHT = 50 + 24 + 6 // height + paddingTop + paddingBottom
 
 type ListItemProps = {
   user: User
@@ -97,7 +99,7 @@ const RoomScreen = () => {
   return (
     <BottomTabLayout fetching={fetchingRooms || fetchingFriends}>
       <View style={styles.container}>
-        <View style={[styles.headerContainer, { paddingTop: inset.top }]}>
+        <View style={[styles.headerContainer, { paddingTop: 24 + inset.top }]}>
           <View style={styles.headerInner}>
             <Header
               fullWidth={true}
@@ -110,7 +112,7 @@ const RoomScreen = () => {
                   return (
                     <HeaderIconTransition isShow={isShowCreateRoom}>
                       <TouchableOpacity onPress={onSwitchRooms}>
-                        <AntDesign name="arrowleft" color={colors.foregrounds.primary} size={24} />
+                        <AntDesign name="arrowleft" color={colors.foregrounds.primary} size={28} />
                       </TouchableOpacity>
                     </HeaderIconTransition>
                   )
@@ -124,7 +126,7 @@ const RoomScreen = () => {
                   return (
                     <HeaderIconTransition isShow={isShowRooms}>
                       <TouchableOpacity onPress={onSwitchCreateRoom}>
-                        <Icons name="chat-plus" color={colors.foregrounds.primary} size={24} />
+                        <Icons name="chat-plus" color={colors.foregrounds.primary} size={28} />
                       </TouchableOpacity>
                     </HeaderIconTransition>
                   )
@@ -147,7 +149,9 @@ const RoomScreen = () => {
           </View>
         </View>
 
-        <Animated.View style={[styles.headerBackground, { paddingTop: inset.top, opacity: hbOpacity.current }]} />
+        <AnimatedBlurView
+          style={[styles.headerBackground, { paddingTop: 24 + inset.top, opacity: hbOpacity.current }]}
+        />
 
         <Animated.ScrollView
           style={[styles.scrollView, { paddingTop: HEADER_HEIGHT + inset.top + 24 }]}
@@ -257,11 +261,10 @@ const makeStyles: MakeStyles = colors =>
       zIndex: 999,
       elevation: 999,
       paddingBottom: 6,
-      height: 100,
-      backgroundColor: colors.backgrounds.tertiary
+      height: 124
     },
     headerInner: {
-      paddingHorizontal: 24
+      paddingHorizontal: 36
     },
     scrollView: {
       height: '100%'
@@ -282,7 +285,7 @@ const makeStyles: MakeStyles = colors =>
     },
     createText: {
       color: colors.tints.primary.main,
-      fontSize: 16
+      fontSize: 18
     }
   })
 

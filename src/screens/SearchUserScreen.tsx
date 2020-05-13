@@ -9,12 +9,14 @@ import { useStackNavigation } from '../services/route'
 import { useStyles, MakeStyles, useColors } from '../services/design'
 import { useSearchUsers, useUserRelationship } from '../services/user'
 import { useAppliedFriendUsers, useApplyFriend, useAcceptFriend } from '../services/friend'
-import { ShadowBase, TextInput, Fab } from '../components/atoms'
+import { ShadowBase, TextInput, Fab, BlurView } from '../components/atoms'
 import { Header, UserCard } from '../components/organisms'
 import { NormalLayout } from '../components/templates'
 import { Icons } from '../@assets/vector-icons'
 
-const HEADER_HEIGHT = 50 + 6 // height + paddingBottom
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
+
+const HEADER_HEIGHT = 50 + 24 + 6 // height + paddingTop + paddingBottom
 const SEARCH_HEIGHT = 50 + 12 // height + paddingBottom
 
 type ListItemProps = {
@@ -143,7 +145,7 @@ const SearchUserScreen = () => {
         style={[styles.headerContainer, { transform: [{ translateY: (headerY.current as unknown) as number }] }]}
       >
         <ShadowBase>
-          <View style={[styles.headerInner, { paddingTop: inset.top }]}>
+          <View style={[styles.headerInner, { paddingTop: 24 + inset.top }]}>
             <Animated.View style={[styles.headerWrapper, { opacity: opacity.current }]}>
               <Header fullWidth={true} title="ともだちを探す" />
             </Animated.View>
@@ -170,6 +172,13 @@ const SearchUserScreen = () => {
           </View>
         </ShadowBase>
       </Animated.View>
+
+      <AnimatedBlurView
+        style={[
+          styles.headerBackground,
+          { paddingTop: inset.top, transform: [{ translateY: (headerY.current as unknown) as number }] }
+        ]}
+      />
 
       <Animated.ScrollView
         style={[styles.scrollView, { paddingTop: HEADER_HEIGHT + SEARCH_HEIGHT + inset.top + 24 }]}
@@ -240,9 +249,17 @@ const makeStyles: MakeStyles = colors =>
       zIndex: 1000,
       elevation: 1000
     },
+    headerBackground: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      zIndex: 999,
+      elevation: 999,
+      height: HEADER_HEIGHT + SEARCH_HEIGHT + 44
+    },
     headerInner: {
-      paddingHorizontal: 24,
-      backgroundColor: colors.backgrounds.tertiary
+      paddingHorizontal: 24
     },
     headerWrapper: {
       paddingBottom: 6

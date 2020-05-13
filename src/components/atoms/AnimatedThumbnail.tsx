@@ -39,13 +39,19 @@ const AnimatedThumbnail: React.FC<Props> = ({
         {uri && (
           <Animated.Image
             source={{ uri }}
-            style={{ width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }}
+            style={[
+              styles.img,
+              { width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }
+            ]}
           />
         )}
         {!uri && (
           <Animated.Image
             source={require('../../../assets/images/no_user.png')}
-            style={{ width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }}
+            style={[
+              styles.img,
+              { width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }
+            ]}
           />
         )}
       </View>
@@ -57,25 +63,28 @@ const AnimatedThumbnail: React.FC<Props> = ({
       {uri && (
         <Animated.Image
           source={{ uri }}
-          style={{ width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }}
+          style={[styles.img, { width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }]}
         />
       )}
       {!uri && (
         <Animated.Image
           source={require('../../../assets/images/no_user.png')}
-          style={{ width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }}
+          style={[styles.img, { width: size, height: size, borderRadius: halfSize.current, borderColor, borderWidth }]}
         />
       )}
     </TouchableOpacity>
   )
 }
 
-const makeStyles: MakeStyles = () =>
+const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
     container: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center'
+    },
+    img: {
+      backgroundColor: colors.system.gray
     }
   })
 

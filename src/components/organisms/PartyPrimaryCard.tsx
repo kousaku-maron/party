@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native'
-import { BlurView } from 'expo-blur'
 import { AntDesign } from '@expo/vector-icons'
 import { useStyles, MakeStyles, useColors } from '../../services/design'
 import { Party, User } from '../../entities'
 import { Thumbnail } from '../atoms'
+import BlurView from '../atoms/BlurView'
 
 type Props = {
   party: Party
@@ -28,7 +28,7 @@ const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 260,
       <Image source={{ uri: party.thumbnailURL }} style={styles.image} />
       <View style={styles.contentsWrapper}>
         <View style={styles.mainInfoTagWrapper}>
-          <BlurView intensity={10} tint="light" style={styles.mainInfoTag}>
+          <BlurView blurAmount={10} blurType="light" style={styles.mainInfoTag}>
             <View style={styles.titleTextWrapper}>
               <Text style={styles.titleText}>{party.name}</Text>
             </View>
@@ -38,7 +38,7 @@ const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 260,
           </BlurView>
         </View>
 
-        <BlurView intensity={50} tint="light" style={styles.avatarsTag}>
+        <BlurView blurAmount={50} blurType="light" style={styles.avatarsTag}>
           <View style={styles.avatarsWrapper}>
             {users.map((user, i) => {
               if (i === 0) {
@@ -68,7 +68,7 @@ const PartyPrimaryCard: React.FC<Props> = ({ party, users, onPress, width = 260,
         </BlurView>
       </View>
       <View style={styles.countWrapper}>
-        <BlurView intensity={50} tint="light" style={styles.countTag}>
+        <BlurView blurAmount={50} blurType="light" style={styles.countTag}>
           <Text style={styles.countText}>
             <AntDesign name="user" size={16} /> {count}
           </Text>
