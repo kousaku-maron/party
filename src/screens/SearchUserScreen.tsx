@@ -14,6 +14,8 @@ import { Header, UserCard } from '../components/organisms'
 import { NormalLayout } from '../components/templates'
 import { Icons } from '../@assets/vector-icons'
 
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
+
 const HEADER_HEIGHT = 50 + 24 + 6 // height + paddingTop + paddingBottom
 const SEARCH_HEIGHT = 50 + 12 // height + paddingBottom
 
@@ -143,7 +145,7 @@ const SearchUserScreen = () => {
         style={[styles.headerContainer, { transform: [{ translateY: (headerY.current as unknown) as number }] }]}
       >
         <ShadowBase>
-          <BlurView style={[styles.headerInner, { paddingTop: 24 + inset.top }]}>
+          <View style={[styles.headerInner, { paddingTop: 24 + inset.top }]}>
             <Animated.View style={[styles.headerWrapper, { opacity: opacity.current }]}>
               <Header fullWidth={true} title="ともだちを探す" />
             </Animated.View>
@@ -167,9 +169,16 @@ const SearchUserScreen = () => {
                 </TouchableOpacity>
               </Animated.View>
             </View>
-          </BlurView>
+          </View>
         </ShadowBase>
       </Animated.View>
+
+      <AnimatedBlurView
+        style={[
+          styles.headerBackground,
+          { paddingTop: inset.top, transform: [{ translateY: (headerY.current as unknown) as number }] }
+        ]}
+      />
 
       <Animated.ScrollView
         style={[styles.scrollView, { paddingTop: HEADER_HEIGHT + SEARCH_HEIGHT + inset.top + 24 }]}
@@ -239,6 +248,15 @@ const makeStyles: MakeStyles = colors =>
       top: 0,
       zIndex: 1000,
       elevation: 1000
+    },
+    headerBackground: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      zIndex: 999,
+      elevation: 999,
+      height: HEADER_HEIGHT + SEARCH_HEIGHT + 44
     },
     headerInner: {
       paddingHorizontal: 24

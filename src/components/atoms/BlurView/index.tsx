@@ -19,6 +19,11 @@ if (Constants.appOwnership !== 'expo') {
   CustomBlurView = require('./BlurView').default
 }
 
-const BlurView: React.FC<Props> = props => <CustomBlurView {...props} />
+// MEMO: Animated.createAnimatedComponent(BlurView)を有効化するために、class componentにしている。
+class BlurView extends React.Component<Props, {}> {
+  render() {
+    return <CustomBlurView {...this.props} />
+  }
+}
 
 export default BlurView

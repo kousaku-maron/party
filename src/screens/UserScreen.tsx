@@ -17,6 +17,8 @@ import { BottomTabLayout } from '../components/templates'
 import { Icons } from '../@assets/vector-icons'
 import { Entypo } from '@expo/vector-icons'
 
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
+
 const PROFILE_HEIGHT = 480
 
 const UserScreen = () => {
@@ -100,6 +102,14 @@ const UserScreen = () => {
     })
   )
 
+  const hbOpacity = useRef(
+    interpolate(scrollY.current, {
+      inputRange: [185, 235],
+      outputRange: [0, 1],
+      extrapolate: Extrapolate.CLAMP
+    })
+  )
+
   const thumbnailSize = useRef(
     interpolate(scrollY.current, {
       inputRange: [120, 170],
@@ -151,7 +161,9 @@ const UserScreen = () => {
           </View>
         </View>
 
-        <BlurView style={[styles.headerBackground, { paddingTop: 24 + inset.top }]} />
+        <AnimatedBlurView
+          style={[styles.headerBackground, { paddingTop: 24 + inset.top, opacity: hbOpacity.current }]}
+        />
 
         <Animated.ScrollView
           style={styles.userScrollView}

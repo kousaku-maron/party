@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import Animated, { Value } from 'react-native-reanimated'
+import Animated, { Value, Extrapolate, interpolate } from 'react-native-reanimated'
 import { useSafeArea } from 'react-native-safe-area-context'
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { UpdateUser } from '../entities'
@@ -18,6 +18,8 @@ import { showUserEditFailurMessage, showUserEditSuccessMessage } from '../servic
 import { Icons } from '../@assets/vector-icons'
 
 const PROFILE_HEIGHT = 480
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
 const UserEditScreen = () => {
   const navigation = useNavigation()
@@ -41,6 +43,14 @@ const UserEditScreen = () => {
   // }, [keyboardVisible])
 
   const scrollY = useRef(new Value<number>(0))
+
+  const hbOpacity = useRef(
+    interpolate(scrollY.current, {
+      inputRange: [185, 235],
+      outputRange: [0, 1],
+      extrapolate: Extrapolate.CLAMP
+    })
+  )
 
   const {
     name,
@@ -84,7 +94,9 @@ const UserEditScreen = () => {
           </View>
         </View>
 
-        <BlurView style={[styles.headerBackground, { paddingTop: 24 + inset.top }]} />
+        <AnimatedBlurView
+          style={[styles.headerBackground, { paddingTop: 24 + inset.top, opacity: hbOpacity.current }]}
+        />
 
         <Animated.ScrollView
           style={styles.scrollView}

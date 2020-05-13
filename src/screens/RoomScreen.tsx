@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef } from 'react'
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
-import Animated, { Value } from 'react-native-reanimated'
+import Animated, { Value, Extrapolate, interpolate } from 'react-native-reanimated'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useAppAuthState } from '../store/hooks'
 import { useStackNavigation } from '../services/route'
@@ -13,6 +13,8 @@ import { BottomTabLayout } from '../components/templates'
 import { Room, User } from '../entities'
 import { Icons } from '../@assets/vector-icons'
 import { AntDesign } from '@expo/vector-icons'
+
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
 const HEADER_HEIGHT = 50 + 24 + 6 // height + paddingTop + paddingBottom
 
@@ -86,6 +88,14 @@ const RoomScreen = () => {
 
   const scrollY = useRef(new Value<number>(0))
 
+  const hbOpacity = useRef(
+    interpolate(scrollY.current, {
+      inputRange: [0, 50],
+      outputRange: [0, 1],
+      extrapolate: Extrapolate.CLAMP
+    })
+  )
+
   return (
     <BottomTabLayout fetching={fetchingRooms || fetchingFriends}>
       <View style={styles.container}>
@@ -139,7 +149,9 @@ const RoomScreen = () => {
           </View>
         </View>
 
-        <BlurView style={[styles.headerBackground, { paddingTop: 24 + inset.top }]} />
+        <AnimatedBlurView
+          style={[styles.headerBackground, { paddingTop: 24 + inset.top, opacity: hbOpacity.current }]}
+        />
 
         <Animated.ScrollView
           style={[styles.scrollView, { paddingTop: HEADER_HEIGHT + inset.top + 24 }]}
