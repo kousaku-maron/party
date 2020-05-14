@@ -1,6 +1,7 @@
 import { Platform } from 'react-native'
 import firebase from '../../repositories/firebase'
 import * as AppAuth from 'expo-app-auth'
+import { GoogleSignin } from '@react-native-community/google-signin'
 
 type Result = {
   success?: boolean
@@ -9,23 +10,44 @@ type Result = {
   error?: any
 }
 
-const getConfig = () => {
-  const config: AppAuth.OAuthProps = {
-    issuer: 'https://accounts.google.com',
-    scopes: ['openid', 'profile'],
-    clientId: Platform.OS === 'ios' ? process.env.GOOGLE_CLIENT_ID_FOR_IOS : process.env.GOOGLE_CLIENT_ID_FOR_ANDROID
-  }
+const signInOthers = async () => {
+  try {
+    const config: AppAuth.OAuthProps = {
+      issuer: 'https://accounts.google.com',
+      scopes: ['openid', 'profile'],
+      clientId: Platform.OS === 'ios' ? process.env.GOOGLE_CLIENT_ID_FOR_IOS : process.env.GOOGLE_CLIENT_ID_FOR_ANDROID
+    }
 
-  if (process.env.GOOGLE_REDIRECT_URL) {
-    config.redirectUrl = process.env.GOOGLE_REDIRECT_URL
-  }
+    if (process.env.GOOGLE_REDIRECT_URL) {
+      config.redirectUrl = process.env.GOOGLE_REDIRECT_URL
+    }
 
-  return config
+    const authState = await AppAuth.authAsync(config)
+    return authState
+  } catch (error) {
+    console.warn(error)
+  }
+}
+
+const signInAndroid = async () => {
+  try {
+    GoogleSignin.configure({
+      webClientId: process.env.GOOGLE_CLIENT_ID_FOR_ANDROID,
+      offlineAccess: false,
+      forceCodeForRefreshToken: true
+    })
+    await GoogleSignin.hasPlayServices()
+
+    const authState = await GoogleSignin.signIn()
+    return authState
+  } catch (error) {
+    console.warn(error)
+  }
 }
 
 export const signInGoogle = async (): Promise<Result> => {
   try {
-    const authState = await AppAuth.authAsync(getConfig())
+    const authState = Platform.OS === 'android' ? await signInAndroid() : await signInOthers()
     console.info(authState.idToken)
 
     if (!authState.idToken) {
