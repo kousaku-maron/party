@@ -66,6 +66,7 @@ buck-out/
 */fastlane/report.xml
 */fastlane/Preview.html
 */fastlane/screenshots
+*/fastlane/report.xml
 partyclient.app.dSYM.zip
 
 # Bundle artifact
