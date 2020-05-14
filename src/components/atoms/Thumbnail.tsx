@@ -33,17 +33,17 @@ const Thumbnail: React.FC<Props> = ({
 
   if (!onPress) {
     return (
-      <View style={[styles.container, { width: size, height: size, borderRadius: size / 2 }]}>
+      <View style={styles.container}>
         {uri && (
           <Image
             source={{ uri }}
-            style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+            style={[styles.img, { width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }]}
           />
         )}
         {!uri && (
           <Image
             source={require('../../../assets/images/no_user.png')}
-            style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+            style={[styles.img, { width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }]}
           />
         )}
       </View>
@@ -51,22 +51,17 @@ const Thumbnail: React.FC<Props> = ({
   }
 
   return (
-    <TouchableOpacity
-      style={[styles.container, { width: size, height: size, borderRadius: size / 2 }]}
-      disabled={disabled}
-      onPress={onPress}
-      onFocus={onFocus}
-    >
+    <TouchableOpacity style={styles.container} disabled={disabled} onPress={onPress} onFocus={onFocus}>
       {uri && (
         <Image
           source={{ uri }}
-          style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+          style={[styles.img, { width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }]}
         />
       )}
       {!uri && (
         <Image
           source={require('../../../assets/images/no_user.png')}
-          style={{ width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }}
+          style={[styles.img, { width: size, height: size, borderRadius: size / 2, borderColor, borderWidth }]}
         />
       )}
     </TouchableOpacity>
@@ -78,7 +73,9 @@ const makeStyles: MakeStyles = colors =>
     container: {
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
+    },
+    img: {
       backgroundColor: colors.system.gray
     }
   })

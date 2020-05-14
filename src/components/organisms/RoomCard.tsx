@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
-import { useAuthState } from '../../store/hooks'
+import { useAppAuthState } from '../../store/hooks'
 import { useColors, useStyles, MakeStyles } from '../../services/design'
 import { formattedDateForMessageCreatedAt } from '../../services/formatedDate'
-import { Room, User } from '../../entities'
+import { Room } from '../../entities'
 import { Thumbnail, ShadowBase } from '../atoms'
 import { Icons } from '../../@assets/vector-icons'
 
 type Props = {
-  room: Room & { users: User[] } // TODO: Roomに"users"を保存させるようにする。
+  room: Room
   height?: number
   width?: number
   fullWidth?: boolean
@@ -26,11 +26,15 @@ const RoomCard: React.FC<Props> = ({
 }) => {
   const styles = useStyles(makeStyles)
   const colors = useColors()
-  const { uid } = useAuthState()
+  const { uid } = useAppAuthState()
 
   // MEMO: 自分以外のユーザーデータ取得
   const filteredUsers = useMemo(() => {
-    return room.users.filter(user => user.uid !== uid)
+    if (room.users) {
+      return room.users.filter(user => user.uid !== uid)
+    }
+
+    return []
   }, [room.users, uid])
 
   return (
@@ -44,7 +48,7 @@ const RoomCard: React.FC<Props> = ({
           {filteredUsers.map((user, index) => (
             <View key={user.uid} style={index === 0 ? styles.thumbnailWrapper : styles.subThumbnailWrapper}>
               <ShadowBase>
-                <Thumbnail size={55} uri={user.thumbnailURL} />
+                <Thumbnail size={45} uri={user.thumbnailURL} />
               </ShadowBase>
             </View>
           ))}
@@ -111,7 +115,7 @@ const makeStyles: MakeStyles = colors =>
     },
     thumbnailWrapper: {},
     subThumbnailWrapper: {
-      marginLeft: -16
+      marginLeft: -20
     },
     messageWrapper: {
       display: 'flex',

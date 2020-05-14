@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import { StyleSheet, ImageBackground } from 'react-native'
 import { useStyles, MakeStyles } from '../services/design'
 
 const AuthLoadingScreen = () => {
   const navigation = useNavigation()
-  const auth = useAuthState()
+  const auth = useAppAuthState()
   const styles = useStyles(makeStyles)
 
   useEffect(() => {

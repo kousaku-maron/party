@@ -4,11 +4,11 @@ import { useRoute, RouteProp } from '@react-navigation/native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import Carousel from 'react-native-snap-carousel'
 import { RouteParams } from '../navigators/RouteProps'
-import { BottomTabLayout } from '../components/templates'
+import { NormalLayout } from '../components/templates'
 import { Fab, ShadowBase, BloomBase } from '../components/atoms'
 import { SwipeCard, Header } from '../components/organisms'
 import { ApplyCard } from '../entities'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import { getAppliedCardsByType } from '../repositories/appliedCard'
 import { useStyles, MakeStyles, useColors } from '../services/design'
 import { useLikeApplyCard } from '../services/likeApplyCard'
@@ -18,7 +18,7 @@ const SwipeCardScreen = () => {
   const inset = useSafeArea()
   const styles = useStyles(makeStyles)
   const colors = useColors()
-  const { uid } = useAuthState()
+  const { uid } = useAppAuthState()
   const route = useRoute<RouteProp<RouteParams, 'SwipeCard'>>()
   const type = route.params.type as string
 
@@ -100,7 +100,7 @@ const SwipeCardScreen = () => {
   }, [])
 
   return (
-    <BottomTabLayout fetching={fetching}>
+    <NormalLayout fetching={fetching}>
       {!fetching && isError && (
         <View style={[styles.container, { paddingTop: inset.top + 36 }]}>
           <View style={styles.headerContainer}>
@@ -153,7 +153,7 @@ const SwipeCardScreen = () => {
           </View>
         </ImageBackground>
       )}
-    </BottomTabLayout>
+    </NormalLayout>
   )
 }
 

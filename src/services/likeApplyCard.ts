@@ -1,6 +1,6 @@
 import { functions } from '../repositories/firebase'
 import { ApplyCard } from '../entities'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 import {
   showLikeApplyCardSunccessMessage,
   showLikeApplyCardAlreadyLikedMessage,
@@ -9,7 +9,7 @@ import {
 } from './flashCard'
 
 export const useLikeApplyCard = () => {
-  const { user } = useAuthState()
+  const { user } = useAppAuthState()
 
   const likeApplyCard = async (applyCard: ApplyCard) => {
     const applyCardID = applyCard.groupID

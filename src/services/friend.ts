@@ -1,37 +1,40 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { InteractionManager } from 'react-native'
-import firebase, { functions } from '../repositories/firebase'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState, useAppUserActions, useDomainUserState, useDomainUserActions } from '../store/hooks'
+import { db, functions } from '../repositories/firebase'
 import { User, buildUser } from '../entities/User'
 import {
-  showApplyFriendSunccessMessage,
-  showApplyFriendFailurMessage,
-  showApplyFriendAlreadyappliedMessage,
-  showAcceptFriendSunccessMessage,
-  showAcceptFriendFailurMessage,
-  showAcceptFriendAlreadyacceptedMessage,
-  showRefuseFriendSunccessMessage,
-  showRefuseFriendFailurMessage
+  showApplyFriendRequestMessage,
+  showApplyFriendFailureMessage,
+  showAcceptFriendRequestMessage,
+  showAcceptFriendFailureMessage,
+  showRefuseFriendRequestMessage,
+  showRefuseFriendFailureMessage
 } from './flashCard'
 
-const db = firebase.firestore()
 const usersRef = db.collection('users')
 
-export const useFriends = (user: User) => {
-  const [friends, setFriends] = useState<User[]>()
+export const useFriends = (uid: string) => {
+  const domainUser = useDomainUserState()
+  const { setUsers: setDomainUsers } = useDomainUserActions()
+  const [fetching, setFetching] = useState<boolean>(true)
+  const [friends, setFriends] = useState<User[]>([])
+
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
-      if (!user || !user.friendUIDs) return
+      if (!uid) return
 
       const unsubscribe = usersRef
-        .doc(user.uid)
+        .doc(uid)
         .collection('friends')
         .onSnapshot(
           snapShot => {
-            const newFriend: User[] = snapShot.docs.map(doc => {
+            const newFriends: User[] = snapShot.docs.map(doc => {
               return buildUser(doc.id, doc.data())
             })
-            setFriends(newFriend)
+            setDomainUsers(newFriends)
+            setFriends(newFriends)
+            setFetching(false)
           },
           error => {
             console.info('catch useFriends error', error)
@@ -42,70 +45,132 @@ export const useFriends = (user: User) => {
         unsubscribe()
       }
     })
-  }, [user])
+  }, [setDomainUsers, uid])
 
-  return friends
+  const friendsFromDomain = useMemo(() => {
+    return friends.map(friend => {
+      if (domainUser[friend.id]) {
+        return domainUser[friend.id]
+      }
+
+      return friend
+    })
+  }, [domainUser, friends])
+
+  return { fetching, friends: friendsFromDomain }
+}
+
+export const useAppliedFriendUsers = (uid: string) => {
+  const domainUser = useDomainUserState()
+  const { setUsers: setDomainUsers } = useDomainUserActions()
+  const [fetching, setFetching] = useState<boolean>(true)
+  const [appliedFriendUsers, setAppliedFriendUsers] = useState<User[]>([])
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      if (!uid) return
+
+      const unsubscribe = usersRef
+        .doc(uid)
+        .collection('appliedFriendUsers')
+        .onSnapshot(
+          snapShot => {
+            const newUsers: User[] = snapShot.docs.map(doc => {
+              return buildUser(doc.id, doc.data())
+            })
+            setDomainUsers(newUsers)
+            setAppliedFriendUsers(newUsers)
+            setFetching(false)
+          },
+          error => {
+            console.info('catch useAppliedFriendUsers error', error)
+          }
+        )
+
+      return () => {
+        unsubscribe()
+      }
+    })
+  }, [setDomainUsers, uid])
+
+  const usersFromDomain = useMemo(() => {
+    return appliedFriendUsers.map(user => {
+      if (domainUser[user.id]) {
+        return domainUser[user.id]
+      }
+
+      return user
+    })
+  }, [appliedFriendUsers, domainUser])
+
+  return { fetching, users: usersFromDomain }
 }
 
 export const useApplyFriend = () => {
-  const { uid } = useAuthState()
-  const applyFriend = async (applyFriendUser: User) => {
-    const applyFriendUID = applyFriendUser.uid
+  const { uid } = useAppAuthState()
+  const { addFetchingApplyFriendship, removeFetchingApplyFriendship } = useAppUserActions()
+  const { applyFriendship } = useDomainUserActions()
+
+  const onApplyFriend = async (user: User) => {
+    const node = { fromUID: uid, toUID: user.uid }
 
     try {
-      if (applyFriendUser.appliedFriendUIDs && applyFriendUser.appliedFriendUIDs.includes(uid)) {
-        showApplyFriendAlreadyappliedMessage()
-        return
-      }
-
-      if (applyFriendUser.friendUIDs && applyFriendUser.friendUIDs.includes(uid)) {
-        showAcceptFriendAlreadyacceptedMessage()
-        return
-      }
-
-      await functions.httpsCallable('applyFriend')({ applyFriendUID })
-      showApplyFriendSunccessMessage()
+      showApplyFriendRequestMessage()
+      addFetchingApplyFriendship(node)
+      await functions.httpsCallable('applyFriend')({ applyFriendUID: user.uid }) // TODO: nodeを引数にそして保存するようにする
+      applyFriendship(node)
+      removeFetchingApplyFriendship(node)
     } catch (e) {
-      showApplyFriendFailurMessage()
+      showApplyFriendFailureMessage()
+      removeFetchingApplyFriendship(node)
       console.warn(e)
     }
   }
-  return { applyFriend }
+  return { onApplyFriend }
 }
 
 export const useAcceptFriend = () => {
-  const { uid } = useAuthState()
-  const acceptFriend = async (acceptFriendUser: User) => {
-    const acceptFriendUID = acceptFriendUser.uid
+  const { uid } = useAppAuthState()
+  const { addFetchingAcceptFriendship, removeFetchingAcceptFriendship } = useAppUserActions()
+  const { acceptFriendship } = useDomainUserActions()
+
+  const onAcceptFriend = async (user: User) => {
+    const node = { fromUID: uid, toUID: user.uid }
 
     try {
-      if (acceptFriendUser.friendUIDs && acceptFriendUser.friendUIDs.includes(uid)) {
-        showAcceptFriendAlreadyacceptedMessage()
-        return
-      }
-      await functions.httpsCallable('acceptFriend')({ acceptFriendUID })
-      showAcceptFriendSunccessMessage()
+      showAcceptFriendRequestMessage()
+      addFetchingAcceptFriendship(node)
+      await functions.httpsCallable('acceptFriend')({ acceptFriendUID: user.uid }) // TODO: nodeを引数にそして保存するようにする
+      acceptFriendship(node)
+      removeFetchingAcceptFriendship(node)
     } catch (e) {
-      showAcceptFriendFailurMessage()
+      showAcceptFriendFailureMessage()
+      removeFetchingAcceptFriendship(node)
       console.warn(e)
     }
   }
-  return { acceptFriend }
+  return { onAcceptFriend }
 }
 
 export const useRefuseFriend = () => {
-  const { uid } = useAuthState()
-  const refuseFriend = async (refuseFriend: User) => {
-    const refuseFriendUID = refuseFriend.uid
+  const { uid } = useAppAuthState()
+  const { addFetchingRefuseFriendship, removeFetchingRefuseFriendship } = useAppUserActions()
+  const { refuseFriendship } = useDomainUserActions()
+
+  const onRefuseFriend = async (user: User) => {
+    const node = { fromUID: uid, toUID: user.uid }
+
     try {
-      if (refuseFriend.applyFriendUIDs && refuseFriend.applyFriendUIDs.includes(uid)) {
-        await functions.httpsCallable('refuseFriend')({ refuseFriendUID })
-        showRefuseFriendSunccessMessage()
-      }
+      showRefuseFriendRequestMessage()
+      addFetchingRefuseFriendship(node)
+      await functions.httpsCallable('refuseFriend')({ refuseFriendUID: user.uid }) // TODO: nodeを引数にそして保存するようにする
+      refuseFriendship(node)
+      removeFetchingRefuseFriendship(node)
     } catch (e) {
-      showRefuseFriendFailurMessage()
+      showRefuseFriendFailureMessage()
+      removeFetchingRefuseFriendship(node)
       console.warn(e)
     }
   }
-  return { refuseFriend }
+  return { onRefuseFriend }
 }

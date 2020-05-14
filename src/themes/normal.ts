@@ -46,9 +46,9 @@ export const dark = {
     onTintSenary: '#ffffff'
   },
   backgrounds: {
-    primary: '#222222',
-    secondary: '#333333',
-    tertiary: '#404040'
+    primary: '#161616',
+    secondary: '#232323',
+    tertiary: '#292929'
   },
   system: {
     blue: '#0a84ff',

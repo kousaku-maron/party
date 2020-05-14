@@ -1,11 +1,11 @@
 import { take, put, call, fork, cancel, cancelled } from 'redux-saga/effects'
 import { eventChannel } from 'redux-saga'
-import { Permission, User, buildUser } from '../../entities'
-import { authActions } from './actions'
-import firebase from '../../repositories/firebase'
-import { db } from '../../repositories/firebase'
-import { getPermission, setPermission } from '../../repositories/permission'
-import notifications from '../../services/notifications'
+import { Permission, User, buildUser } from '../../../entities'
+import { appAuthActions } from './actions'
+import firebase from '../../../repositories/firebase'
+import { db } from '../../../repositories/firebase'
+import { getPermission, setPermission } from '../../../repositories/permission'
+import notifications from '../../../services/notifications'
 
 // auth state
 // ----------------------------------------
@@ -37,8 +37,8 @@ function* watchAuthChannel() {
 
 function* handleCatchAuthState(user: firebase.User) {
   try {
-    yield put(authActions.setAuth(user.uid))
-    yield put(authActions.startUserSession(user.uid))
+    yield put(appAuthActions.setAuth(user.uid))
+    yield put(appAuthActions.startUserSession(user.uid))
     yield call(askNotificationsPermissionTask, user.uid)
     yield call(updateNotificationsTokenTask, user.uid)
   } catch (e) {
@@ -47,8 +47,8 @@ function* handleCatchAuthState(user: firebase.User) {
 }
 
 function* handleNotCatchAuthState() {
-  yield put(authActions.resetAuth())
-  yield put(authActions.stopUserSession())
+  yield put(appAuthActions.resetAuth())
+  yield put(appAuthActions.stopUserSession())
 }
 
 function* askNotificationsPermissionTask(uid: string) {
@@ -96,9 +96,9 @@ function* updateNotificationsTokenTask(uid: string) {
 // ----------------------------------------
 function* userSessionFlow() {
   while (true) {
-    const { payload: uid } = yield take(authActions.startUserSession)
+    const { payload: uid } = yield take(appAuthActions.startUserSession)
     const task = yield fork(watchUserSessionChannel, uid)
-    yield take(authActions.stopUserSession)
+    yield take(appAuthActions.stopUserSession)
     yield cancel(task)
   }
 }
@@ -147,11 +147,11 @@ function* watchUserSessionChannel(uid: string) {
 }
 
 function* handleCatchUserState(user: User) {
-  yield put(authActions.setUser(user))
+  yield put(appAuthActions.setUser(user))
 }
 
 function* handleNotCatchUserState() {
-  yield put(authActions.resetUser())
+  yield put(appAuthActions.resetUser())
 }
 
 const saga = [watchAuthChannel(), userSessionFlow()]

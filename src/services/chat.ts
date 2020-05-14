@@ -3,7 +3,7 @@ import { InteractionManager } from 'react-native'
 import firebase from '../repositories/firebase'
 import { buildMessage, Message, CreateMessage } from '../entities'
 import { setMessage } from '../repositories/message'
-import { useAuthState } from '../store/hooks'
+import { useAppAuthState } from '../store/hooks'
 
 const db = firebase.firestore()
 
@@ -13,7 +13,7 @@ const getMessagesRef = (roomID: string) => {
 }
 
 export const useSendMessage = (roomID: string) => {
-  const { user, uid } = useAuthState()
+  const { user, uid } = useAppAuthState()
 
   const onSend = useCallback(
     (text: string) => {

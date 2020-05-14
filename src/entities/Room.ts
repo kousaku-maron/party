@@ -8,6 +8,11 @@ export type Room = {
   thumbnailURL?: string
   entryUIDs?: string[]
   newMessage?: Message
+  users?: {
+    uid: string
+    name: string
+    thumbnailURL?: string
+  }[]
 }
 
 export const buildRoom = (id: string, data: firebase.firestore.DocumentData) => {
@@ -17,7 +22,8 @@ export const buildRoom = (id: string, data: firebase.firestore.DocumentData) => 
     roomHash: data.roomHash,
     ...(data.thumbnailURL && { thumbnailURL: data.thumbnailURL }),
     ...(data.entryUIDs && { entryUIDs: data.entryUIDs }),
-    ...(data.newMessage && { newMessage: buildMessage(data.newMessage.id, data.newMessage) })
+    ...(data.newMessage && { newMessage: buildMessage(data.newMessage.id, data.newMessage) }),
+    ...(data.users && { users: data.users })
   }
   return newRoom
 }

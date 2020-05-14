@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useDomainUserState, useDomainUserActions, useAppAuthState, useAppUserState } from '../store/hooks'
 import { getSize } from '../services/image'
 import { db } from '../repositories/firebase'
 import { getUser } from '../repositories/user'
@@ -12,6 +13,8 @@ import { buildUser, User, updateDocument } from '../entities'
 const usersRef = db.collection('users')
 
 export const useUser = (uid: string) => {
+  const domainUser = useDomainUserState()
+  const { setUser: setDomainUser } = useDomainUserActions()
   const [fetching, setFetching] = useState<boolean>(true)
   const [user, setUser] = useState<User>(null)
 
@@ -22,6 +25,7 @@ export const useUser = (uid: string) => {
       const unsubscribe = userRef.onSnapshot(
         (doc: firebase.firestore.DocumentSnapshot) => {
           const user = buildUser(doc.id, doc.data())
+          setDomainUser(user)
           setUser(user)
           setFetching(false)
         },
@@ -33,9 +37,61 @@ export const useUser = (uid: string) => {
         unsubscribe()
       }
     })
-  }, [uid])
+  }, [setDomainUser, uid])
 
-  return { fetching, user }
+  const userFromDomain = useMemo(() => {
+    if (user && domainUser[user.id]) {
+      return domainUser[user.id]
+    }
+
+    return user
+  }, [domainUser, user])
+
+  return { fetching, user: userFromDomain }
+}
+
+export const useUserRelationship = (toUID: string) => {
+  const { uid } = useAppAuthState()
+  const domainUser = useDomainUserState()
+  const { fetchingApplyFriendship, fetchingAcceptFriendship, fetchingRefuseFriendship } = useAppUserState()
+
+  const user = useMemo(() => {
+    return domainUser[toUID]
+  }, [domainUser, toUID])
+
+  const isBlocked = useMemo(() => {
+    return user && user.blockUIDs && user.blockUIDs.includes(uid)
+  }, [uid, user])
+
+  const isFriend = useMemo(() => {
+    const isFriendCache = fetchingAcceptFriendship.some(node => node.toUID === toUID)
+    if (isFriendCache) {
+      return true
+    }
+
+    return user && user.friendUIDs && user.friendUIDs.includes(uid)
+  }, [fetchingAcceptFriendship, toUID, uid, user])
+
+  const isApply = useMemo(() => {
+    const isApplyCache = fetchingApplyFriendship.some(node => node.toUID === toUID)
+
+    if (isApplyCache) {
+      return true
+    }
+
+    return user && user.appliedFriendUIDs && user.appliedFriendUIDs.includes(uid)
+  }, [fetchingApplyFriendship, toUID, uid, user])
+
+  const isApplied = useMemo(() => {
+    const isAppliedCache = fetchingRefuseFriendship.some(node => node.toUID === toUID)
+    if (isAppliedCache) {
+      return false
+    }
+
+    return user && user.applyFriendUIDs && user.applyFriendUIDs.includes(uid)
+  }, [fetchingRefuseFriendship, toUID, uid, user])
+
+  return { isBlocked, isFriend, isApply, isApplied }
 }
 
 type SearchUsersOption = {
@@ -43,10 +99,15 @@ type SearchUsersOption = {
 }
 
 export const useSearchUsers = (options?: SearchUsersOption) => {
+  const domainUser = useDomainUserState()
+  const { setUsers: setDomainUsers } = useDomainUserActions()
+  const [fetching, setFetching] = useState<boolean>(false)
   const [users, setUsers] = useState<User[]>([])
 
   const search = useCallback(
     async (text: string) => {
+      setFetching(true)
+
       const snapshot = await usersRef
         .orderBy('userID')
         .startAt(text)
@@ -65,44 +126,55 @@ export const useSearchUsers = (options?: SearchUsersOption) => {
           return true
         })
 
+      setDomainUsers(users)
       setUsers(users)
+      setFetching(false)
     },
-    [options]
+    [options, setDomainUsers]
   )
 
-  return { users, search }
+  const usersFromDomain = useMemo(() => {
+    return users.map(user => {
+      if (domainUser[user.id]) {
+        return domainUser[user.id]
+      }
+
+      return user
+    })
+  }, [domainUser, users])
+
+  return { fetching, users: usersFromDomain, search }
 }
 
 export const useUserEditTools = (uid: string) => {
   const MAX_THUMBNAIL_WIDTH = 1080
   const [user, setUser] = useState<User | null>(null)
-  const [fetched, setFetched] = useState<boolean>(false)
-  const [focusInputName, setFocusInputName] = useState<string | undefined>(undefined)
+  const [fetching, setFetching] = useState<boolean>(true)
 
   useEffect(() => {
     const asyncEffect = async () => {
-      const _user = await getUser(uid)
-      setUser(_user)
-      setFetched(true)
+      const user = await getUser(uid)
+      setUser(user)
+      setFetching(false)
     }
     asyncEffect()
   }, [uid])
 
-  const [name, setName] = useState<string>('')
+  const [name, setName] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     if (!user) return
     setName(user.name)
   }, [user])
 
-  const [userID, setUserID] = useState<string>('')
+  const [userID, setUserID] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     if (!user) return
     setUserID(user.userID)
   }, [user])
 
-  const [introduction, setIntroduction] = useState<string>('')
+  const [introduction, setIntroduction] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     if (!user) return
@@ -110,7 +182,7 @@ export const useUserEditTools = (uid: string) => {
     setIntroduction(user.introduction)
   }, [user])
 
-  const [thumbnailURL, setThumbnailURL] = useState<string>('')
+  const [thumbnailURL, setThumbnailURL] = useState<string | undefined>(undefined)
 
   useEffect(() => {
     if (!user) return
@@ -179,26 +251,6 @@ export const useUserEditTools = (uid: string) => {
     setThumbnailURL(resizeResult.uri)
   }, [])
 
-  const onFocusName = useCallback(() => {
-    setFocusInputName('name')
-  }, [])
-
-  const onFocusUserID = useCallback(() => {
-    setFocusInputName('userID')
-  }, [])
-
-  const onFocusIntroduction = useCallback(() => {
-    setFocusInputName('introduction')
-  }, [])
-
-  const onFocusThumbnail = useCallback(() => {
-    setFocusInputName('thumbnail')
-  }, [])
-
-  const onResetFocusInputName = useCallback(() => {
-    setFocusInputName(undefined)
-  }, [])
-
   return {
     name,
     userID,
@@ -208,13 +260,7 @@ export const useUserEditTools = (uid: string) => {
     onChangeUserID,
     onChangeIntroduction,
     onChangeThumbnailURL,
-    focusInputName,
-    onResetFocusInputName,
-    onFocusName,
-    onFocusUserID,
-    onFocusIntroduction,
-    onFocusThumbnail,
-    fetched
+    fetching
   }
 }
 

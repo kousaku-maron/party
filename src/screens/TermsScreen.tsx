@@ -2,6 +2,7 @@ import React from 'react'
 import { WebView } from 'react-native-webview'
 import { View, StyleSheet } from 'react-native'
 import { useSafeArea } from 'react-native-safe-area-context'
+import { NormalLayout } from '../components/templates'
 import { Header } from '../components/organisms'
 import { useStyles, MakeStyles } from '../services/design'
 
@@ -10,14 +11,14 @@ const TermsScreen = () => {
   const inset = useSafeArea()
 
   return (
-    <React.Fragment>
+    <NormalLayout>
       <View style={(styles.headerBackground, { paddingTop: inset.top + 36 })}>
         <View style={styles.headerContainer}>
           <Header fullWidth={true} title="利用規約" />
         </View>
       </View>
       <WebView scrollEnabled={true} source={{ uri: 'https://insta-693eb.web.app/webview-terms' }} />
-    </React.Fragment>
+    </NormalLayout>
   )
 }
 
