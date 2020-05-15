@@ -106,7 +106,7 @@ const RoomScreen = () => {
               title="トークルーム"
               renderLeft={() => {
                 // -------------------------------------------------
-                // Create Room Header Icon
+                // Create Room Header Left Icon
                 // -------------------------------------------------
                 if (isActiveCreateRoom) {
                   return (
@@ -120,7 +120,7 @@ const RoomScreen = () => {
               }}
               renderRight={() => {
                 // -------------------------------------------------
-                // Room List Header Icon
+                // Room Header Right Icon
                 // -------------------------------------------------
                 if (isActiveRooms) {
                   return (
@@ -133,7 +133,7 @@ const RoomScreen = () => {
                 }
 
                 // -------------------------------------------------
-                // Create Room Header Icon
+                // Create Room Header Right Icon
                 // -------------------------------------------------
                 if (isActiveCreateRoom) {
                   return (
@@ -153,85 +153,101 @@ const RoomScreen = () => {
           style={[styles.headerBackground, { paddingTop: 24 + inset.top, opacity: hbOpacity.current }]}
         />
 
-        <Animated.ScrollView
-          style={[styles.scrollView, { paddingTop: HEADER_HEIGHT + inset.top + 24 }]}
-          showsVerticalScrollIndicator={false}
-          scrollEventThrottle={16}
-          onScroll={Animated.event([
-            {
-              nativeEvent: { contentOffset: { y: scrollY.current } }
-            }
-          ])}
-        >
-          {/*
-            -------------------------------------------------
-            Room List ScrollView Items
-            -------------------------------------------------
-          */}
-          {isActiveRooms && !fetchingRooms && rooms.length === 0 && (
-            <View style={styles.emptyMessageContainer}>
-              <Text style={styles.emptyMessageText}>ルームがまだありません</Text>
-            </View>
-          )}
+        {/*
+          -------------------------------------------------
+          Room ScrollView
+          -------------------------------------------------
+        */}
+        {isActiveRooms && (
+          <Animated.ScrollView
+            style={[styles.scrollView, { paddingTop: HEADER_HEIGHT + inset.top + 24 }]}
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={16}
+            onScroll={Animated.event([
+              {
+                nativeEvent: { contentOffset: { y: scrollY.current } }
+              }
+            ])}
+          >
+            {!fetchingRooms && rooms.length === 0 && (
+              <View style={styles.emptyMessageContainer}>
+                <Text style={styles.emptyMessageText}>ルームがまだありません</Text>
+              </View>
+            )}
 
-          {isActiveRooms &&
-            rooms.length > 0 &&
-            rooms.map(room => (
-              <ListItemTransition
-                key={room.id}
-                isShow={isShowRooms}
-                onAnimationEnd={() => {
-                  if (isShowRooms) return
-                  setIsActiveRooms(false)
-                  setIsActiveCreateRoom(true)
-                }}
-              >
-                <View style={styles.cardWrapper}>
-                  <ShadowBase>
-                    <RoomCard room={room} onPress={onPressCard} fullWidth={true} />
-                  </ShadowBase>
-                </View>
-              </ListItemTransition>
-            ))}
+            {rooms.length > 0 &&
+              rooms.map(room => (
+                <ListItemTransition
+                  key={room.id}
+                  isShow={isShowRooms}
+                  onAnimationEnd={() => {
+                    if (isShowRooms) return
+                    setIsActiveRooms(false)
+                    setIsActiveCreateRoom(true)
+                  }}
+                >
+                  <View style={styles.cardWrapper}>
+                    <ShadowBase>
+                      <RoomCard room={room} onPress={onPressCard} fullWidth={true} />
+                    </ShadowBase>
+                  </View>
+                </ListItemTransition>
+              ))}
 
-          {/*
-            -------------------------------------------------
-            Create Room ScrollView Items
-            -------------------------------------------------
-          */}
-          {isActiveCreateRoom && !fetchingFriends && friends.length === 0 && (
-            <View style={styles.emptyMessageContainer}>
-              <Text style={styles.emptyMessageText}>ともだちがまだいません</Text>
-            </View>
-          )}
+            {/* MEMO: tab height 70px */}
+            <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
+          </Animated.ScrollView>
+        )}
 
-          {isActiveCreateRoom &&
-            friends.length > 0 &&
-            friends.map(friend => (
-              <ListItemTransition
-                key={friend.id}
-                isShow={isShowCreateRoom}
-                onAnimationEnd={() => {
-                  if (isShowCreateRoom) return
-                  setIsActiveCreateRoom(false)
-                  setIsActiveRooms(true)
-                }}
-              >
-                <View style={styles.cardWrapper}>
-                  <ShadowBase>
-                    <UserListItem
-                      user={friend}
-                      checked={!!selectedUsers.find(user => user.uid === friend.uid)}
-                      onPress={onSwitchUser}
-                    />
-                  </ShadowBase>
-                </View>
-              </ListItemTransition>
-            ))}
+        {/*
+          -------------------------------------------------
+          Create Room ScrollView
+          -------------------------------------------------
+        */}
+        {isActiveCreateRoom && (
+          <Animated.ScrollView
+            style={[styles.scrollView, { paddingTop: HEADER_HEIGHT + inset.top + 24 }]}
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={16}
+            onScroll={Animated.event([
+              {
+                nativeEvent: { contentOffset: { y: scrollY.current } }
+              }
+            ])}
+          >
+            {!fetchingFriends && friends.length === 0 && (
+              <View style={styles.emptyMessageContainer}>
+                <Text style={styles.emptyMessageText}>ともだちがまだいません</Text>
+              </View>
+            )}
 
-          {/* MEMO: tab height 70px */}
-          <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
-        </Animated.ScrollView>
+            {friends.length > 0 &&
+              friends.map(friend => (
+                <ListItemTransition
+                  key={friend.id}
+                  isShow={isShowCreateRoom}
+                  onAnimationEnd={() => {
+                    if (isShowCreateRoom) return
+                    setIsActiveCreateRoom(false)
+                    setIsActiveRooms(true)
+                  }}
+                >
+                  <View style={styles.cardWrapper}>
+                    <ShadowBase>
+                      <UserListItem
+                        user={friend}
+                        checked={!!selectedUsers.find(user => user.uid === friend.uid)}
+                        onPress={onSwitchUser}
+                      />
+                    </ShadowBase>
+                  </View>
+                </ListItemTransition>
+              ))}
+
+            {/* MEMO: tab height 70px */}
+            <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
+          </Animated.ScrollView>
+        )}
       </View>
     </BottomTabLayout>
   )
