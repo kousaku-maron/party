@@ -16,7 +16,7 @@ import { User } from '../entities'
 
 const HEADER_HEIGHT = 50 + 24 + 6 // height + paddingTop + paddingBottom
 const TAB_HEIGHT = 70 // height
-const ON_END_REACHED_THRESHOLD = 30
+const ON_END_REACHED_THRESHOLD = 1
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList)
 
