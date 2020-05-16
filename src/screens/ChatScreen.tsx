@@ -27,7 +27,7 @@ const ChatScreen = () => {
   const route = useRoute<RouteProp<RouteParams, 'Chat'>>()
   const roomID = route.params.roomID
   const { fetching, messages, onNext } = useMessages(roomID)
-  const { onSend } = useSendMessage(roomID)
+  const { onSend } = useSendMessage()
   const styles = useStyles(makeStyles)
 
   const onPressAvatar = useCallback(
@@ -118,7 +118,7 @@ const ChatScreen = () => {
 
         <View style={[styles.tabContainer, { paddingBottom: inset.bottom }]}>
           <ShadowBase intensity={2}>
-            <ChatInput fullWidth={true} onSend={onSend} />
+            <ChatInput fullWidth={true} onSend={text => onSend(roomID, text)} />
           </ShadowBase>
           <KeyboardSpacer />
         </View>

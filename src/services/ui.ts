@@ -110,3 +110,30 @@ export const useKeyboardState = ({
 
   return { visible }
 }
+
+export const useLayoutTransitions = <T>(initialLayout: T) => {
+  const [activeLayout, setActiveLayout] = useState<T | null>(initialLayout)
+  const [outLayout, setOutLayout] = useState<T | null>(null)
+  const [inLayout, setInLayout] = useState<T | null>(initialLayout)
+
+  const onOutAnimationStart = useCallback(
+    ({ toLayout, withAnimation = true }: { toLayout?: T; withAnimation?: boolean }) => {
+      setOutLayout(activeLayout)
+
+      if (toLayout) {
+        setInLayout(toLayout)
+      }
+
+      if (!withAnimation) {
+        setActiveLayout(toLayout)
+      }
+    },
+    [activeLayout]
+  )
+
+  const onOutAnimationEnd = useCallback(() => {
+    setActiveLayout(inLayout)
+  }, [inLayout])
+
+  return { activeLayout, inLayout, outLayout, onOutAnimationStart, onOutAnimationEnd }
+}
