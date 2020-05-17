@@ -9,7 +9,7 @@ type Props = {
   style?: StyleProp<ViewStyle>
 }
 
-const CustomBlurView: React.FC<Props> = ({ blurType = 'light', blurAmount = 10, style, children }) => {
+const CustomBlurView: React.FC<Props> = ({ blurType = 'light', blurAmount = 50, style, children }) => {
   const tint = useMemo(() => {
     if (blurType === 'dark') {
       return 'dark'
