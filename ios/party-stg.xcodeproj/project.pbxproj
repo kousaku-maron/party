@@ -12,6 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		4B3F080D52753E6B28A72D09 /* libPods-party-stg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CA1F84375E0B981320A31EA8 /* libPods-party-stg.a */; };
+		6EF8173A24719CC90062E2E6 /* default.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EF8173924719CC90062E2E6 /* default.swift */; };
 		E4D1CD482454871200A8CDC3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E4D1CD472454871200A8CDC3 /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = partyclient/main.m; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B47C5AFCB8BDE514B7D1AC6 /* Pods-partyclient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-partyclient.debug.xcconfig"; path = "Target Support Files/Pods-partyclient/Pods-partyclient.debug.xcconfig"; sourceTree = "<group>"; };
+		6EF8173824719CC90062E2E6 /* party-stg-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "party-stg-Bridging-Header.h"; sourceTree = "<group>"; };
+		6EF8173924719CC90062E2E6 /* default.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = default.swift; sourceTree = "<group>"; };
 		8AC623DBF3A3E2CB072F81F2 /* Pods-partyclient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-partyclient.release.xcconfig"; path = "Target Support Files/Pods-partyclient/Pods-partyclient.release.xcconfig"; sourceTree = "<group>"; };
 		8FEC4D51D714467F80F05120 /* Pods-party-stg.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-party-stg.debug.xcconfig"; path = "Target Support Files/Pods-party-stg/Pods-party-stg.debug.xcconfig"; sourceTree = "<group>"; };
 		CA1F84375E0B981320A31EA8 /* libPods-party-stg.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-party-stg.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,6 +63,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				6EF8173924719CC90062E2E6 /* default.swift */,
+				6EF8173824719CC90062E2E6 /* party-stg-Bridging-Header.h */,
 			);
 			name = partyclient;
 			sourceTree = "<group>";
@@ -149,6 +154,11 @@
 			attributes = {
 				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = Facebook;
+				TargetAttributes = {
+					13B07F861A680F5B00A75B9A = {
+						LastSwiftMigration = 1140;
+					};
+				};
 			};
 			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "party-stg" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -274,6 +284,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				6EF8173A24719CC90062E2E6 /* default.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,6 +308,7 @@
 			baseConfigurationReference = 8FEC4D51D714467F80F05120 /* Pods-party-stg.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = partyclient/partyclient.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -310,6 +322,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.party.Partyopu;
 				PRODUCT_NAME = "party-stg";
+				SWIFT_OBJC_BRIDGING_HEADER = "party-stg-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -332,6 +347,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.party.Partyopu;
 				PRODUCT_NAME = "party-stg";
+				SWIFT_OBJC_BRIDGING_HEADER = "party-stg-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
