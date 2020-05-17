@@ -16,6 +16,7 @@ import com.partyclient.generated.BasePackageList;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.cmcewen.blurview.BlurViewPackage; 
 
 import org.unimodules.adapters.react.ReactAdapterPackage;
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
@@ -61,6 +62,7 @@ public class MainApplication extends Application implements ReactApplication {
           new LottiePackage(),
           new ReactNativeFirebaseAppPackage(),
           new ReactNativeFirebaseMessagingPackage(),
+          new BlurViewPackage(),
           new ModuleRegistryAdapter(mModuleRegistryProvider)
       );
     }
