@@ -31,7 +31,7 @@ const AnimatedMessageFlatList = Animated.createAnimatedComponent(MessageFlatList
 const HEADER_HEIGHT = 50 + 24 + 6 // height + paddingTop + paddingBottom
 // const TAB_HEIGHT = 70 // height
 
-type mode = 'rooms' | 'createRoom' | 'chat'
+type Layout = 'rooms' | 'createRoom' | 'chat'
 
 const RoomScreen = () => {
   const { uid } = useAppAuthState()
@@ -41,25 +41,25 @@ const RoomScreen = () => {
   const inset = useSafeArea()
   const { fetching: fetchingRooms, rooms } = useRooms()
   const { fetching: fetchingFriends, friends } = useFriends(uid)
-  const { selectedUsers, onSwitchUser, onCreateRoom: createRoom } = useCreateRoomTools()
+  const { selectedUsers, onCheckUser, onCreateRoom: createRoom } = useCreateRoomTools()
   const { onSend } = useSendMessage()
   const [selectedRoomID, setSelectedRoomID] = useState<string | null>(null)
 
-  const { activeLayout, inLayout, onOutAnimationStart, onOutAnimationEnd } = useLayoutTransitions<mode>('rooms')
+  const { activeLayout, showLayout, onAnimationTo } = useLayoutTransitions<Layout>('rooms')
 
   const isActiveRooms = useMemo(() => activeLayout === 'rooms', [activeLayout])
   const isActiveCreateRoom = useMemo(() => activeLayout === 'createRoom', [activeLayout])
   const isActiveChat = useMemo(() => activeLayout === 'chat', [activeLayout])
-  const isShowRooms = useMemo(() => inLayout === 'rooms', [inLayout])
-  const isShowCreateRoom = useMemo(() => inLayout === 'createRoom', [inLayout])
-  const isShowChat = useMemo(() => inLayout === 'chat', [inLayout])
+  const isShowRooms = useMemo(() => showLayout === 'rooms', [showLayout])
+  const isShowCreateRoom = useMemo(() => showLayout === 'createRoom', [showLayout])
+  const isShowChat = useMemo(() => showLayout === 'chat', [showLayout])
 
   const onPressRoomCard = useCallback(
     (room: Room) => {
       setSelectedRoomID(room.id)
-      onOutAnimationStart({ toLayout: 'chat' })
+      onAnimationTo('chat', { delay: 200 })
     },
-    [onOutAnimationStart]
+    [onAnimationTo]
   )
 
   const onPressAvatar = useCallback(
@@ -75,8 +75,8 @@ const RoomScreen = () => {
     }
 
     createRoom()
-    onOutAnimationStart({ toLayout: 'rooms' })
-  }, [createRoom, onOutAnimationStart, selectedUsers.length])
+    onAnimationTo('rooms', { delay: 200 })
+  }, [createRoom, onAnimationTo, selectedUsers.length])
 
   const scrollY = useRef(new Value<number>(0))
 
@@ -103,7 +103,7 @@ const RoomScreen = () => {
                 if (isActiveCreateRoom) {
                   return (
                     <HeaderIconTransition isShow={isShowCreateRoom}>
-                      <TouchableOpacity onPress={() => onOutAnimationStart({ toLayout: 'rooms' })}>
+                      <TouchableOpacity onPress={() => onAnimationTo('rooms', { delay: 200 })}>
                         <AntDesign name="arrowleft" color={colors.foregrounds.primary} size={28} />
                       </TouchableOpacity>
                     </HeaderIconTransition>
@@ -116,11 +116,7 @@ const RoomScreen = () => {
                 if (isActiveChat) {
                   return (
                     <HeaderIconTransition isShow={isShowChat}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          onOutAnimationStart({ toLayout: 'rooms', withAnimation: false })
-                        }}
-                      >
+                      <TouchableOpacity onPress={() => onAnimationTo('rooms')}>
                         <AntDesign name="arrowleft" color={colors.foregrounds.primary} size={28} />
                       </TouchableOpacity>
                     </HeaderIconTransition>
@@ -134,11 +130,7 @@ const RoomScreen = () => {
                 if (isActiveRooms) {
                   return (
                     <HeaderIconTransition isShow={isShowRooms}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          onOutAnimationStart({ toLayout: 'createRoom' })
-                        }}
-                      >
+                      <TouchableOpacity onPress={() => onAnimationTo('createRoom', { delay: 200 })}>
                         <Icons name="chat-plus" color={colors.foregrounds.primary} size={28} />
                       </TouchableOpacity>
                     </HeaderIconTransition>
@@ -190,14 +182,7 @@ const RoomScreen = () => {
 
             {rooms.length > 0 &&
               rooms.map(room => (
-                <ListItemTransition
-                  key={room.id}
-                  isShow={isShowRooms}
-                  onAnimationEnd={() => {
-                    if (isShowRooms) return
-                    onOutAnimationEnd()
-                  }}
-                >
+                <ListItemTransition key={room.id} isShow={isShowRooms}>
                   <View style={styles.cardWrapper}>
                     <ShadowBase>
                       <RoomCard room={room} onPress={onPressRoomCard} fullWidth={true} />
@@ -235,20 +220,13 @@ const RoomScreen = () => {
 
             {friends.length > 0 &&
               friends.map(friend => (
-                <ListItemTransition
-                  key={friend.id}
-                  isShow={isShowCreateRoom}
-                  onAnimationEnd={() => {
-                    if (isShowCreateRoom) return
-                    onOutAnimationEnd()
-                  }}
-                >
+                <ListItemTransition key={friend.id} isShow={isShowCreateRoom}>
                   <View style={styles.cardWrapper}>
                     <ShadowBase>
                       <CheckUserListItem
                         user={friend}
                         checked={!!selectedUsers.find(user => user.uid === friend.uid)}
-                        onPress={onSwitchUser}
+                        onPress={onCheckUser}
                       />
                     </ShadowBase>
                   </View>
