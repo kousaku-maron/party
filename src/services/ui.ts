@@ -110,3 +110,22 @@ export const useKeyboardState = ({
 
   return { visible }
 }
+
+export const useLayoutTransitions = <T>(initialLayout: T) => {
+  const [activeLayout, setActiveLayout] = useState<T | null>(initialLayout)
+  const [showLayout, setShowLayout] = useState<T | null>(initialLayout)
+
+  const onAnimationTo = useCallback((layout: T, option?: { delay?: number }) => {
+    setShowLayout(layout)
+
+    if (option?.delay) {
+      return setTimeout(() => {
+        setActiveLayout(layout)
+      }, option.delay)
+    }
+
+    setActiveLayout(layout)
+  }, [])
+
+  return { activeLayout, showLayout, onAnimationTo }
+}

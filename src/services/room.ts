@@ -53,15 +53,13 @@ export const useCreateRoomTools = () => {
     setUsers(prev => [...pullAllBy(prev, [user], 'uid')])
   }, [])
 
-  const onSwitchUser = useCallback(
+  const onCheckUser = useCallback(
     (user: User) => {
       if (users.find(_user => _user.uid === user.uid)) {
-        console.info('remove')
         onRemoveUser(user)
         return
       }
 
-      console.info('append')
       onAppendUser(user)
     },
     [onAppendUser, onRemoveUser, users]
@@ -75,7 +73,6 @@ export const useCreateRoomTools = () => {
 
       await createRoom({
         enabled: true,
-        roomHash: 'tempRoomHash',
         entryUIDs: uniq([...users.map(user => user.uid), user.uid]),
         users: uniqBy([...users, user], 'uid')
       })
@@ -86,5 +83,5 @@ export const useCreateRoomTools = () => {
     }
   }, [user, users])
 
-  return { selectedUsers: users, onSwitchUser, onCreateRoom }
+  return { selectedUsers: users, onCheckUser, onCreateRoom }
 }

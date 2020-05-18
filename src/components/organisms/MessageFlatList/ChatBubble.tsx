@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { useStyles, MakeStyles, useColors } from '../../services/design'
-import { Bubble, Thumbnail } from '../atoms'
-import { Message, User } from '../../entities'
+import { useStyles, MakeStyles, useColors } from '../../../services/design'
+import { Bubble, Thumbnail } from '../../atoms'
+import { Message, User } from '../../../entities'
 
 type Props = {
   message: Message

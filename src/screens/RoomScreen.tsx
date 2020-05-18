@@ -1,49 +1,37 @@
-import React, { useCallback, useState, useRef } from 'react'
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import React, { useCallback, useState, useRef, useMemo } from 'react'
+import { View, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native'
 import Animated, { Value, Extrapolate, interpolate } from 'react-native-reanimated'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useAppAuthState } from '../store/hooks'
 import { useStackNavigation } from '../services/route'
 import { useColors, useStyles, MakeStyles } from '../services/design'
+import { useLayoutTransitions } from '../services/ui'
 import { useRooms, useCreateRoomTools } from '../services/room'
+import { useSendMessage } from '../services/chat'
 import { useFriends } from '../services/friend'
-import { ShadowBase, Fab, BlurView } from '../components/atoms'
-import { RoomCard, UserCard, Header, ListItemTransition, HeaderIconTransition } from '../components/organisms'
-import { BottomTabLayout } from '../components/templates'
+import { ShadowBase, BlurView } from '../components/atoms'
+import {
+  RoomCard,
+  CheckUserListItem,
+  Header,
+  BottomTab,
+  ChatInput,
+  MessageFlatList,
+  ListItemTransition,
+  HeaderIconTransition
+} from '../components/organisms'
+import { NormalLayout } from '../components/templates'
 import { Room, User } from '../entities'
 import { Icons } from '../@assets/vector-icons'
 import { AntDesign } from '@expo/vector-icons'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
+const AnimatedMessageFlatList = Animated.createAnimatedComponent(MessageFlatList)
 
 const HEADER_HEIGHT = 50 + 24 + 6 // height + paddingTop + paddingBottom
+// const TAB_HEIGHT = 70 // height
 
-type ListItemProps = {
-  user: User
-  checked: boolean
-  onPress: (user: User) => void
-}
-
-const UserListItem = ({ user, checked, onPress }: ListItemProps) => {
-  const colors = useColors()
-
-  return (
-    <UserCard
-      user={user}
-      onPress={onPress}
-      fullWidth={true}
-      renderRight={() => {
-        if (checked) {
-          return (
-            <Fab color={colors.backgrounds.secondary}>
-              <Icons color={colors.tints.primary.main} name="check" size={24} />
-            </Fab>
-          )
-        }
-      }}
-    />
-  )
-}
+type Layout = 'rooms' | 'createRoom' | 'chat'
 
 const RoomScreen = () => {
   const { uid } = useAppAuthState()
@@ -53,38 +41,42 @@ const RoomScreen = () => {
   const inset = useSafeArea()
   const { fetching: fetchingRooms, rooms } = useRooms()
   const { fetching: fetchingFriends, friends } = useFriends(uid)
-  const { selectedUsers, onSwitchUser, onCreateRoom } = useCreateRoomTools()
+  const { selectedUsers, onCheckUser, onCreateRoom: createRoom } = useCreateRoomTools()
+  const { onSend } = useSendMessage()
+  const [selectedRoomID, setSelectedRoomID] = useState<string | null>(null)
 
-  const onPressCard = useCallback(
+  const { activeLayout, showLayout, onAnimationTo } = useLayoutTransitions<Layout>('rooms')
+
+  const isActiveRooms = useMemo(() => activeLayout === 'rooms', [activeLayout])
+  const isActiveCreateRoom = useMemo(() => activeLayout === 'createRoom', [activeLayout])
+  const isActiveChat = useMemo(() => activeLayout === 'chat', [activeLayout])
+  const isShowRooms = useMemo(() => showLayout === 'rooms', [showLayout])
+  const isShowCreateRoom = useMemo(() => showLayout === 'createRoom', [showLayout])
+  const isShowChat = useMemo(() => showLayout === 'chat', [showLayout])
+
+  const onPressRoomCard = useCallback(
     (room: Room) => {
-      navigation.push('Chat', { roomID: room.id })
+      setSelectedRoomID(room.id)
+      onAnimationTo('chat', { delay: 200 })
+    },
+    [onAnimationTo]
+  )
+
+  const onPressAvatar = useCallback(
+    (user: User) => {
+      navigation.push('User', { userID: user.id })
     },
     [navigation]
   )
 
-  const [isShowRooms, setIsShowRooms] = useState<boolean>(true)
-  const [isShowCreateRoom, setIsShowCreateRoom] = useState<boolean>(false)
-  const [isActiveCreateRoom, setIsActiveCreateRoom] = useState<boolean>(false)
-  const [isActiveRooms, setIsActiveRooms] = useState<boolean>(true)
-
-  const onSwitchCreateRoom = useCallback(() => {
-    setIsShowRooms(false)
-    setIsShowCreateRoom(true)
-  }, [])
-
-  const onSwitchRooms = useCallback(() => {
-    setIsShowCreateRoom(false)
-    setIsShowRooms(true)
-  }, [])
-
-  const onCreateAndSwitchRoom = useCallback(async () => {
+  const onCreateRoom = useCallback(async () => {
     if (selectedUsers.length === 0) {
       return alert('ユーザーを選択してください。')
     }
 
-    onCreateRoom()
-    onSwitchRooms()
-  }, [onCreateRoom, onSwitchRooms, selectedUsers.length])
+    createRoom()
+    onAnimationTo('rooms', { delay: 200 })
+  }, [createRoom, onAnimationTo, selectedUsers.length])
 
   const scrollY = useRef(new Value<number>(0))
 
@@ -97,7 +89,7 @@ const RoomScreen = () => {
   )
 
   return (
-    <BottomTabLayout fetching={fetchingRooms || fetchingFriends}>
+    <NormalLayout fetching={fetchingRooms || fetchingFriends}>
       <View style={styles.container}>
         <View style={[styles.headerContainer, { paddingTop: 24 + inset.top }]}>
           <View style={styles.headerInner}>
@@ -111,7 +103,20 @@ const RoomScreen = () => {
                 if (isActiveCreateRoom) {
                   return (
                     <HeaderIconTransition isShow={isShowCreateRoom}>
-                      <TouchableOpacity onPress={onSwitchRooms}>
+                      <TouchableOpacity onPress={() => onAnimationTo('rooms', { delay: 200 })}>
+                        <AntDesign name="arrowleft" color={colors.foregrounds.primary} size={28} />
+                      </TouchableOpacity>
+                    </HeaderIconTransition>
+                  )
+                }
+
+                // -------------------------------------------------
+                // Chat Header Left Icon
+                // -------------------------------------------------
+                if (isActiveChat) {
+                  return (
+                    <HeaderIconTransition isShow={isShowChat}>
+                      <TouchableOpacity onPress={() => onAnimationTo('rooms')}>
                         <AntDesign name="arrowleft" color={colors.foregrounds.primary} size={28} />
                       </TouchableOpacity>
                     </HeaderIconTransition>
@@ -125,7 +130,7 @@ const RoomScreen = () => {
                 if (isActiveRooms) {
                   return (
                     <HeaderIconTransition isShow={isShowRooms}>
-                      <TouchableOpacity onPress={onSwitchCreateRoom}>
+                      <TouchableOpacity onPress={() => onAnimationTo('createRoom', { delay: 200 })}>
                         <Icons name="chat-plus" color={colors.foregrounds.primary} size={28} />
                       </TouchableOpacity>
                     </HeaderIconTransition>
@@ -138,7 +143,7 @@ const RoomScreen = () => {
                 if (isActiveCreateRoom) {
                   return (
                     <HeaderIconTransition isShow={isShowCreateRoom}>
-                      <TouchableOpacity onPress={onCreateAndSwitchRoom}>
+                      <TouchableOpacity onPress={onCreateRoom}>
                         <Text style={styles.createText}>作成</Text>
                       </TouchableOpacity>
                     </HeaderIconTransition>
@@ -177,18 +182,10 @@ const RoomScreen = () => {
 
             {rooms.length > 0 &&
               rooms.map(room => (
-                <ListItemTransition
-                  key={room.id}
-                  isShow={isShowRooms}
-                  onAnimationEnd={() => {
-                    if (isShowRooms) return
-                    setIsActiveRooms(false)
-                    setIsActiveCreateRoom(true)
-                  }}
-                >
+                <ListItemTransition key={room.id} isShow={isShowRooms}>
                   <View style={styles.cardWrapper}>
                     <ShadowBase>
-                      <RoomCard room={room} onPress={onPressCard} fullWidth={true} />
+                      <RoomCard room={room} onPress={onPressRoomCard} fullWidth={true} />
                     </ShadowBase>
                   </View>
                 </ListItemTransition>
@@ -223,21 +220,13 @@ const RoomScreen = () => {
 
             {friends.length > 0 &&
               friends.map(friend => (
-                <ListItemTransition
-                  key={friend.id}
-                  isShow={isShowCreateRoom}
-                  onAnimationEnd={() => {
-                    if (isShowCreateRoom) return
-                    setIsActiveCreateRoom(false)
-                    setIsActiveRooms(true)
-                  }}
-                >
+                <ListItemTransition key={friend.id} isShow={isShowCreateRoom}>
                   <View style={styles.cardWrapper}>
                     <ShadowBase>
-                      <UserListItem
+                      <CheckUserListItem
                         user={friend}
                         checked={!!selectedUsers.find(user => user.uid === friend.uid)}
-                        onPress={onSwitchUser}
+                        onPress={onCheckUser}
                       />
                     </ShadowBase>
                   </View>
@@ -248,10 +237,39 @@ const RoomScreen = () => {
             <View style={{ paddingBottom: inset.bottom + 70 + 200 }} />
           </Animated.ScrollView>
         )}
+
+        {/*
+          -------------------------------------------------
+          Chat ScrollView
+          -------------------------------------------------
+        */}
+        {isActiveChat && (
+          <AnimatedMessageFlatList
+            roomID={selectedRoomID}
+            onPressAvatar={onPressAvatar}
+            style={[styles.scrollView, { paddingTop: HEADER_HEIGHT + inset.top + 24 }]}
+            scrollEventThrottle={16}
+            onScroll={Animated.event([
+              {
+                nativeEvent: { contentOffset: { y: scrollY.current } }
+              }
+            ])}
+          />
+        )}
+
+        {/* TODO: タブ切り替えアニメーション追加予定 */}
+        <View style={[styles.tabContainer, { paddingBottom: inset.bottom }]}>
+          <ShadowBase>
+            {isActiveRooms && <BottomTab fullWidth={true} />}
+            {isActiveChat && <ChatInput fullWidth={true} onSend={text => onSend(selectedRoomID, text)} />}
+          </ShadowBase>
+        </View>
       </View>
-    </BottomTabLayout>
+    </NormalLayout>
   )
 }
+
+const fullWidth = Dimensions.get('window').width
 
 const makeStyles: MakeStyles = colors =>
   StyleSheet.create({
@@ -281,6 +299,12 @@ const makeStyles: MakeStyles = colors =>
     },
     headerInner: {
       paddingHorizontal: 36
+    },
+    tabContainer: {
+      position: 'absolute',
+      bottom: 0,
+      width: fullWidth,
+      paddingHorizontal: 24
     },
     scrollView: {
       height: '100%'

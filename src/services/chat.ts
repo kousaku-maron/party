@@ -13,11 +13,11 @@ const getMessagesRef = (roomID: string) => {
   return roomsRef.doc(roomID).collection('messages')
 }
 
-export const useSendMessage = (roomID: string) => {
+export const useSendMessage = () => {
   const { user, uid } = useAppAuthState()
 
   const onSend = useCallback(
-    (text: string) => {
+    (roomID: string, text: string) => {
       const newMessage: CreateMessage = {
         text,
         user,
@@ -28,7 +28,7 @@ export const useSendMessage = (roomID: string) => {
 
       setMessage(roomID, newMessage)
     },
-    [roomID, uid, user]
+    [uid, user]
   )
 
   return { onSend }
