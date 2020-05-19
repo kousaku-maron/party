@@ -19,8 +19,8 @@ const getIdToken = async () => {
     })
     await GoogleSignin.hasPlayServices()
 
-    const authState = await GoogleSignin.signIn()
-    return authState
+    const { idToken } = await GoogleSignin.signIn()
+    return idToken
   } catch (error) {
     console.warn(error)
   }
@@ -28,14 +28,14 @@ const getIdToken = async () => {
 
 export const signInGoogle = async (): Promise<Result> => {
   try {
-    const authState = await getIdToken()
-    console.info(authState.idToken)
+    const idToken = await getIdToken()
+    console.info(idToken)
 
-    if (!authState.idToken) {
+    if (!idToken) {
       return { cancelled: true }
     }
 
-    const credential = firebase.auth.GoogleAuthProvider.credential(authState.idToken)
+    const credential = firebase.auth.GoogleAuthProvider.credential(idToken)
 
     firebase
       .auth()
