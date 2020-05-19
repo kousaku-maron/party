@@ -9,9 +9,8 @@ type Result = {
   error?: any
 }
 
-const signInNativeApp = async () => {
+const getIdToken = async () => {
   try {
-    console.log(process.env.GOOGLE_CLIENT_ID_FOR_IOS)
     GoogleSignin.configure({
       webClientId:
         Platform.OS === 'ios' ? process.env.GOOGLE_CLIENT_ID_FOR_IOS : process.env.GOOGLE_CLIENT_ID_FOR_ANDROID,
@@ -28,11 +27,8 @@ const signInNativeApp = async () => {
 }
 
 export const signInGoogle = async (): Promise<Result> => {
-  console.log('signinGoogleaa')
   try {
-    console.log('signinGoogleaa')
-    const authState = await signInNativeApp()
-
+    const authState = await getIdToken()
     console.info(authState.idToken)
 
     if (!authState.idToken) {
