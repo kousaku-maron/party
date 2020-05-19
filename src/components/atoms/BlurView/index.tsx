@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleProp, ViewStyle } from 'react-native'
+import { StyleProp, ViewStyle, Platform } from 'react-native'
 import Constants from 'expo-constants'
 
 type Props = {
@@ -15,7 +15,11 @@ if (Constants.appOwnership === 'expo') {
   CustomBlurView = require('./BlurView.expo').default
 }
 
-if (Constants.appOwnership !== 'expo') {
+if (Constants.appOwnership !== 'expo' && Platform.OS !== 'ios') {
+  CustomBlurView = require('./BlurView.expo').default
+}
+
+if (Constants.appOwnership !== 'expo' && Platform.OS == 'ios') {
   CustomBlurView = require('./BlurView').default
 }
 

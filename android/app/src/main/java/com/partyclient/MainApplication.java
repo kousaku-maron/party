@@ -3,7 +3,6 @@ package com.partyclient;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.cmcewen.blurview.BlurViewPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.horcrux.svg.SvgPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
@@ -17,6 +16,7 @@ import com.partyclient.generated.BasePackageList;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import com.cmcewen.blurview.BlurViewPackage; 
 
 import org.unimodules.adapters.react.ReactAdapterPackage;
 import org.unimodules.adapters.react.ModuleRegistryAdapter;
@@ -26,7 +26,11 @@ import org.unimodules.core.interfaces.SingletonModule;
 import expo.modules.constants.ConstantsPackage;
 import expo.modules.permissions.PermissionsPackage;
 import expo.modules.filesystem.FileSystemPackage;
+import com.airbnb.android.react.lottie.LottiePackage;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
+import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,15 +50,19 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new BlurViewPackage(),
-            new RNCWebViewPackage(),
-            new SvgPackage(),
-            new SafeAreaContextPackage(),
-            new RNCAppearancePackage(),
-            new RNCMaskedViewPackage(),
+          new RNCWebViewPackage(),
+          new SvgPackage(),
+          new SafeAreaContextPackage(),
+          new RNCAppearancePackage(),
+          new RNCMaskedViewPackage(),
           new ReanimatedPackage(),
           new RNGestureHandlerPackage(),
           new RNScreensPackage(),
+          new RNGoogleSigninPackage(),
+          new LottiePackage(),
+          new ReactNativeFirebaseAppPackage(),
+          new ReactNativeFirebaseMessagingPackage(),
+          new BlurViewPackage(),
           new ModuleRegistryAdapter(mModuleRegistryProvider)
       );
     }

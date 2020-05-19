@@ -1,5 +1,5 @@
 import { Platform } from 'react-native'
-import firebase from '../../repositories/firebase'
+import firebase from '../../../repositories/firebase'
 import * as AppAuth from 'expo-app-auth'
 
 type Result = {
