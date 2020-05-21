@@ -23,10 +23,10 @@ export const appAuthReducer = reducerWithInitialState(initialState)
   .case(appAuthActions.resetAuth, state => {
     return { ...state, uid: null, checked: true }
   })
-  .case(appAuthActions.setUser, (state, user) => {
+  .case(appAuthActions.setAuthUser, (state, user) => {
     return { ...state, user }
   })
-  .case(appAuthActions.resetUser, state => {
+  .case(appAuthActions.resetAuthUser, state => {
     return { ...state, user: null }
   })
 

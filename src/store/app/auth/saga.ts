@@ -38,7 +38,7 @@ function* watchAuthChannel() {
 function* handleCatchAuthState(user: firebase.User) {
   try {
     yield put(appAuthActions.setAuth(user.uid))
-    yield put(appAuthActions.startUserSession(user.uid))
+    yield put(appAuthActions.startAuthUserSession(user.uid))
     yield call(askNotificationsPermissionTask, user.uid)
     yield call(updateNotificationsTokenTask, user.uid)
   } catch (e) {
@@ -48,7 +48,7 @@ function* handleCatchAuthState(user: firebase.User) {
 
 function* handleNotCatchAuthState() {
   yield put(appAuthActions.resetAuth())
-  yield put(appAuthActions.stopUserSession())
+  yield put(appAuthActions.stopAuthUserSession())
 }
 
 function* askNotificationsPermissionTask(uid: string) {
@@ -96,9 +96,9 @@ function* updateNotificationsTokenTask(uid: string) {
 // ----------------------------------------
 function* userSessionFlow() {
   while (true) {
-    const { payload: uid } = yield take(appAuthActions.startUserSession)
+    const { payload: uid } = yield take(appAuthActions.startAuthUserSession)
     const task = yield fork(watchUserSessionChannel, uid)
-    yield take(appAuthActions.stopUserSession)
+    yield take(appAuthActions.stopAuthUserSession)
     yield cancel(task)
   }
 }
@@ -147,11 +147,11 @@ function* watchUserSessionChannel(uid: string) {
 }
 
 function* handleCatchUserState(user: User) {
-  yield put(appAuthActions.setUser(user))
+  yield put(appAuthActions.setAuthUser(user))
 }
 
 function* handleNotCatchUserState() {
-  yield put(appAuthActions.resetUser())
+  yield put(appAuthActions.resetAuthUser())
 }
 
 const saga = [watchAuthChannel(), userSessionFlow()]
