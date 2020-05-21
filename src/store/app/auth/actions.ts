@@ -6,8 +6,8 @@ const actionCreator = actionCreateFactory()
 export const appAuthActions = {
   setAuth: actionCreator<string>('SET_AUTH'),
   resetAuth: actionCreator<void>('RESET_AUTH'),
-  setUser: actionCreator<User>('SET_USER'),
-  resetUser: actionCreator<void>('RESET_USER'),
-  startUserSession: actionCreator<string>('START_USER_SESSION'),
-  stopUserSession: actionCreator<void>('STOP_USER_SESSION')
+  setAuthUser: actionCreator<User>('SET_AUTH_USER'),
+  resetAuthUser: actionCreator<void>('RESET_AUTH_USER'),
+  startAuthUserSession: actionCreator<string>('START_AUTH_USER_SESSION'),
+  stopAuthUserSession: actionCreator<void>('STOP_AUTH_USER_SESSION')
 }
