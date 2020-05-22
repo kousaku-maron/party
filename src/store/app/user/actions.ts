@@ -15,7 +15,11 @@ export const appUserActions = {
   addFetchingAcceptFriendship: actionCreator<UserNodeProps>('ADD_FETCHING_ACCEPT_FRIENDSHIP'),
   removeFetchingAcceptFriendship: actionCreator<UserNodeProps>('REMOVE_FETCHING_ACCEPT_FRIENDSHIP'),
   addFetchingRefuseFriendship: actionCreator<UserNodeProps>('ADD_FETCHING_REFUSE_FRIENDSHIP'),
-  removeFetchingRefuseFriendship: actionCreator<UserNodeProps>('REMOVE_FETCHING_REFUSE_FRIENDSHIP')
+  removeFetchingRefuseFriendship: actionCreator<UserNodeProps>('REMOVE_FETCHING_REFUSE_FRIENDSHIP'),
+  addFetchingReportUser: actionCreator<UserNodeProps>('ADD_FETCHING_REPORT_USER'),
+  removeFetchingReportUser: actionCreator<UserNodeProps>('REMOVE_FETCHING_REPORT_USER'),
+  addFetchingBlockUser: actionCreator<UserNodeProps>('ADD_FETCHING_BLOCK_USER'),
+  removeFetchingBlockUser: actionCreator<UserNodeProps>('REMOVE_FETCHING_BLOCK_USER')
 }
 
 export const useAppUserActions = () => {
@@ -63,12 +67,44 @@ export const useAppUserActions = () => {
     [dispatch]
   )
 
+  const addFetchingReportUser = useCallback(
+    (node: UserNodeProps) => {
+      dispatch(appUserActions.addFetchingReportUser(node))
+    },
+    [dispatch]
+  )
+
+  const removeFetchingReportUser = useCallback(
+    (node: UserNodeProps) => {
+      dispatch(appUserActions.removeFetchingRefuseFriendship(node))
+    },
+    [dispatch]
+  )
+
+  const addFetchingBlockUser = useCallback(
+    (node: UserNodeProps) => {
+      dispatch(appUserActions.addFetchingBlockUser(node))
+    },
+    [dispatch]
+  )
+
+  const removeFetchingBlockUser = useCallback(
+    (node: UserNodeProps) => {
+      dispatch(appUserActions.removeFetchingBlockUser(node))
+    },
+    [dispatch]
+  )
+
   return {
     addFetchingApplyFriendship,
     removeFetchingApplyFriendship,
     addFetchingAcceptFriendship,
     removeFetchingAcceptFriendship,
     addFetchingRefuseFriendship,
-    removeFetchingRefuseFriendship
+    removeFetchingRefuseFriendship,
+    addFetchingReportUser,
+    removeFetchingReportUser,
+    addFetchingBlockUser,
+    removeFetchingBlockUser
   }
 }

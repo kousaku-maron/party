@@ -76,6 +76,44 @@ export const domainUserReducer = reducerWithInitialState(initialState)
       }
     }
   })
+  .case(domainUserActions.reportUser, (state, node) => {
+    return {
+      ...state,
+      [node.fromUID]: {
+        ...state[node.fromUID],
+        reportedUIDs:
+          state[node.fromUID] && state[node.fromUID].reportedUIDs
+            ? uniq([...state[node.fromUID].reportedUIDs, node.toUID])
+            : [node.toUID]
+      },
+      [node.toUID]: {
+        ...state[node.toUID],
+        reportUIDs:
+          state[node.toUID] && state[node.toUID].reportUIDs
+            ? uniq([...state[node.toUID].reportUIDs, node.fromUID])
+            : [node.fromUID]
+      }
+    }
+  })
+  .case(domainUserActions.blockUser, (state, node) => {
+    return {
+      ...state,
+      [node.fromUID]: {
+        ...state[node.fromUID],
+        blockedUIDs:
+          state[node.fromUID] && state[node.fromUID].blockedUIDs
+            ? uniq([...state[node.fromUID].blockedUIDs, node.toUID])
+            : [node.toUID]
+      },
+      [node.toUID]: {
+        ...state[node.toUID],
+        blockUIDs:
+          state[node.toUID] && state[node.toUID].blockUIDs
+            ? uniq([...state[node.toUID].blockUIDs, node.fromUID])
+            : [node.fromUID]
+      }
+    }
+  })
 
 export const useDomainUserState = () => {
   const domainUser = useSelector((state: StoreState) => state.domain.user)
