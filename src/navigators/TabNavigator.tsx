@@ -9,7 +9,6 @@ import {
   SettingScreen,
   TermsScreen,
   PrivacyScreen,
-  ChatScreen,
   RoomScreen,
   SearchUserScreen
 } from '../screens'
@@ -20,7 +19,6 @@ const HomeNavigator = () => (
   <Stack.Navigator initialRouteName="Main">
     <Stack.Screen name="Main" component={HomeScreen} options={{ headerShown: false }} />
     <Stack.Screen name="SwipeCard" component={SwipeCardScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
     <Stack.Screen name="User" component={UserScreen} options={{ headerShown: false }} />
     <Stack.Screen name="UserEdit" component={UserEditScreen} options={{ headerShown: false }} />
     <Stack.Screen name="SearchUser" component={SearchUserScreen} options={{ headerShown: false }} />
@@ -34,7 +32,6 @@ const RoomNavigator = () => (
   <Stack.Navigator initialRouteName="Main">
     <Stack.Screen name="Main" component={RoomScreen} options={{ headerShown: false }} />
     <Stack.Screen name="SwipeCard" component={SwipeCardScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
     <Stack.Screen name="User" component={UserScreen} options={{ headerShown: false }} />
     <Stack.Screen name="UserEdit" component={UserEditScreen} options={{ headerShown: false }} />
     <Stack.Screen name="SearchUser" component={SearchUserScreen} options={{ headerShown: false }} />
@@ -48,7 +45,6 @@ const UserNavigator = () => (
   <Stack.Navigator initialRouteName="Main">
     <Stack.Screen name="Main" component={UserScreen} options={{ headerShown: false }} />
     <Stack.Screen name="SwipeCard" component={SwipeCardScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: false }} />
     <Stack.Screen name="User" component={UserScreen} options={{ headerShown: false }} />
     <Stack.Screen name="UserEdit" component={UserEditScreen} options={{ headerShown: false }} />
     <Stack.Screen name="SearchUser" component={SearchUserScreen} options={{ headerShown: false }} />
