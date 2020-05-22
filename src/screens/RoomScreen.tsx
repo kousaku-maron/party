@@ -2,6 +2,7 @@ import React, { useCallback, useState, useRef, useMemo } from 'react'
 import { View, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native'
 import Animated, { Value, Extrapolate, interpolate } from 'react-native-reanimated'
 import { useSafeArea } from 'react-native-safe-area-context'
+import KeyboardSpacer from 'react-native-keyboard-spacer'
 import { useAppAuthState } from '../store/hooks'
 import { useStackNavigation } from '../services/route'
 import { useColors, useStyles, MakeStyles } from '../services/design'
@@ -261,8 +262,17 @@ const RoomScreen = () => {
         <View style={[styles.tabContainer, { paddingBottom: inset.bottom }]}>
           <ShadowBase>
             {isActiveRooms && <BottomTab fullWidth={true} />}
-            {isActiveChat && <ChatInput fullWidth={true} onSend={text => onSend(selectedRoomID, text)} />}
+            {isActiveChat && (
+              <ChatInput
+                fullWidth={true}
+                onSend={text => {
+                  if (text.length === 0) return
+                  onSend(selectedRoomID, text)
+                }}
+              />
+            )}
           </ShadowBase>
+          <KeyboardSpacer />
         </View>
       </View>
     </NormalLayout>
