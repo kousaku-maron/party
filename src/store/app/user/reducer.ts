@@ -9,20 +9,26 @@ type UserNodeProps = {
   toUID: string
 }
 
+type ReportNodeProps = {
+  fromUID: string
+  toUID: string
+  comment: string
+}
+
 export type AppUser = {
   fetchingApplyFriendship: UserNodeProps[]
   fetchingAcceptFriendship: UserNodeProps[]
   fetchingRefuseFriendship: UserNodeProps[]
-  fetchingReportUser: UserNodeProps[]
-  fetchingBlockUser: UserNodeProps[]
+  fetchingReportUserRelationship: ReportNodeProps[]
+  fetchingBlockUserRelationship: UserNodeProps[]
 }
 
 const initialState: AppUser = {
   fetchingApplyFriendship: [],
   fetchingAcceptFriendship: [],
   fetchingRefuseFriendship: [],
-  fetchingReportUser: [],
-  fetchingBlockUser: []
+  fetchingReportUserRelationship: [],
+  fetchingBlockUserRelationship: []
 }
 
 export const appUserReducer = reducerWithInitialState(initialState)
@@ -62,28 +68,28 @@ export const appUserReducer = reducerWithInitialState(initialState)
       fetchingRefuseFriendship: pullAllBy(state.fetchingRefuseFriendship, [node], 'toUID')
     }
   })
-  .case(appUserActions.addFetchingReportUser, (state, node) => {
+  .case(appUserActions.addFetchingReportUserRelationship, (state, node) => {
     return {
       ...state,
-      fetchingReportUser: uniqBy([...state.fetchingReportUser, node], 'toUID')
+      fetchingReportUser: uniqBy([...state.fetchingReportUserRelationship, node], 'toUID')
     }
   })
-  .case(appUserActions.removeFetchingReportUser, (state, node) => {
+  .case(appUserActions.removeFetchingReportUserRelationship, (state, node) => {
     return {
       ...state,
-      fetchingReportUser: pullAllBy(state.fetchingReportUser, [node], 'toUID')
+      fetchingReportUser: pullAllBy(state.fetchingReportUserRelationship, [node], 'toUID')
     }
   })
-  .case(appUserActions.addFetchingBlockUser, (state, node) => {
+  .case(appUserActions.addFetchingBlockUserRelationship, (state, node) => {
     return {
       ...state,
-      fetchingBlockUser: uniqBy([...state.fetchingBlockUser, node], 'toUID')
+      fetchingBlockUser: uniqBy([...state.fetchingBlockUserRelationship, node], 'toUID')
     }
   })
-  .case(appUserActions.removeFetchingBlockUser, (state, node) => {
+  .case(appUserActions.removeFetchingBlockUserRelationship, (state, node) => {
     return {
       ...state,
-      fetchingBlockUser: pullAllBy(state.fetchingBlockUser, [node], 'toUID')
+      fetchingBlockUser: pullAllBy(state.fetchingBlockUserRelationship, [node], 'toUID')
     }
   })
 

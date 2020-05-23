@@ -76,7 +76,7 @@ export const domainUserReducer = reducerWithInitialState(initialState)
       }
     }
   })
-  .case(domainUserActions.reportUser, (state, node) => {
+  .case(domainUserActions.reportUserRelationship, (state, node) => {
     return {
       ...state,
       [node.fromUID]: {
@@ -95,7 +95,7 @@ export const domainUserReducer = reducerWithInitialState(initialState)
       }
     }
   })
-  .case(domainUserActions.blockUser, (state, node) => {
+  .case(domainUserActions.blockUserRelationship, (state, node) => {
     return {
       ...state,
       [node.fromUID]: {

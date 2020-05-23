@@ -5,11 +5,11 @@ import { showReportUserSunccessMessage, showReportUserFailurMessage } from './fl
 
 export const useReportUser = () => {
   const { uid } = useAppAuthState()
-  const { addFetchingReportUser, removeFetchingReportUser } = useAppUserActions()
+  const { addFetchingReportUserRelationship, removeFetchingReportUserRelationship } = useAppUserActions()
   const { reportUser } = useDomainUserActions()
 
   const onReportUser = async (user: User, comment: string) => {
-    const node = { fromUID: uid, toUID: user.uid }
+    const node = { fromUID: uid, toUID: user.uid, comment }
     const report: Report = {
       reportUID: node.fromUID,
       reportedUID: node.toUID,
@@ -18,13 +18,13 @@ export const useReportUser = () => {
 
     try {
       showReportUserSunccessMessage()
-      addFetchingReportUser(node)
+      addFetchingReportUserRelationship(node)
       await functions.httpsCallable('createReport')({ report }) // TODO: nodeを引数にそして保存するようにする
       reportUser(node)
-      removeFetchingReportUser(node)
+      removeFetchingReportUserRelationship(node)
     } catch (e) {
       showReportUserFailurMessage()
-      removeFetchingReportUser(node)
+      removeFetchingReportUserRelationship(node)
       console.warn(e)
     }
   }
