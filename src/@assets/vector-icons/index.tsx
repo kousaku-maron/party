@@ -12,6 +12,8 @@ import { SendFillIcon } from './send-fill'
 import { TimeIcon } from './time'
 import { UserIcon } from './user'
 import { UserPlusIcon } from './user-plus'
+import { CardIcon } from './card'
+import { CardPlusIcon } from './card-plus'
 
 type VectorIconsName = string
 
@@ -73,6 +75,14 @@ export const Icons = ({ name, size = 24, color = 'black' }: VectorIconsProps) =>
 
     case 'user-plus': {
       return <UserPlusIcon size={size} color={color} />
+    }
+
+    case 'card': {
+      return <CardIcon size={size} color={color} />
+    }
+
+    case 'card-plus': {
+      return <CardPlusIcon size={size} color={color} />
     }
 
     default:
