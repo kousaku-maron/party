@@ -17,7 +17,7 @@ import { useReportUser } from '../services/report'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { Thumbnail, AnimatedThumbnail, Fab, ShadowBase, BlurView } from '../components/atoms'
 import { Modal } from '../components/moleculers'
-import { PartySecondaryCard, Header, ReportModal } from '../components/organisms'
+import { PartySecondaryCard, Header, ReportModal, KickUserActionSheet } from '../components/organisms'
 import { BottomTabLayout } from '../components/templates'
 import { Icons } from '../@assets/vector-icons'
 import { Entypo } from '@expo/vector-icons'
@@ -332,24 +332,19 @@ const UserScreen = () => {
               )}
 
               {!isMy && isShowKickUserActionSheet && (
-                <View style={styles.kickUserActionContainer}>
-                  <View style={styles.kickUserActionContentsArea}>
-                    <TouchableOpacity style={styles.kickUserActionTextWrapper} onPress={goToSetting}>
-                      <Text style={styles.kickUserActionText}>{'設定'}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.kickUserActionTextWrapper} onPress={blockModalTools.onOpen}>
-                      <Text style={styles.kickUserActionText}>{'ブロック'}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.kickUserActionTextWrapper} onPress={reportModalTools.onOpen}>
-                      <Text style={styles.kickUserActionText}>{'通報'}</Text>
-                    </TouchableOpacity>
-                    {isApplyFriendship && (
-                      <TouchableOpacity style={styles.kickUserActionTextWrapper} onPress={refuseFriendshipTools.onOpen}>
-                        <Text style={styles.kickUserActionText}>{'友達申請拒否'}</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </View>
+                <KickUserActionSheet
+                  actionItems={[
+                    { key: 'setting', isShow: true, actionTitle: '設定', onPress: goToSetting },
+                    { key: 'block', isShow: true, actionTitle: 'ブロック', onPress: blockModalTools.onOpen },
+                    { key: 'report', isShow: true, actionTitle: '通報', onPress: reportModalTools.onOpen },
+                    {
+                      key: 'refuseApplyFriendship',
+                      isShow: isApplyFriendship,
+                      actionTitle: '友達申請拒否',
+                      onPress: refuseFriendshipTools.onOpen
+                    }
+                  ]}
+                />
               )}
 
               <View style={styles.grow} />
@@ -529,12 +524,6 @@ const makeStyles: MakeStyles = colors =>
     secondaryCardWrapper: {
       paddingRight: 20
     },
-    kickUserActionTextWrapper: {
-      paddingHorizontal: 48,
-      paddingVertical: 12,
-      display: 'flex',
-      width: '100%'
-    },
     titleText: {
       textAlign: 'left',
       fontSize: 22,
@@ -547,10 +536,6 @@ const makeStyles: MakeStyles = colors =>
     emptyMessageText: {
       fontSize: 16,
       color: colors.foregrounds.secondary
-    },
-    kickUserActionText: {
-      fontSize: 20,
-      color: colors.foregrounds.primary
     },
     friendContainer: {
       display: 'flex',
@@ -576,13 +561,6 @@ const makeStyles: MakeStyles = colors =>
     blockMessageText: {
       fontSize: 20,
       color: colors.foregrounds.placeholder
-    },
-    kickUserActionContainer: {
-      display: 'flex',
-      alignItems: 'center'
-    },
-    kickUserActionContentsArea: {
-      width: '100%'
     }
   })
 
