@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { useRoute, RouteProp } from '@react-navigation/native'
 import Animated, { Value, Extrapolate, interpolate } from 'react-native-reanimated'
 import { useStackNavigation } from '../services/route'
@@ -10,9 +10,14 @@ import { useStyles, useColors, MakeStyles } from '../services/design'
 import { useUser, useUserRelationship } from '../services/user'
 import { useAppliedParties } from '../services/party'
 import { useFriends, useApplyFriend, useAcceptFriend } from '../services/friend'
+import { useModal } from '../services/modal'
+import { useBlockUser } from '../services/block'
+import { useRefuseFriend } from '../services/friend'
+import { useReportUser } from '../services/report'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { Thumbnail, AnimatedThumbnail, Fab, ShadowBase, BlurView } from '../components/atoms'
-import { PartySecondaryCard, Header } from '../components/organisms'
+import { Modal } from '../components/moleculers'
+import { PartySecondaryCard, Header, ReportModal, KickUserActionSheet } from '../components/organisms'
 import { BottomTabLayout } from '../components/templates'
 import { Icons } from '../@assets/vector-icons'
 import { Entypo } from '@expo/vector-icons'
@@ -51,9 +56,26 @@ const UserScreen = () => {
   const { onApplyFriend } = useApplyFriend()
   const { onAcceptFriend } = useAcceptFriend()
 
+  const reportModalTools = useModal()
+  const blockModalTools = useModal()
+  const refuseFriendshipTools = useModal()
+
+  const { onReportUser } = useReportUser()
+  const { onBlockUser } = useBlockUser()
+  const { onRefuseFriend } = useRefuseFriend()
+
+  const isApplyFriendship = useMemo(() => {
+    if (!isMy) {
+      return user?.applyFriendUIDs?.includes(uid)
+    }
+    return false
+  }, [isMy, user, uid])
+
+  const [isShowKickUserActionSheet, setIsShowKickUserActionSheet] = useState<boolean>(false)
+
   const isShowUserPlusIcon = useMemo(() => {
-    return (!isBlocked && !isFriend && !isApply) || isMy
-  }, [isApply, isBlocked, isFriend, isMy])
+    return (!isBlocked && !isFriend && !isApply && !isShowKickUserActionSheet) || isMy
+  }, [isApply, isBlocked, isFriend, isMy, isShowKickUserActionSheet])
 
   const goToEdit = useCallback(() => {
     navigation.push('UserEdit')
@@ -150,13 +172,21 @@ const UserScreen = () => {
             <Header
               fullWidth={true}
               renderTitle={renderTitle}
-              renderRight={() =>
-                isMy && (
-                  <TouchableOpacity style={styles.dotsWrapper} onPress={goToSetting}>
-                    <Entypo name="dots-two-vertical" size={28} color={colors.foregrounds.primary} />
-                  </TouchableOpacity>
-                )
-              }
+              renderRight={() => (
+                <TouchableOpacity
+                  style={styles.dotsWrapper}
+                  onPress={
+                    isMy
+                      ? goToSetting
+                    /* eslint-disable */
+                      : () => {
+                          setIsShowKickUserActionSheet(!isShowKickUserActionSheet)
+                        }
+                  } /* eslint-enable */
+                >
+                  <Entypo name="dots-two-vertical" size={28} color={colors.foregrounds.primary} />
+                </TouchableOpacity>
+              )}
             />
           </View>
         </View>
@@ -233,7 +263,7 @@ const UserScreen = () => {
                 </View>
               )}
 
-              {!isBlocked && (
+              {!isBlocked && !isShowKickUserActionSheet && (
                 <View style={styles.sectionContainer}>
                   <View style={styles.titleTextWrapper}>
                     <Text style={styles.titleText}>参加中</Text>
@@ -259,7 +289,7 @@ const UserScreen = () => {
                 </View>
               )}
 
-              {!isBlocked && (
+              {!isBlocked && !isShowKickUserActionSheet && (
                 <View style={styles.sectionContainer}>
                   <View style={styles.titleTextWrapper}>
                     <Text style={styles.titleText}>ともだち</Text>
@@ -271,7 +301,7 @@ const UserScreen = () => {
                     </View>
                   )}
 
-                  {friends && friends.length > 0 && (
+                  {friends && friends.length > 0 && !isShowKickUserActionSheet && (
                     <ScrollView horizontal={true} style={styles.rowScrollView} showsHorizontalScrollIndicator={false}>
                       {friends.map(friend => (
                         <View key={friend.id} style={styles.friendContainer}>
@@ -294,11 +324,27 @@ const UserScreen = () => {
                 </View>
               )}
 
-              {isBlocked && (
+              {isBlocked && !isShowKickUserActionSheet && (
                 <View style={styles.blockMessageContainer}>
                   <Text style={styles.blockMessageText}>ブロックしたユーザーの</Text>
                   <Text style={styles.blockMessageText}>情報は見れません</Text>
                 </View>
+              )}
+
+              {!isMy && isShowKickUserActionSheet && (
+                <KickUserActionSheet
+                  actionItems={[
+                    { key: 'setting', isShow: true, actionTitle: '設定', onPress: goToSetting },
+                    { key: 'block', isShow: true, actionTitle: 'ブロック', onPress: blockModalTools.onOpen },
+                    { key: 'report', isShow: true, actionTitle: '通報', onPress: reportModalTools.onOpen },
+                    {
+                      key: 'refuseApplyFriendship',
+                      isShow: isApplyFriendship,
+                      actionTitle: '友達申請拒否',
+                      onPress: refuseFriendshipTools.onOpen
+                    }
+                  ]}
+                />
               )}
 
               <View style={styles.grow} />
@@ -306,6 +352,48 @@ const UserScreen = () => {
           </ShadowBase>
         </Animated.ScrollView>
       </View>
+      {user && (
+        <ReportModal
+          isVisible={reportModalTools.isVisible}
+          title={'確認'}
+          desc={`「${user.name}」を本当に通報しますか？`}
+          negative="戻る"
+          positive="通報する"
+          onPositive={(reportDetail: string) => {
+            onReportUser(user, reportDetail)
+            reportModalTools.onClose()
+          }}
+          onNegative={reportModalTools.onClose}
+        />
+      )}
+      {user && (
+        <Modal
+          isVisible={blockModalTools.isVisible}
+          title={'確認'}
+          desc={`「${user.name}」を本当にブロックしますか？`}
+          negative="戻る"
+          positive="ブロックする"
+          onPositive={() => {
+            onBlockUser(user)
+            blockModalTools.onClose()
+          }}
+          onNegative={blockModalTools.onClose}
+        />
+      )}
+      {isApplyFriendship && (
+        <Modal
+          isVisible={refuseFriendshipTools.isVisible}
+          title={'確認'}
+          desc={`「${user.name}」からの友達申請を拒否しますか？`}
+          negative="戻る"
+          positive="拒否する"
+          onPositive={() => {
+            onRefuseFriend(user)
+            refuseFriendshipTools.onClose()
+          }}
+          onNegative={refuseFriendshipTools.onClose}
+        />
+      )}
     </BottomTabLayout>
   )
 }
@@ -437,6 +525,7 @@ const makeStyles: MakeStyles = colors =>
       paddingRight: 20
     },
     titleText: {
+      textAlign: 'left',
       fontSize: 22,
       color: colors.foregrounds.primary
     },

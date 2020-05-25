@@ -71,15 +71,15 @@ export const showCreatePartyGroupAlreadyCreatedMessage = () => {
   showMessageBase({ message: 'パーティーはすでに作成済みです', type: 'danger' })
 }
 
-export const showCreateBlockUserSunccessMessage = () => {
+export const showBlockUserSunccessMessage = () => {
   showMessageBase({ message: 'ユーザーをブロックしました' })
 }
 
-export const showCreateBlockUserFailurMessage = () => {
+export const showBlockUserFailurMessage = () => {
   showMessage({ message: 'ユーザーのブロックに失敗しました', type: 'danger' })
 }
 
-export const showCreateBlockUserAlreadyBlockedMessage = () => {
+export const showBlockUserAlreadyBlockedMessage = () => {
   showMessage({ message: 'このユーザーはすでにブロック済みです', type: 'danger' })
 }
 

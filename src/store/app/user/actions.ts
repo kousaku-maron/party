@@ -9,13 +9,23 @@ type UserNodeProps = {
   toUID: string
 }
 
+type ReportNodeProps = {
+  fromUID: string
+  toUID: string
+  comment: string
+}
+
 export const appUserActions = {
   addFetchingApplyFriendship: actionCreator<UserNodeProps>('ADD_FETCHING_APPLY_FRIENDSHIP'),
   removeFetchingApplyFriendship: actionCreator<UserNodeProps>('REMOVE_FETCHING_APPLY_FRIENDSHIP'),
   addFetchingAcceptFriendship: actionCreator<UserNodeProps>('ADD_FETCHING_ACCEPT_FRIENDSHIP'),
   removeFetchingAcceptFriendship: actionCreator<UserNodeProps>('REMOVE_FETCHING_ACCEPT_FRIENDSHIP'),
   addFetchingRefuseFriendship: actionCreator<UserNodeProps>('ADD_FETCHING_REFUSE_FRIENDSHIP'),
-  removeFetchingRefuseFriendship: actionCreator<UserNodeProps>('REMOVE_FETCHING_REFUSE_FRIENDSHIP')
+  removeFetchingRefuseFriendship: actionCreator<UserNodeProps>('REMOVE_FETCHING_REFUSE_FRIENDSHIP'),
+  addFetchingReportUserRelationship: actionCreator<ReportNodeProps>('ADD_FETCHING_REPORT_USER'),
+  removeFetchingReportUserRelationship: actionCreator<ReportNodeProps>('REMOVE_FETCHING_REPORT_USER'),
+  addFetchingBlockUserRelationship: actionCreator<UserNodeProps>('ADD_FETCHING_BLOCK_USER'),
+  removeFetchingBlockUserRelationship: actionCreator<UserNodeProps>('REMOVE_FETCHING_BLOCK_USER')
 }
 
 export const useAppUserActions = () => {
@@ -63,12 +73,44 @@ export const useAppUserActions = () => {
     [dispatch]
   )
 
+  const addFetchingReportUserRelationship = useCallback(
+    (node: ReportNodeProps) => {
+      dispatch(appUserActions.addFetchingReportUserRelationship(node))
+    },
+    [dispatch]
+  )
+
+  const removeFetchingReportUserRelationship = useCallback(
+    (node: ReportNodeProps) => {
+      dispatch(appUserActions.removeFetchingRefuseFriendship(node))
+    },
+    [dispatch]
+  )
+
+  const addFetchingBlockUserRelationship = useCallback(
+    (node: UserNodeProps) => {
+      dispatch(appUserActions.addFetchingBlockUserRelationship(node))
+    },
+    [dispatch]
+  )
+
+  const removeFetchingBlockUserRelationship = useCallback(
+    (node: UserNodeProps) => {
+      dispatch(appUserActions.removeFetchingBlockUserRelationship(node))
+    },
+    [dispatch]
+  )
+
   return {
     addFetchingApplyFriendship,
     removeFetchingApplyFriendship,
     addFetchingAcceptFriendship,
     removeFetchingAcceptFriendship,
     addFetchingRefuseFriendship,
-    removeFetchingRefuseFriendship
+    removeFetchingRefuseFriendship,
+    addFetchingReportUserRelationship,
+    removeFetchingReportUserRelationship,
+    addFetchingBlockUserRelationship,
+    removeFetchingBlockUserRelationship
   }
 }

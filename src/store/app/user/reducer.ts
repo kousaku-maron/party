@@ -9,16 +9,26 @@ type UserNodeProps = {
   toUID: string
 }
 
+type ReportNodeProps = {
+  fromUID: string
+  toUID: string
+  comment: string
+}
+
 export type AppUser = {
   fetchingApplyFriendship: UserNodeProps[]
   fetchingAcceptFriendship: UserNodeProps[]
   fetchingRefuseFriendship: UserNodeProps[]
+  fetchingReportUserRelationship: ReportNodeProps[]
+  fetchingBlockUserRelationship: UserNodeProps[]
 }
 
 const initialState: AppUser = {
   fetchingApplyFriendship: [],
   fetchingAcceptFriendship: [],
-  fetchingRefuseFriendship: []
+  fetchingRefuseFriendship: [],
+  fetchingReportUserRelationship: [],
+  fetchingBlockUserRelationship: []
 }
 
 export const appUserReducer = reducerWithInitialState(initialState)
@@ -56,6 +66,30 @@ export const appUserReducer = reducerWithInitialState(initialState)
     return {
       ...state,
       fetchingRefuseFriendship: pullAllBy(state.fetchingRefuseFriendship, [node], 'toUID')
+    }
+  })
+  .case(appUserActions.addFetchingReportUserRelationship, (state, node) => {
+    return {
+      ...state,
+      fetchingReportUser: uniqBy([...state.fetchingReportUserRelationship, node], 'toUID')
+    }
+  })
+  .case(appUserActions.removeFetchingReportUserRelationship, (state, node) => {
+    return {
+      ...state,
+      fetchingReportUser: pullAllBy(state.fetchingReportUserRelationship, [node], 'toUID')
+    }
+  })
+  .case(appUserActions.addFetchingBlockUserRelationship, (state, node) => {
+    return {
+      ...state,
+      fetchingBlockUser: uniqBy([...state.fetchingBlockUserRelationship, node], 'toUID')
+    }
+  })
+  .case(appUserActions.removeFetchingBlockUserRelationship, (state, node) => {
+    return {
+      ...state,
+      fetchingBlockUser: pullAllBy(state.fetchingBlockUserRelationship, [node], 'toUID')
     }
   })
 

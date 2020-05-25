@@ -10,12 +10,20 @@ type UserNodeProps = {
   toUID: string
 }
 
+type ReportNodeProps = {
+  fromUID: string
+  toUID: string
+  comment: string
+}
+
 export const domainUserActions = {
   setUser: actionCreator<User>('SET_USER'),
   setUsers: actionCreator<User[]>('SET_USERS'),
   applyFriendship: actionCreator<UserNodeProps>('APPLY_FRIENDSHIP'),
   acceptFriendship: actionCreator<UserNodeProps>('ACCEPT_FRIENDSHIP'),
-  refuseFriendship: actionCreator<UserNodeProps>('REFUSE_FRIENDSHIP')
+  refuseFriendship: actionCreator<UserNodeProps>('REFUSE_FRIENDSHIP'),
+  reportUserRelationship: actionCreator<ReportNodeProps>('REPORT_USER'),
+  blockUserRelationship: actionCreator<UserNodeProps>('BLOCK_USER')
 }
 
 export const useDomainUserActions = () => {
@@ -56,11 +64,27 @@ export const useDomainUserActions = () => {
     [dispatch]
   )
 
+  const reportUser = useCallback(
+    (node: ReportNodeProps) => {
+      dispatch(domainUserActions.reportUserRelationship(node))
+    },
+    [dispatch]
+  )
+
+  const blockUser = useCallback(
+    (node: UserNodeProps) => {
+      dispatch(domainUserActions.blockUserRelationship(node))
+    },
+    [dispatch]
+  )
+
   return {
     setUser,
     setUsers,
     applyFriendship,
     acceptFriendship,
-    refuseFriendship
+    refuseFriendship,
+    reportUser,
+    blockUser
   }
 }
